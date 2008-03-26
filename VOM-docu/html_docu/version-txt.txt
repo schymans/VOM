@@ -1,0 +1,5 @@
+This is a text file describing tagged versions of the VOM code. 
+
+- version 'Thesis8n_CVF': Original code used for results in Schymanski (2007): PhD Thesis. Contains code and pre-compiled executables for Windows. Code written for the Compaq Visual Fortran Compiler and associated libraries.
+
+- version XX: Insert information about the changes done, the submitted commit comment, ...?

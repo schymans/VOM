@@ -1,0 +1,212 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
+<title>VOM-info</title>
+</head>
+<body>
+<p style="float:right; border-width:1px; border-style:solid">
+<object data="navi-bar.html" type="text/html" ></object>
+</p>
+<h1> VOM - Model Description </h1>
+<h2>VOM - info</h2>
+<hr style="clear:right;">
+<hr>
+<h2>Files needed</h2>
+<ul>
+	<li>coreprog.f90: main program code</li>
+	<li>scestan.f90: optimisation subroutine</li>
+	<li>gasexcwatbal.f90: water balance and gas exchange subroutine</li>
+	<li>shuffle.par: ascii file with program options</li>
+	<li>input6.par: ascii file with model parameters</li>
+	<li>dailyweather.prn: ascii file with daily weather data </li>
+</ul>
+<p>OR</p>
+<ul>
+	<li>hourlyweather.prn: ascii file with hourly weather data </li>
+</ul>
+<p>A set of compatible files are available from the repository. </p>
+<hr>
+<hr>
+<h2>How to compile an run the model</h2>
+<p>The model code is written in Fortran programming language. Therefore you need a Fortran compiler. After compilation 
+the model needs to be started repeatedly until the file "finalbest.txt" appears in the directory,
+which contains the optimal values after the model converged. A description of how to compile and run the model
+you can find in an extra section: <a href="HowToRun.html">VOM - how to run</a></p>
+<hr>
+<hr>
+<h2>Settings</h2>
+<h3>Settings in shuffle.par:</h3>
+<ul>
+	<li>To run in optimisation mode, open the file shuffle.par and make sure
+the first word in the first line says 0.</li>
+	<li>Set the initial number of complexes to a high value if you
+want to increase the probability of finding the global maximum. The
+computation time will increase considerably. Good values are 2 or 4.</li>
+	<li>Set the resolution of the optimisation (the model stops if
+the parameters don't change by more than this fraction of their search
+range)</li>
+	<li>Set the number of loops you want the model to keep
+searching for an improved parameter set before it gives up</li>
+	<li>Set the number of simplex optimisations per set of parents
+(a larger number may lead to faster convergence on local optimum)</li>
+	<li>Set the spread of the random seed around the initial guess
+(a value of 1 does not restrict it)</li>
+	<li>Set which parameters need to be optimised by changing their
+'optimisable' option to '1', and define their bounds and starting
+values. (Definition of the starting values is obsolete as of version
+sceStan3.f90.). Prescribe values of non-optimisable parameters by
+setting the 'initial value' in shuffle.par. </li>
+</ul>
+<h3>Settings in input.par:</h3>
+<p>The parameters are explained in the text file itself. Parameters that
+need to be adapted:</p>
+<ul>
+	<li>ny</li>
+	<li>toptfac</li>
+	<li>tstart</li>
+	<li>lat</li>
+	<li>catchment geogmetry:</li>
+	<ul>
+		<li>cz</li>
+		<li>zs</li>
+		<li>cgs</li>
+		<li>zr (has to be &gt;0)</li>
+		<li>go </li>
+	</ul>
+	<li>soil properties after van Genuchten (<a href="SoilValueTable.html">need to find the
+appropriate ones for the dominant soil type on the site</a>):</li>
+	<ul>
+		<li>ksat</li>
+		<li>thetar</li>
+		<li>thetas</li>
+		<li>nvg</li>
+		<li>alphavg </li>
+	</ul>
+	<li>first year</li>
+	<li>last year </li>
+</ul>
+<h3>Description of dailyweather.prn:</h3>
+<p>The file "dailyweather.prn" is an input file for VOM, containing daily
+weather data in ascii format and is described here:
+<a href="dailyweather.prn_inf.html">dailyweather.prn_inf</a>.</p>
+<h3>Description of hourlyweather.prn:</h3>
+<p>The file "hourlyweather.prn" is an alternative input file for VOM. If
+available, the model uses the "hourlyweather.prn" instead of the
+"dailyweather.prn". The file containing hourly weather data in ascii
+format and is described here: <a href="hourlyweather.prn_inf.html">hourlyweather.prn_inf</a>.</p>
+<hr>
+<hr>
+<h2>Model Output</h2>
+<p>During the optimisation, the model writes a few files, of which the
+file progress.txt is the most useful, as it contains information about
+the progress made by the optimisation algorithm and the currently best
+parameter values. After the model has found the optimal values, it
+needs to be run again to write the modelled fluxes and state variables
+into files. Below, the different output files will be described.</p>
+<h3>resultshourly.txt</h3>
+<p>The file containing hourly model output in ascii format for the last
+few years of the model run is described here: <a href="resultshourly.txt_inf.html">resultshourly.txt_inf</a></p>
+<h3>resultsdaily.txt</h3>
+<p>The file containing daily model output in ascii format of all days of
+the model run is described here: <a href="resultsdaily.txt_inf.html">resultsdaily.txt_inf</a></p>
+<h3>yearly.txt</h3>
+<p>The file containing annual model output in ascii format for all years
+of the model run is described here: yearly.txt_inf</p>
+<h3>rsurfdaily.txt</h3>
+<p>The file containing midnight snapshots of the root surface
+distributions in the soil profile is described here: rsrufdaily.txt_inf</p>
+<h3>delyudaily.txt</h3>
+<p>The file containing midnight snapshots of the thickness of each
+unsaturated soil layer is described here: delyudaily.txt_inf</p>
+<h3>ruptkhourly.txt</h3>
+<p>The file containing hourly root water uptake rates in each soil layer
+during the last few years of the model run is described here:
+ruptkhourly.txt_inf</p>
+<h3>suvechourly.txt</h3>
+<p>The file containing hourly soil saturation degrees in each soil layer
+during the last few years of the model run is described here:
+suvechourly.txt_inf</p>
+<hr>
+<hr>
+<h2>Code Information</h2>
+<h3>Main program code file name: coreprog.f90</h3>
+<p>Core program to read model options from shuffle.par and run
+optimisation (scestan.f90) and water balance model (gasexcwatbal.f90)
+Needs shuffle.par, scestan.f90 and gasexcwatbal.f90.</p>
+<h4>Reads data from [file name: type of data]:</h4>
+<ul>
+	<li>shuffle.par: model options </li>
+</ul>
+<p>IF line 1 in shuffle.par="-compute"</p>
+<ul>
+	<li>currentbest.txt: optimal vegetation parameters </li>
+</ul>
+<h4>Calls subroutines [file name: data exchanged]:</h4>
+<p>IF line 1 in shuffle.par=0</p>
+<ul>
+	<li>scestan.f90: no data exchanged </li>
+</ul>
+<p>IF line 1 in shuffle.par=1 or IF file "finalbest.txt" exists in directory</p>
+<ul>
+	<li>gasexcwatbal.f90: sends optimised parameter values, receives NCP value </li>
+</ul>
+<h4>Writes data to [file name: type of data]:</h4>
+<p>None</p>
+<hr>
+<h3>Subroutine: scestan.f90</h3>
+<p>Shuffled complex algorithm, searching for the optimal values of
+optimisable parameters.</p>
+<h4>Reads data from [file name: type of data]:</h4>
+<ul>
+	<li>shuffle.par: model options </li>
+</ul>
+<h4>Calls subroutines [file name: data exchanged]:</h4>
+<ul>
+	<li>gasexcwatbal.f90: sends optimised parameter values,
+receives NCP value </li>
+</ul>
+<h4>Writes data to [file name: type of data]:</h4>
+<ul>
+	<li>sce.out: ascii-file of optimisable parameter values and
+objective function value for each run</li>
+	<li>bestpars.txt: ascii-file of best runs of each population</li>
+	<li>progress.txt: ascii-file of all screen output</li>
+	<li>lastloop.txt: ascii-file of values to be used for the next
+optimisation loop </li>
+</ul>
+<hr>
+<h3>Subroutine: gasexcwatbal.f90</h3>
+<p>Subroutine reading model parameters from input.par and weather data
+from hourlyweather.prn, or, if not available, from dailyweaterh.prn.
+Computes sub-hourly water balance, ET and CO2 uptake rates. Saves
+hourly fluxes and state variables in resultshourly.txt, daily values in
+resultsdaily.txt and annual values in yearly.txt.</p>
+<h4>Reads data from [file name: type of data]:</h4>
+<ul>
+	<li>input.par: ascii file with model parameters</li>
+	<li>dailyweather.prn: ascii file with daily weather data </li>
+</ul>
+<p>OR, if available:</p>
+<ul>
+	<li>hourlyweather.prn: ascii file with hourly weather data </li>
+</ul>
+<h4>Calls subroutines [file name: data exchanged]:</h4>
+<p>None</p>
+<h4>Writes data to [file name: type of data]:</h4>
+<p>IF hourlyweather.prn did not exist, it will be created.</p>
+<p>IF optimisation completed:</p>
+<ul>
+	<li>resultshourly.txt: ascii file of hourly fluxes and state
+variables for last few years of model run</li>
+	<li>resultsdaily.txt: daily values</li>
+	<li>yearly.txt: annual values </li>
+</ul>
+<hr>
+<hr>
+<h2>Other sources</h2>
+<p>Derivations of some of the equations are given in the Mathematica file
+Fortrform16.nb_c.pdf. </p>
+<hr>
+</body>
+</html>

@@ -1,0 +1,15 @@
+#!/bin/sh
+
+#the path, where your model-files are
+CODEDIR=/the_path_to_the_code_files_here
+MYNAME=$(whoami)
+echo $MYNAME
+cd $CODEDIR
+# run looping script as standalone:
+nohup ./cluster_bsubjob.script &
+# show that looping script is running:
+ps aux | grep $MYNAME
+# to stop the standalone looping script (cluster_bsubjob.script), use its process-id displayed in the list and type: kill -9 process-id
+# the process-id should be the first number in the nohup.out-file, relating to the below commands
+pgrep -u $(whoami) -x cluster_bsubjob -n >> nohup.out
+# pgrep only displays 15 characters, therefore the only 'computer_job.sc' is used.

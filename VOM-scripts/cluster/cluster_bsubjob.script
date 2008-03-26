@@ -1,0 +1,15 @@
+#!/bin/sh
+
+# the model-folder (look at startme.script for path)
+CODEDIR=$(pwd)
+# makes a result-folder inside your model-folder
+STOREDIR=$CODEDIR/results
+mkdir -p $STOREDIR
+# copies all inside the result-folder
+cp $CODEDIR/* $STOREDIR/
+cd $STOREDIR
+chmod u=rwx,g=rwx,o=r *
+# starts vomrun.script as batch job until finalbest.txt is written
+until test -e finalbest.txt; do
+	bsub -K -q "BTM" -o logfile.txt $STOREDIR/cluster_vomrun.script
+done

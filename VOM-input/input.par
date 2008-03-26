@@ -1,0 +1,35 @@
+0.2			/* oa= molar ratio of oxygen in air
+0.000375		/* ca= molar ratio of CO2 in air
+0.3			/* alpha= initial slope of j(par) curve
+1.2e-6			/* cpccf= water transport cost factor (cpcc=pc*rootdepth*cpccf) in mol/m/m2/s
+2.2e-7			/* tcf= turnover cost factor for foliage (tc=tcf*LAI) in mol/m2/s
+2			/* ny= number of years to process
+1			/* nyt= number of years after which to perform initial test of netass 
+1.42E-4			/* k25= ! parameters to calculate jmax(temp)
+1.75E-4			/* kopt= ! parameters to calculate jmax(temp)
+43790.0			/* ha= ! parameters to calculate jmax(temp)
+2.0E5			/* hd= ! parameters to calculate jmax(temp)
+305.0			/* topt= ! parameters to calculate jmax(temp)
+0.07			/* rlratio= leaf respiration parameter (rl=rlratio*assmax)
+43.73			/* lat= geogr. latitude in degrees
+5.0			/* cz= average soil elevation in m
+0.0			/* zs= reference point set to 0
+10.0      		/* cgs= Capital Gamma S (length scale for seepage outflow REG) (m)
+0.1			/* zr= average channel bed elevation in m
+0.017			/* go= slope close to channel in radians 
+8.25E-5			/* ksat= Saturated hydraulic conductivity in [m/s]
+0.045			/* thetar= residual soil moisture
+0.43			/* thetas= saturated soil moisture
+2.68			/* nvg= van Genuchten soil parameter n
+14.5			/* alphavg= van Genuchten soil parameter alpha (1/m)
+0.5			/* delyu= thickness of soil sublayers (m)
+10000.0			/* mdf=	!total dry mass of living tissues of trees per unit pc g/m^2
+1.0			/* mqxf=	!total water storage capacity in living tissues of trees per unit md
+1.02e8			/* rrotm= !root water uptake resistivity in s
+0.03			/* rsurfmin= !minimum root area per m^3 to be maintained
+0.3			/* rsurfinit= !initial root surface area per m^3
+0.3E-3			/* rootrad= !fine root radius in m
+150.0			/* prootmg= !constant root balance pressure of 1.5 MPa in grasses
+0.1			/* growthmax= parameter determining maximum daily growth increment of root surface area
+1990		/* first year for the generation of hourly output in computation mode
+2000		/* last year for the generation of hourly output in computation mode
