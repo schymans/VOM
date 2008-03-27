@@ -782,7 +782,7 @@
  			newpar=oldpar-distmin*10.0**(-j)
 			invar2(optid(i))=newpar
 			nrun=nrun+1
-			call transpmodel(invar2,nrun,objfun2,'-optimise')			
+			call transpmodel(invar2,nrun,objfun2,1)			
 			if (objfun2.gt.bestobj) then
 				bestobj=objfun2
 				open(4,file='currentbest.txt')
@@ -813,7 +813,7 @@
 			newpar=oldpar+distmax*10.0**(-j)
 			invar2(optid(i))=newpar
 			nrun=nrun+1
-			call transpmodel(invar2,nrun,objfun2,'-optimise')
+			call transpmodel(invar2,nrun,objfun2,1)
 			if (objfun2.gt.bestobj) then
 				bestobj=objfun2
 				open(4,file='currentbest.txt')

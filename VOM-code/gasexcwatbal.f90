@@ -653,7 +653,9 @@ dtest=nyt*365
 				kunsatvec=ksat*Sqrt(suvec)*(-1.+(1.-suvec**&					! (3.14), (Out[55])
 						(1./mvg))**mvg)**2.
 				postemp=Min(pos,nlayers)
-				phydrostaticvec(1:postemp)= ((/1:postemp:1/)-0.5)*delyu			! (Out[238]) hydrostatic head for (3.34) 	
+				do i=1,postemp
+				 phydrostaticvec(i)=(i-0.5)*delyu								! (Out[238]) hydrostatic head for (3.34) 	
+				enddo
 				prootmvec(1:postemp)= (mpbar*(-mq+mqx)*(750 - (750*mqx)/&		! (Out[239]) 
 						(md + mqx) + (md + mqx)/mqx))/(md + mqx) - &
 						phydrostaticvec(1:postemp)
