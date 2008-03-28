@@ -203,7 +203,7 @@ if (parsaved.ne.1) then
 
 		open(202,file='resultsdaily.txt')
 		close(202,status='delete')
-		open(202,file='etassdaily.txt')
+		open(202,file='resultsdaily.txt')
 		write(202,101)'year','month','day','dcum','hour','rain','tmax',&
    			'tmin','par','vd','esoil','jmax25_t','jmax25_g','pc','rlt+rlg'&
    			,'lambda_t','lambda_g','rr_t','rr_g','ass_t','ass_g','su_avg',&
