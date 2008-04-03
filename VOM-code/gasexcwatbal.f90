@@ -796,7 +796,8 @@ dtest=nyt*365
 						mqssmin=Min(mqssmin,mqss)
 					endif	
 				endif				
-				dmq=(Sum(ruptkvec(1:nlayers))-etm)*1.e6							! (3.35), 1.e6 to convert from m (=1000kg/m2) to g/m2; (Out[250]) 				dtmq=99999.
+				dmq=(Sum(ruptkvec(1:nlayers))-etm)*1.e6							! (3.35), 1.e6 to convert from m (=1000kg/m2) to g/m2; (Out[250]) 				
+				dtmq=99999.
 				if (dmq.gt.0.) then												! avoids mq from becoming larger than mqx or smaller than 0.9mqx
 					dtmq=(mqx-mq)/dmq
 				elseif (dmq.lt.0.) then
