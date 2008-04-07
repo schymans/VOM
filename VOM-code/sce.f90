@@ -41,7 +41,6 @@
 
 	implicit none
 
-	INTEGER, PARAMETER :: double=SELECTED_REAL_KIND(13) 	! == REAL*8
 	INTEGER :: i,j,k,z,m,success,stat
 	INTEGER :: npar,ncomp,ncompmin,ncomp2,nopt,mopt,sopt,qopt,alpha,&
 				beta,nrun,nloop,first
@@ -49,12 +48,12 @@
 	INTEGER, DIMENSION(:), ALLOCATABLE :: paropt,optid
 	INTEGER, DIMENSION(:,:), ALLOCATABLE :: posarray
 	
-	REAL(double), DIMENSION(:), ALLOCATABLE :: wgt,cv,ranarr
-	REAL(double) :: maxcv,ranscal,focus
-	REAL(double), DIMENSION(:,:), ALLOCATABLE :: invar,initpop
-	REAL(double), DIMENSION(:), ALLOCATABLE :: parval,parmin,parmax,&
+	REAL*8, DIMENSION(:), ALLOCATABLE :: wgt,cv,ranarr
+	REAL*8 :: maxcv,ranscal,focus
+	REAL*8, DIMENSION(:,:), ALLOCATABLE :: invar,initpop
+	REAL*8, DIMENSION(:), ALLOCATABLE :: parval,parmin,parmax,&
 				objfun,sumvar
-	REAL(double) :: worstbest,bestobj,bestincomp,resolution
+	REAL*8 :: worstbest,bestobj,bestincomp,resolution
 	CHARACTER(9), DIMENSION(:), ALLOCATABLE :: parname
 	INTEGER(1) :: command
 	CHARACTER(24) :: logdate
@@ -109,10 +108,10 @@
 	!  CALCULATE NUMBER OF OPTIMISABLE PARAMETERS
 	!
 	nopt=sum(paropt)
-	mopt=2*nopt+1												! SCE VARIABLE m
-	ncomp=Max(ncomp,Ceiling(1.+ 2.**nopt/(1. + 2.*nopt)))		! number of complexes after Muttil(2004) or from shuffle.par
-	sopt=mopt*ncomp												! SCE VARIABLE s
-	qopt=nopt+1													! CCE VARIABLE q
+	mopt=2*nopt+1													! SCE VARIABLE m
+	ncomp=Max(ncomp,Ceiling(1.d0 + 2.d0**nopt/(1.d0 + 2.d0*nopt)))	! number of complexes after Muttil(2004) or from shuffle.par
+	sopt=mopt*ncomp													! SCE VARIABLE s
+	qopt=nopt+1														! CCE VARIABLE q
 	beta=mopt
 	ncomp2=ncomp
 	allocate(optid(nopt),invar(npar,sopt),objfun(sopt),wgt(mopt),&
@@ -143,7 +142,7 @@
 	! ASSIGN PROBABILITY WEIGHTS
 	!
 	do i=1,mopt
-		wgt(i)=2.*(mopt+1.-i)/mopt/(mopt+1.)
+		wgt(i)=2.d0*(mopt+1.d0-i)/mopt/(mopt+1.d0)
 	end do
 	!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	! BEGIN MODEL LOOP (EXECUTE s PASSES)
@@ -224,7 +223,7 @@
 		sumvar=sum(invar(optid,1:numcv),2)/numcv				! mean parameter values
 		do i=1,nopt
 			cv(i)=maxval(abs((invar(optid(i),1:numcv)-sumvar(i))/&
-				(parmin(optid(i))-parmax(optid(i))))*100)		! distance from mean in % of feasible range
+				(parmin(optid(i))-parmax(optid(i))))*100.d0)	! distance from mean in % of feasible range
 		enddo
 		maxcv=maxval(cv)										! maximum distance
 		print*,'Greatest parameter range: ',maxcv,'% for optimised parameter ',parname(optid(maxloc(cv)))
@@ -304,7 +303,7 @@
 			write(2,'("Start of loop",i4,", complex",i2,": best OF =",e12.6)')	&
 				nloop+1,m,objfun(first)
 			if(m.eq.1) then
-				bestincomp=-9999.								! SET LESS THAN bestobj
+				bestincomp=-9999.d0								! SET LESS THAN bestobj
 			else
 				bestincomp=objfun(first)
 			endif
@@ -352,9 +351,9 @@
 	implicit none
 	
 	INTEGER, DIMENSION(:), INTENT(in) :: optid
-	REAL(double), DIMENSION(:), INTENT(in) :: invar
-	REAL(double), INTENT(out) :: objfun
-	REAL(double), INTENT(inout) :: bestobj,bestincomp
+	REAL*8, DIMENSION(:), INTENT(in) :: invar
+	REAL*8, INTENT(out) :: objfun
+	REAL*8, INTENT(inout) :: bestobj,bestincomp
 	CHARACTER(1) :: bestmark
 
 	nrun=nrun+1
@@ -417,7 +416,7 @@
 	!
 	nsincebest=0
 	evolution='seed'
-	objfun=-9999.9
+	objfun=-9999.9d0
 	invar(:,1)=parval
 	nrun=0
 	call runmodel(invar(:,1),optid,objfun(1),bestobj,bestincomp)
@@ -439,11 +438,11 @@
 	posarray(2,1)=2
 	do j=1,nopt
 		k=optid(j)
-		initpop(j,1)=0.125*parmax(j)+0.875*parmin(j)
-		initpop(j,2)=0.125*parmin(j)+0.875*parmax(j)
-		initpop(j,3)=0.5*(parmin(j)+parmax(j))
-		initpop(j,4)=0.25*parmax(j)+0.75*parmin(j)
-		initpop(j,5)=0.25*parmin(j)+0.75*parmax(j)
+		initpop(j,1)=0.125d0*parmax(j)+0.875d0*parmin(j)
+		initpop(j,2)=0.125d0*parmin(j)+0.875d0*parmax(j)
+		initpop(j,3)=0.5d0*(parmin(j)+parmax(j))
+		initpop(j,4)=0.25d0*parmax(j)+0.75d0*parmin(j)
+		initpop(j,5)=0.25d0*parmin(j)+0.75d0*parmax(j)
 		posarray(2**(j-1)+1:2**j,1:j-1)=posarray(1:2**(j-1),1:j-1)
 		posarray(1:2**(j-1),j)=1
 		posarray(2**(j-1)+1:2**j,j)=2
@@ -482,7 +481,7 @@
 	! IF MORE POINTS ARE NEEDED, GENERATE RANDOM POINTS
 	!
 		evolution='mutation'
-		do while(objfun(i).le.0.0)								! first loop must generate feasible values to start with
+		do while(objfun(i).le.0.d0)								! first loop must generate feasible values to start with
 			call random_number(ranarr)							! RANDOM ARRAY OF SIZE 1:nopt
 			do j=1,nopt
 				k=optid(j)
@@ -523,10 +522,10 @@
 	
 	INTEGER :: i,nsel,rannum,l
 	INTEGER, DIMENSION(:), ALLOCATABLE :: parentsid
-	REAL(double), DIMENSION(:), INTENT(inout) :: objfun
-	REAL(double), DIMENSION(:,:), INTENT(inout) :: invar
-	REAL(double), DIMENSION(:), ALLOCATABLE :: objfunsub
-	REAL(double), DIMENSION(:,:), ALLOCATABLE :: invarsub
+	REAL*8, DIMENSION(:), INTENT(inout) :: objfun
+	REAL*8, DIMENSION(:,:), INTENT(inout) :: invar
+	REAL*8, DIMENSION(:), ALLOCATABLE :: objfunsub
+	REAL*8, DIMENSION(:,:), ALLOCATABLE :: invarsub
 	LOGICAL, DIMENSION(size(objfun)) :: selected
 	! DIMENSIONALISE
 	!
@@ -538,7 +537,7 @@
 		nsel=0
 		do while(nsel.ne.qopt)
 			call random_number(ranscal)							! SCALAR RANDOM NUMBER
-			rannum=ceiling((2.*mopt+1.-sqrt(4.*mopt*(mopt+1.)*(1-ranscal)+1))*0.5)
+			rannum=ceiling((2.d0*mopt+1.d0-sqrt(4.d0*mopt*(mopt+1.d0)*(1.d0-ranscal)+1.d0))*0.5d0)
 	! NOTE: A SIMPLER ALTERNATIVE TO THE ABOVE LINE IS (19.03.2004):
 	!
 			if(rannum.ge.1.and.rannum.le.mopt) then
@@ -578,17 +577,17 @@
 	implicit none
 	
 	INTEGER :: i,j
-	REAL(double), DIMENSION(:), INTENT(inout) :: objfun
-	REAL(double), DIMENSION(:,:), INTENT(inout) :: invar
-	REAL(double), DIMENSION(size(invar,1)) :: centroid,newpoint
-	REAL(double) :: newobjfun,minj,rangej
+	REAL*8, DIMENSION(:), INTENT(inout) :: objfun
+	REAL*8, DIMENSION(:,:), INTENT(inout) :: invar
+	REAL*8, DIMENSION(size(invar,1)) :: centroid,newpoint
+	REAL*8 :: newobjfun,minj,rangej
 	! REFLECTION STEP
 	!
 	evolution='reflection'
 	newpoint=invar(:,qopt)
-	centroid(optid)=1./(qopt-1)*sum(invar(optid,1:qopt-1),2)
-	newpoint(optid)=2.*centroid(optid)-invar(optid,qopt)
-	if(minval(newpoint-parmin).lt.0.or.maxval(newpoint-parmax).gt.0) then
+	centroid(optid)=1.d0/(qopt-1)*sum(invar(optid,1:qopt-1),2)
+	newpoint(optid)=2.d0*centroid(optid)-invar(optid,qopt)
+	if(minval(newpoint-parmin).lt.0.d0.or.maxval(newpoint-parmax).gt.0.d0) then
 	! MUTATION STEP
 	! NB: MUTATION IS BASED ON THE SMALLEST HYPERCUBE OF THE SUBCOMPLEX, NOT THE
 	!     SMALLEST HYPERCUBE OF THE COMPLEX AS SUGGESTED BY DUAN ET AL.
@@ -618,7 +617,7 @@
 	else
 	! CONTRACTION STEP
 	!
-		newpoint(optid)=(centroid(optid)+invar(optid,qopt))*0.5
+		newpoint(optid)=(centroid(optid)+invar(optid,qopt))*0.5d0
 		evolution='contraction'
 		call runmodel(newpoint,optid,newobjfun,bestobj,bestincomp)
 		if(newobjfun.gt.objfun(qopt)) then
@@ -653,7 +652,7 @@
 					exit
 				endif
 			end do
-		elseif(newobjfun.gt.0.0) then											! REPLACE ANYWAY
+		elseif(newobjfun.gt.0.d0) then											! REPLACE ANYWAY
 			objfun(qopt)=newobjfun
 			invar(:,qopt)=newpoint
 		endif
@@ -682,10 +681,10 @@
 	implicit none
 
 	INTEGER :: i,j(1),dim
-	REAL(double), DIMENSION(:),INTENT(inout) :: objfun
-	REAL(double), DIMENSION(:,:),INTENT(inout) :: invar
-	REAL(double), DIMENSION(size(objfun)) :: objfun2
-	REAL(double), DIMENSION(size(invar,1),size(invar,2)) :: invar2
+	REAL*8, DIMENSION(:),INTENT(inout) :: objfun
+	REAL*8, DIMENSION(:,:),INTENT(inout) :: invar
+	REAL*8, DIMENSION(size(objfun)) :: objfun2
+	REAL*8, DIMENSION(size(invar,1),size(invar,2)) :: invar2
 	INTEGER, DIMENSION(size(objfun)) :: newobjfun
 	EXTERNAL compar
 
@@ -738,19 +737,19 @@
 					outformat,nrun,success,bestobj,okchange)
 	implicit none
 	
-	REAL(double), DIMENSION(:),INTENT(inout) :: objfun
-	REAL(double), DIMENSION(:,:),INTENT(inout) :: invar
-	REAL(double), DIMENSION(size(invar,1)) :: invar2
-	REAL(double), INTENT(inout) :: bestobj
-	REAL(double), intent(in) :: okchange
+	REAL*8, DIMENSION(:),INTENT(inout) :: objfun
+	REAL*8, DIMENSION(:,:),INTENT(inout) :: invar
+	REAL*8, DIMENSION(size(invar,1)) :: invar2
+	REAL*8, INTENT(inout) :: bestobj
+	REAL*8, intent(in) :: okchange
 	INTEGER, DIMENSION(:), INTENT(in) :: optid
 	INTEGER(4) :: i,j,numvar,nrun,numrec,failed10,success,pos
-	REAL(double), DIMENSION(:), INTENT(in) :: parmin,parmax
+	REAL*8, DIMENSION(:), INTENT(in) :: parmin,parmax
 	CHARACTER(9), DIMENSION(:), INTENT(in) :: parname
 	CHARACTER(60) :: outformat
-	REAL(double) :: distmin,distmax,oldpar,newpar,objfun2,&
-									ofchange,parchange
-	REAL(double), dimension(:,:), allocatable :: dataarray
+	REAL*8 :: distmin,distmax,oldpar,newpar,objfun2,&
+				ofchange,parchange
+	REAL*8, dimension(:,:), allocatable :: dataarray
 	
 	numvar=size(optid)
 	ALLOCATE(dataarray(numvar*8+1,numvar+1))
@@ -779,7 +778,7 @@
 		write(2,'(/"change of var: ",a9, "(",e9.3,")")') parname(optid(i)),&
 				oldpar
 		do j=0,3
- 			newpar=oldpar-distmin*10.0**(-j)
+ 			newpar=oldpar-distmin*10.d0**(-j)
 			invar2(optid(i))=newpar
 			nrun=nrun+1
 			call transpmodel(invar2,nrun,objfun2,1)			
@@ -793,13 +792,13 @@
 			dataarray((i-1)*8+j+2,1:numvar)=invar2
 			dataarray((i-1)*8+j+2,numvar+1)=objfun2
 			ofchange=(objfun2-dataarray(1,numvar+1))/abs(dataarray(1,numvar+&
-						1))*100.0
-			parchange=(newpar-oldpar)/(parmax(optid(i))-parmin(optid(i)))*100			! the change of the parameter in % of feasible range
+						1))*100.d0
+			parchange=(newpar-oldpar)/(parmax(optid(i))-parmin(optid(i)))*100.d0		! the change of the parameter in % of feasible range
 			write(*,'(f6.3,"% (",f14.6,")",": change of OF by ",e9.3,"%"," (",&
 						e9.3,")")') parchange,newpar,ofchange,objfun2
 			write(2,'(f6.3,"% (",f14.6,")",": change of OF by ",e9.3,"%"," (",&
 						e9.3,")")') parchange,newpar,ofchange,objfun2
-			if (ofchange.gt.1.0E-10) then
+			if (ofchange.gt.1.d-10) then
 				invar(:,numrec-pos)=invar2
 				objfun(numrec-pos)=objfun2
 				pos=pos+1
@@ -810,7 +809,7 @@
 		enddo
 
 		do j=3,0,-1
-			newpar=oldpar+distmax*10.0**(-j)
+			newpar=oldpar+distmax*10.d0**(-j)
 			invar2(optid(i))=newpar
 			nrun=nrun+1
 			call transpmodel(invar2,nrun,objfun2,1)
@@ -824,13 +823,13 @@
 			dataarray((i-1)*8+j+6,1:numvar)=invar2
 			dataarray((i-1)*8+j+6,numvar+1)=objfun2
 			ofchange=(objfun2-dataarray(1,numvar+1))/abs(dataarray(1,numvar+&
-						1))*100.0
-			parchange=(newpar-oldpar)/(parmax(optid(i))-parmin(optid(i)))*100			! the change of the parameter in % of feasible range
+						1))*100.d0
+			parchange=(newpar-oldpar)/(parmax(optid(i))-parmin(optid(i)))*100.d0	! the change of the parameter in % of feasible range
 			write(*,'(f6.3,"% (",f14.6,")",": change of OF by ",e9.3,"%"," (",&
 						e9.3,")")') parchange,newpar,ofchange,objfun2
 			write(2,'(f6.3,"% (",f14.6,")",": change of OF by ",e9.3,"%"," (",&
 						e9.3,")")') parchange,newpar,ofchange,objfun2
-			if (ofchange.gt.1.0E-10) then
+			if (ofchange.gt.1.0d-10) then
 				invar(:,numrec-pos)=invar2
 				objfun(numrec-pos)=objfun2
 				pos=pos+1
@@ -878,8 +877,7 @@
 	
 	implicit none
 	
-	INTEGER, PARAMETER :: double=SELECTED_REAL_KIND(13) 	! == REAL*8
-	REAL(double), INTENT(in) :: b,c
+	REAL*8, INTENT(in) :: b,c
 	
 	if(b.gt.c) then																! SORTS b,c IN DECREASING ORDER
 		compar=-1

@@ -5,8 +5,8 @@ TMPDIR=/scratch/aostrow/run$$$HOSTNAME
 STOREDIR=$(pwd)
 # the model-code files 
 CODE1=coreprog.f90
-CODE2=sceStan4j.f90
-CODE3=gasexcwatbal10n.f90
+CODE2=sce.f90
+CODE3=gasexcwatbal.f90
 # makes the temp-folder on the cluster and copies all in
 mkdir -p $TMPDIR
 cd $TMPDIR
