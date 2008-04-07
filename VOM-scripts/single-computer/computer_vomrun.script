@@ -6,7 +6,7 @@ STOREDIR=$(pwd)
 TMPDIR=$STOREDIR/tmp
 # the model-code files 
 CODE1=coreprog.f90
-CODE2=sceStan.f90
+CODE2=sce.f90
 CODE3=gasexcwatbal.f90
 # makes the temp-folder and copies all in
 mkdir -p $TMPDIR

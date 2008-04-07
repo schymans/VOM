@@ -35,9 +35,8 @@ CHARACTER(60) outformat
 INTEGER(1) command
 INTEGER stat
 CHARACTER(3) str
-INTEGER, PARAMETER :: double=SELECTED_REAL_KIND(13)				! == REAL*8
-REAL(double), ALLOCATABLE :: invar(:)
-REAL(double), DIMENSION(1) :: netass
+REAL*8, ALLOCATABLE :: invar(:)
+REAL*8, DIMENSION(1) :: netass
 INTEGER nrun,success,npar,ios
 	!--------------------------------------------------------------------
 	! Parameter definitions for sce 
