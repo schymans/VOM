@@ -1,7 +1,8 @@
 #!/bin/sh
 
 # path for the temp-folder on cluster
-TMPDIR=/scratch/aostrow/run$$$HOSTNAME
+# we use TMPDIR=/scratch/login-name/run$$$HOSTNAME
+TMPDIR=/temp-path.on.cluster
 STOREDIR=$(pwd)
 # the model-code files 
 CODE1=coreprog.f90

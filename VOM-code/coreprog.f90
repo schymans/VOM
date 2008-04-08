@@ -79,7 +79,7 @@ if (stat.eq.0 .or. command.eq.2) then
 	write(*,'(/" Model run COMPLETE",/)')
 	write(*,'(" The carbon profit achieved is: ",e12.6)') netass
 	print *, "Hourly results are saved in resulthourly.txt"
-	print *, "Daily results are saved in etassdaily.txt"
+	print *, "Daily results are saved in resultsdaily.txt"
 	print *, "Yearly results are saved in yearly.txt"
 	print *, "Soil results are saved in delyudaily.txt, rsurfdaily.txt, ruptkhourly.txt, suvechourly.txt"
 else
