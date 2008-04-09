@@ -260,7 +260,7 @@ if (parsaved.ne.1) then
 !*		Calculation of vegetation parameters
 !*     
 !*--------------------------------------------------------------------
-!*		Equations in Fortrform16.nb.pdf
+!*		Equations in equations.pdf
 !*		(numeration in the commented parentheses)
 !*********************************************************************
 !*--------------------------------------------------------------------
@@ -428,6 +428,7 @@ assg_d=0.d0
 spgfcf_d=0.d0
 infx_d=0.d0
 rl_d=0.d0
+rlg_d=0.d0
 hass=0.d0
 hassg=0.d0
 hspgfcf=0.d0
@@ -442,6 +443,10 @@ hinf=0.d0
 netassvec=0.d0
 netassvecg=0.d0
 iocum=0.d0
+jmaxg_d=0.d0
+gstomg_d=0.d0
+etmg_d=0.d0
+netassg_d=0.d0
 !*--------------------------------------------------------------------
 !*     Set vegetation parameters 
 !*--------------------------------------------------------------------
