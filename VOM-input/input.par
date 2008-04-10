@@ -3,13 +3,14 @@
 0.3			/* alpha= initial slope of j(par) curve
 1.2e-6			/* cpccf= water transport cost factor (cpcc=pc*rootdepth*cpccf) in mol/m/m2/s
 2.2e-7			/* tcf= turnover cost factor for foliage (tc=tcf*LAI) in mol/m2/s
-2			/* ny= number of years to process
+30			/* ny= number of years to process
 1			/* nyt= number of years after which to perform initial test of netass 
 1.42E-4			/* k25= ! parameters to calculate jmax(temp)
 1.75E-4			/* kopt= ! parameters to calculate jmax(temp)
 43790.0			/* ha= ! parameters to calculate jmax(temp)
 2.0E5			/* hd= ! parameters to calculate jmax(temp)
-305.0			/* topt= ! parameters to calculate jmax(temp)
+0.000			/* toptfac= ! parameter to calculate adaptation of topt (range 0-1, 0.0 means no adaption, 1.0 means topt=tair)
+305.0			/* tstart= ! start parameter for topt to calculate jmax(temp in K)
 0.07			/* rlratio= leaf respiration parameter (rl=rlratio*assmax)
 43.73			/* lat= geogr. latitude in degrees
 5.0			/* cz= average soil elevation in m

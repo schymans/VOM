@@ -45,8 +45,8 @@ CHARACTER(3) str
 !* CO2 to H2O as parameters. 
 !  
 REAL*8 a,pi,E,r,g,rho,degree,mpbar
-REAL*8, SAVE :: oa,ca,alpha,rlratio,k25,kopt,ha,hd,topt,&
-						cpccf,tcf									! cpccf=water transport costs per m root depth and m^2 cover; 
+REAL*8, SAVE :: oa,ca,alpha,rlratio,k25,kopt,ha,hd,&
+						tstart,toptfac,cpccf,tcf					! cpccf=water transport costs per m root depth and m^2 cover; 
 INTEGER, SAVE :: parsaved,ny,nyt,firstyear,lastyear
 PARAMETER(a=1.6d0,pi=3.14159d0,mpbar=10.2d0,&						! mpbar=conversion factor from MPa to bar
 					g=9.81d0,rho=1000.d0,degree=0.0174533d0)			
@@ -64,7 +64,7 @@ REAL*8 jact(3),lambda,gstom,rl(3),vd,par,rain,transp,&
 			ass(3),hass(3),pc,cpcc,sunr,suns,rr,&				
 			lambdafac,gammastar,jmax(3),jmax25(3),&
 			netassyr,rainyr,epanyr,paryr,radyr,vdyr,etyr,evapyr,&
-			gppyr,daylength,tamean,dtr,tair,vp,&
+			gppyr,daylength,tamean,dtr,tair,vp,topt,&
 			rootdepth,mq,mqssmin,time,dmq,mqnew,mqss,changef,&
 			mqold,hruptk,error1,tc,mqssnew,pcg(3),lambdagfac,wsgexp,&
 			cpccg(3),tcg(3),jmax25g(3),wsexp,rgdepth,&
@@ -125,7 +125,8 @@ if (parsaved.ne.1) then
 	read(201,*) kopt	
 	read(201,*) ha
 	read(201,*) hd
-	read(201,*) topt
+	read(201,*) toptfac
+	read(201,*) tstart
 	read(201,*) rlratio
 !*-----Catchment parameters --------------------------------------------
 !
@@ -202,10 +203,10 @@ if (parsaved.ne.1) then
 		open(202,file='resultsdaily.txt')
 		close(202,status='delete')
 		open(202,file='resultsdaily.txt')
-		write(202,101)'year','month','day','dcum','hour','rain','tmax',&
+		write(202,104)'year','month','day','dcum','hour','rain','tmax',&
    			'tmin','par','vd','esoil','jmax25_t','jmax25_g','pc','rlt+rlg'&
    			,'lambda_t','lambda_g','rr_t','rr_g','ass_t','ass_g','su_avg',&
-   			'ys','ws','spgfcf','infx','etm_t','etm_g','su_1'
+   			'ys','ws','spgfcf','infx','etm_t','etm_g','su_1','topt'
 
 		open(203,file='yearly.txt')
 		close(203,status='delete')
@@ -348,6 +349,7 @@ endif
 !*--------------------------------------------------------------------
 !
 NETASS=0.d0
+topt=tstart
 !*--------------------------------------------------------------------
 !*
 !*     Set soil moisture and vegetation parameters to initial conditions 
@@ -565,6 +567,7 @@ dtest=nyt*365
 !*-----calculate gstom, et and ass --------------------------------------- 
 !
 			if (par.gt.0.d0)then
+				topt=topt+toptfac*(tair+273.-topt)								! adaptation of topt to air temperature during sunlight
 				jact=(1.d0 - E**(-(alpha*par)/jmax))*jmax*pc					! (3.23), (Out[311])
 				jactg(1,:)=(1.d0 - E**(-(alpha*par)/jmaxg))*jmaxg*pcg(1)		! (3.23), (Out[311]) 
 				jactg(2,:)=(1.d0 - E**(-(alpha*par)/jmaxg))*jmaxg*pcg(2)		! (3.23), (Out[311])
@@ -984,12 +987,12 @@ dtest=nyt*365
 !*------END OF DAY----------------------------------------------------
 !
 	if (optmode.eq.0) then
-		write(202,102)year(d),month(d),day(d),d,h,rainvec(d),&
+		write(202,105)year(d),month(d),day(d),d,h,rainvec(d),&
 			tmax(d),tmin(d),parvec(d),vd_d/24.d0,esoil_d,&
 			jmax25(2),jmax25g(2),pc+pcg(2),rl_d+rlg_d,lambda,lambdag,&
 			rr*3600.d0*24.d0,rrg*3600.d0*24.d0,ass_d(2),assg_d(2,2),&
 			Sum(suvec(1:nlayers))/nlayers,ys,wsnew,spgfcf_d,&
-			infx_d,etm_d,etmg_d,suvec(1)
+			infx_d,etm_d,etmg_d,suvec(1),topt
 		write(204,dailyformat) year(d),month(d), day(d),d,rsurfvec(1:nlayers)
 		if(year(d).eq.yr) then
 			rainyr=rainyr+rainvec(d)										! in [mm]
@@ -1087,6 +1090,8 @@ endif
 101	format(a6,a7,a7,a7,a7,24a15)
 102	format(i6,i7,i7,i7,i7,24e15.5)
 103	format(e15.5)
+104	format(a6,a7,a7,a7,a7,25a15)
+105	format(i6,i7,i7,i7,i7,25e15.5)
 	close (201)
 	close (202)
 	close (203)
