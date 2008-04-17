@@ -6,14 +6,14 @@
 3						/* ALPHA: NUMBER OF OPTIMISATIONS PER COMPLEX AND RUN
 1.0						/* FOCUS: IF <1.0, THE SPREAD OF THE RANDOM SEED AROUND THE INITIAL VALUES IS LIMITED
 (7x,a9,e14.6,e10.4,e11.1,i5)                                       /* Format of each line                 
-var:   lambdagf   0.779827E+03    0.0000     1.0E04    1		 /* NAME, INITIAL, MIN, MAX, 1=OPTIMISE
-var:   wsgexp    -0.132889E+01   -3.0E00        1.0    1
-var:   lambdafac  0.160181E+04    0.0000     1.0E04    1
-var:   wsexp     -0.564496E+00   -3.0E00        1.0    1
-var:   pc         0.300000E+00    0.0000        1.0    1
-var:   rootdepth  0.300000E+01    1.0000        5.0    1
-var:   mdstore    1.000000E+02    0.0000     1.0E04    0
-var:   rgdepth    0.100000E+01    0.0000       15.0    0
+var:   lambdagf   0.779827d+03    0.0d0      1.0d04    1		 /* NAME, INITIAL, MIN, MAX, 1=OPTIMISE
+var:   wsgexp    -0.132889d+01   -3.0d0       1.0d0    1
+var:   lambdafac  0.160181d+04    0.0d0      1.0d04    1
+var:   wsexp     -0.564496d+00   -3.0d0       1.0d0    1
+var:   pc         0.300000d+00    0.0d0       1.0d0    1
+var:   rootdepth  0.300000d+01    1.0d0       5.0d0    1
+var:   mdstore    1.000000d+02    0.0d0      1.0d04    0
+var:   rgdepth    0.100000d+01    0.0d0      15.0d0    0
 
 
 
