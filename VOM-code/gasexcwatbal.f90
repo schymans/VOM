@@ -52,7 +52,7 @@ PARAMETER(a=1.6d0,pi=3.14159d0,mpbar=10.2d0,&						! mpbar=conversion factor fro
 					g=9.81d0,rho=1000.d0,degree=0.0174533d0)			
 PARAMETER(E=2.7182818d0,R=8.314d0)
 INTEGER, SAVE :: N,Nh,M,optmode
-INTEGER nrun,d,h,oldh,i,in,ii,ik,yr,dtest,pos,posg,postemp,pos1(1),&
+INTEGER nrun,d,h,oldh,i,in,ii,ik,yr,dtest,pos,posg,postemp,postempg,pos1(1),&
 			pos2(2),stat,dummyint1,dummyint2,dummyint3,dummyint4
 REAL*8, ALLOCATABLE, SAVE :: srad(:),rhmax(:),rhmin(:),tmin(:),&
 			tmax(:),rainvec(:),netassvec(:),epan(:),vpvec(:),&
@@ -61,7 +61,7 @@ INTEGER, ALLOCATABLE, SAVE :: year(:),month(:),day(:),dayyear(:)
 REAL*8, ALLOCATABLE, SAVE :: avparvec(:),&
 			parvec(:),parh(:),vdh(:),tairh(:),gammastarvec(:),rainh(:)
 REAL*8 jact(3),lambda,gstom,rl(3),vd,par,rain,transp,&
-			ass(3),hass(3),pc,cpcc,sunr,suns,rr,&				
+			ass(3),hass(3),pc,cpcc,sunr,suns,rr,sumwsu,&				
 			lambdafac,gammastar,jmax(3),jmax25(3),&
 			netassyr,rainyr,epanyr,paryr,radyr,vdyr,etyr,evapyr,&
 			gppyr,daylength,tamean,dtr,tair,vp,topt,&
@@ -92,9 +92,9 @@ REAL*8, ALLOCATABLE, SAVE :: pcapvec(:),suvec(:),ruptkvec(:),&
 			delyunewvec(:),wsnewvec(:),prootmvec(:),pcapnewvec(:),&
 			hruptkvec(:),ruptkvec_d(:),reff(:),ruptkg(:),rsurfg(:),&
 			rsurfgnew(:),rsoilvec(:)
-REAL*8 ys,yu,omgu,omgo,depth,etm,esoil,esoils,dys,dtys,&
-			domgu,dtsu,ysnew,yunew,wsnew,io,iocum,spgfcf,hspgfcf,infx,&
-			hinfx,hio,hesoil,hetm,inf,dyu,omgunew,&
+REAL*8 ys,yu,omgu,omgo,depth,etm,esoil,esoils,dys,dtys,dtomgu,dtyu,&
+			domgu,dyu,dtsu,ysnew,yunew,wsnew,io,iocum,spgfcf,hspgfcf,infx,&
+			hinfx,hio,hesoil,hetm,inf,omgunew,&
 			omgonew,error,dtmq,hinf,dtss
 !*********************************************************************
 !*     Program options
@@ -629,18 +629,22 @@ dtest=nyt*365
 !*********************************************************************
 !*----- setting variables from previous loop---------------------------
 !
-				rsurfvec(1:nlayersnew)=rsurfvec(1:nlayersnew)/(omgu*&
+				if(nlayersnew.ge.1) then
+     rsurfvec(1:nlayersnew)=rsurfvec(1:nlayersnew)/(omgu*&
 						delyuvec(1:nlayersnew))*omgunew*&
 						delyunewvec(1:nlayersnew)
+					rsurfg(1:nlayersnew)=rsurfg(1:nlayersnew)/(omgu*&
+					 delyuvec(1:nlayersnew))*omgunew*&
+					 delyunewvec(1:nlayersnew)	
+				endif
+				
 				if(nlayersnew.lt.pos) then
 					rsurfvec(nlayersnew+1:pos)=rsurfmin*delyu
 				endif
-				rsurfg(1:nlayersnew)=rsurfg(1:nlayersnew)/(omgu*&
-					delyuvec(1:nlayersnew))*omgunew*&
-					delyunewvec(1:nlayersnew)
 				if(nlayersnew.lt.posg) then
-					rsurfvec(nlayersnew+1:pos)=rsurfmin*delyu
+					rsurfg(nlayersnew+1:posg)=rsurfmin*delyu
 				endif
+				
 				mq=mqnew
 				ys=ysnew
 				suvec=sunewvec
@@ -653,71 +657,140 @@ dtest=nyt*365
 				suvec=sunewvec
 !*-----soil capillary pressure, infiltration and runoff--------------- 
 !
-				pcapvec(1:nlayers)= (-1.d0 + suvec(1:nlayers)**(-1.d0/mvg))**&	! (Out[54]), Chapter 3.3.2.3 
-						(1.d0/nvg)/alphavg
-				pcapvec(nlayers+1:M)=0.d0
-				kunsatvec=ksat*Sqrt(suvec)*(-1.d0+(1.d0-suvec**&				! (3.14), (Out[55])
-						(1.d0/mvg))**mvg)**2.d0
-				postemp=Min(pos,nlayers)
-				do i=1,postemp
-				 phydrostaticvec(i)=(i-0.5d0)*delyu								! (Out[238]) hydrostatic head for (3.34) 	
-				enddo
-				prootmvec(1:postemp)= (mpbar*(-mq+mqx)*(750.d0 - (750.d0*mqx)/&	! (Out[239]) 
-						(md + mqx) + (md + mqx)/mqx))/(md + mqx) - &
-						phydrostaticvec(1:postemp)
-				rsoilvec(1:postemp)=(Sqrt(Pi/2.d0)*Sqrt((rootrad*omgu*&			! soil resistance, (Out[ 241] with svolume=omgu*delyuvec(1:postemp)); derived from (3.32)
-						delyuvec(1:postemp))/rsurfvec(1:postemp)))/&
-						kunsatvec(1:postemp)
-				ruptkvec(1:postemp)=((-pcapvec(1:postemp) + &					! root water uptake, Chapter 3.3.3.3 (Out[242])
-						prootmvec(1:postemp))*rsurfvec(1:postemp))/(rrootm +&
-						rsoilvec(1:postemp))
-				ruptkvec(postemp+1:M)=0.d0							
-				if(Maxval(etmg).gt.0.d0) then
-					ruptkg(1:posg)=Max(0.d0,((-pcapvec(1:posg) + &				! root uptake by grasses can not be negative, as storage negligible
-							(prootmg-phydrostaticvec(1:posg)))*rsurfg)/&
-							(rrootm +(Sqrt(Pi/2.d0)*Sqrt(rootrad*omgu*&
-							delyuvec(1:posg)/rsurfg))/kunsatvec(1:posg)))
-					ruptkg(posg+1:M)=0.d0
-					if(Sum(ruptkg).gt.0.d0) then
-						where(etmg.gt.Sum(ruptkg)) 
-							rootlim=1.d0
-							etmg=Sum(ruptkg)
-							transpg=etmg*55555.555555555555d0					! (Out[249])			mol/s=m/s*10^6 g/m/(18g/mol)
-							gstomg=transpg/(a*vd)
-						endwhere
-						ruptkg(1:posg)=etmg(2,2)*(ruptkg(1:posg)/(Sum(ruptkg)))
+			 if(nlayersnew.ge.1) then
+					pcapvec(1:nlayers)= (-1.d0 + suvec(1:nlayers)**(-1.d0/mvg))**&	! (Out[54]), Chapter 3.3.2.3 
+							(1.d0/nvg)/alphavg
+					pcapvec(nlayers+1:M)=0.d0
+					kunsatvec=ksat*Sqrt(suvec)*(-1.d0+(1.d0-suvec**&				! (3.14), (Out[55])
+							(1.d0/mvg))**mvg)**2.d0
+					postemp=Min(pos,nlayers)
+					do i=1,postemp
+						phydrostaticvec(i)=(i-0.5d0)*delyu								! (Out[238]) hydrostatic head for (3.34) 	
+					enddo
+					prootmvec(1:postemp)= (mpbar*(-mq+mqx)*(750.d0 - (750.d0*mqx)/&	! (Out[239]) 
+							(md + mqx) + (md + mqx)/mqx))/(md + mqx) - &
+							phydrostaticvec(1:postemp)
+					rsoilvec(1:postemp)=(Sqrt(Pi/2.d0)*Sqrt((rootrad*omgu*&			! soil resistance, (Out[ 241] with svolume=omgu*delyuvec(1:postemp)); derived from (3.32)
+							delyuvec(1:postemp))/rsurfvec(1:postemp)))/&
+							kunsatvec(1:postemp)
+					ruptkvec(1:postemp)=((-pcapvec(1:postemp) + &					! root water uptake, Chapter 3.3.3.3 (Out[242])
+							prootmvec(1:postemp))*rsurfvec(1:postemp))/(rrootm +&
+							rsoilvec(1:postemp))
+					ruptkvec(postemp+1:M)=0.d0
+					
+					postempg=Min(posg,nlayers)
+					if(Maxval(etmg).gt.0.d0) then
+						ruptkg(1:posg)=Max(0.d0,((-pcapvec(1:postempg) + &				! root uptake by grasses can not be negative, as storage negligible
+								(prootmg-phydrostaticvec(1:postempg)))*rsurfg)/&
+								(rrootm +(Sqrt(Pi/2.d0)*Sqrt(rootrad*omgu*&
+								delyuvec(1:postempg)/rsurfg))/kunsatvec(1:postempg)))
+						ruptkg(postempg+1:M)=0.d0
+						if(Sum(ruptkg).gt.0.d0) then
+							where(etmg.gt.Sum(ruptkg)) 
+								rootlim=1.d0
+								etmg=Sum(ruptkg)
+								transpg=etmg*55555.555555555555d0					! (Out[249])			mol/s=m/s*10^6 g/m/(18g/mol)
+								gstomg=transpg/(a*vd)
+							endwhere
+							ruptkg(1:postempg)=etmg(2,2)*(ruptkg(1:postempg)/(Sum(ruptkg)))
+						else
+							ruptkg=0.d0
+							rootlim=0.d0
+							etmg=0.d0
+							transpg=0.d0
+							gstomg=0.d0
+						endif
 					else
 						ruptkg=0.d0
-						rootlim=0.d0
-						etmg=0.d0
-						transpg=0.d0
-						gstomg=0.d0
 					endif
 				else
 					ruptkg=0.d0
-				endif
-				if (rain.gt.0.d0) then
-					inf=Min((ksat+kunsatvec(1))/2.d0*omgu*(1.d0+(2.d0*&			! (3.6), (Out[60]) 
+					ruptkvec=0.d0
+					ruptkg=0.d0
+					rootlim=0.d0
+					etmg=0.d0
+					transpg=0.d0
+					gstomg=0.d0		
+		 	endif	
+				
+			
+				if(rain.gt.0.d0) then
+					if(nlayers.ge.1) then
+					 inf=Min((ksat+kunsatvec(1))/2.d0*omgu*(1.d0+(2.d0*&			! (3.6), (Out[60]) 
 							pcapvec(1))/delyuvec(1)),omgu*rain)
+					else
+						inf=0.d0
+					endif	
 					infx=rain-inf
 				else	
 					inf=0.d0
 					infx=0.d0
 				endif
-				do i=1,nlayers-1
-					qblvec(i)= -(omgu*(1.d0 + (-pcapvec(i) + pcapvec(i+1))/&	! (3.4), (Out[62]) 
-							(0.5d0*delyuvec(i) + 0.5d0*delyuvec(i+1)))*&
-							0.5d0*(kunsatvec(i) + kunsatvec(i+1)))
-				enddo
-				qblvec(nlayers)= -(omgu*(1.d0 + (-pcapvec(nlayers)/&			! (3.5), (Out[62]) 
-							(0.5d0*delyuvec(nlayers))))*0.5d0*&
-							(kunsatvec(nlayers)+ksat))
+				if(nlayers.ge.1) then
+					do i=1,nlayers-1
+						qblvec(i)= -(omgu*(1.d0 + (-pcapvec(i) + pcapvec(i+1))/&	! (3.4), (Out[62]) 
+								(0.5d0*delyuvec(i) + 0.5d0*delyuvec(i+1)))*&
+								0.5d0*(kunsatvec(i) + kunsatvec(i+1)))
+					enddo
+					qblvec(nlayers)= -(omgu*(1.d0 + (-pcapvec(nlayers)/&			! (3.5), (Out[62]) 
+								(0.5d0*delyuvec(nlayers))))*0.5d0*&
+								(kunsatvec(nlayers)+ksat))
+					qblvec(nlayers+1:M)=0.d0
+				else
+					qblvec=0.d0
+				endif	
 				esoil= 0.0002d0*(1.d0-0.8d0*(pc+pcg(2)))*par*suvec(1)*omgu		! (3.9), (Out[141])
 				esoils= 0.0002d0*(1.d0-0.8d0*(pc+pcg(2)))*par*omgo				! (3.10), (Out[142], but suvec(1) instead of par removed)
 				spgfcf= (0.5d0*ksat*omgo*(ys - zr))/(cgs*Cos(go))				! (3.7), (Out[61])
-903				dys=(esoils + spgfcf + qblvec(nlayers))/(epsln*(-1.d0 +&		! (3.15), (Out[144], with suavg=Sum(suvec(....)/nlayers) 
-							Sum(suvec(1:nlayers))/nlayers))
-				dtys=99999d0
+				
+				!* MAKING SURE THAT NO SUBLAYER 'OVERFLOWS'
+!
+903	if(nlayers.ge.1) then
+					if(Maxval(suvec(1:nlayers)).gt.0.999d0) then
+						if(suvec(1).gt.0.999d0) then
+							if(-esoil+inf+qblvec(1)-ruptkvec(1)-&
+								ruptkg(1).gt.0.d0) then
+								qblvec(1)=esoil - inf + ruptkvec(1)+ruptkg(1)		! (Out[156]) +ruptkg(1)
+							endif	
+						endif
+						do i=2,nlayers
+							if(suvec(i).gt.0.999d0) then
+								if(-qblvec(i-1) + qblvec(i) - ruptkvec(i)-&
+											ruptkg(i).gt.0.d0) then
+									qblvec(i)=qblvec(i-1)+ruptkvec(i)+ruptkg(i)		! (Out[158])+ruptkg(i)
+								endif
+							endif
+						enddo
+					endif
+				endif
+				
+   	if(nlayers.ge.1) then
+!     dys=(-esoils - spgfcf - qblvec(nlayers))/(epsln*(1.d0 -&		! (3.15), using the saturation degree of the bottom layer only 
+!							suvec(nlayers)))
+     if(nlayers.ge.2) then
+      sumwsu=epsln*Sum(suvec(1:nlayers-1)*delyuvec(1:nlayers-1)) 
+					else
+						sumwsu=0
+					endif
+     if(ys.gt.zr) then
+					 dys=(-2.d0*Sqrt((cz - ys)*(cz - zr))*(esoils + spgfcf + &
+       qblvec(nlayers)))/(sumwsu + 2.d0*epsln*Sqrt((cz - ys)*(cz - zr)) - &
+       epsln*(omgu*(cz - zr) + delyuvec(nlayers))*suvec(nlayers))
+      domgu= -dys/(2.d0*Sqrt((cz - ys)*(cz - zr)))				! (Out[146])
+					 dyu= (dys*(-cz + zr))/(2.d0*Sqrt((cz - ys)*(cz - zr)))		! (Out[148])
+
+					else
+						dys=(esoils + spgfcf + qblvec(nlayers))/(epsln*(-1.d0 + suvec(nlayers)))
+      domgu=0.d0
+					 dyu=-dys	
+					endif
+				else
+					dys=(-esoils - spgfcf)/(epsln*(1.d0 -&		! (3.15), (Out[144], with suavg=0.999 (defining su<0.999 as unsaturated, otherwise saturated)
+							0.999d0))
+     domgu= -dys/(2.d0*Sqrt((cz - ys)*(cz - zr)))				! (Out[146])
+					dyu= (dys*(-cz + zr))/(2.d0*Sqrt((cz - ys)*(cz - zr)))		! (Out[148])       
+				endif
+				dtys=99999.d0
 				if (dys.lt.0.d0) then											! preventing ys from becoming negative or time step of being too large
 					if (ys.le.0.1d0*delyu) then
 						qblvec(nlayers)=0.d0
@@ -730,67 +803,138 @@ dtest=nyt*365
 					dtys=0.01d0*delyu/dys
 				endif
 				if(ys.gt.zr) then												
-					domgu= -dys/(2.d0*Sqrt((cz - ys)*(cz - zr)))				! (Out[146])
-					dyu= (dys*(-cz + zr))/(2.d0*Sqrt((cz - ys)*(cz - zr)))		! (Out[148])
 					if(dys.le.0.d0) then
 						dtys=Min(dtys,-(ys-zr)/dys)
 					endif
 				elseif(ys.lt.zr) then
-					domgu=0.d0
-					dyu=-dys	
 					if(dys.gt.0.d0) then
 						dtys=Min(dtys,(zr-ys)/dys)
 					endif
-				else
-					domgu=0.d0
-					dyu=-dys
 				endif
-!* MAKING SURE THAT NO SUBLAYER 'OVERFLOWS'
-!
-				if(Maxval(suvec(1:nlayers)).gt.0.999d0) then
-					if(suvec(1).gt.0.999d0) then
-						if(-esoil+inf+qblvec(1)-ruptkvec(1)-&
-							ruptkg(1).gt.0.d0) then
-							qblvec(1)=esoil - inf + ruptkvec(1)+ruptkg(1)		! (Out[156]) +ruptkg(1)
-						endif	
-					endif
-					do i=2,nlayers-1
-						if(suvec(i).gt.0.999d0) then
-							if(-qblvec(i-1) + qblvec(i) - ruptkvec(i)-&
-										ruptkg(i).gt.0.d0) then
-								qblvec(i)=qblvec(i-1)+ruptkvec(i)+ruptkg(i)		! (Out[158])+ruptkg(i)
-							endif
-						endif
-					enddo
-				endif
+    dtomgu=99999.d0
+    dtyu=99999.d0
+    if(omgu.lt.0.d0) then
+     dtomgu=Abs(0.01d0*omgu/domgu)
+     dtyu=Abs(0.01d0*yu/dyu)
+    endif
+
 !*-----steady-state tissue water (mqss) ---------------------------------------------- 
 !
-				mqss= Max(0.9d0*mqx,(mqx*(mpbar*(md*md+752.d0*md*mqx+mqx*mqx)*&	! (Out[257]) steady-state Mq
-						Sum((rsurfvec(1:postemp)/&
-						(rrootm + rsoilvec(1:postemp)))) - (md + mqx)*&
-						(md+mqx)*(etm - Sum(((-phydrostaticvec(1:postemp) -&
-						pcapvec(1:postemp))*rsurfvec(1:postemp))/&
-						(rrootm + rsoilvec(1:postemp))))))/&
-						(mpbar*(md*md + 752.d0*md*mqx + mqx*mqx)*&
-						Sum((rsurfvec(1:postemp)/(rrootm + &
-						rsoilvec(1:postemp))))))
+				if(nlayers.ge.1) then
+					mqss= Max(0.9d0*mqx,(mqx*(mpbar*(md*md+752.d0*md*mqx+mqx*mqx)*&	! (Out[257]) steady-state Mq
+							Sum((rsurfvec(1:postemp)/&
+							(rrootm + rsoilvec(1:postemp)))) - (md + mqx)*&
+							(md+mqx)*(etm - Sum(((-phydrostaticvec(1:postemp) -&
+							pcapvec(1:postemp))*rsurfvec(1:postemp))/&
+							(rrootm + rsoilvec(1:postemp))))))/&
+							(mpbar*(md*md + 752.d0*md*mqx + mqx*mqx)*&
+							Sum((rsurfvec(1:postemp)/(rrootm + &
+							rsoilvec(1:postemp))))))
+				else
+					mqss=0.9d0*mqx
+				endif
 				mqssmin=Min(mqssmin,mqss)
 !*-----transpiration, gstom and tissue water ---------------------------------------------- 
 !
 				if (mq.le.0.9d0*mqx) then										! makes sure that tissue water does not get below 0.9mqx
-					if (etm.gt.0.9d0*Sum(ruptkvec(1:nlayers))) then
-						if (Sum(ruptkvec(1:nlayers)).ge.0.d0) then
-							etm=Sum(ruptkvec(1:nlayers))
-							transp=etm*55555.555555555555d0						! (Out[249])			mol/s=m/s*10^6 g/m/(18g/mol)
-							gstom=transp/(a*vd)
-						else
-							write(6,'(a20,i2,a1,i2,a1,i4)') &
-									'vegetation	dies on: ',&
-									day(d),'/',month(d),'/',year(d)
-							netass=0.d0
-							RETURN												! if tissues water depleted, but still loosing water -> death
-						endif
-						mqss= Max(0.9d0*mqx,(mqx*(mpbar*(md*md+752.d0*md*mqx+&	! (Out[257]) steady-state Mq
+					if(nlayers.ge.1) then
+						if (etm.gt.0.9d0*Sum(ruptkvec)) then
+							if (Sum(ruptkvec).ge.0.d0) then
+								etm=Sum(ruptkvec)
+								transp=etm*55555.555555555555d0						! (Out[249])			mol/s=m/s*10^6 g/m/(18g/mol)
+								gstom=transp/(a*vd)
+							else
+								write(6,'(a20,i2,a1,i2,a1,i4)') &
+										'vegetation	dies on: ',&
+										day(d),'/',month(d),'/',year(d)
+								netass=0.d0
+								RETURN												! if tissues water depleted, but still loosing water -> death
+							endif
+							mqss= Max(0.9d0*mqx,(mqx*(mpbar*(md*md+752.d0*md*mqx+&	! (Out[257]) steady-state Mq
+								mqx*mqx)*Sum((rsurfvec(1:postemp)/&
+								(rrootm + rsoilvec(1:postemp)))) - (md + mqx)*&
+								(md+mqx)*(etm-Sum(((-phydrostaticvec(1:postemp)&
+								-pcapvec(1:postemp))*rsurfvec(1:postemp))/&
+								(rrootm + rsoilvec(1:postemp))))))/&
+								(mpbar*(md*md + 752.d0*md*mqx + mqx*mqx)*&
+								Sum((rsurfvec(1:postemp)/(rrootm + &
+								rsoilvec(1:postemp))))))
+							mqssmin=Min(mqssmin,mqss)
+						endif	
+				 else
+						etm=0.d0
+						transp=0.d0
+						gstom=0.d0
+				 endif				
+				endif
+				if(nlayers.ge.0) then
+					dmq=(Sum(ruptkvec)-etm)*1.d6							! (3.35), 1.e6 to convert from m (=1000kg/m2) to g/m2; (Out[250]) 				
+				else
+					dmq=-etm*1.d6
+				endif
+				dtmq=99999.d0
+				if (dmq.gt.0.d0) then											! avoids mq from becoming larger than mqx or smaller than 0.9mqx
+					dtmq=(mqx-mq)/dmq
+				elseif (dmq.lt.0.d0) then
+					dtmq=(0.9d0*mqx-mq)/dmq
+				endif
+				
+!*-----change in soil moisture ---------------------------------------------- 
+!
+				dtsu=99999.d0
+				if(nlayers.ge.1) then
+					if(nlayers.ge.2) then
+						dsuvec(nlayers)=(qblvec(nlayers) - &
+						 qblvec(nlayers-1) -&			! (3.17); (Out[151]) with added grass root uptake (ruptkg) to the equation
+							ruptkvec(nlayers)-ruptkg(nlayers))/&
+							(delyuvec(nlayers)*epsln*omgu)
+
+      if (dsuvec(nlayers).gt.0.d0) then
+       dtsu=Min(dtsu,0.9d0*(1.d0-suvec(nlayers))/dsuvec(nlayers),&
+        suvec(nlayers)/(dsuvec(nlayers)*10.d0))
+      elseif (dsuvec(nlayers).lt.0.d0) then
+       dtsu=Min(dtsu,0.1d0*(-suvec(nlayers)/dsuvec(nlayers)))
+      endif
+      do i=2,nlayers-1												! (3.17); (Out[150]) with added ruptkg(i) 
+       dsuvec(i)= (qblvec(i) - qblvec(i-1) - ruptkvec(i)-&
+        ruptkg(i))/(delyuvec(i)*epsln*omgu)
+       if (dsuvec(i).gt.0.d0) then
+        dtsu=Min(dtsu,0.9d0*(1.d0-suvec(i))/dsuvec(i),suvec(i)/&
+         (dsuvec(i)*10.d0))
+       elseif (dsuvec(i).lt.0.d0) then
+        dtsu=Min(dtsu,0.1d0*(-suvec(i)/dsuvec(i)))
+       endif
+      enddo
+     endif
+					dsuvec(1)=(-esoil + inf + qblvec(1) - ruptkvec(1)-&				! (3.16), (Out[149]) with added ruptkg(1)
+						ruptkg(1))/(delyuvec(1)*epsln*omgu)
+					if (dsuvec(1).gt.0.d0) then
+						dtsu=Min(dtsu,0.9d0*(1.d0-suvec(1))/dsuvec(1),&
+							suvec(1)/(dsuvec(1)*10.d0))
+					elseif (dsuvec(1).lt.0.d0) then
+						dtsu=Min(dtsu,0.1d0*(-suvec(1)/dsuvec(1)))
+					endif
+					dsuvec(nlayers+1:M)=0.d0
+				else
+					dsuvec=0.d0
+				endif
+!*----- Calculating maximum time step -------------------------------------	
+!
+901	if(Abs(mq-mqss).gt.mqx/1.d6) then
+					dtss=(mq-mqss)/(1.d6*(etm-Sum(ruptkvec)))
+					if(dtss.le.0.d0) then
+						dtss=9999.d0
+					endif
+				else
+					dtss=9999.d0
+				endif
+				dt=Min(dtss,dtmq,dtsu,dtys,3600.d0-time)
+				if(nlayers.ge.1) then
+					if(dt.eq.dtss) then			
+						pcapnewvec(1:nlayers)= (-1.d0 + (suvec(1:nlayers)+&			! (Out[54]) 
+							dsuvec(1:nlayers)*dt)**(-1.d0/mvg))**(1.d0/nvg)/alphavg
+						pcapnewvec(nlayers+1:M)=0.d0
+						mqssnew=Max(0.9d0*mqx,(mqx*(mpbar*(md*md+752.d0*md*mqx+&	! (Out[257]) steady-state Mq
 							mqx*mqx)*Sum((rsurfvec(1:postemp)/&
 							(rrootm + rsoilvec(1:postemp)))) - (md + mqx)*&
 							(md+mqx)*(etm-Sum(((-phydrostaticvec(1:postemp)&
@@ -799,73 +943,10 @@ dtest=nyt*365
 							(mpbar*(md*md + 752.d0*md*mqx + mqx*mqx)*&
 							Sum((rsurfvec(1:postemp)/(rrootm + &
 							rsoilvec(1:postemp))))))
-						mqssmin=Min(mqssmin,mqss)
-					endif	
-				endif				
-				dmq=(Sum(ruptkvec(1:nlayers))-etm)*1.d6							! (3.35), 1.e6 to convert from m (=1000kg/m2) to g/m2; (Out[250]) 				
-				dtmq=99999.d0
-				if (dmq.gt.0.d0) then											! avoids mq from becoming larger than mqx or smaller than 0.9mqx
-					dtmq=(mqx-mq)/dmq
-				elseif (dmq.lt.0.d0) then
-					dtmq=(0.9d0*mqx-mq)/dmq
-				endif
-!*-----change in soil moisture ---------------------------------------------- 
-!
-				dtsu=99999.d0
-				dsuvec(nlayers)=(qblvec(nlayers) - qblvec(nlayers-1) -&			! (3.17); (Out[151]) with added grass root uptake (ruptkg) to the equation
-					ruptkvec(nlayers)-ruptkg(nlayers))/&
-					(delyuvec(nlayers)*epsln*omgu)
-				if (dsuvec(nlayers).gt.0.d0) then
-					dtsu=Min(dtsu,0.9d0*(1.d0-suvec(nlayers))/dsuvec(nlayers),&
-						suvec(nlayers)/(dsuvec(nlayers)*10.d0))
-				elseif (dsuvec(nlayers).lt.0.d0) then
-					dtsu=Min(dtsu,0.1d0*(-suvec(nlayers)/dsuvec(nlayers)))
-				endif
-				do i=2,nlayers-1												! (3.17); (Out[150]) with added ruptkg(i) 
-					dsuvec(i)= (qblvec(i) - qblvec(i-1) - ruptkvec(i)-&
-						ruptkg(i))/(delyuvec(i)*epsln*omgu)
-					if (dsuvec(i).gt.0.d0) then
-						dtsu=Min(dtsu,0.9d0*(1.d0-suvec(i))/dsuvec(i),suvec(i)/&
-							(dsuvec(i)*10.d0))
-					elseif (dsuvec(i).lt.0.d0) then
-						dtsu=Min(dtsu,0.1d0*(-suvec(i)/dsuvec(i)))
-					endif
-				enddo
-				dsuvec(1)=(-esoil + inf + qblvec(1) - ruptkvec(1)-&				! (3.16), (Out[149]) with added ruptkg(1)
-					ruptkg(1))/(delyuvec(1)*epsln*omgu)
-				if (dsuvec(1).gt.0.d0) then
-					dtsu=Min(dtsu,0.9d0*(1.d0-suvec(1))/dsuvec(1),&
-						suvec(1)/(dsuvec(1)*10.d0))
-				elseif (dsuvec(1).lt.0.d0) then
-					dtsu=Min(dtsu,0.1d0*(-suvec(1)/dsuvec(1)))
-				endif
-!*----- Calculating maximum time step -------------------------------------	
-!
-901				if(Abs(mq-mqss).gt.mqx/1.d6) then
-					dtss=(mq-mqss)/(1.d6*(etm-Sum(ruptkvec(1:nlayers))))
-					if(dtss.le.0.d0) then
-						dtss=9999.d0
-					endif
-				else
-					dtss=9999.d0
-				endif
-				dt=Min(dtss,dtmq,dtsu,dtys,3600.d0-time)
-				if(dt.eq.dtss) then			
-					pcapnewvec(1:nlayers)= (-1.d0 + (suvec(1:nlayers)+&			! (Out[54]) 
-						dsuvec(1:nlayers)*dt)**(-1.d0/mvg))**(1.d0/nvg)/alphavg
-					pcapnewvec(nlayers+1:M)=0.d0
-					mqssnew=Max(0.9d0*mqx,(mqx*(mpbar*(md*md+752.d0*md*mqx+&	! (Out[257]) steady-state Mq
-						mqx*mqx)*Sum((rsurfvec(1:postemp)/&
-						(rrootm + rsoilvec(1:postemp)))) - (md + mqx)*&
-						(md+mqx)*(etm-Sum(((-phydrostaticvec(1:postemp)&
-						-pcapvec(1:postemp))*rsurfvec(1:postemp))/&
-						(rrootm + rsoilvec(1:postemp))))))/&
-						(mpbar*(md*md + 752.d0*md*mqx + mqx*mqx)*&
-						Sum((rsurfvec(1:postemp)/(rrootm + &
-						rsoilvec(1:postemp))))))
-					if(Abs(mqssnew-mqss).gt.mqx/1.d4) then
-						mqss=mqss+0.5d0*(mqssnew-mqss)
-						go to 901
+						if(Abs(mqssnew-mqss).gt.mqx/1.d4) then
+							mqss=mqss+0.5d0*(mqssnew-mqss)
+							go to 901
+						endif
 					endif
 				endif
 !*----- Calculating state variables at next time step-----------------------	
@@ -873,25 +954,75 @@ dtest=nyt*365
 				time=time+dt
 				mqnew=mq+dmq*dt
 				ysnew=ys+dys*dt
-				sunewvec(1:nlayers)=suvec(1:nlayers)+dt*dsuvec(1:nlayers)
+				if(nlayers.ge.1) then
+				 sunewvec(1:nlayers)=suvec(1:nlayers)+dt*dsuvec(1:nlayers)
+				else
+					sunewvec=1.d0
+				endif
 				if(ysnew.gt.zr) then
-					omgunew=(cz - ysnew)/Sqrt((cz - ysnew)*(cz - zr))
+					if(ysnew.lt.cz) then
+					 omgunew=(cz - ysnew)/Sqrt((cz - ysnew)*(cz - zr))
+					else
+						omgunew=0.d0
+					endif
 				else 
 					omgunew=1.d0
 				endif
 				omgonew=1.d0-omgunew
 				yunew=(cz-ysnew)/omgunew
-				io=dt*(inf-esoil-esoils-spgfcf-Sum(ruptkvec(1:nlayers))-&		! (3.19)
-					Sum(ruptkg(1:nlayers)))
+				io=dt*(inf-esoil-esoils-spgfcf-Sum(ruptkvec)-&		! (3.19)
+					Sum(ruptkg))
 				nlayersnew=Floor(yunew/delyu)
+				if(yunew.lt.delyu) then
+					nlayersnew=Ceiling(yunew/delyu)
+				endif
 				delyunewvec(:)=delyu
 				delyunewvec(nlayersnew)=yunew - (nlayersnew - 1)*delyu
-				wsnewvec(1:nlayersnew-1)= sunewvec(1:nlayersnew-1)*epsln*&		! (3.18) 
-					omgunew*delyunewvec(1:nlayersnew-1)
-				wsnewvec(nlayersnew)= Sum(wsvec(1:nlayers))+ys*epsln+io -&		! (3.20) 
-					Sum(wsnewvec(1:nlayersnew-1))-ysnew*epsln
-				sunewvec(nlayersnew)= wsnewvec(nlayersnew)/&					! (3.21) 	
-					(epsln*delyunewvec(nlayersnew)*omgunew)
+				if(nlayersnew.gt.1) then
+					wsnewvec(1:nlayersnew-1)= sunewvec(1:nlayersnew-1)*epsln*&		! (3.18) 
+						omgunew*delyunewvec(1:nlayersnew-1)
+					wsnewvec(nlayersnew)= Sum(wsvec(1:nlayers))+ys*epsln+io -&		! (3.20) 
+						Sum(wsnewvec(1:nlayersnew-1))-ysnew*epsln
+!					sunewvec(nlayersnew)= wsnewvec(nlayersnew)/&					! (3.21) 	
+!						(epsln*delyunewvec(nlayersnew)*omgunew)
+				elseif(nlayersnew.eq.1) then
+					if(nlayers.gt.0) then
+						wsnewvec(nlayersnew)= Sum(wsvec(1:nlayers))+ys*epsln+io -&		! (3.20) 
+						  ysnew*epsln
+					else
+						wsnewvec(nlayersnew)= ys*epsln+io-ysnew*epsln		! (3.20) 
+					endif
+				 sunewvec(nlayersnew)=wsnewvec(nlayersnew)/&					! (3.21) 	
+						(epsln*delyunewvec(nlayersnew)*omgunew)
+				else
+					sunewvec=1.d0
+				endif
+						  
+	!*----- Expansion of saturated zone if su(nlayers)==1------------
+				if(sunewvec(nlayersnew).ge.1.d0) then
+	    !*---- Insertion to dump excessive water into runoff				
+					spgfcf=spgfcf+delyuvec(nlayersnew)*(sunewvec(nlayersnew)-1.d0)*epsln
+					io=dt*(inf-esoil-esoils-spgfcf-Sum(ruptkvec)-&		! (3.19)
+					 Sum(ruptkg))
+					!*---- End of insertion	
+					yunew=Sum(delyunewvec(1:nlayersnew-1))
+					nlayersnew=Floor(yunew/delyu)
+					if(yunew.lt.cz-zr) then
+					 ysnew=(cz**2.d0 - yunew**2.d0 - cz*zr)/(cz - zr) ! from (3.73)
+					else
+						ysnew=cz-yunew
+					endif
+					if(ysnew.gt.zr) then
+						if(ysnew.lt.cz) then
+					  omgunew=(cz - ysnew)/Sqrt((cz - ysnew)*(cz - zr))
+						else
+							omgunew=0.d0
+						endif
+				 else 
+					 omgunew=1.d0
+				 endif
+				 omgonew=1.d0-omgunew
+				endif	
 				sunewvec(nlayersnew+1:M)= 1.d0
 !*----- adding up hourly fluxes------------------------------------
 !
@@ -913,7 +1044,7 @@ dtest=nyt*365
 					hesoil=hesoil+dt*(esoil+esoils)
 					hetm=hetm+dt*etm
 					hetmg=hetmg+dt*etmg(2,2)	
-					hruptk=hruptk+dt*Sum(ruptkvec(1:nlayers))
+					hruptk=hruptk+dt*Sum(ruptkvec)
 					hinf=hinf+inf*dt
 				endif		
 !*------END OF HOUR----------------------------------------------------
@@ -930,7 +1061,7 @@ dtest=nyt*365
 				(cpccg(2)+rrg+tcg(2))											! rl does not need to be included here as ass=-rl if j=0 (at night)
 !*----- summary------------------------------------------------------
 !
-			ruptk_d=ruptk_d+Sum(ruptkvec(1:nlayers))*3600.d0
+			ruptk_d=ruptk_d+Sum(ruptkvec)*3600.d0
 			vd_d=vd_d+vd
 			jmax_d=jmax_d+jmax(2)
 			jmaxg_d=jmaxg_d+jmaxg(2)
