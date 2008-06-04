@@ -55,12 +55,12 @@
 				objfun,sumvar
 	REAL*8 :: worstbest,bestobj,bestincomp,resolution
 	CHARACTER(9), DIMENSION(:), ALLOCATABLE :: parname
-	INTEGER(1) :: command
+	INTEGER(1) :: command,newbest
 	CHARACTER(24) :: logdate
 	CHARACTER(12) :: evolution
 	CHARACTER(3) :: str
 	CHARACTER(60) :: outformat,informat,loopformat
-	LOGICAL :: newbest=.false.
+
 	EXTERNAL compar
 	!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	! Initialize the random number generator (standard subroutine, based on the date and time)
@@ -197,7 +197,10 @@
 	!
 	do while(nrun.lt.20000.and.nloop.lt.500)
 		nloop=nloop+1
-		call sortcomp(invar,objfun)								! [SORT ENTIRE ARRAYS]
+ !Saving the best OF of the worst complex in worstbest for assessment of gene pool mixing 
+		first=1+(ncomp2-1)*mopt
+		worstbest=objfun(first)
+ 	call sortcomp(invar,objfun)								! [SORT ENTIRE ARRAYS]
 	!
 	! WRITE BEST_PARAMETERS FILE FOR PREVIOUS LOOP
 	!
@@ -205,15 +208,10 @@
 		'e12.6,/)') nloop,objfun(1)
 		write(2,'("Finished ",i4," main loops --- best objective function =",'// &
 		'e12.6,/)') nloop,objfun(1)
-		if(newbest) then
-			write(3,outformat) invar(:,1),bestobj
-			newbest=.false.
-			nsincebest=0
-		else
-			write(*,'(/"No improvement in OF for",i5," loops")') nsincebest
-			write(2,'(/"No improvement in OF for",i5," loops")') nsincebest
+		write(*,'(/"No improvement in OF for",i5," loops")') nsincebest
+		write(2,'(/"No improvement in OF for",i5," loops")') nsincebest
 			nsincebest=nsincebest+1
-		endif
+	
 	!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	! ASSESS CONVERGENCE
 	! CHANGED BY STAN TO CALCULATE THE FLUCTUATION RANGE RELATIVELY TO
@@ -228,8 +226,10 @@
 		maxcv=maxval(cv)										! maximum distance
 		print*,'Greatest parameter range: ',maxcv,'% for optimised parameter ',parname(optid(maxloc(cv)))
 		write(2,'("Greatest parameter range: ",f5.2,"% for optimised parameter ",a9)') maxcv,parname(optid(maxloc(cv)))
-		if(maxcv.ge.resolution.AND.nsincebest.le.patience) then
-			call writepars
+		if(maxcv.ge.resolution) then
+   if(nsincebest.le.patience) then
+			 call writepars
+   endif
 		elseif(nsincebest.gt.patience) then
 			write(*,'(/"No improvement in OF for",i5," loops"/"  About to give up...")') nsincebest
 			write(2,'(/"No improvement in OF for",i5," loops"/"  About to give up...")') nsincebest
@@ -250,8 +250,10 @@
 			else
 				call sortcomp(invar,objfun)						! [SORT ENTIRE ARRAYS]
 				call writepars
-				newbest=.true. 
-				cycle
+				newbest=1
+    nsincebest=0
+    write(3,outformat) invar(:,1),bestobj
+    cycle
 			endif
 		else
 			write(*,'(/"First Convergence criterion satisfied..."/"  parameter ranges are '// &
@@ -276,7 +278,11 @@
 				close(2)
 				return
 			else
-				newbest=.true. 
+				call sortcomp(invar,objfun)						! [SORT ENTIRE ARRAYS]
+				call writepars
+				newbest=1
+    write(3,outformat) invar(:,1),bestobj
+			 nsincebest=0
 				cycle
 			endif
 		endif
@@ -284,12 +290,16 @@
 	! EXECUTE CCE ALGORITHM
 	!
 		if(ncomp2.gt.1) then
-			if(nloop.gt.0.and.ncomp2.gt.ncompmin) then
-				ncomp2=ncomp2-1									! REDUCE NUMBER OF COMPLEXES AS nloop INCREASES
-			elseif(ncomp2.le.ncomp/2.and.worstbest.le.objfun(1+(ncomp2-1)*mopt)) then
-				print*,'No gene pool mixing ... reducing number of complexes by one.'
-				write(2,'("No gene pool mixing ... reducing number of complexes by one.")')
-				ncomp2=ncomp2-1
+			if(nloop.gt.0) then
+    if(ncomp2.gt.ncompmin) then
+				 ncomp2=ncomp2-1									! REDUCE NUMBER OF COMPLEXES AS nloop INCREASES
+			 else
+     if(worstbest.le.objfun(1+(ncomp2-1)*mopt)) then
+      print*,'No gene pool mixing ... reducing number of complexes by one.'
+      write(2,'("No gene pool mixing ... reducing number of complexes by one.")')
+      ncomp2=ncomp2-1
+     endif
+    endif
 			endif
 		endif
   	!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -666,7 +676,8 @@
 		open(4,file='currentbest.txt')
 		write(4,outformat) invar(:,1),bestobj
 		close(4)
-		newbest=.true.
+		newbest=1
+  nsincebest=0
 	elseif(newobjfun.gt.bestincomp) then
 		bestincomp=newobjfun
 	endif
