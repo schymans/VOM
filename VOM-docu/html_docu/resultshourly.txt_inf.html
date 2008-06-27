@@ -1,24 +1,23 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
+<html><head>
 <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
-<title>resultshourly.txt_inf</title>
-</head>
+<title>resultshourly.txt_inf</title></head>
+
 <body>
-<p style="float:right; border-width:1px; border-style:solid">
-<object data="navi-bar.html" type="text/html" ></object>
+<p style="border-style: solid; border-width: 1px; float: right;">
+<object data="navi-bar.html" type="text/html"></object>
 </p>
 <h1>VOM - Model Description</h1>
 <h2>VOM - info</h2>
 <h3>resultshourly.txt</h3>
-<hr style="clear:right;">
+<hr style="clear: right;">
 <hr>
 <h2>Description of resultshourly.txt</h2>
 <p>The file "resultshourly.txt" is an output file from VOM, containing
-hourly weather, flux and state variable data in ascii format.</p>
+hourly weather, flux and state variable data in ascii format.</p><p>PLEASE TAKE NOTICE OF THE UNITS (SOME OF THEM PER SECOND, OTHERS PER HOUR).</p>
 <h3>Fields</h3>
 <table border="1">
-<tr>
+<tbody><tr>
 	<td align="center">year</td>
 	<td align="center">year</td>
 </tr>
@@ -48,7 +47,7 @@ hourly weather, flux and state variable data in ascii format.</p>
 </tr>
 <tr>
 	<td align="center">par</td>
-	<td align="center">Photosynthetically active Photon Flux Density (in mol m<sup>2</sup> s<sup>-1</sup>)</td>
+	<td align="center">Photosynthetically active Photon Flux Density (in mol m<sup>-2</sup> s<sup>-1</sup>)</td>
 </tr>
 <tr>
 	<td align="center">vd</td>
@@ -56,7 +55,7 @@ hourly weather, flux and state variable data in ascii format.</p>
 </tr>
 <tr>
 	<td align="center">esoil</td>
-	<td align="center">Modelled soil evaporation (in m/s)</td>
+	<td align="center">Hourly soil evaporation (in m h<sup>-2</sup>)</td>
 </tr>
 <tr>
 	<td align="center">pc</td>
@@ -64,19 +63,19 @@ hourly weather, flux and state variable data in ascii format.</p>
 </tr>
 <tr>
 	<td align="center">jmax25_t</td>
-	<td align="center">Modelled electron transport capacity by trees (in mol m<sup>2</sup> s<sup>-1</sup>)</td>
+	<td align="center">Modelled electron transport capacity by trees (in mol m<sup>-2</sup> s<sup>-1</sup>)</td>
 </tr>
 <tr>
 	<td align="center">jmax25_g</td>
-	<td align="center">Modelled electron transport capacity by grasses (in mol m<sup>2</sup> s<sup>-1</sup>)</td>
+	<td align="center">Modelled electron transport capacity by grasses (in mol m<sup>-2</sup> s<sup>-1</sup>)</td>
 </tr>
 <tr>
 	<td align="center">mq</td>
-	<td align="center">Modelled tissue water content in trees (in kg m<sup>2</sup>)</td>
+	<td align="center">Modelled tissue water content in trees (in kg m<sup>-2</sup>)</td>
 </tr>
 <tr>
 	<td align="center">rl</td>
-	<td align="center">Leaf respiration rate by trees and grasses combined (in mol m<sup>2</sup> s<sup>-1</sup>)</td>
+	<td align="center">Leaf respiration rate by trees and grasses combined (in mol m<sup>-2</sup> s<sup>-1</sup>)</td>
 </tr>
 <tr>
 	<td align="center">lambda_t</td>
@@ -88,23 +87,23 @@ hourly weather, flux and state variable data in ascii format.</p>
 </tr>
 <tr>
 	<td align="center">rr</td>
-	<td align="center">Root respiration rate by trees and grasses combined (in mol m<sup>2</sup> s<sup>-1</sup>)</td>
+	<td align="center">Root respiration rate by trees and grasses combined (in mol m<sup>-2</sup> s<sup>-1</sup>)</td>
 </tr>
 <tr>
 	<td align="center">ass_t</td>
-	<td align="center">CO<sub>2</sub> uptake rate by trees (in mol m<sup>2</sup> s<sup>-1</sup>)</td>
+	<td align="center">Hourly CO<sub>2</sub> uptake rate by trees (in mol m<sup>-2</sup> h<sup>-1</sup>)</td>
 </tr>
 <tr>
 	<td align="center">ass_g</td>
-	<td align="center">CO<sub>2</sub> uptake rate by grasses (in mol m<sup>2</sup> s<sup>-1</sup>)</td>
+	<td align="center">Hourly CO<sub>2</sub> uptake rate by grasses (in mol m<sup>-2</sup> h<sup>-1</sup>)</td>
 </tr>
 <tr>
 	<td align="center">het_t</td>
-	<td align="center">Transpiration rate by trees (in m/s)</td>
+	<td align="center">Hourly transpiration rate by trees (in m h<sup>-1</sup>)</td>
 </tr>
 <tr>
 	<td align="center">het_g</td>
-	<td align="center">Transpiration rate by grasses (in m/s)</td>
+	<td align="center">Hourly transpiration rate by grasses (in m h<sup>-1</sup>)</td>
 </tr>
 <tr>
 	<td align="center">su_1</td>
@@ -124,14 +123,14 @@ hourly weather, flux and state variable data in ascii format.</p>
 </tr>
 <tr>
 	<td align="center">spgfcf</td>
-	<td align="center">Seepage face flow (= subsurface runoff, in m/s)</td>
+	<td align="center">Hourly seepage face flow (= subsurface
+	  runoff, in m h<sup>-1</sup>)</td>
 </tr>
 <tr>
 	<td align="center">infx</td>
-	<td align="center">Infiltration excess runoff (in m/s)</td>
+	<td align="center">Hourly infiltration excess runoff (in m h<sup>-1</sup>)</td>
 </tr>
-</table>
+</tbody></table>
 <p>The first line contains the variable names.</p>
 <hr>
-</body>
-</html>
+</body></html>
