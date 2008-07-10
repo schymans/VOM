@@ -37,6 +37,8 @@ INTEGER stat
 CHARACTER(3) str
 REAL*8, ALLOCATABLE :: invar(:)
 REAL*8, DIMENSION(1) :: netass
+!REAL*8, DIMENSION(1) :: dttarget
+
 INTEGER nrun,success,npar,ios
 	!--------------------------------------------------------------------
 	! Parameter definitions for sce 
