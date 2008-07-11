@@ -46,7 +46,7 @@ subroutine waterbalance(init)
  implicit none
 
  REAL*8 dttarget,yutarget,dummy,timenew
- INTEGER(1), INTENT(in) :: optmode,init
+ INTEGER(1), INTENT(in) :: init
  logical isnand
  logical isinfd 
 
