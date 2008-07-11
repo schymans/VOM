@@ -34,7 +34,7 @@
 !
 subroutine transpmodel(invar,nrun,netass,option1)
 
- use gasexchwatbal
+ use vegwatbal
 
  implicit none
 

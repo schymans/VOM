@@ -1,4 +1,12 @@
-module gasexchwatbal
+!********************************************************************
+!*  Module defining variables and parameters for the vegetation model
+!*  (transpmodel) and water balance model (watbal).
+!*--------------------------------------------------------------------
+!*  Author: Stan Schymanski, Max Planck Institute for Biogeochemistry
+!*  Email: sschym@bgc-jena.mpg.de
+!*  06/2008
+!*--------------------------------------------------------------------
+module vegwatbal
 implicit none
 save
  CHARACTER(60) dailyformat,hourlyformat
@@ -60,4 +68,4 @@ save
   hinfx,hio,hesoil,hetm,inf,omgunew,wc,wcnew,sumsutop,sumdsutop,&
   omgonew,error,hinf,dtss
 
-end module gasexchwatbal
+end module vegwatbal

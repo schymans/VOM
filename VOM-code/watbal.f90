@@ -42,7 +42,7 @@
 
 !subroutine waterbalance(time,dttarget,optmode)
 subroutine waterbalance(init) 
- use gasexchwatbal
+ use vegwatbal
  implicit none
 
  REAL*8 dttarget,yutarget,dummy,timenew
