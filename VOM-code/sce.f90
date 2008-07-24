@@ -65,7 +65,7 @@
 	!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	! Initialize the random number generator (standard subroutine, based on the date and time)
 	!
-	CALL RANDOM_SEED( )
+	!CALL RANDOM_SEED( )
 	!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	! WRITE SCREEN HEADER
 	!
@@ -197,7 +197,7 @@
 	!
 	do while(nrun.lt.20000.and.nloop.lt.500)
 		nloop=nloop+1
- !Saving the best OF of the worst complex in worstbest for assessment of gene pool mixing 
+	!Saving the best OF of the worst complex in worstbest for assessment of gene pool mixing 
 		first=1+(ncomp2-1)*mopt
 		worstbest=objfun(first)
  	call sortcomp(invar,objfun)								! [SORT ENTIRE ARRAYS]
@@ -227,34 +227,35 @@
 		print*,'Greatest parameter range: ',maxcv,'% for optimised parameter ',parname(optid(maxloc(cv)))
 		write(2,'("Greatest parameter range: ",f5.2,"% for optimised parameter ",a9)') maxcv,parname(optid(maxloc(cv)))
 		if(maxcv.ge.resolution) then
-   if(nsincebest.le.patience) then
-			 call writepars
-   endif
-		elseif(nsincebest.gt.patience) then
-			write(*,'(/"No improvement in OF for",i5," loops"/"  About to give up...")') nsincebest
-			write(2,'(/"No improvement in OF for",i5," loops"/"  About to give up...")') nsincebest
-			call optsensitivity(invar,objfun,optid,parname,parmin,parmax,&
-					outformat,nrun,success,bestobj,resolution)
-			if (success.eq.1) then
-				call sortcomp(invar,objfun)						! [SORT ENTIRE ARRAYS]
+			if(nsincebest.le.patience) then
 				call writepars
-				write(*,'(/"Optimisation completed successfully."/)')
-				write(2,'(/"Optimisation completed successfully."/)')
-				print*,char(7)
-				print*,char(7)
-				print*,char(7)			
-				close(8)
-				close(3)
-				close(2)	
-				return
-			else
-				call sortcomp(invar,objfun)						! [SORT ENTIRE ARRAYS]
-				call writepars
-				newbest=1
-    nsincebest=0
-    write(3,outformat) invar(:,1),bestobj
-    cycle
 			endif
+			if(nsincebest.gt.patience) then
+				write(*,'(/"No improvement in OF for",i5," loops"/"  About to give up...")') nsincebest
+				write(2,'(/"No improvement in OF for",i5," loops"/"  About to give up...")') nsincebest
+				call optsensitivity(invar,objfun,optid,parname,parmin,parmax,&
+					outformat,nrun,success,bestobj,resolution)
+				if (success.eq.1) then
+					call sortcomp(invar,objfun)						! [SORT ENTIRE ARRAYS]
+					call writepars
+					write(*,'(/"Optimisation completed successfully."/)')
+					write(2,'(/"Optimisation completed successfully."/)')
+					print*,char(7)
+					print*,char(7)
+					print*,char(7)			
+					close(8)
+					close(3)
+					close(2)	
+					return
+				else
+					call sortcomp(invar,objfun)						! [SORT ENTIRE ARRAYS]
+					call writepars
+					newbest=1
+					nsincebest=0
+					write(3,outformat) invar(:,1),bestobj
+					cycle
+				endif
+			endif	
 		else
 			write(*,'(/"First Convergence criterion satisfied..."/"  parameter ranges are '// &
 			'all less than 0.1 %"//)')
@@ -281,8 +282,8 @@
 				call sortcomp(invar,objfun)						! [SORT ENTIRE ARRAYS]
 				call writepars
 				newbest=1
-    write(3,outformat) invar(:,1),bestobj
-			 nsincebest=0
+				write(3,outformat) invar(:,1),bestobj
+				nsincebest=0
 				cycle
 			endif
 		endif
@@ -291,15 +292,15 @@
 	!
 		if(ncomp2.gt.1) then
 			if(nloop.gt.0) then
-    if(ncomp2.gt.ncompmin) then
-				 ncomp2=ncomp2-1									! REDUCE NUMBER OF COMPLEXES AS nloop INCREASES
-			 else
-     if(worstbest.le.objfun(1+(ncomp2-1)*mopt)) then
-      print*,'No gene pool mixing ... reducing number of complexes by one.'
-      write(2,'("No gene pool mixing ... reducing number of complexes by one.")')
-      ncomp2=ncomp2-1
-     endif
-    endif
+				if(ncomp2.gt.ncompmin) then
+					ncomp2=ncomp2-1									! REDUCE NUMBER OF COMPLEXES AS nloop INCREASES
+				else
+					if(worstbest.le.objfun(1+(ncomp2-1)*mopt)) then
+						print*,'No gene pool mixing ... reducing number of complexes by one.'
+						write(2,'("No gene pool mixing ... reducing number of complexes by one.")')
+						ncomp2=ncomp2-1
+					endif
+				endif
 			endif
 		endif
   	!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
