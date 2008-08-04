@@ -823,8 +823,8 @@ subroutine transpmodel(invar,nrun,netass,option1)
     wsnew=ysnew*epsln + Sum(wsnewvec(1:nlayersnew)) 
     error=wsold+iocum-wsnew
 
-    if(abs(error/wsold).gt.1.d-4) then         ! gives an error message if accumulated error exceeds 10^-4 of ws
-     write(6,*)'Error in water balance [%]:',error*100.d0,'in=',in,&
+    if(abs(error).gt.1.d-3) then         ! gives an error message if accumulated error exceeds 1 mm
+     write(6,*)'Error in water balance [mm]:',error,'in=',in,&
       'io=',io,'wsold=',wsold,'wsnew=',wsnew
      return
     endif
