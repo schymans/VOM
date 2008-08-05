@@ -111,6 +111,9 @@ subroutine waterbalance(init)
   qblvec(nlayers)= -(omgu*(1.d0 + (-pcapvec(nlayers)/&   ! (3.5), (Out[62]) 
    (0.5d0*delyuvec(nlayers))))*0.5d0*&
    (kunsatvec(nlayers)+ksat))
+  if(yu.eq.cz.and.qblvec(nlayers).gt.0.d0) then
+   qblvec(nlayers)=0.d0    ! If the bottom boundary is bedrock, then no water can flow upwards.
+  endif
   qblvec(nlayers+1:M)=0.d0
  else
   qblvec=0.d0
@@ -259,8 +262,12 @@ subroutine waterbalance(init)
   endif
  endif
 
+
  if(yutarget.gt.yu) then 
   if(ys.lt.zr) then
+   if(yutarget.gt.cz) then
+    yutarget=cz                  !* PREVENTING NEGATIVE YS
+   endif
    dttarget=(-wc + epsln*(cz + yutarget*(-1.d0 + suvec(nlayers)) + delyu*(sumsutop + &
     suvec(nlayers) - nlayers*suvec(nlayers))))/(io - &
     epsln*yutarget*dsuvec(nlayers) + delyu*epsln*(-sumdsutop + (-1.d0 + &
