@@ -248,7 +248,7 @@ subroutine waterbalance(init)
    yutarget=Ceiling(yu/delyu)*delyu
   endif
   if(yu.lt.cz-zr.and.yutarget.gt.cz-zr) then
-   yutarget=zr
+   yutarget=cz-zr
   endif
 
  elseif(yutarget.lt.yu) then
@@ -258,7 +258,7 @@ subroutine waterbalance(init)
    yutarget=Floor(yu/delyu)*delyu
   endif
   if(yu.gt.cz-zr.and.yutarget.lt.cz-zr) then
-   yutarget=zr
+   yutarget=cz-zr
   endif
  endif
 
@@ -306,7 +306,7 @@ subroutine waterbalance(init)
  !*----- Calculating state variables at next time step----------------------- 
  !   
 
- if(ys.lt.zr.or.yutarget.gt.cz-zr) then
+ if(ys.le.zr.and.yutarget.ge.cz-zr) then
   yunew=(-(cz*epsln) + dt*io + wc - delyu*epsln*(dt*sumdsutop + sumsutop - &
    dt*(-1 + nlayers)*dsuvec(nlayers) + suvec(nlayers) - &
    nlayers*suvec(nlayers)))/(epsln*(-1 + dt*dsuvec(nlayers) + &
