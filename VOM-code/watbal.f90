@@ -357,7 +357,9 @@ subroutine waterbalance(init)
  ysnew=cz-omgunew*yunew
  nlayersnew=Ceiling(yunew/delyu) ! The bottom layer is smaller than or equal to delyu
  delyunewvec(:)=delyu
- delyunewvec(nlayersnew)=yunew - (nlayersnew - 1)*delyu
+ if(nlayersnew.ge.1) then 
+  delyunewvec(nlayersnew)=yunew - (nlayersnew - 1)*delyu
+ endif
 
  if(nlayers.ge.1) then
   sunewvec(1:nlayers)=suvec(1:nlayers)+dt*dsuvec(1:nlayers)
