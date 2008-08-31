@@ -394,7 +394,10 @@ subroutine waterbalance(init)
  else  !*If nlayers=0 and io<0, then make yu increase to yu=delyuvec or any value small enough to fit within dt
   if(io.lt.0.d0) then
    yunew=2.d0*delyu
-   do while(dt.gt.Min(dtsu,dttarget,dtmax))  !*yunew must be small enough to be reached within dtmax
+   dt=(-1.d0*(1.d0*wc - 1.d0*epsln*(cz - (1.d0*yunew**2.d0)/&
+    (cz - 1.d0*zr) + (yunew**2.d0*(1.d0/(1.d0 + 0.5d0**nvg*&
+    (alphavg*yunew)**nvg))**mvg)/(cz - 1.d0*zr))))/io
+   do while(dt.gt.Min(dtsu,dtmax))  !*yunew must be small enough to be reached within dtmax
     yunew=yunew/2.d0
     dt=(-1.d0*(1.d0*wc - 1.d0*epsln*(cz - (1.d0*yunew**2.d0)/&
      (cz - 1.d0*zr) + (yunew**2.d0*(1.d0/(1.d0 + 0.5d0**nvg*&
