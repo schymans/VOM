@@ -573,12 +573,18 @@ subroutine transpmodel(invar,nrun,netass,option1)
     !*----- setting variables from previous loop---------------------------
     !
     if(nlayersnew.ge.1) then
-     rsurfvec(1:nlayersnew)=rsurfvec(1:nlayersnew)/(omgu*&
-      delyuvec(1:nlayersnew))*omgunew*&
-      delyunewvec(1:nlayersnew)
-     rsurfg(1:nlayersnew)=rsurfg(1:nlayersnew)/(omgu*&
-      delyuvec(1:nlayersnew))*omgunew*&
-      delyunewvec(1:nlayersnew) 
+     if(nlayers.ge.1) then            ! Need to account for the change in rsurf due to a change in unsaturated soil volume.
+      rsurfvec(1:nlayersnew)=rsurfvec(1:nlayersnew)/(omgu*&
+       delyuvec(1:nlayersnew))*omgunew*&
+       delyunewvec(1:nlayersnew)
+      rsurfg(1:nlayersnew)=rsurfg(1:nlayersnew)/(omgu*&
+       delyuvec(1:nlayersnew))*omgunew*&
+       delyunewvec(1:nlayersnew) 
+     else             ! If nlayers at the previous time step was 0, rsurf was set to rsurfmin.
+      rsurfvec(1:nlayersnew)=rsurfvec(1:nlayersnew)*omgunew*&
+       delyunewvec(1:nlayersnew)
+      rsurfg(1:nlayersnew)=rsurfg(1:nlayersnew)*omgunew*&
+       delyunewvec(1:nlayersnew)
     endif
 
     if(nlayersnew.lt.pos) then
