@@ -303,8 +303,9 @@ subroutine waterbalance(init)
      epsln*yutarget*dsuvec(nlayers) + delyu*epsln*(-sumdsutop + (-1.d0 + &
      nlayers)*dsuvec(nlayers)))
    endif
+  endif
 
-  else
+  if(yutarget==yu) then   
    dttarget=99999.d0
   endif
 
