@@ -279,10 +279,14 @@ subroutine waterbalance(init)
     if(yutarget.gt.cz) then
      yutarget=cz                  !* PREVENTING NEGATIVE YS
     endif
-    dttarget=(-wc + epsln*(cz + yutarget*(-1.d0 + suvec(nlayers)) + delyu*(sumsutop + &
-     suvec(nlayers) - nlayers*suvec(nlayers))))/(io - &
-     epsln*yutarget*dsuvec(nlayers) + delyu*epsln*(-sumdsutop + (-1.d0 + &
-     nlayers)*dsuvec(nlayers)))
+    if(yutarget.eq.yu) then
+     dttarget=99999.d0
+    else
+     dttarget=(-wc + epsln*(cz + yutarget*(-1.d0 + suvec(nlayers)) + delyu*(sumsutop + &
+      suvec(nlayers) - nlayers*suvec(nlayers))))/(io - &
+      epsln*yutarget*dsuvec(nlayers) + delyu*epsln*(-sumdsutop + (-1.d0 + &
+      nlayers)*dsuvec(nlayers)))
+    endif
    else
     dttarget=(cz**2.d0*epsln + wc*zr - cz*(wc + epsln*zr) + &
      epsln*yutarget*(yutarget*(-1.d0 + suvec(nlayers)) + delyu*(sumsutop + &
