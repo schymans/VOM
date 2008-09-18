@@ -5,15 +5,17 @@ STOREDIR=$(pwd)
 # path for the temp-folder
 TMPDIR=$STOREDIR/tmp
 # the model-code files 
-CODE1=coreprog.f90
-CODE2=sce.f90
-CODE3=gasexcwatbal.f90
+CODE1=modules.f90
+CODE2=coreprog.f90
+CODE3=sce.f90
+CODE4=transpmodel.f90
+CODE5=watbal.f90
 # makes the temp-folder and copies all in
 mkdir -p $TMPDIR
 cd $TMPDIR
 cp $STOREDIR/* $TMPDIR/
 # compiles the code
-pgf90 -o model.x $CODE1 $CODE2 $CODE3
+pgf90 -o model.x $CODE1 $CODE2 $CODE3 $CODE4 $CODE5
 #echo run information to home dir
 cat > $STOREDIR/vomrun.info <<EOI
 $STOREDIR
