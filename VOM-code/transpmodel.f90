@@ -586,6 +586,7 @@ subroutine transpmodel(invar,nrun,netass,option1)
       rsurfg(1:nlayersnew)=rsurfg(1:nlayersnew)*omgunew*&
        delyunewvec(1:nlayersnew)
     endif
+    endif
 
     if(nlayersnew.lt.pos) then
      rsurfvec(nlayersnew+1:pos)=rsurfmin*delyu
