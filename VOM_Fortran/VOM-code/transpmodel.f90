@@ -108,7 +108,7 @@ subroutine transpmodel(invar,nrun,netass,option1)
   !* 
   !*-----calculate vector sizes-----------------------------------------
   !
-  N=ceiling(ny*365.25)
+  N=ceiling(ny*365)
   Nh=N*24
   M=ceiling(cz/delyu)           ! maximum number of soil sublayers
   !*
@@ -189,7 +189,6 @@ subroutine transpmodel(invar,nrun,netass,option1)
    !
    informat='(4i8,6f8.2)'
    open(101,file='dailyweather.prn',status='old',iostat=stat) 
-   read(101,*)
    read(101,*)
    do i=1,N
     read(101,informat) dayyear(i),day(i),month(i),year(i),tmax(i),&
