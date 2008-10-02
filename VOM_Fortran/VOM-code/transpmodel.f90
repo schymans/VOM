@@ -108,7 +108,7 @@ subroutine transpmodel(invar,nrun,netass,option1)
   !* 
   !*-----calculate vector sizes-----------------------------------------
   !
-  N=ceiling(ny*365)
+  N=ceiling(ny*365.0)
   Nh=N*24
   M=ceiling(cz/delyu)           ! maximum number of soil sublayers
   !*
