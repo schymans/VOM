@@ -216,33 +216,33 @@ subroutine waterbalance(init)
   if(ys.le.zr) then
    !* Testing for increase or decrease of yu:
    yutarget=(-(cz*epsln) + dt*io + wc - delyu*epsln*(dt*sumdsutop + sumsutop - &
-    dt*(-1 + nlayers)*dsuvec(nlayers) + suvec(nlayers) - &
-    nlayers*suvec(nlayers)))/(epsln*(-1 + dt*dsuvec(nlayers) + &
+    dt*(-1.d0 + nlayers)*dsuvec(nlayers) + suvec(nlayers) - &
+    nlayers*suvec(nlayers)))/(epsln*(-1.d0 + dt*dsuvec(nlayers) + &
     suvec(nlayers)))
   elseif(nlayers.ge.1) then
    !* Making sure that Sqrt term is not negative  
    dummy=-1.d0 
    do while (dummy.lt.0.d0)
-    dummy=(epsln*(4*(-(cz*epsln) + dt*io + wc)*(cz - zr)*(-1 + &
-     dt*dsuvec(nlayers) + suvec(nlayers)) + delyu**2*epsln*(dt*sumdsutop + &
-     sumsutop - dt*(-1 + nlayers)*dsuvec(nlayers) + suvec(nlayers) - &
-     nlayers*suvec(nlayers))**2))
+    dummy=(epsln*(4.d0*(-(cz*epsln) + dt*io + wc)*(cz - zr)*(-1.d0 + &
+     dt*dsuvec(nlayers) + suvec(nlayers)) + delyu**2.d0*epsln*(dt*sumdsutop + &
+     sumsutop - dt*(-1.d0 + nlayers)*dsuvec(nlayers) + suvec(nlayers) - &
+     nlayers*suvec(nlayers))**2.d0))
     dt=0.5d0*dt
    enddo
-   yutarget=(delyu*epsln*(-(dt*sumdsutop) - sumsutop + dt*(-1 + &
+   yutarget=(delyu*epsln*(-(dt*sumdsutop) - sumsutop + dt*(-1.d0 + &
     nlayers)*dsuvec(nlayers) - suvec(nlayers) + nlayers*suvec(nlayers)) - &
-    Sqrt(epsln*(4*(-(cz*epsln) + dt*io + wc)*(cz - zr)*(-1 + &
-    dt*dsuvec(nlayers) + suvec(nlayers)) + delyu**2*epsln*(dt*sumdsutop + &
-    sumsutop - dt*(-1 + nlayers)*dsuvec(nlayers) + suvec(nlayers) - &
-    nlayers*suvec(nlayers))**2)))/(2.*epsln*(-1 + dt*dsuvec(nlayers) + &
+    Sqrt(epsln*(4.d0*(-(cz*epsln) + dt*io + wc)*(cz - zr)*(-1 + &
+    dt*dsuvec(nlayers) + suvec(nlayers)) + delyu**2.d0*epsln*(dt*sumdsutop + &
+    sumsutop - dt*(-1.d0 + nlayers)*dsuvec(nlayers) + suvec(nlayers) - &
+    nlayers*suvec(nlayers))**2)))/(2.d0*epsln*(-1.d0 + dt*dsuvec(nlayers) + &
     suvec(nlayers)))
   else
-   yutarget=(delyu*epsln*(-(dt*sumdsutop) - sumsutop + dt*(-1 + &
+   yutarget=(delyu*epsln*(-(dt*sumdsutop) - sumsutop + dt*(-1.d0 + &
     nlayers)*dsuvec(nlayers) - suvec(nlayers) + nlayers*suvec(nlayers)) - &
-    Sqrt(epsln*(4*(-(cz*epsln) + dt*io + wc)*(cz - zr)*(-1 + &
-    dt*dsuvec(nlayers) + suvec(nlayers)) + delyu**2*epsln*(dt*sumdsutop + &
-    sumsutop - dt*(-1 + nlayers)*dsuvec(nlayers) + suvec(nlayers) - &
-    nlayers*suvec(nlayers))**2)))/(2.*epsln*(-1 + dt*dsuvec(nlayers) + &
+    Sqrt(epsln*(4.d0*(-(cz*epsln) + dt*io + wc)*(cz - zr)*(-1.d0 + &
+    dt*dsuvec(nlayers) + suvec(nlayers)) + delyu**2.d0*epsln*(dt*sumdsutop + &
+    sumsutop - dt*(-1.d0 + nlayers)*dsuvec(nlayers) + suvec(nlayers) - &
+    nlayers*suvec(nlayers))**2.d0)))/(2.d0*epsln*(-1.d0 + dt*dsuvec(nlayers) + &
     suvec(nlayers))) 
   endif
 
@@ -324,16 +324,16 @@ subroutine waterbalance(init)
 
   if(ys.le.zr.and.yutarget.ge.cz-zr) then
    yunew=(-(cz*epsln) + dt*io + wc - delyu*epsln*(dt*sumdsutop + sumsutop - &
-    dt*(-1 + nlayers)*dsuvec(nlayers) + suvec(nlayers) - &
-    nlayers*suvec(nlayers)))/(epsln*(-1 + dt*dsuvec(nlayers) + &
+    dt*(-1.d0 + nlayers)*dsuvec(nlayers) + suvec(nlayers) - &
+    nlayers*suvec(nlayers)))/(epsln*(-1.d0 + dt*dsuvec(nlayers) + &
     suvec(nlayers))) 
   else
-   yunew=(delyu*epsln*(-(dt*sumdsutop) - sumsutop + dt*(-1 + &
+   yunew=(delyu*epsln*(-(dt*sumdsutop) - sumsutop + dt*(-1.d0 + &
     nlayers)*dsuvec(nlayers) - suvec(nlayers) + nlayers*suvec(nlayers)) - &
-    Sqrt(epsln*(4*(-(cz*epsln) + dt*io + wc)*(cz - zr)*(-1 + &
+    Sqrt(epsln*(4.d0*(-(cz*epsln) + dt*io + wc)*(cz - zr)*(-1.d0 + &
     dt*dsuvec(nlayers) + suvec(nlayers)) + delyu**2*epsln*(dt*sumdsutop + &
-    sumsutop - dt*(-1 + nlayers)*dsuvec(nlayers) + suvec(nlayers) - &
-    nlayers*suvec(nlayers))**2)))/(2.*epsln*(-1 + dt*dsuvec(nlayers) + &
+    sumsutop - dt*(-1.d0 + nlayers)*dsuvec(nlayers) + suvec(nlayers) - &
+    nlayers*suvec(nlayers))**2.d0)))/(2.d0*epsln*(-1.d0 + dt*dsuvec(nlayers) + &
     suvec(nlayers)))
   endif
 
