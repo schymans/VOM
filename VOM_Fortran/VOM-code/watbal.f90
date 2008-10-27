@@ -423,6 +423,9 @@ subroutine waterbalance(init)
   omgonew=1.d0-omgunew
   ysnew=cz-omgunew*yunew
   nlayersnew=Ceiling(yunew/delyu) ! The bottom layer is smaller than or equal to delyu
+  if(yunew - (nlayersnew - 1)*delyu .lt. 1.d-8) then
+   nlayersnew = nlayersnew - 1   ! Merging the bottom 2 layers if the bottom layer gets thinner than 1.d-8
+  endif
   delyunewvec(:)=delyu
   if(nlayersnew.eq.1) then 
    delyunewvec(nlayersnew)=yunew
