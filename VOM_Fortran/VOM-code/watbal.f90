@@ -40,7 +40,6 @@
 !*
 !********************************************************************
 
-!subroutine waterbalance(time,dttarget,optmode)
 subroutine waterbalance(init) 
  use vegwatbal
  implicit none
@@ -253,7 +252,7 @@ subroutine waterbalance(init)
 
 
   if(yutarget.gt.yu) then
-   if(yu.eq.Ceiling(yu/delyu)*delyu) then
+   if(abs(yu-Ceiling(yu/delyu)*delyu).lt.1.d-9) then
     yutarget=yu+delyu
    else
     yutarget=Ceiling(yu/delyu)*delyu
@@ -263,7 +262,7 @@ subroutine waterbalance(init)
    endif
 
   elseif(yutarget.lt.yu) then
-   if(yu.eq.Floor(yu/delyu)*delyu) then
+   if(abs(yu-Floor(yu/delyu)*delyu).lt.1.d-9) then
     yutarget=yu-delyu
    else
     yutarget=Floor(yu/delyu)*delyu
@@ -275,7 +274,7 @@ subroutine waterbalance(init)
 
 
   if(yutarget.gt.yu) then 
-   if(ys.lt.zr) then
+   if(ys.le.zr) then
     if(yutarget.gt.cz) then
      yutarget=cz                  !* PREVENTING NEGATIVE YS
     endif
@@ -352,15 +351,22 @@ subroutine waterbalance(init)
 !!$Print*,"nlayers=",Ceiling(yu/delyu),"nlayersnew=",Ceiling(yunew/delyu)
 !!$endif
 
+  nlayersnew=Ceiling(yunew/delyu) ! The bottom layer is smaller than or equal to delyu
 
-
-  !*Rounding layers of less than 0.001 mm away from delyu
+  !*Rounding yunew and nlayersnew
   if(Abs(yunew - nlayers*delyu).lt.1.d-9) then
    yunew=nlayers*delyu
+   nlayersnew=nlayers
   endif
   if(Abs(yunew - (nlayers-1)*delyu).lt.1.d-9) then
    yunew=(nlayers-1)*delyu
+   nlayersnew=nlayers-1
   endif
+  if(Abs(yunew - (nlayers+1)*delyu).lt.(1.d-9)) then
+   yunew=(nlayers+1)*delyu
+   nlayersnew=nlayers+1
+  endif
+
 
   !* Calculating other state variables at next time step
   if(yunew.ge.cz-zr) then
@@ -371,7 +377,7 @@ subroutine waterbalance(init)
 
   omgonew=1.d0-omgunew
   ysnew=cz-omgunew*yunew
-  nlayersnew=Ceiling(yunew/delyu) ! The bottom layer is smaller than or equal to delyu
+
   delyunewvec(:)=delyu
   if(nlayersnew.ge.1) then 
    delyunewvec(nlayersnew)=yunew - (nlayersnew - 1)*delyu
@@ -413,19 +419,32 @@ subroutine waterbalance(init)
    yunew=yu
   endif
 
-  !*Rounding layers of less than 0.001 mm away from delyu
+  nlayersnew=Ceiling(yunew/delyu) ! The bottom layer is smaller than or equal to delyu
+
+  !*Rounding yunew and nlayersnew
   if(yunew.lt.1.d-9) then
    yunew=0.d0
+   nlayersnew=0
+  endif
+
+  if(Abs(yunew - nlayers*delyu).lt.1.d-9) then
+   yunew=nlayers*delyu
+   nlayersnew=nlayers
+  endif
+  if(Abs(yunew - (nlayers-1)*delyu).lt.1.d-9) then
+   yunew=(nlayers-1)*delyu
+   nlayersnew=nlayers-1
+  endif
+  if(Abs(yunew - (nlayers+1)*delyu).lt.(1.d-9)) then
+   yunew=(nlayers+1)*delyu
+   nlayersnew=nlayers+1
   endif
 
   !* Calculating other state variables at next time step
   omgunew=yunew/(cz - zr)
   omgonew=1.d0-omgunew
   ysnew=cz-omgunew*yunew
-  nlayersnew=Ceiling(yunew/delyu) ! The bottom layer is smaller than or equal to delyu
-  if(yunew - (nlayersnew - 1)*delyu .lt. 1.d-8) then
-   nlayersnew = nlayersnew - 1   ! Merging the bottom 2 layers if the bottom layer gets thinner than 1.d-8
-  endif
+
   delyunewvec(:)=delyu
   if(nlayersnew.eq.1) then 
    delyunewvec(nlayersnew)=yunew
