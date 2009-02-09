@@ -114,7 +114,7 @@ subroutine transpmodel(invar,nrun,netass,option1)
   !*
   !*-----allocate vector sizes------------------------------------------
   !
-  allocate(srad(N),rhmax(N),rhmin(N),tmin(N),tmax(N),rainvec(N))
+  allocate(srad(N),rhmax(N),rhmin(N),tmin(N),tmax(N),rainvec(N),press(N))
   allocate(year(N),month(N),day(N),dayyear(N),vpvec(N),epan(N))
   allocate(avparvec(N))
   allocate(parvec(N))
@@ -187,12 +187,12 @@ subroutine transpmodel(invar,nrun,netass,option1)
    close(102)
    !----Creating hourly climate data from daily data---------------------  
    !
-   informat='(4i8,6f8.2)'
+   informat='(4i8,7f8.2)'
    open(101,file='dailyweather.prn',status='old',iostat=stat) 
    read(101,*)
    do i=1,N
     read(101,informat) dayyear(i),day(i),month(i),year(i),tmax(i),&
-     tmin(i),rainvec(i),epan(i),srad(i),vpvec(i)
+     tmin(i),rainvec(i),epan(i),srad(i),vpvec(i),press(i)
    enddo
    close(101)
    open(102,file='hourlyweather.prn',iostat=stat)
@@ -229,8 +229,14 @@ subroutine transpmodel(invar,nrun,netass,option1)
       0.0984d0*Cos(0.36d0 - ((-1.d0 + ik)*Pi)/6.d0) + &
       0.4632d0*Cos(3.805d0 - ((-1.d0 + ik)*Pi)/12.d0))
      tairh(ii)=tair
-     vd=0.006028127d0*2.718282d0**((17.27d0*tair)/(237.3d0 +&   ! (Out[52]), accounts for diurnal variation in vapour deficit
-      tair)) - 9.869233d-6*vp           ! (derived from 3.54+3.55) 
+
+     ! old calculation of vd (without a given air pressure, takes standard pressure instead)
+     !             vd = 0.006028127d0 * 2.718282d0 ** ((17.27d0 * tair) / (237.3d0 + &   ! (Out[52]), accounts for diurnal variation in vapour deficit
+     !                 tair)) - 9.869233d-6 * vp           ! (derived from 3.54+3.55) 
+     
+     ! new calculation of vd with a given airpressure in dailyweather.prn
+     vd = (((0.6108d0 * E ** (17.27d0 * tair / (tair + 237.3d0))) *1000) - vp) / (press(in) * 100.d0)
+
      if(vd.le.0.d0)then
       vd=0.d0
      endif

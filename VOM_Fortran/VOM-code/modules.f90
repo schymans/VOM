@@ -28,7 +28,7 @@ save
   pos2(2),stat,dummyint1,dummyint2,dummyint3,dummyint4
  REAL*8, ALLOCATABLE, SAVE :: srad(:),rhmax(:),rhmin(:),tmin(:),&
   tmax(:),rainvec(:),netassvec(:),epan(:),vpvec(:),&
-  netassvecg(:)
+  netassvecg(:),press(:)
  INTEGER, ALLOCATABLE, SAVE :: year(:),month(:),day(:),dayyear(:)
  REAL*8, ALLOCATABLE, SAVE :: avparvec(:),&
   parvec(:),parh(:),vdh(:),tairh(:),gammastarvec(:),rainh(:)
