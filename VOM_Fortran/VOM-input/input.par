@@ -1,5 +1,4 @@
 0.2d0			/* oa= molar ratio of oxygen in air
-0.000350d0		/* ca= molar ratio of CO2 in air
 0.3d0			/* alpha= initial slope of j(par) curve
 1.2d-6			/* cpccf= water transport cost factor (cpcc=pc*rootdepth*cpccf) in mol/m/m2/s
 2.2d-7			/* tcf= turnover cost factor for foliage (tc=tcf*LAI) in mol/m2/s
@@ -32,5 +31,5 @@
 0.3d-3			/* rootrad= !fine root radius in m
 150.0d0			/* prootmg= !constant root balance pressure of 1.5 MPa in grasses
 0.1d0			/* growthmax= parameter determining maximum daily growth increment of root surface area
-1995			/* first year for the generation of hourly output in computation mode
-2000			/* last year for the generation of hourly output in computation mode
+2000			/* first year for the generation of hourly output in computation mode
+2005			/* last year for the generation of hourly output in computation mode

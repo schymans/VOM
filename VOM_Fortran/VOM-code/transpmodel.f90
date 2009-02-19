@@ -45,11 +45,11 @@ subroutine transpmodel(invar,nrun,netass,option1)
 
   !
   if (option1.eq.2) then
-     optmode=0
+     optmode = 0
   else
-     optmode=1
+     optmode = 1
   endif
-  ets=0.d0              ! we assume that no water uptake in the saturated zone is happening
+  ets = 0.d0              ! we assume that no water uptake in the saturated zone is happening
   !*--------------------------------------------------------------------
   !*
   !*    PARAMETER READING FROM INPUT.PAR
@@ -59,7 +59,7 @@ subroutine transpmodel(invar,nrun,netass,option1)
   if (parsaved.ne.1) then
      open(201,file='input.par',status='old')
      read(201,*) oa
-     read(201,*) ca
+!     read(201,*) ca
      read(201,*) alpha
      read(201,*) cpccf 
      read(201,*) tcf
@@ -87,8 +87,8 @@ subroutine transpmodel(invar,nrun,netass,option1)
      read(201,*) thetas
      read(201,*) nvg
      read(201,*) alphavg
-     epsln=thetas-thetar           ! epsilon, porosity see Reggiani (2000)
-     mvg=1-(1/nvg)            ! van Genuchten soil parameter m
+     epsln = thetas - thetar           ! epsilon, porosity see Reggiani (2000)
+     mvg = 1.d0 - (1.d0 / nvg)            ! van Genuchten soil parameter m
      !*-----Vertical Resolution--- -------------------------------------
      !
      read(201,*) delyu
@@ -103,23 +103,23 @@ subroutine transpmodel(invar,nrun,netass,option1)
      read(201,*) growthmax
      read(201,*) firstyear
      read(201,*) lastyear
-     rcond=1./rrootm            ! root conductivity in s^-1 (ruptk=rcond(proot-psoil)rsurf
+     rcond = 1.d0 / rrootm            ! root conductivity in s^-1 (ruptk=rcond(proot-psoil)rsurf
      close(201)
      !* 
      !*-----calculate vector sizes-----------------------------------------
      !
-     N=ceiling(ny*365.0)
-     Nh=N*24
-     M=ceiling(cz/delyu)           ! maximum number of soil sublayers
+     N = ceiling(ny * 365.d0)
+     Nh = N * 24
+     M = ceiling(cz / delyu)           ! maximum number of soil sublayers
      !*
      !*-----allocate vector sizes------------------------------------------
      !
      allocate(srad(N),rhmax(N),rhmin(N),tmin(N),tmax(N),rainvec(N),press(N))
-     allocate(year(N),month(N),day(N),dayyear(N),vpvec(N),epan(N))
+     allocate(year(N),month(N),day(N),dayyear(N),vpvec(N),epan(N),cavec(N))
      allocate(avparvec(N))
      allocate(parvec(N))
      allocate(netassvec(N),netassvecg(N))
-     allocate(parh(Nh),vdh(Nh),tairh(Nh),gammastarvec(Nh),rainh(Nh))
+     allocate(parh(Nh),vdh(Nh),tairh(Nh),gammastarvec(Nh),rainh(Nh),cah(Nh))
      allocate(pcapvec(M),suvec(M),ruptkvec(M),sunewvec(M),wsvec(M),&
           kunsatvec(M),delyuvec(M),rsurfvec(M),rsurfnewvec(M),&
           qblvec(M),dsuvec(M),phydrostaticvec(M),delyunewvec(M),&
@@ -187,17 +187,17 @@ subroutine transpmodel(invar,nrun,netass,option1)
         close(102)
         !----Creating hourly climate data from daily data---------------------  
         !
-        informat='(4i8,7f8.2)'             ! format of dailyweather.prn, includes air pressure as last row
+        informat='(4i8,8f8.2)'             ! format of dailyweather.prn, includes air pressure as last row
         open(101,file='dailyweather.prn',status='old',iostat=stat) 
         read(101,*)
         do i=1,N
            read(101,informat) dayyear(i),day(i),month(i),year(i),tmax(i),&
-                tmin(i),rainvec(i),epan(i),srad(i),vpvec(i),press(i)
+                tmin(i),rainvec(i),epan(i),srad(i),vpvec(i),press(i),cavec(i)
         enddo
         close(101)
         open(102,file='hourlyweather.prn',iostat=stat)
-        write(102,'(5a8,4a10)') '   hour',' dayyear','     day','   month','    year',&
-             '      tair','        vd','      parh','     rainh'
+        write(102,'(5a8,5a10)') '   hour',' dayyear','     day','   month','    year',&
+             '      tair','        vd','      parh','     rainh','     cah'
         !*********************************************************************
         !*  Calculation of vegetation parameters
         !*     
@@ -229,6 +229,7 @@ subroutine transpmodel(invar,nrun,netass,option1)
                    0.0984d0 * Cos(0.36d0 - ((-1.d0 + ik) * Pi) / 6.d0) + &
                    0.4632d0 * Cos(3.805d0 - ((-1.d0 + ik) * Pi) / 12.d0))
               tairh(ii) = tair
+              cah(ii) = cavec(in)
               !             vd = 0.006028127d0 * 2.718282d0 ** ((17.27d0 * tair) / (237.3d0 + &   ! (Out[52]), accounts for diurnal variation in vapour deficit
               !                 tair)) - 9.869233d-6 * vp           ! (derived from 3.54+3.55) 
               
@@ -257,8 +258,8 @@ subroutine transpmodel(invar,nrun,netass,option1)
               else 
                  parh(ii) = 0.d0
               endif
-              write(102,'(5i8,4e10.3)') ik,dayyear(in),day(in),month(in),year(in),&
-                   tairh(ii),vdh(ii),parh(ii),rainh(ii)
+              write(102,'(5i8,5e10.3)') ik,dayyear(in),day(in),month(in),year(in),&
+                   tairh(ii),vdh(ii),parh(ii),rainh(ii),cah(ii)
               gammastarvec(ii) = 0.00004275d0 * E ** ((18915.d0 * (-25.d0 + tairh(ii))) / & ! (Out[274], derived from (3.25))
                    (149.d0 * R * (273.d0 + tairh(ii))))
            enddo
@@ -270,8 +271,8 @@ subroutine transpmodel(invar,nrun,netass,option1)
      ii = 1
      oldh = 99
      do i = 1,Nh
-        read(102,'(5i8,4e10.3)') h,dummyint1,dummyint2,dummyint3,dummyint4,&
-             tairh(i),vdh(i),parh(i),rainh(i)
+        read(102,'(5i8,5e10.3)') h,dummyint1,dummyint2,dummyint3,dummyint4,&
+             tairh(i),vdh(i),parh(i),rainh(i),cah(i)
         if(h.lt.oldh) then
            dayyear(ii) = dummyint1
            day(ii) = dummyint2
@@ -309,7 +310,7 @@ subroutine transpmodel(invar,nrun,netass,option1)
   wsnewvec(1:nlayersnew) = sunewvec(1:nlayersnew) * epsln * omgunew * & ! (3.18) water content in unsaturated soil layers (m)
        delyunewvec(1:nlayersnew) 
   wsold = ysnew * epsln + Sum(wsnewvec(1:nlayersnew))     ! initial soil water storage
-  cumerror = 0
+  cumerror = 0.d0
   wsnew = wsold
   ys = ysnew
   omgu = omgunew
@@ -323,7 +324,7 @@ subroutine transpmodel(invar,nrun,netass,option1)
   wsnewvec(1:nlayers) = suvec(1:nlayersnew) * epsln * omgu * & ! (3.18) water content in unsaturated soil layers (m)
        delyuvec(1:nlayersnew)
   wsold = ysnew * epsln + Sum(wsnewvec(1:nlayersnew))     ! initial soil water storage
-  cumerror = 0
+  cumerror = 0.d0
   wsnew = wsold
   wsvec = wsnewvec
    
@@ -476,6 +477,7 @@ subroutine transpmodel(invar,nrun,netass,option1)
         tair = tairh(ii)
         vd = vdh(ii)
         par = parh(ii)
+        ca = cah(ii) / 1000000.d0
         jmax = (E ** ((ha * (-25.d0 + tair) * (-273.d0 + topt + 273.d0 * r * topt)) / & ! (Out[310], derived from (3.26)) Temperature dependence of Jmax
              ((25.d0 + 273.d0 * r * topt) * (tair + 273.d0 * r * topt))) * &
              ((-1.d0 + E ** (-(hd * (-298.d0 + topt)) / (25.d0 + 273.d0 * r * topt))) * ha + & 
@@ -632,7 +634,7 @@ subroutine transpmodel(invar,nrun,netass,option1)
                       (prootmg - phydrostaticvec(1:postempg))) * rsurfg) / &
                       (rrootm + (Sqrt(Pi / 2.d0) * Sqrt(rootrad * omgu * &
                       delyuvec(1:postempg) / rsurfg)) / kunsatvec(1:postempg)))
-                 ruptkg(postempg+1:M) = 0.d0
+                 ruptkg(postempg + 1:M) = 0.d0
                  if(Sum(ruptkg).gt.0.d0) then
                     where(etmg.gt.Sum(ruptkg)) 
                        rootlim = 1.d0
