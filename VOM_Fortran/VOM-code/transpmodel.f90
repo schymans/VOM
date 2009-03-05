@@ -892,6 +892,23 @@ subroutine transpmodel(invar,nrun,netass,option1)
                 (cpccg(2) + rrg) * 3600.d0 * 24.d0 
            gppyr = (ass_d(2) + rl_d) + assg_d(2,2) + rlg_d
         endif
+        ! WRITING THE ACCUMULATED DATA FROM THE LAST YEAR TO FILE:
+        if (d.eq.N) then
+         write(203,'(i6,9e15.6)') yr,rainyr,epanyr,paryr,radyr,vdyr / &
+          (dayyear(d)),etyr,evapyr,netassyr,gppyr
+         yr = year(d)
+         rainyr = rainvec(d)
+         epanyr = epan(d)             ! epan originally in [mm]/day
+         paryr = parvec(d)
+         radyr = srad(d)             ! srad originally in MJ/day
+         vdyr = vd_d / 24.d0
+         etyr = (etmg_d + etm_d) * 1000.d0
+         evapyr = esoil_d * 1000.d0
+         netassyr = ass_d(2) - (cpcc + rr) * 3600.d0 * 24.d0 + assg_d(2,2) - &
+          (cpccg(2) + rrg) * 3600.d0 * 24.d0 
+         gppyr = (ass_d(2) + rl_d) + assg_d(2,2) + rlg_d      
+        endif
+
         ruptk_d = 0.d0
         vd_d = 0.d0
         jmax_d = 0.d0
