@@ -449,11 +449,11 @@ contains
     posarray(2,1) = 2
     do j = 1,nopt
        k = optid(j)
-       initpop(j,1) = 0.125d0 * parmax(j) + 0.875d0 * parmin(j)
-       initpop(j,2) = 0.125d0 * parmin(j) + 0.875d0 * parmax(j)
-       initpop(j,3) = 0.5d0 * (parmin(j) + parmax(j))
-       initpop(j,4) = 0.25d0 * parmax(j) + 0.75d0 * parmin(j)
-       initpop(j,5) = 0.25d0 * parmin(j) + 0.75d0 * parmax(j)
+       initpop(j,1) = 0.125d0 * parmax(k) + 0.875d0 * parmin(k)      !each position j contains the intial perturbation of an optimised parameter
+       initpop(j,2) = 0.125d0 * parmin(k) + 0.875d0 * parmax(k)
+       initpop(j,3) = 0.5d0 * (parmin(k) + parmax(k))
+       initpop(j,4) = 0.25d0 * parmax(k) + 0.75d0 * parmin(k)
+       initpop(j,5) = 0.25d0 * parmin(k) + 0.75d0 * parmax(k)
        posarray(2 ** (j - 1) + 1:2 ** j,1:j - 1) = posarray(1:2 ** (j - 1),1:j - 1)
        posarray(1:2 ** (j - 1),j) = 1
        posarray(2 ** (j - 1) + 1:2 ** j,j) = 2
