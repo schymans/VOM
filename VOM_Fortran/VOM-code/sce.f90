@@ -61,7 +61,7 @@ subroutine sce(success)
  CHARACTER(3) :: str
  CHARACTER(60) :: outformat,informat,loopformat
  
- EXTERNAL compar
+ !EXTERNAL compar
  !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
  ! Initialize the random number generator (standard subroutine, based on the date and time)
  !
@@ -698,13 +698,14 @@ subroutine sortcomp(invar,objfun)
   REAL*8, DIMENSION(size(objfun)) :: objfun2
   REAL*8, DIMENSION(size(invar,1),size(invar,2)) :: invar2
   INTEGER, DIMENSION(size(objfun)) :: newobjfun
-  EXTERNAL compar
+  !EXTERNAL compar
   
   dim = size(objfun)
   objfun2 = objfun
   newobjfun = -99											! NEEDED TO SEPARATE EQUAL O.F. VALUES
   invar2 = invar
-  call qsort(objfun,dim,8,compar)									! USE compar(b,c)=(c-b)/dabs(c-b)
+!  call qsort(objfun,dim,8,compar)									! USE compar(b,c)=(c-b)/dabs(c-b)
+  call qsort(objfun,dim)
   do i = 1,dim
      j=minloc(real(dabs(objfun2-objfun(i))),newobjfun.lt.0)
      newobjfun(j) = i
@@ -880,25 +881,63 @@ end subroutine optsensitivity
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 !
+subroutine qsort(objfun,dim)
+! SORTS THE VECTOR OBJFUN IN DESCENDING ORDER AND RETURNS IT
+
+implicit none
+
+!Declarations
+ INTEGER :: dim 
+ REAL*8, DIMENSION(dim),INTENT(inout) :: objfun
+
+!Definitions 
+  INTEGER :: i,j,k
+
+ do i=2,dim
+  if(objfun(i).gt.objfun(i-1)) then
+   do j=i-2,1,-1
+    k=j
+    if(objfun(i).lt.objfun(j)) exit
+    if(j.eq.1) k=0   ! If objfun(i)>objfun(1), then cycle objfun(i) to the top
+   enddo
+   objfun(k+1:i) = cshift(objfun(k+1:i),-1)
+  endif
+ enddo
+ 
+ ! For debugging:
+!!$ do i=1,dim
+!!$  print*,objfun(i)
+!!$ enddo
+ 
+return
+end subroutine qsort
+
+
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!
 end subroutine sce
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 !
-INTEGER function compar(b,c)
-  
-  implicit none
-  
-  REAL*8, INTENT(in) :: b,c
-  
-  if(b.gt.c) then			! SORTS b,c IN DECREASING ORDER
-     compar = -1
-  elseif(b.lt.c) then
-     compar = 1
-  else
-     compar = 0
-  endif
-  return
-end function compar
+!!$INTEGER function compar(b,c)
+!!$  
+!!$  implicit none
+!!$  
+!!$  REAL*8, INTENT(in) :: b,c
+!!$  
+!!$  if(b.gt.c) then			! SORTS b,c IN DECREASING ORDER
+!!$     compar = -1
+!!$  elseif(b.lt.c) then
+!!$     compar = 1
+!!$  else
+!!$     compar = 0
+!!$  endif
+!!$  return
+!!$end function compar
+
+
 
 
