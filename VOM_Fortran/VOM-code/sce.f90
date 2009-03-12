@@ -895,6 +895,7 @@ implicit none
 
  do i=2,dim
   if(objfun(i).gt.objfun(i-1)) then
+   k=0
    do j=i-2,1,-1
     k=j
     if(objfun(i).lt.objfun(j)) exit
