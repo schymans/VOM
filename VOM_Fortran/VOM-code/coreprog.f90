@@ -29,66 +29,66 @@
 !********************************************************************
 program vom
 
-implicit none
+ implicit none
 
-CHARACTER(60) outformat
-INTEGER(1) command
-INTEGER stat
-CHARACTER(3) str
-REAL*8, ALLOCATABLE :: invar(:)
-REAL*8, DIMENSION(1) :: netass
-!REAL*8, DIMENSION(1) :: dttarget
+ CHARACTER(60) outformat
+ INTEGER(1) command
+ INTEGER stat
+ CHARACTER(3) str
+ REAL*8, ALLOCATABLE :: invar(:)
+ REAL*8, DIMENSION(1) :: netass
+ !REAL*8, DIMENSION(1) :: dttarget
 
-INTEGER nrun,success,npar,ios
-	!--------------------------------------------------------------------
-	! Parameter definitions for sce 
-	!--------------------------------------------------------------------
-	!--------------------------------------------------------------------
-	! for debug purposes:
-	! option1='-optimise'
-	!--------------------------------------------------------------------		
-open(1,file='shuffle.par',status='old')
-read(1,*) command
-open(2,file='finalbest.txt', status='old', iostat=stat)
-if (stat.eq.0 .or. command.eq.2) then
-	command=2
-	if(stat.ne.0) then
-		open(2,file='currentbest.txt')							! reads input parameters from previous optimisation
-	endif
-	!--------------------------------------------------------------------
-	! model run with optimised parameters
-	!--------------------------------------------------------------------
-	nrun=1
-	print *,"Calculation of results with optimised parameters..."
-	open(1,file='shuffle.par',status='old')
-	read(1,*)
-	read(1,*)
-	npar=0
-	do
-		read(1,*,iostat=ios) str
-		if(ios.lt.0) exit
-			if(str.eq.'var') npar=npar+1
-	end do
-	close(1)
-	allocate(invar(npar))
-	write(str,'(i3)') npar+1									!internal write to convert from number to string
-	outformat='('//str//'e14.6)'								! includes a column for each parameter and a column for the value of OF
-	rewind(2)
-	read(2,*) invar(:),netass
-	close(2)
-	write(*,'(" The best carbon profit was: ",e12.6)') netass
-	call transpmodel(invar,nrun,netass,command)
-	write(*,'(/" Model run COMPLETE",/)')
-	write(*,'(" The carbon profit achieved is: ",e12.6)') netass
-	print *, "Hourly results are saved in resulthourly.txt"
-	print *, "Daily results are saved in resultsdaily.txt"
-	print *, "Yearly results are saved in yearly.txt"
-	print *, "Soil results are saved in delyudaily.txt, rsurfdaily.txt, ruptkhourly.txt, suvechourly.txt"
-else
-	rewind(1)
-	close(1)
-	call sce(success)
-endif
-print *,"Program terminated"
-end
+ INTEGER nrun,success,npar,ios
+ !--------------------------------------------------------------------
+ ! Parameter definitions for sce 
+ !--------------------------------------------------------------------
+ !--------------------------------------------------------------------
+ ! for debug purposes:
+ ! option1='-optimise'
+ !--------------------------------------------------------------------		
+ open(1,file='shuffle.par',status='old')
+ read(1,*) command
+ open(2,file='finalbest.txt', status='old', iostat=stat)
+ if (stat.eq.0 .or. command.eq.2) then
+  command=2
+  if(stat.ne.0) then
+   open(2,file='currentbest.txt')       	! reads input parameters from previous optimisation
+  endif
+  !--------------------------------------------------------------------
+  ! model run with optimised parameters
+  !--------------------------------------------------------------------
+  nrun=1
+  print *,"Calculation of results with optimised parameters..."
+  open(1,file='shuffle.par',status='old')
+  read(1,*)
+  read(1,*)
+  npar=0
+  do
+   read(1,*,iostat=ios) str
+   if(ios.lt.0) exit
+   if(str.eq.'var') npar=npar+1
+  end do
+  close(1)
+  allocate(invar(npar))
+  write(str,'(i3)') npar+1            !internal write to convert from number to string
+  outformat='('//str//'e14.6)'     ! includes a column for each parameter and a column for the value of OF
+  rewind(2)
+  read(2,*) invar(:),netass
+  close(2)
+  write(*,'(" The best carbon profit was: ",e12.6)') netass
+  call transpmodel(invar,nrun,netass,command)
+  write(*,'(/" Model run COMPLETE",/)')
+  write(*,'(" The carbon profit achieved is: ",e12.6)') netass
+  print *, "Hourly results are saved in resulthourly.txt"
+  print *, "Daily results are saved in resultsdaily.txt"
+  print *, "Yearly results are saved in yearly.txt"
+  print *, "Soil results are saved in delyudaily.txt, rsurfdaily.txt, ruptkhourly.txt, suvechourly.txt"
+ else
+  rewind(1)
+  close(1)
+  call sce(success)
+ endif
+ print *,"Program terminated"
+end program vom
 
