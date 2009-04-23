@@ -765,9 +765,9 @@ subroutine optsensitivity(invar,objfun,optid,parname,parmin,parmax,&
   REAL*8, dimension(:,:), allocatable :: dataarray
   
   numvar = size(optid)
-  ALLOCATE(dataarray(numvar*8+1,numvar+1))
+  ALLOCATE(dataarray(numvar*8+1,numvar+1))                ! Enough space to store all optimisable parameters and objective function values of sensitivity analysis (for debugging)
   invar2 = invar(:,1)
-  objfun2 = objfun(1)
+  objfun2 = objfun(1)                ! objfun2 has the value of the latest model run. Here it is set to the best objfun
   numrec = size(objfun)
   failed10 = 0
   
@@ -775,7 +775,7 @@ subroutine optsensitivity(invar,objfun,optid,parname,parmin,parmax,&
   print *,"(changes in % of feasible range)"
   print *
   write(2,'("SENSITIVITY ANALYSIS"/"changes in % of feasible range)" )')
-  dataarray(1,1:numvar) = invar2
+  dataarray(1,1:numvar) = invar2(optid)  ! dataarray(1,:) stores the best parameter set and its objective function
   dataarray(1,numvar+1) = objfun2
   evolution = 'test'
   pos = 0
@@ -802,10 +802,10 @@ subroutine optsensitivity(invar,objfun,optid,parname,parmin,parmax,&
            close(4)
         endif
         write(8,outformat) invar2(optid),objfun2
-        dataarray((i-1)*8+j+2,1:numvar) = invar2
-        dataarray((i-1)*8+j+2,numvar+1) = objfun2
+        dataarray((i-1)*8+j+2,1:numvar) = invar2(optid)    !saving perturbed parameter set
+        dataarray((i-1)*8+j+2,numvar+1) = objfun2          !saving objective function of perturbed parameter set
         ofchange = (objfun2 - dataarray(1,numvar + 1)) / abs(dataarray(1,numvar + &
-             1)) * 100.d0
+             1)) * 100.d0                                  !change of objective function in % of the so far best OF value
         parchange = (newpar - oldpar) / (parmax(optid(i)) - parmin(optid(i))) * 100.d0		! the change of the parameter in % of feasible range
         write(*,'(f6.3,"% (",f14.6,")",": change of OF by ",e9.3,"%"," (",&
              e9.3,")")') parchange,newpar,ofchange,objfun2
@@ -833,7 +833,7 @@ subroutine optsensitivity(invar,objfun,optid,parname,parmin,parmax,&
            close(4)
         endif
         write(8 ,outformat) invar2(optid),objfun2
-        dataarray((i-1)*8+j+6,1:numvar) = invar2
+        dataarray((i-1)*8+j+6,1:numvar) = invar2(optid)
         dataarray((i-1)*8+j+6,numvar+1) = objfun2
         ofchange = (objfun2 - dataarray(1,numvar + 1)) / abs(dataarray(1,numvar + &
              1)) * 100.d0
