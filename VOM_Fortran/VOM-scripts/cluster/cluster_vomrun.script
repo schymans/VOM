@@ -4,30 +4,83 @@
 # we use TMPDIR=/scratch/login-name/run$$$HOSTNAME
 TMPDIR=/temp-path.on.cluster
 STOREDIR=$(pwd)
-# the model-code files 
-CODE1=modules.f90
-CODE2=coreprog.f90
-CODE3=sce.f90
-CODE4=transpmodel.f90
-CODE5=watbal.f90
-# makes the temp-folder on the cluster and copies all in
+
+# writes process-id and scratch folder name into logfile.txt
+echo run$$$HOSTNAME " > " $(pwd)
+
+# makes the temp-folder on the cluster
 mkdir -p $TMPDIR
 cd $TMPDIR
-cp $STOREDIR/* $TMPDIR/
-# compiles the code
-pgf90 -o model.x $CODE1 $CODE2 $CODE3 $CODE4 $CODE5
-#echo run information to home dir
-cat > $STOREDIR/vomrun.info <<EOI
-$STOREDIR
-$HOSTNAME
-$TMPDIR
-EOI
-# runs the the compiled model
-$TMPDIR/model.x >>$STOREDIR/job1.info
+
+# copies files in temp-folder
+cp $STOREDIR/* .
+
 # makes sure that the file system had enough time to write data to disk!
 sleep 10
-# copies the temp-folder out
-cp $TMPDIR/* $STOREDIR/
+
+# the if loop makes that the code will be compiled just at the beginning for one time
+# if the cluster computers are made up of different architectures (e.g. processors) please compile the code every time
+# to do so please comment out the if loop and use the compile command without it
+if [ ! -e model.x ]; then
+	# the model-code files 
+	CODE1=modules.f90
+	CODE2=coreprog.f90
+	CODE3=sce.f90
+	CODE4=transpmodel.f90
+	CODE5=watbal.f90
+	
+	# compiles the code without debugging options
+	pgf90 -o model.x $CODE1 $CODE2 $CODE3 $CODE4 $CODE5	
+	
+	# compiles the code with (full) debugging options
+	# pgf90 -g -Mbounds -Mchkptr -Mchkstk -Mpreprocess -o model.x $CODE1 $CODE2 $CODE3 $CODE4 $CODE5
+	
+	# makes sure that the file system had enough time to write data to disk!
+	sleep 10
+fi
+
+# delete files not needed anymore
+rm -f *.f90 *.o *.mod *.script nohup.out logfile.txt
+
+# goes in result-folder and delete files not needed anymore (prevent unnecessary copying)
 cd $STOREDIR
-# clears the temp-folder
-rm -r $TMPDIR
+rm -f *.f90 *.script nohup.out logfile.txt
+cd $TMPDIR
+
+# runs the the compiled model and writes output in a file
+./model.x >>$STOREDIR/job1.info
+
+# breaks up if the model.x cames with an error message
+if [ $? = 0 ]; then
+	# makes sure that the file system had enough time to write data to disk!
+	sleep 10
+	
+	# copies the temp-folder out
+	cp *.txt *.out *.x $STOREDIR/
+	
+	# copies hourlyweather out if it exists
+	if [ ! -e $STOREDIR/hourlyweather.prn ]; then
+		cp hourlyweather.prn $STOREDIR/
+	fi
+	
+	# makes sure that the file system had enough time to write data to disk!
+	sleep 10
+	
+	# goes into result-folder (needed for deleting below)
+	cd $STOREDIR
+	
+	# clears the temp-folder
+	rm -r $TMPDIR
+else
+	# writes error.txt
+	echo " see logfile.txt in the folder above for error message " >$STOREDIR/error.txt
+	
+	# another possibility of creating an error.txt file (without message inside)
+	# touch $STOREDIR/error.txt
+	
+	# goes into result-folder (needed for deleting command below)
+	cd $STOREDIR
+	
+	# clears the temp-folder
+	rm -r $TMPDIR
+fi

@@ -1,15 +1,25 @@
 #!/bin/sh
 
-# the model-folder (look at startme.script for path)
+#the path, where your model-files are (see cluster_start.script)
 CODEDIR=$(pwd)
+
 # makes a result-folder inside your model-folder
 STOREDIR=$CODEDIR/results
 mkdir -p $STOREDIR
-# copies all inside the result-folder
+
+# copies all inside the result-folder and goes in
 cp $CODEDIR/* $STOREDIR/
 cd $STOREDIR
+
+# change permissions
 chmod u=rwx,g=rwx,o=r *
-# starts vomrun.script as batch job until finalbest.txt is written
-until test -e finalbest.txt; do
-	bsub -K -q "BTM" -o logfile.txt $STOREDIR/cluster_vomrun.script
+
+# writes process id into nohup.out
+echo $$
+
+# starts vomrun.script as batch job until finalbest.txt or error.txt is written
+until [ -e $STOREDIR/finalbest.txt -o -e $STOREDIR/error.txt ]; do
+	# makes sure that the file system had enough time to write data to disk!
+	sleep 30
+	bsub -K -q "all" -o $CODEDIR/logfile.txt $CODEDIR/cluster_vomrun.script
 done
