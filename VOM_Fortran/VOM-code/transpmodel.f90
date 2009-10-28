@@ -620,9 +620,15 @@ subroutine transpmodel(invar,nrun,netass,option1)
               do i = 1,postemp
                  phydrostaticvec(i) = (i - 0.5d0) * delyu        ! (Out[238]) hydrostatic head for (3.34)  
               enddo
-              prootmvec(1:postemp) = (mpbar * (-mq + mqx) * (750.d0 - (750.d0 * mqx) / & ! (Out[239]) 
-                   (md + mqx) + (md + mqx) / mqx)) / (md + mqx) - &
-                   phydrostaticvec(1:postemp)
+			  
+			  if (md.gt.0) then
+				prootmvec(1:postemp) = (mpbar * (-mq + mqx) * (750.d0 - (750.d0 * mqx) / & ! (Out[239]) 
+					(md + mqx) + (md + mqx) / mqx)) / (md + mqx) - &
+					phydrostaticvec(1:postemp)
+			  else
+				prootmvec(1:postemp) = 0.d0
+			  endif		
+					
               rsoilvec(1:postemp) = (Sqrt(Pi / 2.d0) * Sqrt((rootrad * omgu * &   ! soil resistance, (Out[ 241] with svolume=omgu*delyuvec(1:postemp)); derived from (3.32)
                    delyuvec(1:postemp)) / rsurfvec(1:postemp))) / &
                    kunsatvec(1:postemp)
