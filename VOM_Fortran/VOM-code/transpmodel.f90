@@ -433,6 +433,9 @@ subroutine transpmodel(invar,nrun,netass,option1)
   !
   d = 0
   dtest = nyt * 365
+  
+  if (optmode.eq.0) dtest = N
+  
 902 do while (d.lt.dtest)
      d = d + 1
      rsurfvec = rsurfnewvec
