@@ -1,0 +1,77 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
+<title>hourlyweather.prn_inf</title>
+</head>
+<body>
+<p style="float:right; border-width:1px; border-style:solid">
+<object data="navi-bar.html" type="text/html" ></object>
+</p>
+<h1>VOM - Model Description</h1>
+<h2>VOM - info</h2>
+<h3>hourlyweather.prn</h3>
+<hr style="clear:right;">
+<hr>
+<h2>Description of hourlyweather.prn</h2>
+<p>The file "hourlyweather.prn" is an input file for VOM, containing
+hourly weather data in ascii format.</p>
+<h3>Fields</h3>
+<table border="1">
+<tr>
+	<td align="center">hour</td>
+	<td align="center">hour</td>
+	<td align="center">Integer, starting with 1, ends with 24</td>
+</tr>
+<tr>
+	<td align="center">dayyear</td>
+	<td align="center">Day of the year</td>
+	<td align="center">Integer, starting with 1 on 1 January</td>
+</tr>
+<tr>
+	<td align="center">day</td>
+	<td align="center">Day of the month</td>
+	<td align="center">Integer</td>
+</tr>
+<tr>
+	<td align="center">month</td>
+	<td align="center">month</td>
+	<td align="center">Integer,starting with 1 on January</td>
+</tr>
+<tr>
+	<td align="center">year</td>
+	<td align="center">year</td>
+	<td align="center">Integer</td>
+</tr>
+<tr>
+	<td align="center">tair</td>
+	<td align="center">Air temp (in °C)</td>
+	<td align="center">positive: #.###e±##, negative: -#.###e±##</td>
+</tr>
+<tr>
+	<td align="center">vd</td>
+	<td align="center">Water vapour deficit (dimensionless, i.e. vd=VPD/P)</td>
+	<td align="center">#.###e±##</td>
+</tr>
+<tr>
+	<td align="center">parh</td>
+	<td align="center">Photosynthetically active Photon Flux Density (in mol m<sup>2</sup> s<sup>-1</sup>)</td>
+	<td align="center">#.###e±##</td>
+</tr>
+<tr>
+	<td align="center">rainh</td>
+	<td align="center">Precipitation (in m s<sup>-1</sup>)</td>
+	<td align="center">#.###e±##</td>
+</tr>
+</table>
+<p>The first line contains the variable names and is
+omitted when reading the file. The first five fields are 8 characters
+long, the remaining four have 10 characters. The fields need to be
+filled from behind, e.g.:</p>
+<pre>
+       1       1       1    2000 3.469e+00 2.119e-03 2.446e-07 0.000e+00
+       1       1       1    2000-4.843e-01 1.513e-04 0.000e+00 0.000e+00
+</pre>
+<hr>
+</body>
+</html>

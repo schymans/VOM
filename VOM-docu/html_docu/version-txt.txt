@@ -1,0 +1,8 @@
+This is a text file describing tagged versions of the VOM code. 
+
+
+- version 'VOM_0.2': Next tagged version of the code including resolved tickets 1, 2 and 5.   
+
+- version 'VOM_0.1': The first new version of the model including model code, input data, start scripts and a detailed documentation. The code should be compiler-independent.
+
+- version 'Thesis8n_CVF': Original code used for results in Schymanski (2007): PhD Thesis. Contains code and pre-compiled executables for Windows. Code written for the Compaq Visual Fortran Compiler and associated libraries.
