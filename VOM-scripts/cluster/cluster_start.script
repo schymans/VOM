@@ -1,0 +1,17 @@
+#!/bin/sh
+
+#the path, where your model-files are
+CODEDIR=/the_path_to_the_code_files_here
+
+cd $CODEDIR
+
+MYNAME=$(whoami)
+
+# starts the next script as standalone
+nohup ./cluster_bsubjob.script &
+
+# to stop the standalone looping script (cluster_bsubjob.script), use its process-id displayed in the list and type: kill -9 process-id
+# the process-id should be the first number in the nohup.out-file
+
+# output of process information
+ps aux | grep $MYNAME
