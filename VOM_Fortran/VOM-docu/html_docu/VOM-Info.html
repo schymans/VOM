@@ -16,7 +16,8 @@
 <ul>
 	<li>coreprog.f90: main program code</li>
 	<li>sce.f90: optimisation subroutine</li>
-	<li>gasexcwatbal.f90: water balance and gas exchange subroutine</li>
+	<li>watbal.f90: water balance subroutine</li>
+	<li>transpmodel.f90: gas exchange subroutine</li>
 	<li>shuffle.par: ascii file with program options</li>
 	<li>input.par: ascii file with model parameters</li>
 	<li>dailyweather.prn: ascii file with daily weather data </li>
@@ -132,8 +133,8 @@ suvechourly.txt_inf</p>
 <h2>Code Information</h2>
 <h3>Main program code file name: coreprog.f90</h3>
 <p>Core program to read model options from shuffle.par and run
-optimisation (scestan.f90) and water balance model (gasexcwatbal.f90)
-Needs shuffle.par, scestan.f90 and gasexcwatbal.f90.</p>
+optimisation (sce.f90), gas exchange and water balance model (transpmodel.f90, watbal.f90)
+Needs shuffle.par, sce.f90, transpmodel.f90 and watbal.f90.</p>
 <h4>Reads data from [file name: type of data]:</h4>
 <ul>
 	<li>shuffle.par: model options </li>
@@ -149,7 +150,7 @@ Needs shuffle.par, scestan.f90 and gasexcwatbal.f90.</p>
 </ul>
 <p>IF line 1 in shuffle.par=1 or IF file "finalbest.txt" exists in directory</p>
 <ul>
-	<li>gasexcwatbal.f90: sends optimised parameter values, receives NCP value </li>
+	<li>transpmodel.f90 and watbal.f90: sends optimised parameter values, receives NCP value </li>
 </ul>
 <h4>Writes data to [file name: type of data]:</h4>
 <p>None</p>
@@ -163,7 +164,7 @@ optimisable parameters.</p>
 </ul>
 <h4>Calls subroutines [file name: data exchanged]:</h4>
 <ul>
-	<li>gasexcwatbal.f90: sends optimised parameter values,
+	<li>transpmodel.f90: sends optimised parameter values,
 receives NCP value </li>
 </ul>
 <h4>Writes data to [file name: type of data]:</h4>
@@ -176,10 +177,10 @@ objective function value for each run</li>
 optimisation loop </li>
 </ul>
 <hr>
-<h3>Subroutine: gasexcwatbal.f90</h3>
+<h3>Subroutine: transpmodel.f90</h3>
 <p>Subroutine reading model parameters from input.par and weather data
 from hourlyweather.prn, or, if not available, from dailyweaterh.prn.
-Computes sub-hourly water balance, ET and CO2 uptake rates. Saves
+Computes ET and CO2 uptake rates. Saves
 hourly fluxes and state variables in resultshourly.txt, daily values in
 resultsdaily.txt and annual values in yearly.txt.</p>
 <h4>Reads data from [file name: type of data]:</h4>
@@ -192,7 +193,9 @@ resultsdaily.txt and annual values in yearly.txt.</p>
 	<li>hourlyweather.prn: ascii file with hourly weather data </li>
 </ul>
 <h4>Calls subroutines [file name: data exchanged]:</h4>
-<p>None</p>
+<ul>
+	<li>watbal.f90: calculates water balance </li>
+</ul>
 <h4>Writes data to [file name: type of data]:</h4>
 <p>IF hourlyweather.prn did not exist, it will be created.</p>
 <p>IF optimisation completed:</p>
@@ -202,6 +205,15 @@ variables for last few years of model run</li>
 	<li>resultsdaily.txt: daily values</li>
 	<li>yearly.txt: annual values </li>
 </ul>
+<hr>
+<h3>Subroutine: watbal.f90</h3>
+<p>Subroutine calculating (and computing) sub-hourly water balance.</p>
+<h4>Reads data from [file name: type of data]:</h4>
+<p>None</p>
+<h4>Calls subroutines [file name: data exchanged]:</h4>
+<p>None</p>
+<h4>Writes data to [file name: type of data]:</h4>
+<p>None</p>
 <hr>
 <hr>
 <h2>Other sources</h2>

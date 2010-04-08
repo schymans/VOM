@@ -68,13 +68,23 @@ weather data in ascii format.</p>
 	<td align="center">Water vapour pressure in hPa</td>
 	<td align="center">Decimal, #.##</td>
 </tr>
+<tr>
+	<td align="center">Pres</td>
+	<td align="center">air pressure in hPa</td>
+	<td align="center">Decimal, #.##</td>
+</tr>
+<tr>
+	<td align="center">Ca</td>
+	<td align="center">ambient air CO<sub>2</sub> concentration in &micro;mol</td>
+	<td align="center">Decimal, #.##</td>
+</tr>
 </table>
 <p>
 The first line contains the variable names and is omitted when reading
 the file. All fields are 8 characters long and need to be filled from
 behind, e.g.:</p>
 <pre>
-       1       1       1    1976   30.50   25.00    0.70    4.00    9.00   29.00
+       1       1       1    1976   30.50   25.00    0.70    4.00    9.00   29.00  999.32  350.00
 </pre>
 <h3>What is needed?</h3>
 <ul>
@@ -83,7 +93,9 @@ behind, e.g.:</p>
 	<li>T.Max, T.Min: used for calculating diurnal variations in air temperature and VPD</li>
 	<li>Rain: needed for water balance</li>
 	<li>Radn: needed for PAR</li>
-	<li>VP: needed to calculate VPD </li>
+	<li>VP: needed to calculate VPD (needed for calculating hourly VD)</li>
+	<li>Pres: needed for calculating hourly VD</li>
+	<li>Ca: needed to calculate some vegetation variables</li>
 </ul>
 <p>Note: Evap is not needed and can be substituted with a dummy number in the right format.</p>
 <hr>

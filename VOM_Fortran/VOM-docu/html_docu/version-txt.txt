@@ -1,5 +1,6 @@
 This is a text file describing tagged versions of the VOM code. 
 
+- version 'last_rew_based': Last representative elementary watershed based version of the model. See _README.txt file inside svn folder for more information.
 
 - version 'VOM_0.2': Next tagged version of the code including resolved tickets 1, 2 and 5.   
 
