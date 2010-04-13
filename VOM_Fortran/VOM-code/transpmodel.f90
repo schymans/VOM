@@ -236,7 +236,7 @@
       close(kfile_resultsdaily)
       close(kfile_yearly)
       close(kfile_rsurfdaily)
-      close(kfile_delyudaily)
+      close(kfile_delyuhourly)
       close(kfile_ruptkhourly)
       close(kfile_suvechourly)
 
@@ -435,9 +435,9 @@
       write(kfile_rsurfdaily,*) ' year', ' month', ' day', '   dcum',  &
      &  '  rsurfsublayer'
 
-      open(kfile_delyudaily, status='replace',                         &
-     &     file=sfile_delyudaily(1:len_trim(sfile_delyudaily)))
-      write(kfile_delyudaily,*) ' year', ' month', ' day', '   dcum',  &
+      open(kfile_delyuhourly, status='replace',                         &
+     &     file=sfile_delyuhourly(1:len_trim(sfile_delyuhourly)))
+      write(kfile_delyuhourly,*) ' year', ' month', ' day', '   dcum',  &
      &  ' hour', '  delyusublayer'
 
       open(kfile_ruptkhourly, status='replace',                        &
@@ -1369,7 +1369,7 @@
      &    rl__(2) + rlg__(2,2), lambda_, lambdag, rr_ + rrg, hass_(2), &
      &    hassg(2,2), hetm_, hetmg, suvec_(1), ys_, wsnew_, omgo_,     &
      &    hspgfcf, hinfx
-        write(kfile_delyudaily,hourlyformat) year(d___), month(d___),  &
+        write(kfile_delyuhourly,hourlyformat) year(d___), month(d___),  &
      &    day(d___), d___, h__, delzvec(1:nlayers_)
         write(kfile_ruptkhourly,hourlyformat) year(d___), month(d___), &
      &    day(d___), d___, h__, hruptkvec(1:nlayers_)
