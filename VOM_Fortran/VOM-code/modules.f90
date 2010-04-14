@@ -277,7 +277,7 @@
       INTEGER :: kfile_resultsdaily  = 202
       INTEGER :: kfile_yearly        = 203
       INTEGER :: kfile_rsurfdaily    = 204
-      INTEGER :: kfile_delyudaily    = 205
+      INTEGER :: kfile_delyuhourly   = 205
       INTEGER :: kfile_ruptkhourly   = 206
       INTEGER :: kfile_suvechourly   = 207
       INTEGER :: kfile_soilprofile   = 208
@@ -291,7 +291,7 @@
       CHARACTER(80) :: sfile_resultsdaily  = 'resultsdaily.txt'
       CHARACTER(80) :: sfile_yearly        = 'yearly.txt'
       CHARACTER(80) :: sfile_rsurfdaily    = 'rsurfdaily.txt'
-      CHARACTER(80) :: sfile_delyudaily    = 'delyudaily.txt'
+      CHARACTER(80) :: sfile_delyuhourly   = 'delyuhourly.txt'
       CHARACTER(80) :: sfile_ruptkhourly   = 'ruptkhourly.txt'
       CHARACTER(80) :: sfile_suvechourly   = 'suvechourly.txt'
       CHARACTER(80) :: sfile_soilprofile   = 'soilprofile.par'
