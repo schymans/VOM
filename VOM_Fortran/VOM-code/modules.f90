@@ -104,7 +104,7 @@
       REAL*8  :: gammastar
       REAL*8  :: jmax__(3)
       REAL*8  :: jmax25_(3)
-      REAL*8  :: netassyr
+!d      REAL*8  :: netassyr
       REAL*8  :: rainyr
       REAL*8  :: epanyr
       REAL*8  :: paryr
@@ -112,7 +112,17 @@
       REAL*8  :: vdyr
       REAL*8  :: etyr
       REAL*8  :: evapyr
-      REAL*8  :: gppyr
+!d      REAL*8  :: gppyr
+      REAL*8  :: assg_y
+      REAL*8  :: rlg_y
+      REAL*8  :: rrg_y
+      REAL*8  :: cpccg_y
+      REAL*8  :: tcg_y
+      REAL*8  :: asst_y
+      REAL*8  :: rlt_y
+      REAL*8  :: rrt_y
+      REAL*8  :: cpcct_y
+      REAL*8  :: tct_y
       REAL*8  :: daylength
       REAL*8  :: tair
       REAL*8  :: vp_

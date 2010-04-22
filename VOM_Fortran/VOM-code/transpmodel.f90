@@ -201,8 +201,8 @@
 
         if (optmode .eq. 0) then
           call vom_write_dayyear()
-          call vom_add_yearly()
-        endif
+		  call vom_add_yearly()
+		endif
 
 !*-----ADJUSTMENT OF JMAX25 and PC--------------------------------------
 
@@ -427,8 +427,10 @@
 
       open(kfile_yearly, status='replace',                             &
      &     file=sfile_yearly(1:len_trim(sfile_yearly)))
-      write(kfile_yearly,'(a6,9a15)') "year", "rainyr", "epanyr",      &
-     &  "paryr", "radyr", "vdyr", "etyr", "esoilyr", "netassyr", "gppyr"
+      write(kfile_yearly,'(a6,17a16)') "year", "rainyr", "epanyr",     &
+     &  "paryr", "radyr", "vdyr", "esoilyr", "etyr",                   &
+	 &  "assgyr", "rlgyr", "rrgyr", "cpccgyr", "tcgyr",                &
+	 &  "asstyr", "rltyr", "rrtyr", "cpcctyr", "tcyr"
 
       open(kfile_rsurfdaily, status='replace',                         &
      &     file=sfile_rsurfdaily(1:len_trim(sfile_rsurfdaily)))
@@ -736,15 +738,15 @@
 !     * Setting yearly, daily and hourly parameters
 
       yr_            = year(1)
-      netassyr       = 0.d0
-      gppyr          = 0.d0
+!d      netassyr       = 0.d0
+!d      gppyr          = 0.d0
       rainyr         = 0.d0
       paryr          = 0.d0
       radyr          = 0.d0
       vdyr           = 0.d0
       etyr           = 0.d0
       epanyr         = 0.d0
-      evapyr         = 0.d0
+      evapyr         = 0.d0        ! = yearly esoil
       ruptkvec_d(:)  = 0.d0
       ruptkg_d(:)    = 0.d0
       ass_d(:)       = 0.d0
@@ -752,7 +754,19 @@
       netassvec(:)   = 0.d0
       netassvecg(:)  = 0.d0
       iocum          = 0.d0
-
+	  ! for grasses
+	  assg_y         = 0.d0
+	  rlg_y          = 0.d0
+	  rrg_y          = 0.d0
+	  cpccg_y        = 0.d0
+	  tcg_y          = 0.d0
+	  ! for trees
+	  asst_y         = 0.d0
+	  rlt_y          = 0.d0
+	  rrt_y          = 0.d0
+	  cpcct_y        = 0.d0
+	  tct_y          = 0.d0
+	 
       return
       end subroutine vom_init_vegpar
 
@@ -1440,15 +1454,22 @@
      &  day(d___), d___, rsurfvec(1:nlayers_)
 
       if (year(d___) .ne. yr_) then
-        write(kfile_yearly,'(i6,9e15.6)') yr_, rainyr, epanyr, paryr,  &
-     &  radyr, vdyr / (dayyear(d___)), etyr, evapyr, netassyr, gppyr
+!     * for calculation of vdyr a -1 is added to d___ for using dayyear of correct year
+        write(kfile_yearly,'(i6,17e16.6)') yr_, rainyr, epanyr, paryr, &
+     &  radyr, vdyr / (dayyear(d___ - 1)), evapyr, etyr,               &
+	 &  assg_y, rlg_y, rrg_y, cpccg_y, tcg_y,                          &
+	 &  asst_y, rlt_y, rrt_y, cpcct_y, tct_y
       endif
 
 ! WRITING THE ACCUMULATED DATA FROM THE LAST YEAR TO FILE:
 
       if (d___ .eq. N__) then
-        write(kfile_yearly,'(i6,9e15.6)') yr_, rainyr, epanyr, paryr,  &
-     &    radyr, vdyr / (dayyear(d___)), etyr, evapyr, netassyr, gppyr
+!	  * one more call of subroutine to write last day to yearly
+		call vom_add_yearly()
+	    write(kfile_yearly,'(i6,17e16.6)') yr_, rainyr, epanyr, paryr, &
+     &  radyr, vdyr / (dayyear(d___)), evapyr, etyr,                   &
+	 &  assg_y, rlg_y, rrg_y, cpccg_y, tcg_y,                          &
+	 &  asst_y, rlt_y, rrt_y, cpcct_y, tct_y
       endif
 
       return
@@ -1470,9 +1491,21 @@
         vdyr     = vdyr + vd_d / 24.d0
         etyr     = etyr + (etm_d + etmg_d) * 1000.d0  ! in[mm]
         evapyr   = evapyr + esoil_d * 1000.d0  ! in [mm]
-        netassyr = netassyr + ass_d(2) - (cpcc_ + rr_) * 3600.d0       &
-     &           * 24.d0 + assg_d(2,2) - (cpccg(2) + rrg) * 3600.d0 * 24.d0
-        gppyr    = gppyr + (ass_d(2) + rl_d) + assg_d(2,2) + rlg_d
+!d        netassyr = netassyr + ass_d(2) - (cpcc_ + rr_) * 3600.d0       &
+!d     &           * 24.d0 + assg_d(2,2) - (cpccg(2) + rrg) * 3600.d0 * 24.d0
+!d        gppyr    = gppyr + (ass_d(2) + rl_d) + assg_d(2,2) + rlg_d
+        ! for grasses
+		assg_y   = assg_y + assg_d(2,2)
+		rlg_y    = rlg_y + rlg_d
+		rrg_y    = rrg_y + rrg * 3600.d0 * 24.d0
+		cpccg_y  = cpccg_y + cpccg(2) * 3600.d0 * 24.d0
+		tcg_y    = tcg_y + tcg(2) * 3600.d0 * 24.d0
+		! for trees
+		asst_y   = asst_y + ass_d(2)
+		rlt_y    = rlt_y + rl_d
+		rrt_y    = rrt_y + rr_ * 3600.d0 * 24.d0
+		cpcct_y  = cpcct_y + cpcc_ * 3600.d0 * 24.d0
+		tct_y    = tct_y + tc_ * 3600.d0 * 24.d0
       else
         yr_      = year(d___)
         rainyr   = rainvec(d___)
@@ -1482,9 +1515,21 @@
         vdyr     = vd_d / 24.d0
         etyr     = (etmg_d + etm_d) * 1000.d0
         evapyr   = esoil_d * 1000.d0
-        netassyr = ass_d(2) - (cpcc_ + rr_) * 3600.d0 * 24.d0          &
-     &           + assg_d(2,2) - (cpccg(2) + rrg) * 3600.d0 * 24.d0
-        gppyr    = (ass_d(2) + rl_d) + assg_d(2,2) + rlg_d
+!d        netassyr = ass_d(2) - (cpcc_ + rr_) * 3600.d0 * 24.d0          &
+!d    &           + assg_d(2,2) - (cpccg(2) + rrg) * 3600.d0 * 24.d0
+!d        gppyr    = (ass_d(2) + rl_d) + assg_d(2,2) + rlg_d
+        ! for grasses
+		assg_y   = assg_d(2,2)
+		rlg_y    = rlg_d
+		rrg_y    = rrg * 3600.d0 * 24.d0
+		cpccg_y  = cpccg(2) * 3600.d0 * 24.d0
+		tcg_y    = tcg(2) * 3600.d0 * 24.d0
+		! for trees
+		asst_y   = ass_d(2)
+		rlt_y    = rl_d
+		rrt_y    = rr_ * 3600.d0 * 24.d0
+		cpcct_y  = cpcc_ * 3600.d0 * 24.d0
+		tct_y    = tc_ * 3600.d0 * 24.d0
       endif
 
       return
