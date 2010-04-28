@@ -1,20 +1,14 @@
-0						/* COMMAND LINE TO RUN ASSIMILATION MODEL (0 for -optimise, 1 for -continue or 2 for compute)
-2                                                                  /* MAXIMUM NUMBER OF COMPLEXES (p)  
-2								/* MINIMUM NUMBER OF COMPLEXES (pmin)  
-0.01						/* RESOLUTION OF OPTIMISATION (% OF MAX VARIATION WHEN OPTIMISATION STOPS)
+0						/* COMMAND LINE TO RUN ASSIMILATION MODEL (0 for -optimise, 1 for -continue, 2 for compute, 3 for compute ncp only with pars.txt)
+2                       /* MAXIMUM NUMBER OF COMPLEXES (p)  
+2						/* MINIMUM NUMBER OF COMPLEXES (pmin)  
+0.01					/* RESOLUTION OF OPTIMISATION (% OF MAX VARIATION WHEN OPTIMISATION STOPS)
 10						/* PATIENCE: NUMBER OF LOOPS WITHOUT INCREASE IN OF BEFORE OPTIMISATION STOPS
 3						/* ALPHA: NUMBER OF OPTIMISATIONS PER COMPLEX AND RUN
 1.0						/* FOCUS: IF <1.0, THE SPREAD OF THE RANDOM SEED AROUND THE INITIAL VALUES IS LIMITED
-(7x,a9,e14.6,e10.4,e11.1,i5)                                       /* Format of each line                 
+(7x,a9,e14.6,e10.4,e11.1,i5)                                     /* Format of each line                 
 var:   lambdagf   0.779827d+03    0.0d0      1.0d04    1		 /* NAME, INITIAL, MIN, MAX, 1=OPTIMISE
 var:   wsgexp    -0.132889d+01   -3.0d0       1.0d0    1
 var:   lambdafac  0.160181d+04    0.0d0      1.0d04    1
 var:   wsexp     -0.564496d+00   -3.0d0       1.0d0    1
 var:   pc         0.300000d+00    0.0d0       1.0d0    1
 var:   rootdepth  0.300000d+01    1.0d0       9.0d0    1
-var:   mdstore    1.000000d+02    0.0d0      1.0d04    0
-var:   rgdepth    0.100000d+01    0.0d0      15.0d0    0
-
-
-
- 

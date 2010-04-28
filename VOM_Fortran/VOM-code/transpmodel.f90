@@ -47,8 +47,9 @@
 
       finish = 0
 
-      if (dim_invar .lt. 8) then
-        write(*,*) "ERROR: Number of input parameters less than 8."
+!dd      if (dim_invar .lt. 8) then
+      if (dim_invar .lt. 6) then
+        write(*,*) "ERROR: Number of input parameters less than 6."
         stop
       endif
 
@@ -59,6 +60,8 @@
       else
         optmode = 1
       endif
+	  
+      if (option1 .eq. 3) optmode = 2
 
 !*----------------------------------------------------------------------
 !*     Optimised parameters reading from invar
@@ -70,8 +73,8 @@
       wsexp      = invar(4)
       pc_        = invar(5)
       rootdepth  = invar(6)
-      mdstore    = invar(7)
-      rgdepth    = invar(8)
+!dd      mdstore    = invar(7)
+!dd      rgdepth    = invar(8)
 
       if (parsaved .ne. 1) then
 
@@ -86,6 +89,8 @@
 !*-----File opening (saving climate and gstom ass data)-----------------
 
         if (optmode .eq. 0) call vom_open_output()
+		
+        if (optmode .eq. 2) call vom_open_ncp_output()
 
 !*-----PARAMETER READING FROM SOILPROFILE.PAR---------------------------
 
@@ -114,8 +119,8 @@
 
       d___ = 0
       dtest = nyt * 365
-      if (optmode.eq.0) dtest = N__
-      do while (d___ .lt. dtest)
+      if (optmode .eq. 0 .or. optmode .eq. 2) dtest = N__
+      do while (d___  .lt. dtest)
         d___ = d___ + 1
 
         call vom_daily_init()
@@ -158,7 +163,6 @@
 
               call vom_tissue_water_et(finish, netass)
               if (finish .eq. 1) return
-            
             endif
 
 !*-----water balance and conditions at next time step-------------------
@@ -230,15 +234,19 @@
         print *,"Cumulative error in water balance (initial Ws+Input-Output-final Ws, in m): ",error
         print *,"Number of times dtsu was limiting: ",dtsu_count
         print *,"Number of times dtmax was limiting: ",dtmax_count
+        close(kfile_resultshourly)
+        close(kfile_resultsdaily)
+        close(kfile_yearly)
+        close(kfile_rsurfdaily)
+        close(kfile_delyuhourly)
+        close(kfile_ruptkhourly)
+        close(kfile_suvechourly)
       endif
-
-      close(kfile_resultshourly)
-      close(kfile_resultsdaily)
-      close(kfile_yearly)
-      close(kfile_rsurfdaily)
-      close(kfile_delyuhourly)
-      close(kfile_ruptkhourly)
-      close(kfile_suvechourly)
+	  
+      if (optmode .eq. 2) then
+        call vom_write_model_output(netass)
+        close(kfile_model_output)
+      endif
 
       return
       end subroutine transpmodel
@@ -303,6 +311,8 @@
       read(kfile_inputpar,*) rootrad
       read(kfile_inputpar,*) prootmg
       read(kfile_inputpar,*) growthmax
+      read(kfile_inputpar,*) mdstore
+      read(kfile_inputpar,*) rgdepth
       read(kfile_inputpar,*) firstyear
       read(kfile_inputpar,*) lastyear
       close(kfile_inputpar)
@@ -454,6 +464,20 @@
 
       return
       end subroutine vom_open_output
+
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!*-----File opening (saving ncp)----------------------------------------
+
+      subroutine vom_open_ncp_output ()
+      use vegwatbal
+      implicit none
+
+      open(kfile_model_output, file=sfile_model_output(1:len_trim(sfile_model_output)))
+
+      return
+      end subroutine vom_open_ncp_output
 
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1534,6 +1558,21 @@
 
       return
       end subroutine vom_add_yearly
+
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+      subroutine vom_write_model_output (netass)
+      use vegwatbal
+      implicit none
+
+      REAL*8, INTENT(in) :: netass
+
+      write(kfile_model_output,'(e12.6)') netass
+
+      return
+      end subroutine vom_write_model_output
 
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

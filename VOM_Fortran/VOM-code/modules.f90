@@ -291,6 +291,8 @@
       INTEGER :: kfile_ruptkhourly   = 206
       INTEGER :: kfile_suvechourly   = 207
       INTEGER :: kfile_soilprofile   = 208
+      INTEGER :: kfile_model_output  = 209
+
 
 !     * file names
 
@@ -305,5 +307,6 @@
       CHARACTER(80) :: sfile_ruptkhourly   = 'ruptkhourly.txt'
       CHARACTER(80) :: sfile_suvechourly   = 'suvechourly.txt'
       CHARACTER(80) :: sfile_soilprofile   = 'soilprofile.par'
+      CHARACTER(80) :: sfile_model_output  = 'model_output.txt'
 
       end module vegwatbal

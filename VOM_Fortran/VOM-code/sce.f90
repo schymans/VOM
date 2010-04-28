@@ -1073,7 +1073,7 @@
 
       if (success .eq. 2) then
         open(kfile_finalbest, file=sfile_finalbest(1:len_trim(sfile_finalbest)))
-        write(kfile_finalbest, '("   0.0E+00  0.0E+00  0.0E+00  0.0E+00  0.0E+00  0.0E+00  0.0E+00  0.0E+00  0.0E+00")')
+        write(kfile_finalbest, '("   0.0E+00  0.0E+00  0.0E+00  0.0E+00  0.0E+00  0.0E+00  0.0E+00")')
         close(kfile_finalbest)
       endif
 
