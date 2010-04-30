@@ -14,18 +14,45 @@
 <hr>
 <h2>Files needed</h2>
 <ul>
-	<li>coreprog.f90: main program code</li>
-	<li>sce.f90: optimisation subroutine</li>
-	<li>watbal.f90: water balance subroutine</li>
-	<li>transpmodel.f90: gas exchange subroutine</li>
-	<li>shuffle.par: ascii file with program options</li>
-	<li>input.par: ascii file with model parameters</li>
-	<li>dailyweather.prn: ascii file with daily weather data </li>
+	<li>model code</li>
+		<ul>
+			<li>coreprog.f90: main program code</li>
+			<li>sce.f90: optimisation subroutine</li>
+			<li>watbal.f90: water balance subroutine</li>
+			<li>transpmodel.f90: gas exchange subroutine</li>
+			<li>modules.f90: module defining variables and parameters</li>
+		</ul>
+	<li>input files to start optimisation</li>
+		<ul>
+			<li>shuffle.par: ascii file with program options</li>
+			<li>input.par: ascii file with model parameters</li>
+			<li>dailyweather.prn: ascii file with daily weather data </li>
+		</ul>
+		<ul style="list-style-type:none">
+			<li>OR</li>
+		</ul>
+		<ul>
+			<li>hourlyweather.prn: ascii file with hourly weather data </li>
+		</ul>
+	<li>input files to calculate results</li>
+		<ul>
+			<li>files mentioned above</li>
+			<li>finalbest.txt: ascii file with optimal values, created by the model after optimisation completed</li>
+		</ul>
+		<ul style="list-style-type:none">
+			<li>OR</li>
+		</ul>
+		<ul>
+			<li>currentbest.txt: ascii file with optimal values during the model run, created by the model during optimisation</li>
+		</ul>
+		<ul style="list-style-type:none">
+			<li>OR</li>
+		</ul>
+		<ul>
+			<li>pars.txt: ascii file with optimal values, has to be created by your own</li>
+		</ul>
 </ul>
-<p>OR</p>
-<ul>
-	<li>hourlyweather.prn: ascii file with hourly weather data </li>
-</ul>
+
 <p>A set of compatible files are available from the repository. </p>
 <hr>
 <hr>
@@ -58,6 +85,15 @@ searching for an improved parameter set before it gives up</li>
 values. (Definition of the starting values is obsolete as of version
 sceStan3.f90.). Prescribe values of non-optimisable parameters by
 setting the 'initial value' in shuffle.par. </li>
+</ul>
+<p>The following parameters are included and can be optimised:</p>
+<ul>
+	<li><span style="font-weight:bold">lambdagf</span> : dE/dA in grasses (targeted slope between transpiration rate and CO<sub>2</sub> uptake rate)</li>
+	<li style="line-height:1.8em"><span style="font-weight:bold">wsgexp</span> : value for the relationship between lambdagf and soil water</li>
+	<li style="line-height:1.8em"><span style="font-weight:bold">lambdafac</span> : dE/dA in trees (targeted slope between transpiration rate and CO<sub>2</sub> uptake rate)</li>
+	<li style="line-height:1.8em"><span style="font-weight:bold">wsexp</span> : value for the relationship between lambdafac and soil water</li>
+	<li style="line-height:1.8em"><span style="font-weight:bold">pc</span> : Area fraction covered by trees</li>
+	<li style="line-height:1.8em"><span style="font-weight:bold">rootdepth</span> : Rootdepth for trees</li>
 </ul>
 <h3>Settings in input.par:</h3>
 <p>The parameters are explained in the text file itself. Parameters that
@@ -97,6 +133,10 @@ available, the model uses the "hourlyweather.prn" instead of the
 "dailyweather.prn". The file containing hourly weather data in ascii
 format and is described here:
 <a href="hourlyweather.prn_inf.html">hourlyweather.prn_inf</a>.</p>
+<h3>Description of finalbest.txt, currentbest.txt and pars.txt:</h3>
+<p>Files have a list directed format with a sequence of values. Value separators are a set of adjacent blanks.
+Finalbest.txt and currentbest.txt contains the parameters as included in shuffle.par followed by a value for netass (ncp).
+Pars.txt contains the parameters as included in shuffle.par.</p>
 <hr>
 <hr>
 <h2>Model Output</h2>
@@ -134,6 +174,8 @@ during the last few years of the model run is described here:
 <p>The file containing hourly soil saturation degrees in each soil layer
 during the last few years of the model run is described here:
 <a href="suvechourly.txt_inf.html">suvechourly.txt_inf</a></p>
+<h3>model_output.txt</h3>
+<p>The file contains the best ncp.</p>
 <hr>
 <hr>
 <h2>Code Information</h2>
@@ -145,16 +187,32 @@ Needs shuffle.par, sce.f90, transpmodel.f90 and watbal.f90.</p>
 <ul>
 	<li>shuffle.par: model options </li>
 </ul>
-<p>IF line 1 in shuffle.par="-compute"</p>
+<p>IF line 1 in shuffle.par=0</p>
 <ul>
-	<li>currentbest.txt: optimal vegetation parameters </li>
+	<li>None OR finalbest.txt: optimal vegetation parameters</li>
+</ul>
+<p>IF line 1 in shuffle.par=2</p>
+<ul>
+	<li>currentbest.txt OR finalbest.txt: optimal vegetation parameters</li>
+</ul>
+<p>IF line 1 in shuffle.par=3</p>
+<ul>
+	<li>pars.txt: optimal vegetation parameters</li>
 </ul>
 <h4>Calls subroutines [file name: data exchanged]:</h4>
-<p>IF line 1 in shuffle.par=0</p>
+<p>IF line 1 in shuffle.par=0 AND <span style="font-weight:bold">no file</span> "finalbest.txt" exists</p>
 <ul>
 	<li>sce.f90: no data exchanged </li>
 </ul>
-<p>IF line 1 in shuffle.par=1 or IF file "finalbest.txt" exists in directory</p>
+<p>IF line 1 in shuffle.par=0 AND file "finalbest.txt" exists</p>
+<ul>
+	<li>transpmodel.f90 and watbal.f90: sends optimised parameter values, receives NCP value</li>
+</ul>
+<p>IF line 1 in shuffle.par=2 OR file "finalbest.txt" exists in directory</p>
+<ul>
+	<li>transpmodel.f90 and watbal.f90: sends optimised parameter values, receives NCP value </li>
+</ul>
+<p>IF line 1 in shuffle.par=3 AND file "pars.txt" exists in directory</p>
 <ul>
 	<li>transpmodel.f90 and watbal.f90: sends optimised parameter values, receives NCP value </li>
 </ul>
