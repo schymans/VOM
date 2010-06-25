@@ -123,6 +123,12 @@ appropriate ones for the dominant soil type on the site</a>):</li>
 	<li>first year</li>
 	<li>last year </li>
 </ul>
+<h3>Settings for random values</h3>
+<p>To get really different random numbers you have to delete the comment mark (!) in one line (135 or around) in sce.f90, directly before the intrinsic subroutine call of RANDOM_SEED().
+This subroutine initialize the random number generator.
+If you don't delete the mark there will be generated also random numbers. But their generation depends always on the same starting seed.
+Therefore these random numbers will be the same with every new start of the model. To avoid the influence of random numbers can be helpful e.g. for evaluating the model.
+In our work with the model we start 4 runs. The first with set comment mark and the other 3 without the comment mark.</p>
 <h3>Description of dailyweather.prn:</h3>
 <p>The file "dailyweather.prn" is an input file for VOM, containing daily
 weather data in ascii format and is described here:
