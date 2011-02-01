@@ -74,8 +74,8 @@ computation time will increase considerably. Good values are 2 or 4.</li>
 	<li>Set the resolution of the optimisation (the model stops if
 the parameters don't change by more than this fraction of their search
 range)</li>
-	<li>Set the number of loops you want the model to keep
-searching for an improved parameter set before it gives up</li>
+	<li>Set the number of unsuccessful loops before the model gives up searching for an improved 
+	objective function.</li>
 	<li>Set the number of simplex optimisations per set of parents
 (a larger number may lead to faster convergence on local optimum)</li>
 	<li>Set the spread of the random seed around the initial guess
@@ -124,11 +124,13 @@ appropriate ones for the dominant soil type on the site</a>):</li>
 	<li>last year </li>
 </ul>
 <h3>Settings for random values</h3>
-<p>To get really different random numbers you have to delete the comment mark (!) in one line (135 or around) in sce.f90, directly before the intrinsic subroutine call of RANDOM_SEED().
-This subroutine initialize the random number generator.
-If you don't delete the mark there will be generated also random numbers. But their generation depends always on the same starting seed.
-Therefore these random numbers will be the same with every new start of the model. To avoid the influence of random numbers can be helpful e.g. for evaluating the model.
-In our work with the model we start 4 runs. The first with set comment mark and the other 3 without the comment mark.</p>
+<p>The SCE algorithm generates random numbers as part of the optimisation routine. These are
+initialised using a random seed based on the date and time. For debugging purposes, the initialisation
+can be made independent of the date and time and only machine-specific. This will result in exactly
+identical optimisation runs if the model is run repeatedly with the same data on the same machine.
+To achieve this, set the 'command' option in shuffle.par to 4 (first line in the file).
+Our experience revealed that the model should be run several times in order to reduce the risk of
+converging to a local maximum.</p>
 <h3>Description of dailyweather.prn:</h3>
 <p>The file "dailyweather.prn" is an input file for VOM, containing daily
 weather data in ascii format and is described here:
