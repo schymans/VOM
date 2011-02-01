@@ -131,7 +131,7 @@
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ! Initialize the random number generator
 ! (standard subroutine, based on the date and time)
-      if (command .ne. 4)
+      if (command .ne. 4) then
         CALL RANDOM_SEED()
       endif
 
