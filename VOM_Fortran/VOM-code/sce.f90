@@ -131,8 +131,9 @@
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ! Initialize the random number generator
 ! (standard subroutine, based on the date and time)
-
-!     CALL RANDOM_SEED()
+      if (command .ne. 4)
+        CALL RANDOM_SEED()
+      endif
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ! WRITE SCREEN HEADER

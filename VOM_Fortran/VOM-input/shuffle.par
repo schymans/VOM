@@ -1,4 +1,4 @@
-0						/* COMMAND LINE TO RUN ASSIMILATION MODEL (0 for -optimise, 1 for -continue, 2 for compute, 3 for compute ncp only with pars.txt)
+0						/* COMMAND LINE TO RUN ASSIMILATION MODEL (0 for -optimise, 1 for -continue, 2 for compute, 3 for compute ncp only with pars.txt, 4 for optimise without random_seed)
 2                       /* MAXIMUM NUMBER OF COMPLEXES (p)  
 2						/* MINIMUM NUMBER OF COMPLEXES (pmin)  
 0.01					/* RESOLUTION OF OPTIMISATION (% OF MAX VARIATION WHEN OPTIMISATION STOPS)
