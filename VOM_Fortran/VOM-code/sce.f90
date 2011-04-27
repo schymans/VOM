@@ -53,6 +53,7 @@
       INTEGER :: nloop
       INTEGER :: nsincebest
       INTEGER :: patience
+      INTEGER :: command
 
       INTEGER, ALLOCATABLE :: optid(:)
 
@@ -297,7 +298,7 @@
       use sce_mod
       implicit none
 
-      INTEGER :: i_, j_, ios, command
+      INTEGER :: i_, j_, ios
       INTEGER, ALLOCATABLE :: paropt(:)
       CHARACTER(3)   :: str
       CHARACTER(60)  :: informat

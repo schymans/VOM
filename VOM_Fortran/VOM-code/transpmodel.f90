@@ -549,9 +549,9 @@
 
         open(kfile_hourlyweather, iostat=stat,                         &
      &       file=sfile_hourlyweather(1:len_trim(sfile_hourlyweather)))
-        write(kfile_hourlyweather,'(5a8,5a10)') '   hour', ' dayyear', &
-     &    '     day', '   month', '    year', '      tair',            &
-     &    '        vd', '      parh', '     rainh', '     cah'
+        write(kfile_hourlyweather,'(5a8,5a11)') '   hour', ' dayyear', &
+     &    '     day', '   month', '    year', '       tair',            &
+     &    '         vd', '       parh', '      rainh', '      cah'
 
 !       * Calculation of derived parameters
 
@@ -570,7 +570,7 @@
 			ii = 1
 			oldh = 99
 			do i = 1, Nh_
-				read(kfile_hourlyweather,'(5i8,5e10.3)') h, dummyint1,       &
+				read(kfile_hourlyweather,'(5i8,5e11.3)') h, dummyint1,       &
 	 &      dummyint2, dummyint3, dummyint4, tairh(i), vdh(i),         &
 	 &      parh(i), rainh(i), cah(i)
 				if (h .lt. oldh) then
@@ -664,7 +664,7 @@
             parh(ii) = 0.d0
           endif
 
-          write(kfile_hourlyweather,'(5i8,5e10.3)') ik, dayyear(in),   &
+          write(kfile_hourlyweather,'(5i8,5e11.3)') ik, dayyear(in),   &
      &      day(in), month(in), year(in), tairh(ii), vdh(ii),          &
      &      parh(ii), rainh(ii), cah(ii)
 
