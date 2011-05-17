@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #the path, where your model-files are
-CODEDIR=/the_path_to_the_code_files_here
+CODEDIR=$(pwd)
 
 cd $CODEDIR
 

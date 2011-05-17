@@ -3,14 +3,6 @@
 #the path, where your model-files are (see cluster_start.script)
 CODEDIR=$(pwd)
 
-# makes a result-folder inside your model-folder
-STOREDIR=$CODEDIR/results
-mkdir -p $STOREDIR
-
-# copies all inside the result-folder and goes in
-cp $CODEDIR/* $STOREDIR/
-cd $STOREDIR
-
 # change permissions
 chmod u=rwx,g=rwx,o=r *
 
@@ -18,8 +10,9 @@ chmod u=rwx,g=rwx,o=r *
 echo $$
 
 # starts vomrun.script as batch job until finalbest.txt or error.txt is written
-until [ -e $STOREDIR/finalbest.txt -o -e $STOREDIR/error.txt ]; do
+until [ -e $CODEDIR/finalbest.txt -o -e $CODEDIR/error.txt ]; do
 	# makes sure that the file system had enough time to write data to disk!
 	sleep 30
-	bsub -K -q "all" -o $CODEDIR/logfile.txt $CODEDIR/cluster_vomrun.script
+	# This is the appropriate line to run it in the BTM-queue. Change as appropriate.
+	bsub -K -q "BTM" -o $CODEDIR/logfile.txt $CODEDIR/cluster_vomrun.script
 done

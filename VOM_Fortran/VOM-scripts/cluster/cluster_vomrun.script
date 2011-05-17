@@ -1,26 +1,25 @@
 #!/bin/sh
 
-# path for the temp-folder on cluster
-# we use TMPDIR=/scratch/login-name/run$$$HOSTNAME
-TMPDIR=/temp-path.on.cluster
+# path for the temp-folder on cluster (replace by appropriate pattern)
+TMPDIR=/scratch/$whoami/run$$$HOSTNAME
 STOREDIR=$(pwd)
 
 # writes process-id and scratch folder name into logfile.txt
 echo run$$$HOSTNAME " > " $(pwd)
 
-# makes the temp-folder on the cluster
+# makes a temp-folder on the cluster
 mkdir -p $TMPDIR
 cd $TMPDIR
 
-# copies files in temp-folder
+# copies files into temp-folder
 cp $STOREDIR/* .
 
 # makes sure that the file system had enough time to write data to disk!
 sleep 10
 
-# the if loop makes that the code will be compiled just at the beginning for one time
-# if the cluster computers are made up of different architectures (e.g. processors) please compile the code every time
-# to do so please comment out the if loop and use the compile command without it
+# The below if loop compiles the code just once at the beginning.
+# If the cluster computers are made up of different architectures (e.g. processors), compile the code every time.
+# To do so, comment out the if loop and use the compile command without it.
 if [ ! -e model.x ]; then
 	# the model-code files 
 	CODE1=modules.f90
@@ -39,26 +38,21 @@ if [ ! -e model.x ]; then
 	sleep 10
 fi
 
-# delete files not needed anymore
+# delete files not needed any more
 rm -f *.f90 *.o *.mod *.script nohup.out logfile.txt
 
-# goes in result-folder and delete files not needed anymore (prevent unnecessary copying)
-cd $STOREDIR
-rm -f *.f90 *.script nohup.out logfile.txt
-cd $TMPDIR
-
-# runs the the compiled model and writes output in a file
+# Run the compiled model and write output to a file
 ./model.x >>$STOREDIR/job1.info
 
-# breaks up if the model.x cames with an error message
+# Abort if the model.x gives an error message
 if [ $? = 0 ]; then
 	# makes sure that the file system had enough time to write data to disk!
 	sleep 10
 	
-	# copies the temp-folder out
+	# copies executable and output files to storedir
 	cp *.txt *.out *.x $STOREDIR/
 	
-	# copies hourlyweather out if it exists
+	# copies hourlyweather to storedir if not present
 	if [ ! -e $STOREDIR/hourlyweather.prn ]; then
 		cp hourlyweather.prn $STOREDIR/
 	fi
