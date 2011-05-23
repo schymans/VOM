@@ -113,11 +113,13 @@
       REAL*8  :: etyr
       REAL*8  :: evapyr
 !d      REAL*8  :: gppyr
-      REAL*8  :: assg_y
+      REAL*8  :: etmg_y
+      REAL*8  :: assg_y      
       REAL*8  :: rlg_y
       REAL*8  :: rrg_y
       REAL*8  :: cpccg_y
       REAL*8  :: tcg_y
+      REAL*8  :: etmt_y      
       REAL*8  :: asst_y
       REAL*8  :: rlt_y
       REAL*8  :: rrt_y

@@ -157,7 +157,8 @@
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ! INSERTED BY STAN TO ALLOW CONTINUATION OF OPTIMSATION FROM PREVIOUSLY SAVED STEP
 
-      open(kfile_lastloop, file=sfile_lastloop(1:len_trim(sfile_lastloop)), status='old', iostat=stat)
+      open(kfile_lastloop, file=sfile_lastloop(1:len_trim(sfile_lastloop)), status='old', &
+      &	iostat=stat)
       if (stat .eq. 0) then
         read(kfile_lastloop,*) ncomp2
         read(kfile_lastloop,*) nloop
@@ -173,9 +174,12 @@
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ! OPEN FILES FOR STORING OBJECTIVE FUNCTION AND PARAMETER VALUES
 
-        open(kfile_sceout, file=sfile_sceout(1:len_trim(sfile_sceout)), status='old', position='append')
-        open(kfile_bestpars, file=sfile_bestpars(1:len_trim(sfile_bestpars)), status='old', position='append')
-        open(kfile_progress, file=sfile_progress(1:len_trim(sfile_progress)), status='old', position='append')
+        open(kfile_sceout, file=sfile_sceout(1:len_trim(sfile_sceout)), status='old', &
+        &	position='append')
+        open(kfile_bestpars, file=sfile_bestpars(1:len_trim(sfile_bestpars)), status='old', &
+        &	position='append')
+        open(kfile_progress, file=sfile_progress(1:len_trim(sfile_progress)), status='old', &
+        &	position='append')
         write(kfile_progress,'(/"  NEW Run time:   ",a)') logdate
       else
 
@@ -444,7 +448,8 @@
       open(kfile_currentbest, file=sfile_currentbest(1:len_trim(sfile_currentbest)))
       write(kfile_currentbest,outformat) shufflevar(:,1), bestobj
       close(kfile_currentbest)
-      write(*,'("Systematic seed of",i4," parameters for ",i2," complexes. Initial OF= ",e12.6)') nopt, ncomp, ofvec(1)
+      write(*,'("Systematic seed of",i4," parameters for ",i2," complexes. Initial OF= ",e12.6)') &
+      &	nopt, ncomp, ofvec(1)
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ! GENERATE A SYSTEMATIC ARRAY OF INITIAL PARAMETER VALUES FOLLOWING
@@ -1061,8 +1066,10 @@
       write(*,'(/"PARAMETER|     VALUE   |    MINVAL   |    MAXVAL   |  CV (%)     ")')
       write(kfile_progress,'(/"PARAMETER|     VALUE   |    MINVAL   |    MAXVAL   |  CV (%)     ")')
       do i_ = 1, nopt
-        write(*,'(a9,5e14.6)') parname(optid(i_)), shufflevar(optid(i_),1), parmin(optid(i_)), parmax(optid(i_)), cv_(i_)
-        write(kfile_progress,'(a9,5e14.6)') parname(optid(i_)), shufflevar(optid(i_),1), parmin(optid(i_)), parmax(optid(i_)), cv_(i_)
+        write(*,'(a9,5e14.6)') parname(optid(i_)), shufflevar(optid(i_),1), parmin(optid(i_)), &
+        &	parmax(optid(i_)), cv_(i_)
+        write(kfile_progress,'(a9,5e14.6)') parname(optid(i_)), shufflevar(optid(i_),1), &
+        &	parmin(optid(i_)), parmax(optid(i_)), cv_(i_)
       enddo
       write(kfile_progress,'(//)')
       print *
@@ -1075,7 +1082,8 @@
 
       if (success .eq. 2) then
         open(kfile_finalbest, file=sfile_finalbest(1:len_trim(sfile_finalbest)))
-        write(kfile_finalbest, '("   0.0E+00  0.0E+00  0.0E+00  0.0E+00  0.0E+00  0.0E+00  0.0E+00")')
+        write(kfile_finalbest, &
+        &	'("   0.0E+00  0.0E+00  0.0E+00  0.0E+00  0.0E+00  0.0E+00  0.0E+00")')
         close(kfile_finalbest)
       endif
 
