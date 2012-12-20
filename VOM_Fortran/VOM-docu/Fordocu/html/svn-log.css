@@ -1,0 +1,46 @@
+log {
+  background-color: white;
+  display: block;
+  margin: 2em 204px 2em 5ex;
+}
+ 
+logentry {
+  display: list-item;
+  margin-bottom: 1em;
+  font-family: monospace;
+  font-size: normal;
+  color: #999;
+}
+
+revision {
+  list-style-type: square;
+  font-family: monospace;
+  font-size: 110%;
+  color: black;
+}
+ 
+author {
+  font-weight: bold;
+  overflow: hidden;
+  overflow: visible; 
+  font-size: 110%;
+  color: #AA0000;
+}
+ 
+date {
+  width: 10ex;
+  /* If Firefox would support font families even when you force a font,
+     I could use 'overflow: hidden' to hide everything except the date part of <date>. */
+  overflow: hidden;
+  overflow: visible; 
+  font-family: monospace;
+  font-weight: bold;
+  font-size: 110%;
+  color: #7488a7;
+}
+ 
+msg {
+  display: block;
+  white-space: pre-wrap;
+  color: black;
+}
