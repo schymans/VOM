@@ -1,12 +1,13 @@
+      subroutine sce ()
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 !
 !  SHUFFLED COMPLEX EVOLUTION
-!    Parameter optimisation algorithm based on a paper by Duan et al. (1993,
-!    J. Opt. Theory and Appl., 76, 501--521). 
+!    Parameter optimisation algorithm based on a paper by Duan et al. 
+!    (1993, J. Opt. Theory and Appl., 76, 501--521). 
 !
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 !  VERSION 2.1        ---  01 February 1999         
-!  Written by:        Neil Viney, Centre for Water Research (CWR), The University of WA
+!  Written by Neil Viney, Centre for Water Research (CWR), The University of WA
 !  Modified by Stan Schymanski, CWR, 05 April 2004 (to run with transpmodel)  
 !  Extended by Stan Schymanski, SESE, 02 June 2006 to follow Muttil & Liong (2004,
 !  Journal of Hydraulic Engineering-Asce 130(12):1202-1205) and Duan et al. (1994, 
@@ -37,88 +38,6 @@
 !
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-      module sce_mod
-
-      INTEGER :: success = 0
-      INTEGER :: npar
-      INTEGER :: ncomp
-      INTEGER :: ncompmin
-      INTEGER :: ncomp2
-      INTEGER :: nopt
-      INTEGER :: mopt
-      INTEGER :: sopt
-      INTEGER :: qopt
-      INTEGER :: alpha
-      INTEGER :: nrun
-      INTEGER :: nloop
-      INTEGER :: nsincebest
-      INTEGER :: patience
-      INTEGER :: command
-
-      INTEGER, ALLOCATABLE :: optid(:)
-
-      REAL*8  :: ranscal
-      REAL*8  :: focus
-      REAL*8  :: worstbest
-      REAL*8  :: bestobj
-      REAL*8  :: bestincomp
-      REAL*8  :: resolution
-
-      REAL*8, ALLOCATABLE :: wgt(:)
-      REAL*8, ALLOCATABLE :: cv_(:)
-      REAL*8, ALLOCATABLE :: ranarr(:)
-
-      REAL*8, ALLOCATABLE :: shufflevar(:,:)
-      REAL*8, ALLOCATABLE :: parval(:)
-      REAL*8, ALLOCATABLE :: parmin(:)
-      REAL*8, ALLOCATABLE :: parmax(:)
-      REAL*8, ALLOCATABLE :: ofvec(:)
-
-      CHARACTER(9), ALLOCATABLE :: parname(:)
-      CHARACTER(12)  :: evolution
-      CHARACTER(60)  :: outformat, loopformat
-
-!     * allocated variables for optsensitivity()
-      REAL*8, ALLOCATABLE :: dataarray(:,:)
-      REAL*8, ALLOCATABLE :: shufflevar2(:)
-
-!     * allocated variables for cce()
-      INTEGER, ALLOCATABLE :: parentsid(:)
-      REAL*8,  ALLOCATABLE :: objfunsub(:)
-      REAL*8,  ALLOCATABLE :: invarsub(:,:)
-      LOGICAL, ALLOCATABLE :: selected(:)
-
-!     * allocated variables for simplex()
-      REAL*8, ALLOCATABLE :: centroid(:)
-      REAL*8, ALLOCATABLE :: newpoint(:)
-
-!     * file codes
-
-      INTEGER :: kfile_sceout      = 701
-      INTEGER :: kfile_shufflepar  = 702
-      INTEGER :: kfile_progress    = 703
-      INTEGER :: kfile_lastloop    = 704
-      INTEGER :: kfile_currentbest = 705
-      INTEGER :: kfile_bestpars    = 706
-      INTEGER :: kfile_finalbest   = 707
-
-!     * file names
-
-      CHARACTER(80) :: sfile_sceout      = 'sce.out'
-      CHARACTER(80) :: sfile_shufflepar  = 'shuffle.par'
-      CHARACTER(80) :: sfile_progress    = 'progress.txt'
-      CHARACTER(80) :: sfile_lastloop    = 'lastloop.txt'
-      CHARACTER(80) :: sfile_currentbest = 'currentbest.txt'
-      CHARACTER(80) :: sfile_bestpars    = 'bestpars.txt'
-      CHARACTER(80) :: sfile_finalbest   = 'finalbest.txt'
-
-      end module sce_mod
-
-!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-      subroutine sce ()
       use sce_mod
       implicit none
 
@@ -158,7 +77,7 @@
 ! INSERTED BY STAN TO ALLOW CONTINUATION OF OPTIMSATION FROM PREVIOUSLY SAVED STEP
 
       open(kfile_lastloop, file=sfile_lastloop(1:len_trim(sfile_lastloop)), status='old', &
-      &	iostat=stat)
+      & iostat=stat)
       if (stat .eq. 0) then
         read(kfile_lastloop,*) ncomp2
         read(kfile_lastloop,*) nloop
@@ -175,11 +94,11 @@
 ! OPEN FILES FOR STORING OBJECTIVE FUNCTION AND PARAMETER VALUES
 
         open(kfile_sceout, file=sfile_sceout(1:len_trim(sfile_sceout)), status='old', &
-        &	position='append')
+        & position='append')
         open(kfile_bestpars, file=sfile_bestpars(1:len_trim(sfile_bestpars)), status='old', &
-        &	position='append')
+        & position='append')
         open(kfile_progress, file=sfile_progress(1:len_trim(sfile_progress)), status='old', &
-        &	position='append')
+        & position='append')
         write(kfile_progress,'(/"  NEW Run time:   ",a)') logdate
       else
 
@@ -436,20 +355,20 @@
       ofvec(:) = -9999.9d0
       shufflevar(:,1) = parval(:)
       nrun = 0
-	  worstcount = 0
+    worstcount = 0
       call runmodel(shufflevar(:,1), ofvec(1))
       
-	  if (ofvec(1) .le. 0) then
-	    worstcount = worstcount + 1
-	  endif
-	  
-	  bestobj = ofvec(1)
+    if (ofvec(1) .le. 0) then
+      worstcount = worstcount + 1
+    endif
+    
+    bestobj = ofvec(1)
       bestincomp = bestobj
       open(kfile_currentbest, file=sfile_currentbest(1:len_trim(sfile_currentbest)))
       write(kfile_currentbest,outformat) shufflevar(:,1), bestobj
       close(kfile_currentbest)
       write(*,'("Systematic seed of",i4," parameters for ",i2," complexes. Initial OF= ",e12.6)') &
-      &	nopt, ncomp, ofvec(1)
+      & nopt, ncomp, ofvec(1)
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ! GENERATE A SYSTEMATIC ARRAY OF INITIAL PARAMETER VALUES FOLLOWING
@@ -484,22 +403,22 @@
             shufflevar(k_,i_) = initpop(j_,i_+1)
           enddo
           call runmodel(shufflevar(:,i_), ofvec(i_))
-		  
-		  if (ofvec(i_) .le. 0) then
-	        worstcount = worstcount + 1
-	      endif
-		  
+      
+      if (ofvec(i_) .le. 0) then
+          worstcount = worstcount + 1
+        endif
+      
         elseif (i_ .le. Size(posarray(:,:),1)) then
           do j_ = 1, nopt
             k_ = optid(j_)
             shufflevar(k_,i_) = initpop(j_, posarray(i_-4, j_))
           enddo
           call runmodel(shufflevar(:,i_), ofvec(i_))
-		  
-		  if (ofvec(i_) .le. 0) then
-	        worstcount = worstcount + 1
-	      endif
-		  
+      
+      if (ofvec(i_) .le. 0) then
+          worstcount = worstcount + 1
+        endif
+      
         else
 
 !         * IF MORE POINTS ARE NEEDED, GENERATE RANDOM POINTS
@@ -519,17 +438,17 @@
             shufflevar(optid(:),i_) = merge(shufflevar(optid(:),i_), parmax(optid(:)),      &
      &                             shufflevar(optid(:),i_) .lt. parmax(optid(:)))
             call runmodel(shufflevar(:,i_), ofvec(i_))
-			
-			if (ofvec(i_) .le. 0) then
-	          worstcount = worstcount + 1
-	        endif
-			
-			if (nrun .gt. 100 .and. nrun .eq. worstcount) then       ! program stops after 100 runs without positive objective function
-			  success = 2
-			  call writepars()
-			  exit
-		    endif
-						
+      
+      if (ofvec(i_) .le. 0) then
+            worstcount = worstcount + 1
+          endif
+      
+      if (nrun .gt. 100 .and. nrun .eq. worstcount) then       ! program stops after 100 runs without positive objective function
+        success = 2
+        call writepars()
+        exit
+        endif
+            
           enddo
         endif
         if (ofvec(i_) .gt. bestobj) then
@@ -538,9 +457,9 @@
           write(kfile_currentbest,outformat) shufflevar(:,i_), bestobj
           close(kfile_currentbest)
         endif
-		
-		if (success .eq. 2) exit
-		
+    
+    if (success .eq. 2) exit
+    
       enddo
       nloop = -1                                  ! FIRST LOOP IS LOOP ZERO
       call writeloop
@@ -1067,9 +986,9 @@
       write(kfile_progress,'(/"PARAMETER|     VALUE   |    MINVAL   |    MAXVAL   |  CV (%)     ")')
       do i_ = 1, nopt
         write(*,'(a9,5e14.6)') parname(optid(i_)), shufflevar(optid(i_),1), parmin(optid(i_)), &
-        &	parmax(optid(i_)), cv_(i_)
+        & parmax(optid(i_)), cv_(i_)
         write(kfile_progress,'(a9,5e14.6)') parname(optid(i_)), shufflevar(optid(i_),1), &
-        &	parmin(optid(i_)), parmax(optid(i_)), cv_(i_)
+        & parmin(optid(i_)), parmax(optid(i_)), cv_(i_)
       enddo
       write(kfile_progress,'(//)')
       print *
@@ -1083,7 +1002,7 @@
       if (success .eq. 2) then
         open(kfile_finalbest, file=sfile_finalbest(1:len_trim(sfile_finalbest)))
         write(kfile_finalbest, &
-        &	'("   0.0E+00  0.0E+00  0.0E+00  0.0E+00  0.0E+00  0.0E+00  0.0E+00")')
+        & '("   0.0E+00  0.0E+00  0.0E+00  0.0E+00  0.0E+00  0.0E+00  0.0E+00")')
         close(kfile_finalbest)
       endif
 

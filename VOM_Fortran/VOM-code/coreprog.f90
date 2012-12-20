@@ -1,3 +1,4 @@
+      program vom
 !***********************************************************************
 !        Optimised Vegetation Optimality Model (VOM)
 !        Core program to run optimisation (sce) and transpmodel
@@ -28,10 +29,9 @@
 !
 !***********************************************************************
 
-      program vom
       implicit none
 
-      CHARACTER(60) :: outformat
+!      CHARACTER(60) :: outformat
       INTEGER       :: command
       INTEGER       :: iostatus, stat
       CHARACTER(3)  :: str
@@ -50,12 +50,12 @@
 
       open(1, file='shuffle.par', status='old')
       read(1,*) command
-	  
+    
 !     * now with fourth commmand (3 for compute ncp oonly with pars.txt)
       if (command .eq. 3) then
-	    close(1)
+      close(1)
         open(3, file='pars.txt', status='old', iostat=stat)
-		  
+      
         if (stat .eq. 0) then
           rewind(3)
           read(3,*) invar(:)
@@ -63,21 +63,21 @@
 !         * values given, because they are needed for calling transpmodel subroutine 
           netass = 0.d0
           nrun = 1
-			
+      
           print *, "Pars.txt read. Start calculation of ncp with parameters..."
-			
+      
           call transpmodel(invar, size(invar), nrun, netass, command)
 
           print *, "Model run COMPLETE"
           write(*,'(" The carbon profit achieved is: ",e12.6)') netass
           print *, "Best ncp is saved in model_output.txt"
-!         * programm ends here			
+!         * programm ends here      
         else
           write(*,*) "ERROR: pars.txt missing."
           stop
 !         * programm ends here
         endif
-		  					
+                
       else
         open(2, file='finalbest.txt', status='old', iostat=iostatus)
 
@@ -93,7 +93,7 @@
 !-----------------------------------------------------------------------
 
           nrun = 1
-		  
+      
           print *,"Calculation of results with optimised parameters..."
           
           rewind(2)
@@ -111,7 +111,7 @@
           print *, "Yearly results are saved in yearly.txt"
           print *, "Soil results are saved in delyudaily.txt, rsurfdaily.txt, ruptkhourly.txt, suvechourly.txt"
         
-		else
+    else
           npar = 0
             
           do
@@ -121,19 +121,19 @@
           enddo
             
           close(1)
-			
+      
           if (npar .ne. 6) then
             write(*,*) "ERROR: shuffle.par has to contain 6 parameters (var)"
-			close(2)
+      close(2)
             stop
           endif
 
           call sce()
-		  
+      
         endif
-		
-      endif	
-		
+    
+      endif 
+    
       print *,"Program terminated"
 
       end

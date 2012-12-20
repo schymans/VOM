@@ -1,3 +1,4 @@
+      subroutine waterbalance(init)
 !***********************************************************************
 !*  Layered water balance
 !*----------------------------------------------------------------------
@@ -36,12 +37,12 @@
 !*    GNU General Public License for more details.
 !*
 !*    You should have received a copy of the GNU General Public License
-!*    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+!*    along with this program. If not, see http://www.gnu.org/licenses.
 !*
 !***********************************************************************
 
-      subroutine waterbalance(init)
-      use vegwatbal
+      use watmod
+      use vegwatmod
       implicit none
 
       INTEGER, INTENT(in) :: init
@@ -93,8 +94,8 @@
         pcapnewvec   = pcapvec
         sunewvec     = suvec_
         kunsatnewvec = kunsatvec
-        omgu_        = 1.d0                  ! In this version, the hill slope is vertical, thus there is no saturated surface fraction
-        omgunew      = omgu_
+!        omgu_        = 1.d0                  ! In this version, the hill slope is vertical, thus there is no saturated surface fraction
+!        omgunew      = omgu_
 
         return
       endif
