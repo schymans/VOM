@@ -10,18 +10,18 @@
       implicit none
       REAL*8  :: pc_      ! Projected cover perennial vegetation (0-1)
       REAL*8  :: pcg_(3)    ! Projected cover seasonal vegetation (pcg_(2) is actual value)  
-      REAL*8  :: rain_      ! Rainfall rate (m/s)
-      REAL*8  :: par_       ! Photosynthetically active radiation (mol/m2/s)
+      REAL*8  :: rain__     ! Rainfall rate (m/s)
+      REAL*8  :: par__      ! Photosynthetically active radiation (mol/m2/s)
       REAL*8  :: dt_        ! Length of time step (s)
       REAL*8  :: dtmax      ! Maximum time step (s)
       REAL*8  :: etm__      ! Transpiration rate (m/s)
-      REAL*8  :: lat        ! geogr. latitude 
+      REAL*8  :: lat_       ! geogr. latitude 
       
-      INTEGER :: nlayers_                 ! Number of soil layers in unsaturated zone
-      INTEGER :: d___                      ! Day of year
-      INTEGER :: dtsu_count, dtmax_count   ! For speed analysis, count of how often dtsu or dtmax is time limiting
-      INTEGER :: h__                      ! Hour of day
-      INTEGER :: M___                     ! Number of soil layers
+      INTEGER :: wlayer_                  ! Number of soil layers in unsaturated zone
+      INTEGER :: nday                     ! Day of year
+      INTEGER :: dtsu_count, dtmax_count  ! For speed analysis, count of how often dtsu or dtmax is time limiting
+      INTEGER :: nhour                    ! Hour of day
+      INTEGER :: maxlayer                     ! Number of soil layers
 
       REAL*8, ALLOCATABLE :: ruptkvec(:)  ! Root water uptake rate perennial veg (m/s)
       REAL*8, ALLOCATABLE :: ruptkg(:)    ! Root water uptake rate seasonal veg (m/s)
@@ -73,42 +73,42 @@
       INTEGER :: optmode
 
 !TODO: replace the following variable names
-! M___ by layer
+! maxlayer by layer
 !
 
-      REAL*8  :: oa     ! O2 mole fraction
-      REAL*8  :: ca_    ! CO2 mole fraction
+      REAL*8  :: oa_    ! O2 mole fraction
+      REAL*8  :: ca__   ! CO2 mole fraction
       REAL*8  :: alpha      ! Initial slope of electron transport curve
       REAL*8  :: rlratio    ! Ratio of leaf respiration to photosynthetic capacity
       REAL*8  :: k25        ! Temperature response parameter
       REAL*8  :: kopt       ! Temperature response parameter
       REAL*8  :: ha_        ! Temperature response parameter
-      REAL*8  :: hd         ! Temperature response parameter
-      REAL*8  :: tstart     ! Start parameter for topt to calculate jmax(temp in K)
+      REAL*8  :: hd_        ! Temperature response parameter
+      REAL*8  :: toptstart  ! Start parameter for topt to calculate jmax(temp in K)
       REAL*8  :: toptfac    ! Parameter to calculate adaptation of topt (range 0-1 for no to full adaptation)
       REAL*8  :: cpccf      ! Water transport costs per m root depth and m^2 cover
       REAL*8  :: tcf        ! Turnover cost factor for foliage (tc=tcf*LAI)
 
       INTEGER :: parsaved = 0       ! Indicator whether input parameter values have been read and saved
-      INTEGER :: ny_                ! Number of years to process
-      INTEGER :: nyt                ! Number of years after which to perform initial test of netass 
+      INTEGER :: maxyear            ! Number of years to process
+      INTEGER :: testyear           ! Number of years after which to perform initial test of netass 
       INTEGER :: firstyear          ! First year for the generation of hourly output in computation mode
       INTEGER :: lastyear           ! Last year for the generation of hourly output in computation mode
 
 
-      REAL*8, PARAMETER :: a__    = 1.6d0             ! Ratio of diffusivities of water vapour to CO2 in air
-      REAL*8, PARAMETER :: pi     = 3.14159d0         ! Pi-constant
-      REAL*8, PARAMETER :: mpbar  = 10.2d0            ! Conversion factor from MPa to bar
+      REAL*8, PARAMETER :: p_a    = 1.6d0             ! Ratio of diffusivities of water vapour to CO2 in air
+      REAL*8, PARAMETER :: p_pi   = 3.14159d0         ! Pi-constant
+      REAL*8, PARAMETER :: p_mpbar = 10.2d0           ! Conversion factor from MPa to bar
       REAL*8, PARAMETER :: g___   = 9.81d0            ! Gravitational acceleration
       REAL*8, PARAMETER :: rho    = 1000.d0           ! Density of water
       REAL*8, PARAMETER :: degree = 0.0174533d0       ! Conversion from degree to radians
-      REAL*8, PARAMETER :: E__    = 2.7182818d0       ! Eurler's number
-      REAL*8, PARAMETER :: R__    = 8.314d0           ! Molar gas konstant
+      REAL*8, PARAMETER :: p_E    = 2.7182818d0       ! Eurler's number
+      REAL*8, PARAMETER :: p_R_   = 8.314d0           ! Molar gas konstant
 
-      INTEGER :: N__          ! Number of days to process
-      INTEGER :: Nh_          ! Number of hours to process
-      INTEGER :: yr_          ! Year
-      INTEGER :: dtest        ! Number of days for initial check if netass>0
+      INTEGER :: maxday       ! Number of days to process
+      INTEGER :: maxhour      ! Number of hours to process
+      INTEGER :: nyear        ! Year
+      INTEGER :: testday      ! Number of days for initial check if netass>0
       INTEGER :: pos_         ! Lowest soil layer containing tree roots
       INTEGER :: posg         ! Lowest soil layer containing grass roots
       INTEGER :: postemp_     ! Lowest soil layer containing tree roots within unsaturated zone
@@ -116,31 +116,31 @@
       INTEGER :: pos1(1)      ! Pointer to variable values that achieved maximum assimilation
       INTEGER :: pos2(2)      ! pointer to variable values that achieved maximum net assimilation
 
-      REAL*8, ALLOCATABLE  :: srad(:)           ! Daily shortwave radiation
-      REAL*8, ALLOCATABLE  :: tmin(:)           ! Daily minimum temperature (K)
-      REAL*8, ALLOCATABLE  :: tmax(:)           ! Daily maximum temperature (K)
+      REAL*8, ALLOCATABLE  :: srad__(:)         ! Daily shortwave radiation
+      REAL*8, ALLOCATABLE  :: tairmin(:)        ! Daily minimum temperature (K)
+      REAL*8, ALLOCATABLE  :: tairmax(:)        ! Daily maximum temperature (K)
       REAL*8, ALLOCATABLE  :: rainvec(:)        ! Daily rainfall
-      REAL*8, ALLOCATABLE  :: netassvec(:)      ! Daily net assimilation by trees
-      REAL*8, ALLOCATABLE  :: epan(:)           ! Daily pan evaporation
+      REAL*8, ALLOCATABLE  :: netassvec_(:)     ! Daily net assimilation by trees
+      REAL*8, ALLOCATABLE  :: epan__(:)         ! Daily pan evaporation
       REAL*8, ALLOCATABLE  :: vpvec(:)          ! Daily vapour pressure (Pa)
       REAL*8, ALLOCATABLE  :: netassvecg(:)     ! Daily net assimilation by grasses
       REAL*8, ALLOCATABLE  :: press(:)          ! Daily air pressure (Pa)
       REAL*8, ALLOCATABLE  :: cavec(:)          ! Daily atmospheric CO2 mole fraction
 
-      INTEGER, ALLOCATABLE :: year(:)           ! Year for each day
-      INTEGER, ALLOCATABLE :: month(:)          ! Month for each day
-      INTEGER, ALLOCATABLE :: day(:)            ! Day of month
+      INTEGER, ALLOCATABLE :: fyear(:)          ! Year for each day
+      INTEGER, ALLOCATABLE :: fmonth(:)         ! Month for each day
+      INTEGER, ALLOCATABLE :: fday(:)           ! Day of month
       INTEGER, ALLOCATABLE :: dayyear(:)        ! Day of year
 
       REAL*8, ALLOCATABLE  :: parvec(:)         ! Daily photosynthetically active radiation
-      REAL*8, ALLOCATABLE  :: parh(:)           ! Hourly photosynthetically active radiation
-      REAL*8, ALLOCATABLE  :: vdh(:)            ! Hourly vapour deficit (VPD/air pressure)
-      REAL*8, ALLOCATABLE  :: tairh(:)          ! Hourly air temperature (K)
+      REAL*8, ALLOCATABLE  :: par_h(:)          ! Hourly photosynthetically active radiation
+      REAL*8, ALLOCATABLE  :: vd_h(:)           ! Hourly vapour deficit (VPD/air pressure)
+      REAL*8, ALLOCATABLE  :: tair_h(:)         ! Hourly air temperature (K)
       REAL*8, ALLOCATABLE  :: gammastarvec(:)   ! Hourly value for CO2 compensation point
-      REAL*8, ALLOCATABLE  :: rainh(:)          ! Hourly rainfall
-      REAL*8, ALLOCATABLE  :: cah(:)            ! Hourly atmospheric CO2 mole fraction
+      REAL*8, ALLOCATABLE  :: rain_h(:)         ! Hourly rainfall
+      REAL*8, ALLOCATABLE  :: ca_h(:)           ! Hourly atmospheric CO2 mole fraction
       
-      REAL*8, ALLOCATABLE :: hruptkvec(:)       ! Hourly root water uptake by trees in each layer
+      REAL*8, ALLOCATABLE :: ruptkvec_h(:)      ! Hourly root water uptake by trees in each layer
       REAL*8, ALLOCATABLE :: ruptkvec_d(:)      ! Daily root water uptake by trees in each layer
       REAL*8, ALLOCATABLE :: hruptkg(:)         ! Hourly root water uptake by grasses in each layer
       REAL*8, ALLOCATABLE :: ruptkg_d(:)        ! Daily root water uptake by grasses in each layer
@@ -161,22 +161,22 @@
       REAL*8  :: rl__(3)      ! Tree leaf respiration for different values of Jmax (rl__(2) is actual value)
       REAL*8  :: vd__         ! Atmospheric vapour deficit (VPD/air pressure)
       REAL*8  :: transp_      ! Tree transpiration rate
-      REAL*8  :: hass_(3)     ! Tree hourly assimilation rate for different values of Jmax (hass_(2) is actual value)
+      REAL*8  :: ass_h(3)     ! Tree hourly assimilation rate for different values of Jmax (ass_h(2) is actual value)
       REAL*8  :: cpcc_        ! Tree water transport costs as a function of projected cover and rooting depth (mol/m2/s)
       REAL*8  :: rr_          ! Tree root respiration rate (mol/m2/s)
       REAL*8  :: lambdafac    ! Factor for calculating lambda_
-      REAL*8  :: gammastar    ! CO2 compensation point
+      REAL*8  :: gammastar_   ! CO2 compensation point
       REAL*8  :: jmax__(3)    ! Tree photosynthetic electron transport capacity
       REAL*8  :: jmax25_(3)   ! Tree photosynthetic electron transport capacity at 25oC
-!d      REAL*8  :: netassyr
-      REAL*8  :: rainyr       ! Annual rainfall
-      REAL*8  :: epanyr       ! Annual pan evaporation
-      REAL*8  :: paryr        ! Annual photosynthetically active radiation
-      REAL*8  :: radyr        ! Annual shortwave radiation
-      REAL*8  :: vdyr         ! Mean annual atmospheric vapour deficit
-      REAL*8  :: etyr         ! Annual total transpiration
-      REAL*8  :: evapyr       ! Annual soil evaporation rate
-!d      REAL*8  :: gppyr
+!d      REAL*8  :: netass_y
+      REAL*8  :: rain_y       ! Annual rainfall
+      REAL*8  :: epan_y       ! Annual pan evaporation
+      REAL*8  :: par_y        ! Annual photosynthetically active radiation
+      REAL*8  :: srad_y       ! Annual shortwave radiation
+      REAL*8  :: vd_y         ! Mean annual atmospheric vapour deficit
+      REAL*8  :: etm_y        ! Annual total transpiration
+      REAL*8  :: esoil_y      ! Annual soil evaporation rate
+!d      REAL*8  :: gpp_y
       REAL*8  :: etmg_y       ! Annual grass transpiration
       REAL*8  :: assg_y       ! Annual grass assimilation
       REAL*8  :: rlg_y        ! Annual grass leaf respiration
@@ -190,7 +190,7 @@
       REAL*8  :: cpcct_y      ! Annual tree water transport costs
       REAL*8  :: tct_y        ! Annual tree foliage turnover costs
       REAL*8  :: daylength    ! Day length (hours)
-      REAL*8  :: tair         ! Air temperature (K)
+      REAL*8  :: tair__       ! Air temperature (K)
       REAL*8  :: vp_          ! Atmospheric vapour deficit (VPD/air pressure)
       REAL*8  :: topt_        ! Optimal temperature in temperature response curve
       REAL*8  :: rootdepth    ! Tree rooting depth (m)
@@ -200,7 +200,7 @@
       REAL*8  :: mqnew        ! Tree water content in next time step
       REAL*8  :: mqss_        ! Tree water content at steady state
       REAL*8  :: mqold        ! Previous tree water content
-      REAL*8  :: hruptk_      ! Hourly tree root water uptake
+      REAL*8  :: ruptk_h      ! Hourly tree root water uptake
       REAL*8  :: tc_          ! Tree foliage turnover costs
       REAL*8  :: mqssnew      ! Tree water content in next time step
       REAL*8  :: lambdagfac   ! Factor for calculating lambdag
@@ -210,7 +210,7 @@
       REAL*8  :: jmax25g(3)   ! Grass photosynthetic electron transport capacity at 25oC
       REAL*8  :: wsexp        ! Exponent for calculating lambda_
       REAL*8  :: rgdepth      ! Grass rooting depth
-      REAL*8  :: lambdag      ! Target dE/dA for calculating gstomg__
+      REAL*8  :: lambdag_     ! Target dE/dA for calculating gstomg__
       REAL*8  :: rrg          ! Grass root respiration
       REAL*8  :: jmaxg__(3)   ! Grass electron transport capacity
       REAL*8  :: rlg__(3,3)   ! Grass leaf respiration
@@ -218,8 +218,8 @@
       REAL*8  :: gstomg__(3,3)! Grass stomatal conductance
       REAL*8  :: etmg__(3,3)  ! Grass transpiration rate (m/s)
       REAL*8  :: transpg(3,3) ! Grass transpiration rate (mol/m2/s)
-      REAL*8  :: hassg(3,3)   ! Hourly grass assimilation
-      REAL*8  :: hetmg        ! Hourly grass transpiration
+      REAL*8  :: assg_h(3,3)  ! Hourly grass assimilation
+      REAL*8  :: etmg_h       ! Hourly grass transpiration
       REAL*8  :: assg_d(3,3)  ! Daily grass assimilation
       REAL*8  :: jmaxg_d      ! Daily grass electron transport capacity
       REAL*8  :: gstomg_d     ! Daily average stomatal conductance
@@ -273,7 +273,7 @@
 !*    Parameters for Water balance model
 !***********************************************************************
 
-      INTEGER :: nlayersnew   ! Number of layers in unsaturated zone for next time step
+      INTEGER :: wlayernew    ! Number of layers in unsaturated zone for next time step
 
       REAL*8  :: cz           ! Average soil elevation in m
       REAL*8  :: cgs          ! Capital Gamma S (length scale for seepage outflow) (m)
@@ -322,20 +322,20 @@
       REAL*8  :: esoil__      ! Bare soil evaporation rate
       REAL*8  :: ysnew        ! Elevation of water table at next time step
 !      REAL*8  :: yunew_
-      REAL*8  :: wsnew_       ! Total soil water store at next time step
-      REAL*8  :: io_          ! Mass balance of soil water
-      REAL*8  :: iocum        ! Cumulative mass balance of soil water
+      REAL*8  :: wsnew        ! Total soil water store at next time step
+      REAL*8  :: io__         ! Mass balance of soil water
+      REAL*8  :: ioacum       ! Cumulative mass balance of soil water
       REAL*8  :: spgfcf__     ! Seepage face flow rate
-      REAL*8  :: hspgfcf      ! Hourly seepage face flow
+      REAL*8  :: spgfcf_h     ! Hourly seepage face flow
       REAL*8  :: infx__       ! Infiltration excess runoff rate
-      REAL*8  :: hinfx        ! Hourly infiltration excess runoff
-      REAL*8  :: hio          ! Hourly mass balance of soil water
-      REAL*8  :: hesoil       ! Hourly soil evaporation
-      REAL*8  :: hetm_        ! Hourly transpiration
-      REAL*8  :: inf_         ! Infiltration rate
+      REAL*8  :: infx_h       ! Hourly infiltration excess runoff
+      REAL*8  :: io_h         ! Hourly mass balance of soil water
+      REAL*8  :: esoil_h      ! Hourly soil evaporation
+      REAL*8  :: etm_h        ! Hourly transpiration
+      REAL*8  :: inf__        ! Infiltration rate
  !     REAL*8  :: omgunew
  !     REAL*8  :: omgonew
-      REAL*8  :: hinf_        ! Hourly infiltration rate
+      REAL*8  :: inf_h        ! Hourly infiltration rate
 
       end module watmod
 
@@ -359,7 +359,7 @@
       INTEGER :: mopt         ! Minimum number of runs per complex
       INTEGER :: sopt         ! SCE variable s
       INTEGER :: qopt         ! SCE variable q
-      INTEGER :: alpha        ! Number of simplex runs per complex
+      INTEGER :: nsimp        ! Number of simplex runs per complex
       INTEGER :: nrun         ! Number of runs performed so far
       INTEGER :: nloop        ! Number of loops performed so far
       INTEGER :: nsincebest   ! Number of runs since last improvement in objective function

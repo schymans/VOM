@@ -254,7 +254,7 @@
       read(kfile_shufflepar,*) ncompmin
       read(kfile_shufflepar,*) resolution
       read(kfile_shufflepar,*) patience
-      read(kfile_shufflepar,*) alpha
+      read(kfile_shufflepar,*) nsimp
       read(kfile_shufflepar,*) focus
       read(kfile_shufflepar,'(a60)') informat
       do i_ = 1, npar
@@ -742,7 +742,7 @@
 
         objfunsub(:) = objfun(parentsid(:))
         invarsub(:,:) = invar(:, parentsid(:))
-        do j_ = 1, alpha
+        do j_ = 1, nsimp
           call simplex(invarsub(:,:), objfunsub(:))
         enddo
         objfun(parentsid(:)) = objfunsub(:)
@@ -798,7 +798,7 @@
       if (newobjfun .gt. objfun(qopt)) then
         do j_ = 1, qopt
           if (newobjfun .gt. objfun(j_)) then     ! SORT objfun HERE
-            objfun(j_+1:qopt) = objfun(j_:qopt-1) ! IN CASE alpha > 1
+            objfun(j_+1:qopt) = objfun(j_:qopt-1) ! IN CASE nsimp > 1
             invar(:,j_+1:qopt) = invar(:,j_:qopt-1)
             objfun(j_) = newobjfun
             invar(:,j_) = newpoint(:)

@@ -62,23 +62,23 @@
         dtsu_count = 0
         dtmax_count = 0
         ys_ = cz
-        nlayers_ = 0
+        wlayer_ = 0
 !       * Adapt the number of unsaturated layers such that ys = zr
         do while (ys_ .gt. zr_)
-          nlayers_ = nlayers_ + 1
-          ys_ = ys_ - delzvec(nlayers_)
+          wlayer_ = wlayer_ + 1
+          ys_ = ys_ - delzvec(wlayer_)
         enddo
-        pcapvec(nlayers_+1:M___) = 0.d0
+        pcapvec(wlayer_+1:maxlayer) = 0.d0
 !       * Equilibrium pressure head
-        do j = nlayers_, 1, -1
+        do j = wlayer_, 1, -1
           pcapvec(j) = 0.5d0 * delzvec(j+1) + 0.5d0 * delzvec(j) + pcapvec(j+1)
         enddo
 !       * equilibrium su above a saturated layer (after eq_sueq1 in Watbal3)
-        do j = 1, M___ - 1
+        do j = 1, maxlayer - 1
           sueqvec(j) = (1.d0 / ((0.5d0 * (delzvec(j+1) +  delzvec(j))  &
      &               * avgvec(j)) ** nvgvec(j) + 1.d0)) ** mvgvec(j)
         enddo
-        sueqvec(M___) = (1.d0 / ((0.5d0 * delzvec(j) * avgvec(j))      &
+        sueqvec(maxlayer) = (1.d0 / ((0.5d0 * delzvec(j) * avgvec(j))      &
      &                ** nvgvec(j) + 1.d0)) ** mvgvec(j)
         suvec_(:) = (1.d0 / ((pcapvec(:) * avgvec(:)) ** nvgvec(:)     &
      &            + 1.d0)) ** mvgvec(:)
@@ -90,7 +90,7 @@
      &             * thetasvec(:) + thetarvec(:)) * delzvec(:)
 
         ysnew        = ys_
-        nlayersnew   = nlayers_
+        wlayernew   = wlayer_
         pcapnewvec   = pcapvec
         sunewvec     = suvec_
         kunsatnewvec = kunsatvec
@@ -108,54 +108,54 @@
 
 !     * FLUXES
 
-      if (rain_ .gt. 0.d0) then
-        if (nlayers_ .ge. 1) then
-          inf_ = MIN((ksatvec(1) + kunsatvec(1)) / 2.d0 *(1.d0        &
-     &         + (2.d0 * pcapvec(1)) / delzvec(1)), rain_)  ! (3.6), (Out[60])
+      if (rain__ .gt. 0.d0) then
+        if (wlayer_ .ge. 1) then
+          inf__ = MIN((ksatvec(1) + kunsatvec(1)) / 2.d0 *(1.d0        &
+     &         + (2.d0 * pcapvec(1)) / delzvec(1)), rain__)  ! (3.6), (Out[60])
         else
-          inf_ = 0.d0
+          inf__ = 0.d0
         endif
-        infx__ = rain_ - inf_
+        infx__ = rain__ - inf__
       else 
-        inf_ = 0.d0
+        inf__ = 0.d0
         infx__ = 0.d0
       endif
 
       qblvec(:) = 0.d0
-      if (nlayers_ .gt. 1) then
-!       * Runoff occurs only from the layer 'nlayers_',
+      if (wlayer_ .gt. 1) then
+!       * Runoff occurs only from the layer 'wlayer_',
 !         therefore no downward flow into the layers below is allowed.
-        do j = 1, nlayers_ - 1
+        do j = 1, wlayer_ - 1
           qblvec(j) = -0.5d0 * (2.d0 * (pcapvec(j+1) - pcapvec(j))     &
      &              / (delzvec(j+1) + delzvec(j)) + 1.d0)              &
      &              * (kunsatvec(j+1) + kunsatvec(j))
         enddo
       endif
 
-      esoil__  = 0.0002d0 * (1.d0 - 0.8d0 * (pc_ + pcg_(2))) * par_ * suvec_(1)
+      esoil__  = 0.0002d0 * (1.d0 - 0.8d0 * (pc_ + pcg_(2))) * par__ * suvec_(1)
 !     * Seepage face flow as a function of ys_ following eq_spgfcf in Watbal3.
       spgfcf__ = 0.d0
       if (ys_ .gt. zr_) then
         spgfcf__ = MAX(0.d0, 0.5d0 * (sqrt(cz - zr_) - sqrt(cz - ys_))  &
-     &           * (ys_ - zr_) * ksatvec(nlayers_) / (sqrt(cz - zr_)    &
+     &           * (ys_ - zr_) * ksatvec(wlayer_) / (sqrt(cz - zr_)    &
      &           * cgs * Cos(go_)))
       endif
 
 !     * MAKING SURE THAT NO SUBLAYER 'OVERFLOWS'
 
-      if (MAXVAL(suvec_(1:nlayers_)) .ge. 1.d0) then
+      if (MAXVAL(suvec_(1:wlayer_)) .ge. 1.d0) then
 
-        if (nlayers_ .gt. 1) then
+        if (wlayer_ .gt. 1) then
           if (suvec_(1) .ge. 0.99d0) then
-            dummy = esoil__ - inf_ + ruptkvec(1) + ruptkg(1)
+            dummy = esoil__ - inf__ + ruptkvec(1) + ruptkg(1)
             if (qblvec(1) - dummy .gt. 0.d0) then
               qblvec(1) = dummy - 1.d-16              ! (Out[156])+ruptkg(1)
             endif
           endif
         endif
 
-        if (nlayers_ .gt. 2) then
-          do i = 2, nlayers_ - 1
+        if (wlayer_ .gt. 2) then
+          do i = 2, wlayer_ - 1
             if (suvec_(i) .ge. 0.99d0) then
               dummy = qblvec(i-1) + ruptkvec(i) + ruptkg(i)     ! 1.d-16 makes sure that 0 does not get transformed to tiny positive
               if (qblvec(i) - dummy .gt. 0.d0) then
@@ -165,15 +165,15 @@
           enddo
         endif
 
-        if (nlayers_ .gt. 1) then
-          if (suvec_(nlayers_) .ge. 1.d0) then
-            dummy = -qblvec(nlayers_-1) - ruptkvec(nlayers_) - ruptkg(nlayers_) 
+        if (wlayer_ .gt. 1) then
+          if (suvec_(wlayer_) .ge. 1.d0) then
+            dummy = -qblvec(wlayer_-1) - ruptkvec(wlayer_) - ruptkg(wlayer_) 
 !           * make sure that any surplus water runs off
             spgfcf__ = max(spgfcf__, dummy + 1.d-16)
           endif
         else
-          if (suvec_(nlayers_) .ge. 1.d0) then
-            dummy = inf_ - esoil__ - ruptkvec(1) - ruptkg(1)
+          if (suvec_(wlayer_) .ge. 1.d0) then
+            dummy = inf__ - esoil__ - ruptkvec(1) - ruptkg(1)
             spgfcf__ = max(spgfcf__, dummy + 1.d-16)
           endif
         endif
@@ -182,20 +182,20 @@
 
 !     * CHANGES IN SOIL MOISTURE IN THE UNSATURATED ZONE
 
-      io_      = inf_ - esoil__ - spgfcf__ - SUM(ruptkvec(:)) - SUM(ruptkg(:))  ! (3.19)
+      io__      = inf__ - esoil__ - spgfcf__ - SUM(ruptkvec(:)) - SUM(ruptkg(:))  ! (3.19)
       iovec(:) = 0.d0
-      iovec(1) = qblvec(1) + inf_ - esoil__ - ruptkvec(1) - ruptkg(1)
-      if (nlayers_ .eq. 1) then
+      iovec(1) = qblvec(1) + inf__ - esoil__ - ruptkvec(1) - ruptkg(1)
+      if (wlayer_ .eq. 1) then
         iovec(1) = iovec(1) - spgfcf__
       endif
-      if (nlayers_ .gt. 2) then
-        do j = 2, nlayers_ - 1     
+      if (wlayer_ .gt. 2) then
+        do j = 2, wlayer_ - 1     
           iovec(j) = qblvec(j) - qblvec(j-1) - ruptkvec(j) - ruptkg(j)
         enddo
       endif
-      if (nlayers_ .gt. 1) then
-        iovec(nlayers_) = qblvec(nlayers_) - qblvec(nlayers_-1)        &
-     &                  - ruptkvec(nlayers_) - ruptkg(nlayers_) - spgfcf__
+      if (wlayer_ .gt. 1) then
+        iovec(wlayer_) = qblvec(wlayer_) - qblvec(wlayer_-1)        &
+     &                  - ruptkvec(wlayer_) - ruptkg(wlayer_) - spgfcf__
       endif
 
       dsuvec(:) = -iovec(:) / ((thetarvec(:) - thetasvec(:)) * delzvec(:))
@@ -203,7 +203,7 @@
 !     * CALCULATION OF MAXIMAL TIME STEP SIZE
 
       dtsu = 999999.d0
-      do j = 1, nlayers_
+      do j = 1, wlayer_
         if (dsuvec(j) .lt. 0.d0) then
           dtsu = MIN(dtsu, -0.1d0 * suvec_(j) / dsuvec(j))
         endif
@@ -232,19 +232,19 @@
 !*----- Calculating state variables at next time step-------------------
 
       sunewvec(:) = suvec_(:) + dt_ * dsuvec(:)
-      j = M___
-      nlayersnew = M___
-!     * Find the lowest unsaturated layer and set the one below it as nlayersnew
+      j = maxlayer
+      wlayernew = maxlayer
+!     * Find the lowest unsaturated layer and set the one below it as wlayernew
       do while (sunewvec(j) .gt. 0.999999d0 .and. j .gt. 1)
         j = j - 1
-        nlayersnew = j  
+        wlayernew = j  
       enddo
 !     * If there is not enough moisture in the layer above the saturated
 !       layers, the water table is in the top saturated layer.
-      if (sunewvec(nlayersnew) .lt. sueqvec(nlayersnew)) then
-        nlayersnew = nlayersnew + 1
+      if (sunewvec(wlayernew) .lt. sueqvec(wlayernew)) then
+        wlayernew = wlayernew + 1
       endif
-      sunewvec(nlayersnew + 1:M___) = 1.d0
+      sunewvec(wlayernew + 1:maxlayer) = 1.d0
       pcapnewvec(:) = 1.d0 / avgvec(:) * (sunewvec(:) ** (-1.d0        &
      &              / mvgvec(:)) - 1.d0) ** (1.d0 / nvgvec(:))
 
@@ -252,13 +252,13 @@
      &                / mvgvec(:)) + 1.d0) ** mvgvec(:) - 1.d0)        &
      &                ** 2.d0 * SQRT(sunewvec(:))
 !    Position of the water table after eq_wt1 in watbal3:
-      if (nlayersnew .lt. M___) then
-        ysnew = SUM(delzvec(nlayersnew:M___)) - 2.d0                   &
-     &        * delzvec(nlayersnew) * pcapnewvec(nlayersnew)           &
-     &        / (delzvec(nlayersnew+1) + delzvec(nlayersnew))
+      if (wlayernew .lt. maxlayer) then
+        ysnew = SUM(delzvec(wlayernew:maxlayer)) - 2.d0                   &
+     &        * delzvec(wlayernew) * pcapnewvec(wlayernew)           &
+     &        / (delzvec(wlayernew+1) + delzvec(wlayernew))
       else
-        ysnew = delzvec(nlayersnew) - 2.d0 * delzvec(nlayersnew)       &
-     &        * pcapnewvec(nlayersnew) / delzvec(nlayersnew)
+        ysnew = delzvec(wlayernew) - 2.d0 * delzvec(wlayernew)       &
+     &        * pcapnewvec(wlayernew) / delzvec(wlayernew)
       endif
 
       cH2Ol_s(:) = (-sunewvec(:) * thetarvec(:) + sunewvec(:)          &
@@ -279,10 +279,10 @@
 
 !!$ print*,"errorstep=",(wc+dt*io-wcnew)
 
-      if (ABS(wc_ + dt_ * io_ - wcnew) .gt. 1.d-6) then
-        print *, "error=", (wc_ + dt_ * io_ - wcnew), " ys=", ysnew
-        print *, "sum(iovec) = ", SUM(iovec(:)), "; io = ", io_
-        print *, "day = ", d___, "; hour = ", h__
+      if (ABS(wc_ + dt_ * io__ - wcnew) .gt. 1.d-6) then
+        print *, "error=", (wc_ + dt_ * io__ - wcnew), " ys=", ysnew
+        print *, "sum(iovec) = ", SUM(iovec(:)), "; io = ", io__
+        print *, "day = ", nday, "; hour = ", nhour
       endif
 
       return
