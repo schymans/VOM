@@ -1,4 +1,3 @@
-      subroutine transpmodel(invar, dim_invar, nrun, netass, option1)
 !***********************************************************************
 !*  Transpiration model and layered water balance
 !*----------------------------------------------------------------------
@@ -12,7 +11,7 @@
 !*----------------------------------------------------------------------
 !*
 !* Numbers in the commented parentheses refer to the equation numeration
-!* in Schymanski (2007): PhD thesis, University of W.A. 
+!* in Schymanski (2007): PhD thesis, University of W.A.
 !* and in the document 'equations.pdf' that comes with the documentation.
 !*
 !*----------------------------------------------------------------------
@@ -33,7 +32,7 @@
 !*
 !***********************************************************************
 
-      use vegmod
+      subroutine transpmodel(invar, dim_invar, nrun, netass, option1)
       use vegwatmod
       implicit none
 
@@ -60,7 +59,7 @@
       else
         optmode = 1
       endif
-    
+
       if (option1 .eq. 3) optmode = 2
 
 !*----------------------------------------------------------------------
@@ -89,7 +88,7 @@
 !*-----File opening (saving climate and gstom ass data)-----------------
 
         if (optmode .eq. 0) call vom_open_output()
-    
+
         if (optmode .eq. 2) call vom_open_ncp_output()
 
 !*-----PARAMETER READING FROM SOILPROFILE.PAR---------------------------
@@ -100,7 +99,7 @@
 
         call vom_get_hourly_clim()
 
-        parsaved = 1 
+        parsaved = 1
       endif
 
 !***********************************************************************
@@ -115,42 +114,41 @@
 
       call vom_init_vegpar()
 
-!*-----DAILY LOOPS------------------------------------------------------
+!     * DAILY LOOPS
 
       nday = 0
       testday = testyear * 365
       if (optmode .eq. 0 .or. optmode .eq. 2) testday = maxday
+
       do while (nday  .lt. testday)
         nday = nday + 1
 
         call vom_daily_init()
 
-!*-----HOURLY LOOPS-----------------------------------------------------
-
-!       * loops through each hour of daily dataset
+!       * HOURLY LOOPS (loops through each hour of daily dataset)
         do nhour = 1, 24
 
           call vom_hourly_init()
 
-!*-----calculate gstom, et and ass--------------------------------------
+!         * calculate gstom, et and ass
 
           call vom_gstom()
 
-!*-----SUB-HOURLY LOOPS-------------------------------------------------
+!         * SUB-HOURLY LOOPS
 
           do while (time .lt. 3600.d0)
 
-!*-----setting variables from previous loop-----------------------------
+!           * setting variables from previous loop
 
             call vom_subhourly_init()
 
-!*-----root water uptake------------------------------------------------
+!           * root water uptake
 
             call vom_rootuptake()
 
             if (md_ .gt. 0.d0) then
 
-!*-----steady-state tissue water (mqss)---------------------------------
+!             * steady-state tissue water (mqss)
 
               if (wlayer_ .ge. 1) then
                 call vom_mqss(mqss_)
@@ -158,42 +156,43 @@
                 mqss_ = 0.9d0 * mqx_
               endif
               mqssmin = MIN(mqssmin,mqss_)
-            
-!*-----transpiration, gstom and tissue water----------------------------
+
+!             * transpiration, gstom and tissue water
 
               call vom_tissue_water_et(finish, netass)
               if (finish .eq. 1) return
+
             endif
 
-!*-----water balance and conditions at next time step-------------------
+!           * water balance and conditions at next time step
 
             call vom_subhourly()
 
             time = time + dt_
             mqnew = mq_ + dmq * dt_
 
-!*-----adding up hourly fluxes------------------------------------------
+!           * adding up hourly fluxes
 
             call vom_add_hourly()
 
-!*-----END OF HOUR------------------------------------------------------
+!           * END OF HOUR
 
           enddo
 
 !         * rl does not need to be included here as ass=-rl if j=0 (at night)
-          netass = netass + ass_h(2) - 3600.d0 * (cpcc_ + rr_ + tc_)   &
+          netass = netass + ass_h(2) - 3600.d0 * (cpcc_ + rr_ + tc_) &
      &           + assg_h(2,2) - 3600.d0 * (cpccg(2) + rrg + tcg(2))
-          ass_d(:) = ass_d(:) + ass_h(:)
+          ass_d(:)    = ass_d(:)    + ass_h(:)
           assg_d(:,:) = assg_d(:,:) + assg_h(:,:)
           ruptkvec_d(:) = ruptkvec_d(:) + ruptkvec_h(:)
-          ruptkg_d(:) = ruptkg_d(:) + hruptkg(:)
+          ruptkg_d(:)   = ruptkg_d(:)   + hruptkg(:)
 
           if (optmode .eq. 0) then
 
             call vom_add_daily()
             call vom_write_hourly()
 
-!*-----check water balance----------------------------------------------
+!           * check water balance
 
             call vom_check_water(finish)
             if (finish .eq. 1) return
@@ -201,39 +200,40 @@
           endif
         enddo
 
-!*-----END OF DAY-------------------------------------------------------
+!       * END OF DAY
 
-        if (optmode .eq. 0) then
-          call vom_write_dayyear()
-      call vom_add_yearly()
-    endif
+      if (optmode .eq. 0) then
+        call vom_write_dayyear()
+        call vom_add_yearly()
+      endif
 
-!*-----ADJUSTMENT OF JMAX25 and PC--------------------------------------
+!     * ADJUSTMENT OF JMAX25 and PC
 
-        call vom_adapt_foliage()
+      call vom_adapt_foliage()
 
-!*-----ADJUSTMENT OF ROOT SURFACE---------------------------------------
+!     * ADJUSTMENT OF ROOT SURFACE
 
-        call vom_adapt_roots()
+      call vom_adapt_roots()
 
-        if ((nday .eq. testday) .and. (nday .lt. maxday)) then
-          if (netass .le. 0.d0) then
-!           * estimates how bad the carbon loss would be instead of
-!             running through the whole set
-            netass = netass / testyear * maxyear
-          else
-            testday = maxday
-          endif
+      if ((nday .eq. testday) .and. (nday .lt. maxday)) then
+        if (netass .le. 0.d0) then
+!         * estimates how bad the carbon loss would be instead of
+!           running through the whole set
+          netass = netass / testyear * maxyear
+        else
+          testday = maxday
         endif
+      endif
 
       enddo
 
-!*-----END OF DAILY LOOPS-----------------------------------------------
+!     * END OF DAILY LOOPS
 
       if (optmode .eq. 0) then
-        print *,"Cumulative error in water balance (initial Ws+Input-Output-final Ws, in m): ",error
-        print *,"Number of times dtsu was limiting: ",dtsu_count
-        print *,"Number of times dtmax was limiting: ",dtmax_count
+        print *,'Cumulative error in water balance (initial Ws+Input-Output-final Ws, in m): ',error
+        print *,'Number of times dtsu was limiting: ',dtsu_count
+        print *,'Number of times dtmax was limiting: ',dtmax_count
+
         close(kfile_resultshourly)
         close(kfile_resultsdaily)
         close(kfile_yearly)
@@ -242,7 +242,7 @@
         close(kfile_ruptkhourly)
         close(kfile_suvechourly)
       endif
-    
+
       if (optmode .eq. 2) then
         call vom_write_model_output(netass)
         close(kfile_model_output)
@@ -257,15 +257,14 @@
 !*-----PARAMETER READING FROM INPUT.PAR---------------------------------
 
       subroutine vom_read_input ()
-      use vegmod
       use vegwatmod
-      use watmod
       implicit none
 
-      INTEGER :: stat
+      INTEGER :: iostat
 
-      open(kfile_inputpar, status='old',                               &
-     &     file=sfile_inputpar(1:len_trim(sfile_inputpar)))
+!     * Input of variable parameters from the parameter file
+
+      open(kfile_inputpar, FILE=sfile_inputpar(1:len_trim(sfile_inputpar)), STATUS='old')
       read(kfile_inputpar,*) oa_
       read(kfile_inputpar,*) alpha
       read(kfile_inputpar,*) cpccf
@@ -280,30 +279,28 @@
       read(kfile_inputpar,*) toptstart
       read(kfile_inputpar,*) rlratio
 
-!*-----Catchment parameters --------------------------------------------
+!     * Catchment parameters
 
       read(kfile_inputpar,*) lat_
       read(kfile_inputpar,*) cz
       read(kfile_inputpar,*) zs_
       read(kfile_inputpar,*) cgs
       read(kfile_inputpar,*) zr_
-      read(kfile_inputpar,*) go_    
+      read(kfile_inputpar,*) go_
 
-!*-----Soil parameters -------------------------------------------------
+!     * Soil parameters
 
       read(kfile_inputpar,*) ksat_
       read(kfile_inputpar,*) thetar_
       read(kfile_inputpar,*) thetas_
       read(kfile_inputpar,*) nvg_
       read(kfile_inputpar,*) avg_
-      epsln_ = thetas_ - thetar_             ! epsilon, porosity see Reggiani (2000)
-      mvg_ = 1.d0 - (1.d0 / nvg_)            ! van Genuchten soil parameter m
 
-!*-----Vertical Resolution ---------------------------------------------
+!     * Vertical Resolution
 
       read(kfile_inputpar,*) delz_
 
-!*-----Vegetation Parameters -------------------------------------------
+!     * Vegetation Parameters
 
       read(kfile_inputpar,*) mdf
       read(kfile_inputpar,*) mqxf
@@ -319,23 +316,27 @@
       read(kfile_inputpar,*) lastyear
       close(kfile_inputpar)
 
+      epsln_ = thetas_ - thetar_        ! epsilon, porosity see Reggiani (2000)
+      mvg_ = 1.d0 - (1.d0 / nvg_)       ! van Genuchten soil parameter m
+
+      maxday = maxyear * 365
+      maxhour = maxday * 24
+
 !     * The file soilprofile.par contain information about thickness and
 !       soil properties in each soil layer, with the layer number in the
 !       first column.
 
       maxlayer = 0
 
-      open(kfile_soilprofile, status='old', iostat=stat,               &
-     &     file=sfile_soilprofile(1:len_trim(sfile_soilprofile)))
-      if (stat .eq. 0) then
+      open(kfile_soilprofile, FILE=sfile_soilprofile(1:len_trim(sfile_soilprofile)),                  &
+     &                        STATUS='old', IOSTAT=iostat)
+      if (iostat .eq. 0) then
         read(kfile_soilprofile,*) maxlayer
       endif
       close(kfile_soilprofile)
 
 !     * number of soil layers maxlayer assuming same thickness everywhere
       if (maxlayer .eq. 0) maxlayer = ceiling(cz / delz_)
-      maxday = ceiling(maxyear * 365.d0)
-      maxhour = maxday * 24
 
       return
       end subroutine vom_read_input
@@ -346,33 +347,35 @@
 !*-----allocate vector sizes--------------------------------------------
 
       subroutine vom_alloc ()
-      use vegmod
       use vegwatmod
-      use watmod
-      
+
       implicit none
 
-      allocate(srad__(maxday))
-      allocate(tairmin(maxday))
-      allocate(tairmax(maxday))
-      allocate(rainvec(maxday))
-      allocate(press(maxday))
-      allocate(fyear(maxday))
-      allocate(fmonth(maxday))
-      allocate(fday(maxday))
       allocate(dayyear(maxday))
-      allocate(vpvec(maxday))
+      allocate(fday(maxday))
+      allocate(fmonth(maxday))
+      allocate(fyear(maxday))
+
+      allocate(tairmax(maxday))
+      allocate(tairmin(maxday))
+      allocate(rainvec(maxday))
       allocate(epan__(maxday))
+      allocate(srad__(maxday))
+      allocate(vpvec(maxday))
+      allocate(press(maxday))
       allocate(cavec(maxday))
-      allocate(parvec(maxday))
-      allocate(netassvec_(maxday))
-      allocate(netassvecg(maxday))
+
       allocate(par_h(maxhour))
       allocate(vd_h(maxhour))
       allocate(tair_h(maxhour))
-      allocate(gammastarvec(maxhour))
       allocate(rain_h(maxhour))
       allocate(ca_h(maxhour))
+
+      allocate(parvec(maxday))
+      allocate(netassvec_(maxday))
+      allocate(netassvecg(maxday))
+      allocate(gammastarvec(maxhour))
+
       allocate(pcapvec(maxlayer))
       allocate(suvec_(maxlayer))
       allocate(ruptkvec(maxlayer))
@@ -384,8 +387,8 @@
       allocate(qblvec(maxlayer))
       allocate(dsuvec(maxlayer))
       allocate(phydrostaticvec(maxlayer))
-!      allocate(delznewvec(maxlayer))
-!      allocate(wsnewvec(maxlayer))
+!     allocate(delznewvec(maxlayer))
+!     allocate(wsnewvec(maxlayer))
       allocate(prootmvec(maxlayer))
       allocate(pcapnewvec(maxlayer))
       allocate(ruptkvec_d(maxlayer))
@@ -420,51 +423,43 @@
 !*-----File opening (saving climate and gstom ass data)-----------------
 
       subroutine vom_open_output ()
-      use vegmod
       use vegwatmod
       implicit none
 
-      open(kfile_resultshourly, status='replace',                      &
-     &     file=sfile_resultshourly(1:len_trim(sfile_resultshourly)))
-      write(kfile_resultshourly,'(a6,a7,a7,a7,a7,23a15)') 'year',      &
+      open(kfile_resultshourly, FILE=sfile_resultshourly(1:len_trim(sfile_resultshourly)), STATUS='replace')
+      write(kfile_resultshourly,'(a6,a7,a7,a7,a7,22a15)') 'year',      &
      &  'month', 'day', 'dcum', 'hour', 'rain', 'tair', 'par', 'vd',   &
      &  'esoil', 'pc', 'jmax25_t', 'jmax25_g', 'mq', 'rl', 'lambda_t', &
      &  'lambda_g', 'rr', 'ass_t', 'ass_g', 'het_t', 'het_g', 'su_1',  &
      &  'ys', 'Ws', 'spgfcf', 'infx'
 
-      open(kfile_resultsdaily, status='replace',                       &
-     &     file=sfile_resultsdaily(1:len_trim(sfile_resultsdaily)))
+      open(kfile_resultsdaily, FILE=sfile_resultsdaily(1:len_trim(sfile_resultsdaily)), STATUS='replace')
       write(kfile_resultsdaily,'(a6,a7,a7,a7,a7,25a15)') 'year',       &
-     &  'month', 'day', 'dcum', 'hour', 'rain', 'tairmax', 'tairmin', 'par', &
-     &  'vd', 'esoil', 'jmax25_t', 'jmax25_g', 'pc', 'rlt+rlg',        &
+     &  'month', 'day', 'dcum', 'hour', 'rain', 'tairmax', 'tairmin',  &
+     &  'par', 'vd', 'esoil', 'jmax25_t', 'jmax25_g', 'pc', 'rlt+rlg', &
      &  'lambda_t', 'lambda_g', 'rr_t', 'rr_g', 'ass_t', 'ass_g',      &
      &  'su_avg', 'ys', 'ws', 'spgfcf', 'infx', 'etm_t', 'etm_g',      &
      &  'su_1', 'topt'
 
-      open(kfile_yearly, status='replace',                             &
-     &     file=sfile_yearly(1:len_trim(sfile_yearly)))
+      open(kfile_yearly, FILE=sfile_yearly(1:len_trim(sfile_yearly)), STATUS='replace')
       write(kfile_yearly,'(a6,19a16)') "year", "rain_y", "epan_y",     &
-     &  "par_y", "srad_y", "vd_y", "esoilyr", "etm_y", "etmgyr",         &
-   &  "assgyr", "rlgyr", "rrgyr", "cpccgyr", "tcgyr",                &
-   &  "etmtyr", "asstyr", "rltyr", "rrtyr", "cpcctyr", "tcyr"
+     &  "par_y", "srad_y", "vd_y", "esoil_y", "etm_y", "etmg_y",       &
+     &  "assg_y", "rlg_y", "rrg_y", "cpccg_y", "tcg_y",                &
+     &  "etmt_y", "asst_y", "rlt_y", "rrt_y", "cpcct_y", "tc_y"
 
-      open(kfile_rsurfdaily, status='replace',                         &
-     &     file=sfile_rsurfdaily(1:len_trim(sfile_rsurfdaily)))
+      open(kfile_rsurfdaily, FILE=sfile_rsurfdaily(1:len_trim(sfile_rsurfdaily)), STATUS='replace')
       write(kfile_rsurfdaily,*) ' year', ' month', ' day', '   dcum',  &
      &  '  rsurfsublayer'
 
-      open(kfile_delyuhourly, status='replace',                         &
-     &     file=sfile_delyuhourly(1:len_trim(sfile_delyuhourly)))
+      open(kfile_delyuhourly, FILE=sfile_delyuhourly(1:len_trim(sfile_delyuhourly)), STATUS='replace')
       write(kfile_delyuhourly,*) ' year', ' month', ' day', '   dcum',  &
      &  ' hour', '  delyusublayer'
 
-      open(kfile_ruptkhourly, status='replace',                        &
-     &     file=sfile_ruptkhourly(1:len_trim(sfile_ruptkhourly)))
+      open(kfile_ruptkhourly, FILE=sfile_ruptkhourly(1:len_trim(sfile_ruptkhourly)), STATUS='replace')
       write(kfile_ruptkhourly,*) ' year', ' month', ' day', '   dcum', &
      &  ' hour', '  delyusublayer'
 
-      open(kfile_suvechourly, status='replace',                        &
-     &     file=sfile_suvechourly(1:len_trim(sfile_suvechourly)))
+      open(kfile_suvechourly, FILE=sfile_suvechourly(1:len_trim(sfile_suvechourly)), STATUS='replace')
       write(kfile_suvechourly,*) ' year', ' month', ' day', '   dcum', &
      &  ' hour', '  susublayer'
 
@@ -478,7 +473,6 @@
 
       subroutine vom_open_ncp_output ()
       use vegwatmod
-!      use vegmod
       implicit none
 
       open(kfile_model_output, file=sfile_model_output(1:len_trim(sfile_model_output)))
@@ -492,21 +486,20 @@
 !*-----PARAMETER READING FROM SOILPROFILE.PAR---------------------------
 
       subroutine vom_get_soilprofile ()
-      use watmod
       use vegwatmod
       implicit none
 
-      INTEGER :: stat, j
+      INTEGER :: iostat, j
 
 !     * The file soilprofile.par can contain information about thickness
 !       and soil properties in each soil layer, with the layer number in
 !       the first column.
 
-      open(kfile_soilprofile, status='old', iostat=stat,               &
-     &     file=sfile_soilprofile(1:len_trim(sfile_soilprofile)))
-      if (stat .eq. 0) then
+      open(kfile_soilprofile, FILE=sfile_soilprofile(1:len_trim(sfile_soilprofile)),                  &
+     &                        STATUS='old', IOSTAT=iostat)
+      if (iostat .eq. 0) then
         do j = 1, maxlayer
-          read(kfile_soilprofile,*) maxlayer, delzvec(j), ksatvec(j),      &
+          read(kfile_soilprofile,*) maxlayer, delzvec(j), ksatvec(j),  &
      &      nvgvec(j), avgvec(j), thetasvec(j), thetarvec(j)
           epslnvec(j) = thetasvec(j) - thetarvec(j)  ! porosity
           mvgvec(j) = 1.d0 - (1.d0 / nvgvec(j))  ! van Genuchten soil parameter m
@@ -533,34 +526,31 @@
 
       subroutine vom_get_hourly_clim ()
       use vegwatmod
-      use vegmod
       implicit none
 
       INTEGER :: ii, i, h, oldh, stat
       INTEGER :: dummyint1, dummyint2, dummyint3, dummyint4
 
-      open(kfile_hourlyweather, status='old', iostat=stat,             &
-     &     file=sfile_hourlyweather(1:len_trim(sfile_hourlyweather)))
+      open(kfile_hourlyweather, FILE=sfile_hourlyweather(1:len_trim(sfile_hourlyweather)),              &
+     &                          STATUS='old', IOSTAT=stat)
       if (stat .ne. 0) then
         close(kfile_hourlyweather)
 
 !       * Creating hourly climate data from daily data
 
-        open(kfile_dailyweather, status='old', iostat=stat,            &
-     &       file=sfile_dailyweather(1:len_trim(sfile_dailyweather)))
+        open(kfile_dailyweather, FILE=sfile_dailyweather(1:len_trim(sfile_dailyweather)),              &
+     &                           STATUS='old', IOSTAT=stat)
         read(kfile_dailyweather,*)
         do i = 1, maxday
-          read(kfile_dailyweather,'(4i8,8f8.2)') dayyear(i), fday(i),   &
-     &      fmonth(i), fyear(i), tairmax(i), tairmin(i), rainvec(i), epan__(i),  &
-     &      srad__(i), vpvec(i), press(i), cavec(i)
+          read(kfile_dailyweather,'(4i8,8f8.2)') dayyear(i), fday(i),  &
+     &      fmonth(i), fyear(i), tairmax(i), tairmin(i), rainvec(i),   &
+     &      epan__(i), srad__(i), vpvec(i), press(i), cavec(i)
         enddo
         close(kfile_dailyweather)
 
-        open(kfile_hourlyweather, iostat=stat,                         &
-     &       file=sfile_hourlyweather(1:len_trim(sfile_hourlyweather)))
-        write(kfile_hourlyweather,'(5a8,5a11)') '   hour', ' dayyear', &
-     &    '     day', '   month', '    year', '       tair',            &
-     &    '         vd', '       par_h', '      rain_h', '      ca_h'
+        open(kfile_hourlyweather, FILE=sfile_hourlyweather(1:len_trim(sfile_hourlyweather)), IOSTAT=stat)
+        write(kfile_hourlyweather,'(5a8,5a11)') 'hour', 'dayyear', 'day', &
+     &    'month', 'year', 'tair_h', 'vd_h', 'par_h', 'rain_h', 'ca_h'
 
 !       * Calculation of derived parameters
 
@@ -569,33 +559,30 @@
         close(kfile_hourlyweather)
 
       endif
-     
 
 !       * Reading hourly climate data if available
 
-      open(kfile_hourlyweather, status='old', iostat=stat,             &
-     &     file=sfile_hourlyweather(1:len_trim(sfile_hourlyweather)))
-      read(kfile_hourlyweather,*)
-      ii = 1
-      oldh = 99
-      do i = 1, maxhour
-        read(kfile_hourlyweather,'(5i8,5e11.3)') h, dummyint1,       &
-   &      dummyint2, dummyint3, dummyint4, tair_h(i), vd_h(i),         &
-   &      par_h(i), rain_h(i), ca_h(i)
-        if (h .lt. oldh) then
-          dayyear(ii) = dummyint1
-          fday(ii)     = dummyint2
-          fmonth(ii)   = dummyint3
-          fyear(ii)    = dummyint4
-          ii = ii + 1
-        endif
-        oldh = h
-        gammastarvec(i) = 0.00004275d0 * p_E ** ((18915.d0 * (-25.d0 &
-   &                    + tair_h(i))) / (149.d0 * p_R_ * (273.d0       &
-   &                    + tair_h(i))))      ! (Out[274], derived from (3.25))
-      enddo
-      close(kfile_hourlyweather)
-      
+        open(kfile_hourlyweather, FILE=sfile_hourlyweather(1:len_trim(sfile_hourlyweather)), STATUS='old', IOSTAT=stat)
+        read(kfile_hourlyweather,*)
+        ii = 1
+        oldh = 99
+        do i = 1, maxhour
+          read(kfile_hourlyweather,'(5i8,5e11.3)') h, dummyint1,       &
+     &      dummyint2, dummyint3, dummyint4, tair_h(i), vd_h(i),       &
+     &      par_h(i), rain_h(i), ca_h(i)
+          if (h .lt. oldh) then
+            dayyear(ii) = dummyint1
+            fday(ii)    = dummyint2
+            fmonth(ii)  = dummyint3
+            fyear(ii)   = dummyint4
+            ii = ii + 1
+          endif
+          oldh = h
+          gammastarvec(i) = 0.00004275d0 * p_E ** ((18915.d0 * (-25.d0 &
+   &                      + tair_h(i))) / (149.d0 * p_R_ * (273.d0       &
+   &                      + tair_h(i))))      ! (Out[274], derived from (3.25))
+        enddo
+        close(kfile_hourlyweather)
 
       return
       end subroutine vom_get_hourly_clim
@@ -607,7 +594,6 @@
 
       subroutine vom_calc_derived ()
       use vegwatmod
-      use vegmod
       implicit none
 
       INTEGER :: in, ik, ii
@@ -615,16 +601,16 @@
       REAL*8  :: tamean
       REAL*8  :: dtr
 
-      parvec(:) = 2.0804d0 * srad__(:)         ! (Out[17]), par in mol/m2 if srad was MJ/m2
+      parvec(:) = 2.0804d0 * srad__(:)       ! (Out[17]), par in mol/m2 if srad was MJ/m2
       do in = 1, maxday
         daylength = 12.d0 - 7.639437d0 * ASIN((0.397949d0              &
      &            * COS(0.172142d0 + 0.017214d0 * dayyear(in))         &
-     &            * TAN(0.017453d0 * lat_))                             &
+     &            * TAN(0.017453d0 * lat_))                            &
      &            / SQRT(0.920818d0 - 0.079182d0                       &
      &            * COS(0.344284d0 + 0.034428d0 * dayyear(in))))  ! (Out[22]), in hours
 !       * sets time of sunrise and sunset
         sunr = 12d0 - 0.5d0 * daylength
-        suns = 12d0 + 0.5d0 * daylength 
+        suns = 12d0 + 0.5d0 * daylength
         tamean = (tairmax(in) + tairmin(in)) / 2.d0
         dtr = tairmax(in) - tairmin(in)
         vp_ = vpvec(in) * 100.d0             ! vp in Pa
@@ -634,54 +620,57 @@
           ii = in * 24 + ik - 24
 !         * (derived from 3.52+3.53) (Out[38], accounts for diurnal
 !           variation in air temperature
-          tair__ = tamean + dtr * (0.0138d0                              &
-     &         * COS(3.513d0 - ((-1.d0 + ik) * p_pi) / 3.d0) + 0.0168d0  &
-     &         * COS(0.822d0 - ((-1.d0 + ik) * p_pi) / 4.d0) + 0.0984d0  &
-     &         * COS(0.360d0 - ((-1.d0 + ik) * p_pi) / 6.d0) + 0.4632d0  &
-     &         * COS(3.805d0 - ((-1.d0 + ik) * p_pi) / 12.d0))
+          tair__ = tamean + dtr * (0.0138d0                        &
+     &           * COS(3.513d0 - ((-1.d0 + ik) * p_pi) / 3.d0) + 0.0168d0 &
+     &           * COS(0.822d0 - ((-1.d0 + ik) * p_pi) / 4.d0) + 0.0984d0 &
+     &           * COS(0.360d0 - ((-1.d0 + ik) * p_pi) / 6.d0) + 0.4632d0 &
+     &           * COS(3.805d0 - ((-1.d0 + ik) * p_pi) / 12.d0))
           tair_h(ii) = tair__
+
           ca_h(ii) = cavec(in)
-!         vd__ = 0.006028127d0 * 2.718282d0 ** ((17.27d0 * tair__)       &
+
+!         vd__ = 0.006028127d0 * 2.718282d0 ** ((17.27d0 * tair__)     &
 !    &       / (237.3d0 + tair__)) - 9.869233d-6 * vp_  ! (derived from 3.54+3.55) (Out[52]), accounts for diurnal variation in vapour deficit
-
-          vd__ = (((0.6108d0 * p_E ** (17.27d0 * tair__ / (tair__ + 237.3d0))) &
-     &         * 1000) - vp_) / (press(in) * 100.d0)
-
+          vd__ = (((0.6108d0 * p_E ** (17.27d0 * tair__ / (tair__      &
+     &         + 237.3d0))) * 1000) - vp_) / (press(in) * 100.d0)
           if (vd__ .le. 0.d0) vd__ = 0.d0
           vd_h(ii) = vd__
+
 !         * average rainfall in hour ii (m/s)
           rain_h(ii) = rainvec(in) / (24.d0 * 3600.d0 * 1000.d0)
+
           if (sunr .le. ik .and. ik + 1 .le. suns) then
 !           * ([Out30]), in mol/m2/s (derived from 3.51) accounts for
 !             diurnal variation in global irradiance
             par_h(ii) = (-0.000873d0 * parvec(in) * COS(0.017453d0 * lat_) &
-     &               * SQRT(0.920818d0 - 0.079182d0                    &
-     &               * COS(0.034428d0 * (10.d0 + dayyear(in))))        &
-     &               * COS(0.2618d0 * ik) - 0.000347d0 * parvec(in)    &
-     &               * COS(0.017214d0 * (10.d0 + dayyear(in)))         &
-     &               * SIN(0.017453d0 * lat_)) / (-1.250192d0 * daylength &
-     &               * COS(0.017214d0 * (10.d0 + dayyear(in)))         &
-     &               * SIN(0.017453d0 * lat_) + 24.d0                   &
-     &               * COS(0.017453d0 * lat_)                           &
-     &               * SQRT(0.920818d0 - 0.079182d0                    &
-     &               * COS(0.034428d0 * (10.d0 + dayyear(in))))        &
-     &               * (1.d0 - (0.158363d0                             &
-     &               * COS(0.017214d0 * (10.d0 + dayyear(in))) ** 2.d0 &
-     &               * TAN(0.017453d0 * lat_) ** 2.d0)                  &
-     &               / (0.920818d0 - 0.079182d0 * COS(0.034428d0       &
-     &               * (10.d0 + dayyear(in))))) ** 0.5d0)
-          else 
+     &                * SQRT(0.920818d0 - 0.079182d0                   &
+     &                * COS(0.034428d0 * (10.d0 + dayyear(in))))       &
+     &                * COS(0.2618d0 * ik) - 0.000347d0 * parvec(in)   &
+     &                * COS(0.017214d0 * (10.d0 + dayyear(in)))        &
+     &                * SIN(0.017453d0 * lat_)) / (-1.250192d0 * daylength &
+     &                * COS(0.017214d0 * (10.d0 + dayyear(in)))        &
+     &                * SIN(0.017453d0 * lat_) + 24.d0                 &
+     &                * COS(0.017453d0 * lat_)                         &
+     &                * SQRT(0.920818d0 - 0.079182d0                   &
+     &                * COS(0.034428d0 * (10.d0 + dayyear(in))))       &
+     &                * (1.d0 - (0.158363d0                            &
+     &                * COS(0.017214d0 * (10.d0 + dayyear(in))) ** 2.d0 &
+     &                * TAN(0.017453d0 * lat_) ** 2.d0)                &
+     &                / (0.920818d0 - 0.079182d0 * COS(0.034428d0      &
+     &                * (10.d0 + dayyear(in))))) ** 0.5d0)
+          else
             par_h(ii) = 0.d0
           endif
 
-          write(kfile_hourlyweather,'(5i8,5e11.3)') ik, dayyear(in),   &
-     &      fday(in), fmonth(in), fyear(in), tair_h(ii), vd_h(ii),          &
-     &      par_h(ii), rain_h(ii), ca_h(ii)
+            write(kfile_hourlyweather,'(5i8,5e11.3)') ik, dayyear(in), &
+     &        fday(in), fmonth(in), fyear(in), tair_h(ii), vd_h(ii),   &
+     &        par_h(ii), rain_h(ii), ca_h(ii)
 
 !         * (Out[274], derived from (3.25))
           gammastarvec(ii) = 0.00004275d0 * p_E ** ((18915.d0          &
      &                     * (-25.d0 + tair_h(ii))) / (149.d0 * p_R_     &
      &                     * (273.d0 + tair_h(ii))))
+
         enddo
       enddo
 
@@ -694,116 +683,114 @@
 !*-----Initial values---------------------------------------------------
 
       subroutine vom_init_vegpar ()
-        use vegwatmod
-        use vegmod
-        use watmod
-        implicit none
+      use vegwatmod
+      implicit none
 
-        INTEGER :: init
-        REAL*8  :: dummy
+      INTEGER :: init
+      REAL*8  :: dummy
 
-        topt_ = toptstart
+      topt_ = toptstart
 
-        !     * Set soil moisture and vegetation parameters to initial conditions 
+!     * Set soil moisture and vegetation parameters to initial conditions
 
-        !     * Set init=1 to signalise to waterbalance that this is the inital step
-        init = 1
-        call waterbalance(init)
+!     * Set init=1 to signalise to waterbalance that this is the inital step
+      init = 1
+      call waterbalance(init)
 
-        if (rootdepth .gt. cz) then
-           write(*,*) 'Root depth greater than soil depth'
-           rootdepth = cz
-        endif
+      if (rootdepth .gt. cz) then
+        write(*,*) 'Root depth greater than soil depth'
+        rootdepth = cz
+      endif
 
-        wsold  = SUM(cH2Ol_s(:))               ! initial soil water storage
-        wsnew = wsold
+      wsold  = SUM(cH2Ol_s(:))               ! initial soil water storage
+      wsnew = wsold
 
-        !     * Set vegetation parameters
+!     * Set vegetation parameters
 
-        md_   = pc_ * mdf + mdstore
-        mqx_  = md_ * mqxf
-        mqnew = 0.95d0 * mqx_                  ! initial wood water storage
-        mqold = mqnew
-        rsurfnewvec(:) = 0.d0
+      md_   = pc_ * mdf + mdstore
+      mqx_  = md_ * mqxf
+      mqnew = 0.95d0 * mqx_                  ! initial wood water storage
+      mqold = mqnew
+      rsurfnewvec(:) = 0.d0
 
-        !     * Determining the position of the bottom of the tree root zone
+!     * Determining the position of the bottom of the tree root zone
 
-        pos_ = 0
-        dummy = 0
-        do while (rootdepth .gt. dummy)
-           pos_ = pos_ + 1
-           dummy = dummy + delzvec(pos_)
-        enddo
+      pos_ = 0
+      dummy = 0
+      do while (rootdepth .gt. dummy)
+        pos_ = pos_ + 1
+        dummy = dummy + delzvec(pos_)
+      enddo
 
-        !     * Determining the position of the bottom of the tree root zone
+!     * Determining the position of the bottom of the tree root zone
 
-        posg = 0
-        dummy = 0
-        do while (rgdepth .gt. dummy)
-           posg = posg + 1
-           dummy = dummy + delzvec(posg)
-        enddo
+      posg = 0
+      dummy = 0
+      do while (rgdepth .gt. dummy)
+        posg = posg + 1
+        dummy = dummy + delzvec(posg)
+      enddo
 
-        rsurfgnew(1:posg) = rsurfinit * delzvec(1:posg)
-        rsurfgnew(posg+1:maxlayer) = 0.d0
-        if (posg .gt. wlayernew) then
-           rsurfgnew(wlayernew+1:posg) = rsurfmin                        &
-                &                               * delzvec(wlayernew+1:pos_)      
-        endif
-        !     * root surface density (root surface area/soil volume) in each sublayer
-        rsurfnewvec(1:pos_) = rsurfinit * delzvec(1:pos_)
-        if (pos_ .gt. wlayernew) then
-           rsurfnewvec(wlayernew+1:pos_) = rsurfmin                      &
-                &                                 * delzvec(wlayernew+1:pos_)    
-        endif
-        jmax25_(2)   = 0.0003d0
-        jmax25g(2)   = 0.0003d0
-        pcgmin       = 0.02d0                  ! minimum grass pc; initial point for growth
-        pcg_(2)      = MIN(1.d0 - pc_, pcgmin)
-        pcg_(:)      = pcg_(2) + (/-0.02,0.0,0.02/)  ! vector with values varying by 1%
-        pcg_(3)      = MIN(MAX(pcgmin, pcg_(3)), 1.d0 - pc_)
-        rootlim(:,:) = 0.d0
+      rsurfgnew(1:posg) = rsurfinit * delzvec(1:posg)
+      rsurfgnew(posg+1:maxlayer) = 0.d0
+      if (posg .gt. wlayernew) then
+        rsurfgnew(wlayernew+1:posg) = rsurfmin * delzvec(wlayernew+1:pos_)
+      endif
 
-        !     * Direct costs
+!     * root surface density (root surface area/soil volume) in each sublayer
 
-        !     * (3.38)  foliage tunrover costs, assuming crown LAI of 2.5
-        tc_ = tcf * pc_ * 2.5d0
+      rsurfnewvec(1:pos_) = rsurfinit * delzvec(1:pos_)
+      if (pos_ .gt. wlayernew) then
+        rsurfnewvec(wlayernew+1:pos_) = rsurfmin * delzvec(wlayernew+1:pos_)
+      endif
+      jmax25_(2)   = 0.0003d0
+      jmax25g(2)   = 0.0003d0
+      pcgmin       = 0.02d0                  ! minimum grass pc; initial point for growth
+      pcg_(2)      = MIN(1.d0 - pc_, pcgmin)
+      pcg_(:)      = pcg_(2) + (/-0.02,0.0,0.02/)  ! vector with values varying by 1%
+      pcg_(3)      = MIN(MAX(pcgmin, pcg_(3)), 1.d0 - pc_)
+      rootlim(:,:) = 0.d0
 
-        !     * Setting yearly, daily and hourly parameters
+!     * Direct costs
 
-        nyear            = fyear(1)
-        !d      netass_y       = 0.d0
-        !d      gpp_y          = 0.d0
-        rain_y         = 0.d0
-        par_y          = 0.d0
-        srad_y          = 0.d0
-        vd_y           = 0.d0
-        etm_y           = 0.d0
-        epan_y         = 0.d0
-        esoil_y         = 0.d0        ! = yearly esoil
-        ruptkvec_d(:)  = 0.d0
-        ruptkg_d(:)    = 0.d0
-        ass_d(:)       = 0.d0
-        assg_d(:,:)    = 0.d0
-        netassvec_(:)   = 0.d0
-        netassvecg(:)  = 0.d0
-        ioacum          = 0.d0
-        ! for grasses
-        etmg_y         = 0.d0
-        assg_y         = 0.d0
-        rlg_y          = 0.d0
-        rrg_y          = 0.d0
-        cpccg_y        = 0.d0
-        tcg_y          = 0.d0
-        ! for trees
-        etmt_y         = 0.d0
-        asst_y         = 0.d0
-        rlt_y          = 0.d0
-        rrt_y          = 0.d0
-        cpcct_y        = 0.d0
-        tct_y          = 0.d0
+!     * (3.38)  foliage tunrover costs, assuming crown LAI of 2.5
+      tc_ = tcf * pc_ * 2.5d0
 
-        return
+!     * Setting yearly, daily and hourly parameters
+
+      nyear          = fyear(1)
+!d    netass_y       = 0.d0
+!d    gpp_y          = 0.d0
+      rain_y         = 0.d0
+      par_y          = 0.d0
+      srad_y         = 0.d0
+      vd_y           = 0.d0
+      etm_y          = 0.d0
+      epan_y         = 0.d0
+      esoil_y        = 0.d0             ! = yearly esoil
+      ruptkvec_d(:)  = 0.d0
+      ruptkg_d(:)    = 0.d0
+      ass_d(:)       = 0.d0
+      assg_d(:,:)    = 0.d0
+      netassvec_(:)  = 0.d0
+      netassvecg(:)  = 0.d0
+      ioacum         = 0.d0
+!     * for grasses
+      etmg_y         = 0.d0
+      assg_y         = 0.d0
+      rlg_y          = 0.d0
+      rrg_y          = 0.d0
+      cpccg_y        = 0.d0
+      tcg_y          = 0.d0
+!     * for trees
+      etmt_y         = 0.d0
+      asst_y         = 0.d0
+      rlt_y          = 0.d0
+      rrt_y          = 0.d0
+      cpcct_y        = 0.d0
+      tct_y          = 0.d0
+
+      return
       end subroutine vom_init_vegpar
 
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -812,14 +799,12 @@
 
       subroutine vom_daily_init ()
       use vegwatmod
-      use vegmod
-      use watmod
       implicit none
 
       rsurfvec(:) = rsurfnewvec(:)
       rsurfg_(:)  = rsurfgnew(:)
-      lambda_     = lambdafac * (SUM(pcapnewvec(1:pos_)) / pos_) ** wsexp  ! (3.45) 
-      lambdag_     = lambdagfac * pcapnewvec(1) ** wsgexp  ! (3.44)
+      lambda_     = lambdafac * (SUM(pcapnewvec(1:pos_)) / pos_) ** wsexp  ! (3.45)
+      lambdag_    = lambdagfac * pcapnewvec(1) ** wsgexp  ! (3.44)
 !     * vector with values varying by 1%
       jmax25_(:)  = jmax25_(2) * (/0.99,1.0,1.01/)
 !     * making sure that the values don't become too low, otherwise
@@ -856,11 +841,11 @@
 
 !     * used for daily recalculation
       if (optmode .eq. 0) then
-        tairmax(nday)    = -9999.d0
-        tairmin(nday)    =  9999.d0
+        tairmax(nday) = -9999.d0
+        tairmin(nday) =  9999.d0
         rainvec(nday) =     0.d0
         parvec(nday)  =     0.d0
-        srad__(nday)    =     0.d0
+        srad__(nday)  =     0.d0
       endif
 
       if (optmode .eq. 0) then
@@ -887,71 +872,76 @@
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
       subroutine vom_hourly_init ()
-      use vegmod
       use vegwatmod
-      use watmod
       implicit none
 
       INTEGER :: ii
 
-      ii        = nday * 24 + nhour - 24
+      ii         = nday * 24 + nhour - 24
       rain__     = rain_h(ii)
-      gammastar_ = gammastarvec(ii)
-      tair__      = tair_h(ii)
-      vd__      = vd_h(ii)
+      tair__     = tair_h(ii)
+      vd__       = vd_h(ii)
       par__      = par_h(ii)
       ca__       = ca_h(ii) / 1.0d6
 
+      gammastar_ = gammastarvec(ii)
+
 !     * (Out[310], derived from (3.26)) Temperature dependence of Jmax
-      jmax__(:) = (p_E ** ((ha_ * (-25.d0 + tair__) * (-273.d0 + topt_   &
-     &          + 273.d0 * p_R_ * topt_)) / ((25.d0 + 273.d0 * p_R_ * topt_) &
-     &          * (tair__ + 273.d0 * p_R_ * topt_))) * ((-1.d0 + p_E ** (-(hd_ &
-     &          * (-298.d0 + topt_)) / (25.d0 + 273.d0 * p_R_ * topt_)))  &
-     &          * ha_ + hd_) * jmax25_(:)) / ((-1.d0 + p_E ** ((hd_ * (273.d0 &
-     &          + tair__ - topt_)) / (tair__ + 273.d0 * p_R_ * topt_))) * ha_ + hd_)
-      rl__(:) = ((ca__ - gammastar_) * pc_ * jmax__(:) * rlratio) / (4.d0 &
-     &        * (ca__ + 2.d0 * gammastar_) * (1.d0 + rlratio))  ! (3.24), (Out[312])
+      jmax__(:) = (p_E ** ((ha_ * (-25.d0 + tair__) * (-273.d0 + topt_ &
+     &          + 273.d0 * p_R_ * topt_)) / ((25.d0 + 273.d0 * p_R_    &
+     &          * topt_) * (tair__ + 273.d0 * p_R_ * topt_))) * ((-1.d0 &
+     &          + p_E ** (-(hd_ * (-298.d0 + topt_)) / (25.d0 + 273.d0 &
+     &          * p_R_ * topt_))) * ha_ + hd_) * jmax25_(:)) / ((-1.d0 &
+     &          + p_E ** ((hd_ * (273.d0 + tair__ - topt_)) / (tair__  &
+     &          + 273.d0 * p_R_ * topt_))) * ha_ + hd_)
+!     * (3.24), (Out[312])
+      rl__(:) = ((ca__ - gammastar_) * pc_ * jmax__(:) * rlratio)      &
+     &        / (4.d0 * (ca__ + 2.d0 * gammastar_) * (1.d0 + rlratio))
 !     * (Out[310], derived from (3.26)) Temperature dependence of Jmax
-      jmaxg__(:) = (p_E ** ((ha_ * (-25.d0 + tair__) * (-273.d0 + topt_  &
-     &           + 273.d0 * p_R_ * topt_)) / ((25.d0 + 273.d0 * p_R_ * topt_) &
-     &           * (tair__ + 273.d0 * p_R_ * topt_))) * ((-1.d0 + p_E ** (-(hd_ &
-     &           * (-298.d0 + topt_)) / (25.d0 + 273.d0 * p_R_ * topt_))) &
-     &           * ha_ + hd_) * jmax25g(:)) / ((-1.d0 + p_E ** ((hd_ * (273.d0 &
-     &           + tair__ - topt_)) / (tair__ + 273.d0 * p_R_ * topt_))) * ha_ + hd_)
-      rlg__(1,:) = ((ca__ - gammastar_) * pcg_(1) * jmaxg__(:) * rlratio) &
-     &           / (4.d0 * (ca__ + 2.d0 * gammastar_) * (1.d0 + rlratio))  ! (3.24), (Out[312])
-      rlg__(2,:) = ((ca__ - gammastar_) * pcg_(2) * jmaxg__(:) * rlratio) &
-     &           / (4.d0 * (ca__ + 2.d0 * gammastar_) * (1.d0 + rlratio))  ! (3.24), (Out[312])
-      rlg__(3,:) = ((ca__ - gammastar_) * pcg_(3) * jmaxg__(:) * rlratio) &
-     &           / (4.d0 * (ca__ + 2.d0 * gammastar_) * (1.d0 + rlratio))  ! (3.24), (Out[312])
+      jmaxg__(:) = (p_E ** ((ha_ * (-25.d0 + tair__) * (-273.d0 + topt_ &
+     &           + 273.d0 * p_R_ * topt_)) / ((25.d0 + 273.d0 * p_R_   &
+     &           * topt_) * (tair__ + 273.d0 * p_R_ * topt_))) * ((-1.d0 &
+     &           + p_E ** (-(hd_ * (-298.d0 + topt_)) / (25.d0         &
+     &           + 273.d0 * p_R_ * topt_))) * ha_ + hd_) * jmax25g(:)) &
+     &           / ((-1.d0 + p_E ** ((hd_ * (273.d0 + tair__ - topt_)) &
+     &           / (tair__ + 273.d0 * p_R_ * topt_))) * ha_ + hd_)
+      rlg__(1,:) = ((ca__ - gammastar_) * pcg_(1) * jmaxg__(:)         &
+     &           * rlratio) / (4.d0 * (ca__ + 2.d0 * gammastar_)       &
+     &           * (1.d0 + rlratio))  ! (3.24), (Out[312])
+      rlg__(2,:) = ((ca__ - gammastar_) * pcg_(2) * jmaxg__(:)         &
+     &           * rlratio) / (4.d0 * (ca__ + 2.d0 * gammastar_)       &
+     &           * (1.d0 + rlratio))  ! (3.24), (Out[312])
+      rlg__(3,:) = ((ca__ - gammastar_) * pcg_(3) * jmaxg__(:)         &
+     &           * rlratio) / (4.d0 * (ca__ + 2.d0 * gammastar_)       &
+     &           * (1.d0 + rlratio))  ! (3.24), (Out[312])
 
 !     * daily recalculation for resultsdaily
       if (optmode .eq. 0) then
         rainvec(nday) = rainvec(nday) + rain__ * 3600.d0 * 1000.d0  ! mm/d
         parvec(nday)  = parvec(nday) + par__ * 3600.d0  ! in mol/m2/d
-        srad__(nday)    = parvec(nday) / 2.0804d0  ! MJ/m2/d
+        srad__(nday)  = parvec(nday) / 2.0804d0  ! MJ/m2/d
 
         if (tair__ .gt. tairmax(nday)) tairmax(nday) = tair__
         if (tair__ .lt. tairmin(nday)) tairmin(nday) = tair__
       endif
 
       if (optmode .eq. 0) then
-        mqold   = mqnew
+        mqold    = mqnew
         spgfcf_h = 0.d0
-        inf_h   = 0.d0
+        inf_h    = 0.d0
         infx_h   = 0.d0
         io_h     = 0.d0
         esoil_h  = 0.d0
-        etm_h   = 0.d0
+        etm_h    = 0.d0
         etmg_h   = 0.d0
-        ruptk_h = 0.d0
+        ruptk_h  = 0.d0
       endif
 
-      time         = 0.d0
-      ass_h(:)     = 0.d0                    ! hourly assimilation
+      time          = 0.d0
+      ass_h(:)      = 0.d0                   ! hourly assimilation
       assg_h(:,:)   = 0.d0
       ruptkvec_h(:) = 0.d0
-      hruptkg(:)   = 0.d0
+      hruptkg(:)    = 0.d0
 
       return
       end subroutine vom_hourly_init
@@ -962,7 +952,6 @@
 !*-----calculate gstom, et and ass -------------------------------------
 
       subroutine vom_gstom ()
-      use vegmod
       use vegwatmod
       implicit none
 
@@ -974,35 +963,36 @@
       if (par__ .gt. 0.d0) then
 !       * adaptation of topt to air temperature during sunlight
         topt_ = topt_ + toptfac * (tair__ + 273.d0 - topt_)
-        jact_(:)   = (1.d0 - p_E ** (-(alpha * par__) / jmax__(:)))     &
+        jact_(:)   = (1.d0 - p_E ** (-(alpha * par__) / jmax__(:)))    &
      &             * jmax__(:) * pc_         ! (3.23), (Out[311])
-        jactg(1,:) = (1.d0 - p_E ** (-(alpha * par__) / jmaxg__(:)))    &
+        jactg(1,:) = (1.d0 - p_E ** (-(alpha * par__) / jmaxg__(:)))   &
      &             * jmaxg__(:) * pcg_(1)    ! (3.23), (Out[311])
-        jactg(2,:) = (1.d0 - p_E ** (-(alpha * par__) / jmaxg__(:)))    &
+        jactg(2,:) = (1.d0 - p_E ** (-(alpha * par__) / jmaxg__(:)))   &
      &             * jmaxg__(:) * pcg_(2)    ! (3.23), (Out[311])
-        jactg(3,:) = (1.d0 - p_E ** (-(alpha * par__) / jmaxg__(:)))    &
+        jactg(3,:) = (1.d0 - p_E ** (-(alpha * par__) / jmaxg__(:)))   &
      &             * jmaxg__(:) * pcg_(3)    ! (3.23), (Out[311])
 
         cond1      = (2.d0 * p_a * vd__) / (ca__ + 2.d0 * gammastar_)
-        cond2      = (4.d0 * ca__ * rl__(2) + 8.d0 * gammastar_ * rl__(2)) &
-     &             / (ca__ - gammastar_)
-        cond3(:,:) = (4.d0 * ca__ * rlg__(:,:) + 8.d0 * gammastar_ * rlg__(:,:)) &
-     &             / (ca__ - gammastar_)
+        cond2      = (4.d0 * ca__ * rl__(2) + 8.d0 * gammastar_        &
+     &             * rl__(2)) / (ca__ - gammastar_)
+        cond3(:,:) = (4.d0 * ca__ * rlg__(:,:) + 8.d0 * gammastar_     &
+     &             * rlg__(:,:)) / (ca__ - gammastar_)
 
         if (vd__ .gt. 0.d0 .and. lambda_ .gt. cond1 .and. jact_(2) .gt. cond2) then
 
 !          gstom__ = MAX(0.d0, (0.25d0 * (p_a * (ca__ * (jact_(2) - 4.d0 &
-!     &            * rl__(2)) - 4.d0 * gammastar_ * (jact_(2) + 2.d0     &
-!     &            * rl__(2))) * vd__ * (ca__ * lambda_ + 2.d0           &
-!     &            * gammastar_ * lambda_ - p_a * vd__)                  &
-!     &            + 1.7320508075688772d0 * SQRT(p_a * gammastar_        &
-!     &            * jact_(2) * (ca__ * (jact_(2) - 4.d0 * rl__(2))      &
-!     &            - gammastar_ * (jact_(2) + 8.d0 * rl__(2))) * vd__    &
-!     &            * (ca__ * lambda_ + 2.d0 * gammastar_ * lambda_        &
-!     &            - 2.d0 * p_a * vd__) ** 2.d0 * (ca__ * lambda_        &
-!     &            + 2.d0 * gammastar_ * lambda_ - p_a * vd__))))        &
-!     &            / (p_a * (ca__ + 2.d0 * gammastar_) ** 2.d0 * vd__     &
-!     &            * (ca__ * lambda_ + 2.d0 * gammastar_ * lambda_ - p_a * vd__)))
+!     &            * rl__(2)) - 4.d0 * gammastar_ * (jact_(2) + 2.d0    &
+!     &            * rl__(2))) * vd__ * (ca__ * lambda_ + 2.d0          &
+!     &            * gammastar_ * lambda_ - p_a * vd__)                 &
+!     &            + 1.7320508075688772d0 * SQRT(p_a * gammastar_       &
+!     &            * jact_(2) * (ca__ * (jact_(2) - 4.d0 * rl__(2))     &
+!     &            - gammastar_ * (jact_(2) + 8.d0 * rl__(2))) * vd__   &
+!     &            * (ca__ * lambda_ + 2.d0 * gammastar_ * lambda_      &
+!     &            - 2.d0 * p_a * vd__) ** 2.d0 * (ca__ * lambda_       &
+!     &            + 2.d0 * gammastar_ * lambda_ - p_a * vd__))))       &
+!     &            / (p_a * (ca__ + 2.d0 * gammastar_) ** 2.d0 * vd__   &
+!     &            * (ca__ * lambda_ + 2.d0 * gammastar_ * lambda_      &
+!     &            - p_a * vd__)))
 
           part1 = ca__ + 2.d0 * gammastar_
           part2 = part1 * lambda_ - p_a * vd__
@@ -1027,18 +1017,19 @@
 
         where (vd__ .gt. 0.d0 .and. lambdag_ .gt. cond1 .and. jactg(:,:) .gt. cond3(:,:))
           gstomg__(:,:) = MAX(0.d0,(0.25d0 * (p_a * (ca__ * (jactg(:,:) &
-     &                  - 4.d0 * rlg__(:,:)) - 4.d0 * gammastar_        &
+     &                  - 4.d0 * rlg__(:,:)) - 4.d0 * gammastar_       &
      &                  * (jactg(:,:) + 2.d0 * rlg__(:,:))) * vd__     &
-     &                  * (ca__ * lambdag_ + 2.d0 * gammastar_ * lambdag_  &
-     &                  - p_a * vd__) + 1.7320508075688772d0           &
-     &                  * SQRT(p_a * gammastar_ * jactg(:,:) * (ca__     &
-     &                  * (jactg(:,:) - 4.d0 * rlg__(:,:)) - gammastar_ &
-     &                  * (jactg(:,:) + 8.d0 * rlg__(:,:))) * vd__     &
-     &                  * (ca__ * lambdag_ + 2.d0 * gammastar_ * lambdag_  &
-     &                  - 2.d0 * p_a * vd__) ** 2.d0 * (ca__ * lambdag_  &
-     &                  + 2.d0 * gammastar_ * lambdag_ - p_a * vd__))))  &
-     &                  / (p_a * (ca__ + 2.d0 * gammastar_) ** 2.d0      &
-     &                  * vd__ * (ca__ * lambdag_ + 2.d0 * gammastar_     &
+     &                  * (ca__ * lambdag_ + 2.d0 * gammastar_         &
+     &                  * lambdag_ - p_a * vd__) + 1.7320508075688772d0 &
+     &                  * SQRT(p_a * gammastar_ * jactg(:,:) * (ca__   &
+     &                  * (jactg(:,:) - 4.d0 * rlg__(:,:))             &
+     &                  - gammastar_ * (jactg(:,:) + 8.d0              &
+     &                  * rlg__(:,:))) * vd__ * (ca__ * lambdag_       &
+     &                  + 2.d0 * gammastar_ * lambdag_ - 2.d0 * p_a    &
+     &                  * vd__) ** 2.d0 * (ca__ * lambdag_ + 2.d0      &
+     &                  * gammastar_ * lambdag_ - p_a * vd__))))       &
+     &                  / (p_a * (ca__ + 2.d0 * gammastar_) ** 2.d0    &
+     &                  * vd__ * (ca__ * lambdag_ + 2.d0 * gammastar_  &
      &                  * lambdag_ - p_a * vd__)))  ! (Out[314])
         elsewhere
           gstomg__(:,:) = 0.d0
@@ -1046,7 +1037,7 @@
         transpg(:,:) = p_a * vd__ * gstomg__(:,:)  ! (3.28) transpiration rate in mol/s
         etmg__(:,:) = (transpg(:,:) * 18.d0) / (10.d0 ** 6.d0)  ! transpiration rate in m/s
       else
-        par__          = 0.d0
+        par__         = 0.d0
         jact_(:)      = 0.d0
         gstom__       = 0.d0
         etm__         = 0.d0
@@ -1065,25 +1056,23 @@
 
       subroutine vom_subhourly_init ()
       use vegwatmod
-      use vegmod
-      use watmod
       implicit none
 
-!!$      if (wlayernew .ge. 1) then
-!!$        if (wlayer_ .ge. 1) then         ! Need to account for the change in rsurf due to a change in unsaturated soil volume.
-!!$          rsurfvec(1:wlayernew) = rsurfvec(1:wlayernew)            &
-!!$     &                           / (omgu_ * delzvec(1:wlayernew))   &
-!!$     &                           * omgunew * delznewvec(1:wlayernew)
-!!$          rsurfg_(1:wlayernew) = rsurfg_(1:wlayernew) / (omgu_     &
-!!$     &                          * delzvec(1:wlayernew)) * omgunew   &
-!!$     &                          * delznewvec(1:wlayernew)
-!!$        else                              ! If nlayers at the previous time step was 0, rsurf was set to rsurfmin.
-!!$          rsurfvec(1:wlayernew) = rsurfvec(1:wlayernew) * omgunew  &
-!!$     &                           * delzvec(1:wlayernew)
-!!$          rsurfg_(1:wlayernew) = rsurfg_(1:wlayernew) * omgunew    &
-!!$     &                          * delzvec(1:wlayernew)
-!!$        endif
-!!$      endif
+!$      if (wlayernew .ge. 1) then
+!$        if (wlayer_ .ge. 1) then          ! Need to account for the change in rsurf due to a change in unsaturated soil volume.
+!$          rsurfvec(1:wlayernew) = rsurfvec(1:wlayernew)             &
+!$     &                           / (omgu_ * delzvec(1:wlayernew))   &
+!$     &                           * omgunew * delznewvec(1:wlayernew)
+!$          rsurfg_(1:wlayernew) = rsurfg_(1:wlayernew) / (omgu_      &
+!$     &                          * delzvec(1:wlayernew)) * omgunew   &
+!$     &                          * delznewvec(1:wlayernew)
+!$        else                              ! If nlayers at the previous time step was 0, rsurf was set to rsurfmin.
+!$          rsurfvec(1:wlayernew) = rsurfvec(1:wlayernew) * omgunew  &
+!$     &                           * delzvec(1:wlayernew)
+!$          rsurfg_(1:wlayernew) = rsurfg_(1:wlayernew) * omgunew    &
+!$     &                          * delzvec(1:wlayernew)
+!$        endif
+!$      endif
 
       if (wlayernew .lt. pos_) then
         rsurfvec(wlayernew+1:pos_) = rsurfmin * delz_
@@ -1094,9 +1083,8 @@
 
       mq_          = mqnew
       ys_          = ysnew
-      suvec_(:)    = sunewvec(:)
-!      yu__         = yunew_
-      wlayer_     = wlayernew
+!     yu__         = yunew_
+      wlayer_      = wlayernew
       suvec_(:)    = sunewvec(:)
       pcapvec(:)   = pcapnewvec(:)
       kunsatvec(:) = kunsatnewvec(:)
@@ -1111,8 +1099,6 @@
 
       subroutine vom_rootuptake ()
       use vegwatmod
-      use vegmod
-      use watmod
       implicit none
 
       INTEGER :: i
@@ -1122,35 +1108,38 @@
         do i = 1, postemp_
           phydrostaticvec(i) = (i - 0.5d0) * delz_  ! (Out[238]) hydrostatic head for (3.34)
         enddo
-        if (md_.gt.0.d0) then
-          prootmvec(1:postemp_) = (p_mpbar * (-mq_ + mqx_) * (750.d0       &
-     &                        - (750.d0 * mqx_) / (md_ + mqx_) + (md_  &
-     &                        + mqx_) / mqx_)) / (md_ + mqx_)          &
-     &                        - phydrostaticvec(1:postemp_)  ! (Out[239])
+        if (md_ .gt. 0.d0) then
+          prootmvec(1:postemp_) = (p_mpbar * (-mq_ + mqx_) * (750.d0   &
+     &                          - (750.d0 * mqx_) / (md_ + mqx_)       &
+     &                          + (md_ + mqx_) / mqx_)) / (md_ + mqx_) &
+     &                          - phydrostaticvec(1:postemp_)  ! (Out[239])
         else
-         prootmvec(1:postemp_) = prootmg      ! set tissue suction to the same as in grasses, if no storage capacity
+!         * set tissue suction to the same as in grasses, if no storage capacity
+          prootmvec(1:postemp_) = prootmg
         endif
+
 !       * soil resistance, (Out[ 241] with svolume=omgu*delzvec(1:postemp_)); derived from (3.32)
-        rsoilvec(1:postemp_) = SQRT(p_pi / 2.d0) * SQRT((rootrad         &
-     &                        * delzvec(1:postemp_))                   &
+        rsoilvec(1:postemp_) = SQRT(p_pi / 2.d0) * SQRT((rootrad       &
+     &                       * delzvec(1:postemp_))                    &
      &                       / rsurfvec(1:postemp_))                   &
      &                       / kunsatvec(1:postemp_)
 
 !       * root water uptake, Chapter 3.3.3.3 (Out[242])
         if (md_ .gt. 0.d0) then
-          ruptkvec(1:postemp_) = (-pcapvec(1:postemp_)                   &
-     &                         + prootmvec(1:postemp_))                  &
-     &                         * rsurfvec(1:postemp_) / (rrootm          &
+          ruptkvec(1:postemp_) = (-pcapvec(1:postemp_)                 &
+     &                         + prootmvec(1:postemp_))                &
+     &                         * rsurfvec(1:postemp_) / (rrootm        &
      &                         + rsoilvec(1:postemp_))
           ruptkvec(postemp_+1:maxlayer) = 0.d0
-        else      ! if no storage, uptake happens only when etm__>0
+        else  ! if no storage, uptake happens only when etm__>0
+
           if (etm__ .gt. 0.d0) then
-            ruptkvec(1:postemp_) = MAX(0.d0,(-pcapvec(1:postemp_)        &
-     &                         + prootmvec(1:postemp_))                  &
-     &                         * rsurfvec(1:postemp_) / (rrootm          &
-     &                         + rsoilvec(1:postemp_)))
+            ruptkvec(1:postemp_) = MAX(0.d0,(-pcapvec(1:postemp_)      &
+     &                           + prootmvec(1:postemp_))              &
+     &                           * rsurfvec(1:postemp_) / (rrootm      &
+     &                           + rsoilvec(1:postemp_)))
             ruptkvec(postemp_+1:maxlayer) = 0.d0
-            
+
             if (SUM(ruptkvec(:)) .gt. 0.d0) then
               if (etm__ .gt. SUM(ruptkvec(:))) then
                 changef = 1.d0
@@ -1158,8 +1147,8 @@
                 transp_ = etm__ * 55555.555555555555d0  ! (Out[249]) mol/s=m/s*10^6 g/m/(18g/mol)
                 gstom__ = transp_ / (p_a * vd__)
               endif
-              ! Setting SUM(ruptkvec)=etm__ and distributing according to relative uptake:
-              ruptkvec(:) = etm__ * (ruptkvec(:) / (SUM(ruptkvec(:)))) 
+!             * Setting SUM(ruptkvec)=etm__ and distributing according to relative uptake:
+              ruptkvec(:) = etm__ * (ruptkvec(:) / (SUM(ruptkvec(:))))
             else
               ruptkvec(:) = 0.d0
               changef     = 1.d0
@@ -1167,18 +1156,19 @@
               transp_     = 0.d0
               gstom__     = 0.d0
             endif
-             
+
           else
             ruptkvec(:) = 0.d0
           endif
-        endif  
+
+        endif
 
         postempg = MIN(posg, wlayer_)
         if (MAXVAL(etmg__(:,:)) .gt. 0.d0) then
 !         * root uptake by grasses can not be negative, as storage negligible
           ruptkg(1:posg) = MAX(0.d0,((-pcapvec(1:postempg)             &
      &                   + (prootmg - phydrostaticvec(1:postempg)))    &
-     &                   * rsurfg_(:)) / (rrootm + (SQRT(p_pi / 2.d0)    &
+     &                   * rsurfg_(:)) / (rrootm + (SQRT(p_pi / 2.d0)  &
      &                   * SQRT(rootrad * delzvec(1:postempg)          &
      &                   / rsurfg_(:))) / kunsatvec(1:postempg)))
           ruptkg(postempg+1:maxlayer) = 0.d0
@@ -1218,7 +1208,6 @@
 
       subroutine vom_mqss (mqss_out)
       use vegwatmod
-      use vegmod
       implicit none
 
       REAL*8, INTENT(out) :: mqss_out
@@ -1232,7 +1221,7 @@
 !     &         / (rrootm + rsoilvec(1:postemp_)))) - (md_ + mqx_) * (md_ &
 !     &         + mqx_) * (etm__ - SUM(((-phydrostaticvec(1:postemp_)   &
 !     &         - pcapvec(1:postemp_)) * rsurfvec(1:postemp_))          &
-!     &         / (rrootm + rsoilvec(1:postemp_)))))) / (p_mpbar * (md_   &
+!     &         / (rrootm + rsoilvec(1:postemp_)))))) / (p_mpbar * (md_ &
 !     &         * md_ + 752.d0 * md_ * mqx_ + mqx_ * mqx_)              &
 !     &         * SUM((rsurfvec(1:postemp_) / (rrootm + rsoilvec(1:postemp_))))))
 
@@ -1256,11 +1245,10 @@
 
       subroutine vom_tissue_water_et (finish, netass)
       use vegwatmod
-      use vegmod
       implicit none
 
-      INTEGER, INTENT(inout) :: finish
       REAL*8,  INTENT(inout) :: netass
+      INTEGER, INTENT(inout) :: finish
 
 !     * makes sure that tissue water does not get below 0.9mqx
       if (mq_ .le. 0.9d0 * mqx_) then
@@ -1304,23 +1292,22 @@
 
       subroutine vom_subhourly ()
       use vegwatmod
-      use vegmod
       implicit none
 
-      INTEGER :: init
       REAL*8  :: dtss
+      INTEGER :: init
 
       init = 0
-
       dtmq = 99999.d0
+
       if (md_ .gt. 0.d0) then
-!     * avoids mq from becoming larger than mqx or smaller than 0.9mqx
+!       * avoids mq from becoming larger than mqx or smaller than 0.9mqx
         if (dmq .gt. 0.d0) then
           dtmq = (mqx_ - mq_) / dmq
         elseif (dmq .lt. 0.d0) then
           dtmq = (0.9d0 * mqx_ - mq_) / dmq
         endif
-  
+
         if (ABS(mq_ - mqss_) .gt. mqx_ / 1.d6) then
           dtss = (mq_ - mqss_) / (1.d6 * (etm__ - SUM(ruptkvec(:))))
           if (dtss .le. 0.d0) dtss = 99999.d0
@@ -1345,37 +1332,37 @@
 
       subroutine vom_add_hourly ()
       use vegwatmod
-      use vegmod
-      use watmod
       implicit none
 
       REAL*8 :: ass__(3)
       REAL*8 :: assg__(3,3)
 
-      ass__(:) = (4.d0 * ca__ * gstom__ + 8.d0 * gammastar_ * gstom__    &
-     &         + jact_(:) - 4.d0 * rl__(:) - SQRT((-4.d0 * ca__ * gstom__ &
-     &         + 8.d0 * gammastar_ * gstom__ + jact_(:) - 4.d0          &
-     &         * rl__(:)) ** 2.d0 + 16.d0 * gammastar_ * gstom__        &
-     &         * (8.d0 * ca__ * gstom__ + jact_(:) + 8.d0 * rl__(:)))) / 8.d0  ! (3.22) ; (Out[319])
+      ass__(:) = (4.d0 * ca__ * gstom__ + 8.d0 * gammastar_ * gstom__  &
+     &         + jact_(:) - 4.d0 * rl__(:) - SQRT((-4.d0 * ca__        &
+     &         * gstom__ + 8.d0 * gammastar_ * gstom__ + jact_(:)      &
+     &         - 4.d0 * rl__(:)) ** 2.d0 + 16.d0 * gammastar_          &
+     &         * gstom__ * (8.d0 * ca__ * gstom__ + jact_(:) + 8.d0    &
+     &         * rl__(:)))) / 8.d0  ! (3.22) ; (Out[319])
       ass_h(:) = ass_h(:) + ass__(:) * dt_
-      assg__(:,:) = (4.d0 * ca__ * gstomg__(:,:) + 8.d0 * gammastar_     &
+      assg__(:,:) = (4.d0 * ca__ * gstomg__(:,:) + 8.d0 * gammastar_   &
      &            * gstomg__(:,:) + jactg(:,:) - 4.d0 * rlg__(:,:)     &
-     &            - SQRT((-4.d0 * ca__ * gstomg__(:,:) + 8.d0 * gammastar_ &
-     &            * gstomg__(:,:) + jactg(:,:) - 4.d0 * rlg__(:,:))    &
-     &            ** 2.d0 + 16.d0 * gammastar_ * gstomg__(:,:) * (8.d0  &
-     &            * ca__ * gstomg__(:,:) + jactg(:,:) + 8.d0 * rlg__(:,:)))) / 8.d0  ! (3.22); (Out[319])
+     &            - SQRT((-4.d0 * ca__ * gstomg__(:,:) + 8.d0          &
+     &            * gammastar_ * gstomg__(:,:) + jactg(:,:) - 4.d0     &
+     &            * rlg__(:,:)) ** 2.d0 + 16.d0 * gammastar_           &
+     &            * gstomg__(:,:) * (8.d0 * ca__ * gstomg__(:,:)       &
+     &            + jactg(:,:) + 8.d0 * rlg__(:,:)))) / 8.d0  ! (3.22); (Out[319])
       assg_h(:,:) = assg_h(:,:) + assg__(:,:) * dt_
       ruptkvec_h(:) = ruptkvec_h(:) + ruptkvec(:) * dt_
-      hruptkg(:) = hruptkg(:) + ruptkg(:) * dt_
+      hruptkg(:)    = hruptkg(:)    + ruptkg(:)   * dt_
       if (optmode .eq. 0) then
         spgfcf_h = spgfcf_h + dt_ * spgfcf__
         infx_h   = infx_h   + dt_ * infx__
         io_h     = io_h     + dt_ * io__
         esoil_h  = esoil_h  + dt_ * esoil__
-        etm_h   = etm_h   + dt_ * etm__
-        etmg_h   = etmg_h   + dt_ * etmg__(2,2) 
-        ruptk_h = ruptk_h + dt_ * SUM(ruptkvec(:))
-        inf_h   = inf_h   + dt_ * inf__
+        etm_h    = etm_h    + dt_ * etm__
+        etmg_h   = etmg_h   + dt_ * etmg__(2,2)
+        ruptk_h  = ruptk_h  + dt_ * SUM(ruptkvec(:))
+        inf_h    = inf_h    + dt_ * inf__
       endif
 
       return
@@ -1387,13 +1374,11 @@
 
       subroutine vom_add_daily ()
       use vegwatmod
-      use vegmod
-      use watmod
       implicit none
 
       netassvec_(nday)  = netassvec_(nday) + ass_h(2) - 3600.d0 * (cpcc_ + rr_ + tc_)
 !     * rl does not need to be included here as ass=-rl if j=0 (at night)
-      netassvecg(nday) = netassvecg(nday) + assg_h(2,2) - 3600.d0       &
+      netassvecg(nday) = netassvecg(nday) + assg_h(2,2) - 3600.d0      &
      &                 * (cpccg(2) + rrg + tcg(2))
 
       ruptk_d  = ruptk_d  + SUM(ruptkvec(:)) * 3600.d0
@@ -1419,9 +1404,6 @@
 
       subroutine vom_write_hourly ()
       use vegwatmod
-      use vegmod
-      use watmod
-      
       implicit none
 
       CHARACTER(60) :: hourlyformat
@@ -1432,18 +1414,18 @@
         write(str,'(i3)') wlayer_
 !       * includes a column for each sublayer
         hourlyformat = '(i6,i6,i4,i7,i5,'//str//'e14.6)'
-        write(kfile_resultshourly,'(i6,i7,i7,i7,i7,24e15.5)') fyear(nday), &
-     &    fmonth(nday), fday(nday), nday, nhour, rain__, tair__, par__, vd__,  &
-     &    esoil_h, pc_ + pcg_(2), jmax25_(2), jmax25g(2), mq_,          &
-     &    rl__(2) + rlg__(2,2), lambda_, lambdag_, rr_ + rrg, ass_h(2), &
-     &    assg_h(2,2), etm_h, etmg_h, suvec_(1), ys_, wsnew,            &
-     &    spgfcf_h, infx_h
-        write(kfile_delyuhourly,hourlyformat) fyear(nday), fmonth(nday),  &
-     &    fday(nday), nday, nhour, delzvec(1:wlayer_)
-        write(kfile_ruptkhourly,hourlyformat) fyear(nday), fmonth(nday), &
-     &    fday(nday), nday, nhour, ruptkvec_h(1:wlayer_)
-        write(kfile_suvechourly,hourlyformat) fyear(nday), fmonth(nday), &
-     &    fday(nday), nday, nhour, suvec_(1:wlayer_)
+        write(kfile_resultshourly,'(i6,i7,i7,i7,i7,22e15.5)')          &
+     &    fyear(nday), fmonth(nday), fday(nday), nday, nhour, rain__,  &
+     &    tair__, par__, vd__, esoil_h, pc_ + pcg_(2), jmax25_(2),     &
+     &    jmax25g(2), mq_, rl__(2) + rlg__(2,2), lambda_, lambdag_,    &
+     &    rr_ + rrg, ass_h(2), assg_h(2,2), etm_h, etmg_h, suvec_(1),  &
+     &    ys_, wsnew, spgfcf_h, infx_h
+        write(kfile_delyuhourly,hourlyformat) fyear(nday),             &
+     &    fmonth(nday), fday(nday), nday, nhour, delzvec(1:wlayer_)
+        write(kfile_ruptkhourly,hourlyformat) fyear(nday),             &
+     &    fmonth(nday), fday(nday), nday, nhour, ruptkvec_h(1:wlayer_)
+        write(kfile_suvechourly,hourlyformat) fyear(nday),             &
+     &    fmonth(nday), fday(nday), nday, nhour, suvec_(1:wlayer_)
       endif
 
       return
@@ -1456,20 +1438,19 @@
 
       subroutine vom_check_water (finish)
       use vegwatmod
-      use vegmod
-      use watmod
       implicit none
 
+      REAL*8  :: error1
       INTEGER, INTENT(inout) :: finish
 
-      REAL*8  :: error1
-
       ioacum = ioacum + io_h
-      wsnew = SUM(cH2Ol_s(:)) 
-      error = wsold + ioacum - wsnew
+      wsnew  = SUM(cH2Ol_s(:))
+      error  = wsold + ioacum - wsnew
+
 !     * gives an error message if accumulated error exceeds 1 mm
+
       if (abs(error) .gt. 1.d-3) then
-        write(*,*) 'Error in water balance [mm]:', error, 'io=', io__,  &
+        write(*,*) 'Error in water balance [mm]:', error, 'io=', io__, &
      &    'wsold=', wsold, 'wsnew=', wsnew
         finish = 1
       elseif (md_ .gt. 0.d0) then
@@ -1490,8 +1471,6 @@
 
       subroutine vom_write_dayyear ()
       use vegwatmod
-      use vegmod
-      use watmod
       implicit none
 
       CHARACTER(60) :: dailyformat
@@ -1502,33 +1481,34 @@
 !     * includes a column for each sublayer
       dailyformat = '(i6,i6,i4,i7,'//str//'e14.6)'
 
-      write(kfile_resultsdaily,'(i6,i7,i7,i7,i7,25e15.5)') fyear(nday), &
-     &  fmonth(nday), fday(nday), nday, nhour, rainvec(nday), tairmax(nday),  &
-     &  tairmin(nday), parvec(nday), vd_d / 24.d0, esoil_d, jmax25_(2),   &
-     &  jmax25g(2), pc_ + pcg_(2), rl_d + rlg_d, lambda_, lambdag_,     &
-     &  rr_ * 3600.d0 * 24.d0, rrg * 3600.d0 * 24.d0, ass_d(2),        &
-     &  assg_d(2,2), SUM(suvec_(1:wlayer_)) / wlayer_, ys_, wsnew,  &
-     &  spgfcf_d, infx_d, etm_d, etmg_d, suvec_(1), topt_
-      write(kfile_rsurfdaily,dailyformat) fyear(nday), fmonth(nday),     &
+      write(kfile_resultsdaily,'(i6,i7,i7,i7,i7,25e15.5)')             &
+     &  fyear(nday), fmonth(nday), fday(nday), nday, nhour,            &
+     &  rainvec(nday), tairmax(nday), tairmin(nday), parvec(nday),     &
+     &  vd_d / 24.d0, esoil_d, jmax25_(2), jmax25g(2), pc_ + pcg_(2),  &
+     &  rl_d + rlg_d, lambda_, lambdag_, rr_ * 3600.d0 * 24.d0,        &
+     &  rrg * 3600.d0 * 24.d0, ass_d(2), assg_d(2,2),                  &
+     &  SUM(suvec_(1:wlayer_)) / wlayer_, ys_, wsnew, spgfcf_d,        &
+     &  infx_d, etm_d, etmg_d, suvec_(1), topt_
+      write(kfile_rsurfdaily,dailyformat) fyear(nday), fmonth(nday),   &
      &  fday(nday), nday, rsurfvec(1:wlayer_)
 
       if (fyear(nday) .ne. nyear) then
-!     * for calculation of vd_y a -1 is added to nday for using dayyear of correct year
-        write(kfile_yearly,'(i6,19e16.6)') nyear, rain_y, epan_y, par_y, &
-     &  srad_y, vd_y / (dayyear(nday - 1)), esoil_y, etm_y, etmg_y,    &
-   &  assg_y, rlg_y, rrg_y, cpccg_y, tcg_y,                          &
-   &  etmt_y, asst_y, rlt_y, rrt_y, cpcct_y, tct_y
+!       * for calculation of vd_y a -1 is added to nday for using dayyear of correct year
+        write(kfile_yearly,'(i6,19e16.6)') nyear, rain_y, epan_y,      &
+     &    par_y, srad_y, vd_y / (dayyear(nday-1)), esoil_y, etm_y,     &
+     &    etmg_y, assg_y, rlg_y, rrg_y, cpccg_y, tcg_y,                &
+     &    etmt_y, asst_y, rlt_y, rrt_y, cpcct_y, tct_y
       endif
 
-! WRITING THE ACCUMULATED DATA FROM THE LAST YEAR TO FILE:
+!     * WRITING THE ACCUMULATED DATA FROM THE LAST YEAR TO FILE:
 
       if (nday .eq. maxday) then
-!   * one more call of subroutine to write last day to yearly
-    call vom_add_yearly()
-      write(kfile_yearly,'(i6,19e16.6)') nyear, rain_y, epan_y, par_y, &
-     &  srad_y, vd_y / (dayyear(nday)), esoil_y, etm_y, etmg_y,               &
-   &  assg_y, rlg_y, rrg_y, cpccg_y, tcg_y,                          &
-   &  etmt_y, asst_y, rlt_y, rrt_y, cpcct_y, tct_y
+!       * call subroutine there to get yearly data for the output
+        call vom_add_yearly()
+        write(kfile_yearly,'(i6,19e16.6)') nyear, rain_y, epan_y,      &
+     &    par_y, srad_y, vd_y / (dayyear(nday)), esoil_y, etm_y,       &
+     &    etmg_y, assg_y, rlg_y, rrg_y, cpccg_y, tcg_y,                &
+     &    etmt_y, asst_y, rlt_y, rrt_y, cpcct_y, tct_y
       endif
 
       return
@@ -1540,64 +1520,62 @@
 
       subroutine vom_add_yearly ()
       use vegwatmod
-      use vegmod
-      use watmod
-        implicit none
+      implicit none
 
-        if (fyear(nday) .eq. nyear) then
-           rain_y   = rain_y + rainvec(nday)    ! in [mm]
-           epan_y   = epan_y + epan__(nday)       ! epan originally in [mm]/day
-           par_y    = par_y + parvec(nday)
-           srad_y    = srad_y + srad__(nday)        ! srad originally in MJ/day
-           vd_y     = vd_y + vd_d / 24.d0
-           etm_y     = etm_y + (etm_d + etmg_d) * 1000.d0  ! in[mm]
-           esoil_y   = esoil_y + esoil_d * 1000.d0  ! in [mm]
-           !d        netass_y = netass_y + ass_d(2) - (cpcc_ + rr_) * 3600.d0       &
-           !d     &           * 24.d0 + assg_d(2,2) - (cpccg(2) + rrg) * 3600.d0 * 24.d0
-           !d        gpp_y    = gpp_y + (ass_d(2) + rl_d) + assg_d(2,2) + rlg_d
-           ! for grasses
-           etmg_y   = etmg_y + etmg_d * 1000.d0 ! in [mm]
-           assg_y   = assg_y + assg_d(2,2)
-           rlg_y    = rlg_y + rlg_d
-           rrg_y    = rrg_y + rrg * 3600.d0 * 24.d0
-           cpccg_y  = cpccg_y + cpccg(2) * 3600.d0 * 24.d0
-           tcg_y    = tcg_y + tcg(2) * 3600.d0 * 24.d0
-           ! for trees
-           etmt_y   = etmt_y + etm_d * 1000.d0   ! in [mm]
-           asst_y   = asst_y + ass_d(2)
-           rlt_y    = rlt_y + rl_d
-           rrt_y    = rrt_y + rr_ * 3600.d0 * 24.d0
-           cpcct_y  = cpcct_y + cpcc_ * 3600.d0 * 24.d0
-           tct_y    = tct_y + tc_ * 3600.d0 * 24.d0
-        else
-           nyear      = fyear(nday)
-           rain_y   = rainvec(nday)
-           epan_y   = epan__(nday)                ! epan originally in [mm]/day
-           par_y    = parvec(nday)
-           srad_y    = srad__(nday)                ! srad originally in MJ/day
-           vd_y     = vd_d / 24.d0
-           etm_y     = (etmg_d + etm_d) * 1000.d0
-           esoil_y   = esoil_d * 1000.d0
-           !d        netass_y = ass_d(2) - (cpcc_ + rr_) * 3600.d0 * 24.d0          &
-           !d    &           + assg_d(2,2) - (cpccg(2) + rrg) * 3600.d0 * 24.d0
-           !d        gpp_y    = (ass_d(2) + rl_d) + assg_d(2,2) + rlg_d
-           ! for grasses
-           etmg_y   = etmg_d * 1000.d0
-           assg_y   = assg_d(2,2)
-           rlg_y    = rlg_d
-           rrg_y    = rrg * 3600.d0 * 24.d0
-           cpccg_y  = cpccg(2) * 3600.d0 * 24.d0
-           tcg_y    = tcg(2) * 3600.d0 * 24.d0
-           ! for trees
-           etmt_y = etm_d * 1000.d0
-           asst_y   = ass_d(2)
-           rlt_y    = rl_d
-           rrt_y    = rr_ * 3600.d0 * 24.d0
-           cpcct_y  = cpcc_ * 3600.d0 * 24.d0
-           tct_y    = tc_ * 3600.d0 * 24.d0
-        endif
+      if (fyear(nday) .eq. nyear) then
+        rain_y   = rain_y + rainvec(nday)    ! in [mm]
+        epan_y   = epan_y + epan__(nday)     ! epan originally in [mm]/day
+        par_y    = par_y + parvec(nday)
+        srad_y   = srad_y + srad__(nday)     ! srad originally in MJ/day
+        vd_y     = vd_y + vd_d / 24.d0
+        etm_y    = etm_y + (etm_d + etmg_d) * 1000.d0  ! in[mm]
+        esoil_y  = esoil_y + esoil_d * 1000.d0  ! in [mm]
+!d      netass_y = netass_y + ass_d(2) - (cpcc_ + rr_) * 3600.d0       &
+!d   &           * 24.d0 + assg_d(2,2) - (cpccg(2) + rrg) * 3600.d0 * 24.d0
+!d      gpp_y    = gpp_y + (ass_d(2) + rl_d) + assg_d(2,2) + rlg_d
+!       * for grasses
+        etmg_y   = etmg_y + etmg_d * 1000.d0 ! in [mm]
+        assg_y   = assg_y + assg_d(2,2)
+        rlg_y    = rlg_y + rlg_d
+        rrg_y    = rrg_y + rrg * 3600.d0 * 24.d0
+        cpccg_y  = cpccg_y + cpccg(2) * 3600.d0 * 24.d0
+        tcg_y    = tcg_y + tcg(2) * 3600.d0 * 24.d0
+!       * for trees
+        etmt_y   = etmt_y + etm_d * 1000.d0   ! in [mm]
+        asst_y   = asst_y + ass_d(2)
+        rlt_y    = rlt_y + rl_d
+        rrt_y    = rrt_y + rr_ * 3600.d0 * 24.d0
+        cpcct_y  = cpcct_y + cpcc_ * 3600.d0 * 24.d0
+        tct_y    = tct_y + tc_ * 3600.d0 * 24.d0
+      else
+        nyear    = fyear(nday)
+        rain_y   = rainvec(nday)
+        epan_y   = epan__(nday)              ! epan originally in [mm]/day
+        par_y    = parvec(nday)
+        srad_y   = srad__(nday)              ! srad originally in MJ/day
+        vd_y     = vd_d / 24.d0
+        etm_y    = (etmg_d + etm_d) * 1000.d0
+        esoil_y  = esoil_d * 1000.d0
+!d      netass_y = ass_d(2) - (cpcc_ + rr_) * 3600.d0 * 24.d0          &
+!d  &           + assg_d(2,2) - (cpccg(2) + rrg) * 3600.d0 * 24.d0
+!d      gpp_y    = (ass_d(2) + rl_d) + assg_d(2,2) + rlg_d
+!       * for grasses
+        etmg_y   = etmg_d * 1000.d0
+        assg_y   = assg_d(2,2)
+        rlg_y    = rlg_d
+        rrg_y    = rrg * 3600.d0 * 24.d0
+        cpccg_y  = cpccg(2) * 3600.d0 * 24.d0
+        tcg_y    = tcg(2) * 3600.d0 * 24.d0
+!       * for trees
+        etmt_y = etm_d * 1000.d0
+        asst_y   = ass_d(2)
+        rlt_y    = rl_d
+        rrt_y    = rr_ * 3600.d0 * 24.d0
+        cpcct_y  = cpcc_ * 3600.d0 * 24.d0
+        tct_y    = tc_ * 3600.d0 * 24.d0
+      endif
 
-        return
+      return
       end subroutine vom_add_yearly
 
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1606,7 +1584,6 @@
 
       subroutine vom_write_model_output(netass)
       use vegwatmod
-      use vegmod
       implicit none
 
       REAL*8, INTENT(in) :: netass
@@ -1622,7 +1599,6 @@
 !*------ADJUSTMENT OF JMAX25 and PC-------------------------------------
 
       subroutine vom_adapt_foliage ()
-      use vegmod
       use vegwatmod
       implicit none
 
@@ -1646,19 +1622,18 @@
 !*------ADJUSTMENT OF ROOT SURFACE--------------------------------------
 
       subroutine vom_adapt_roots ()
-      use vegmod
       use vegwatmod
-      use watmod
       implicit none
 
 
-!*-----PERENNIAL VEGETATION---------------
+!     *-----PERENNIAL VEGETATION---------------
+
       reff(:) = 0.d0
-      if (md_ .gt. 0.d0) then   !if md_=0, then changef is calculated elsewhere
+      if (md_ .gt. 0.d0) then  ! if md_=0, then changef is calculated elsewhere
         changef = (0.95d0 * mqx_ - mqssmin) / (0.05d0 * mqx_)  ! (3.47)
-      else 
-        !     * changef for md_=0 is either 0 or 1. Change it to be either -1 or + 1:
-        changef = 2.d0*changef - 1.d0
+      else
+!       * changef for md_=0 is either 0 or 1. Change it to be either -1 or + 1:
+        changef = 2.d0 * changef - 1.d0
       endif
       reff(1:pos_) = 0.5d0 * ruptkvec_d(1:pos_) / rsurfvec(1:pos_)     &
      &             / (MAXVAL(ruptkvec_d(1:pos_) / rsurfvec(1:pos_)))  ! (3.48)
@@ -1668,32 +1643,41 @@
       if (changef .lt. 0.d0) then
         reff(:) = 1.d0 - reff(:)
       endif
-!     * rsurf=(2*epsln_/rootrad) if all pores filled by roots   
-      rsurfnewvec(1:pos_) = MIN(2.d0 * epsln_ / rootrad * delzvec(1:pos_),    &
-     &                 MAX(rsurfmin * delzvec(1:pos_), rsurfvec(1:pos_)       &
-     &                 + rsurfvec(1:pos_) * growthmax * changef               &
-     &                 * reff(1:pos_) * delzvec(1:pos_)))
-     
-!*-----SEASONAL VEGETATION---------------
+
+!     * rsurf=(2*epsln_/rootrad) if all pores filled by roots
+
+      rsurfnewvec(1:pos_) = MIN(2.d0 * epsln_ / rootrad * delzvec(1:pos_), &
+     &                    MAX(rsurfmin * delzvec(1:pos_), rsurfvec(1:pos_) &
+     &                    + rsurfvec(1:pos_) * growthmax * changef     &
+     &                    * reff(1:pos_) * delzvec(1:pos_)))
+
+!     *-----SEASONAL VEGETATION---------------
+
 !     * rootlim is either 0 or 1. Change it to be either -1 or + 1:
-      rootlim(pos2(1), pos2(2)) = 2.d0*rootlim(pos2(1), pos2(2)) - 1.d0
+      rootlim(pos2(1),pos2(2)) = 2.d0 * rootlim(pos2(1),pos2(2)) - 1.d0
+
       reffg(:) = 0.d0
-      reffg(1:posg) = 0.5d0 * ruptkg_d(1:posg) / rsurfg_(1:posg)     &
-     &             / (MAXVAL(ruptkg_d(1:posg) / rsurfg_(1:posg)))  ! (3.48)
-!     * if roots are going to be reduced, reverse effectivity vector     
-      if (rootlim(pos2(1), pos2(2)).lt.0.d0) then
+      reffg(1:posg) = 0.5d0 * ruptkg_d(1:posg) / rsurfg_(1:posg)       &
+     &              / (MAXVAL(ruptkg_d(1:posg) / rsurfg_(1:posg)))  ! (3.48)
+
+!     * if roots are going to be reduced, reverse effectivity vector
+
+      if (rootlim(pos2(1),pos2(2)) .lt. 0.d0) then
         reffg(:) = 1.d0 - reffg(:)
       endif
+
 !     * maximum rsurfg depends on rsurf of trees in same layer.
-      rsurfgnew(1:posg) = MIN(2.d0 * epsln_ / rootrad * delzvec(1:posg) &
-     &                  - rsurfvec(1:posg), MAX(rsurfmin                &
-     &                  * delzvec(1:posg), rsurfg_(1:posg)              &
-     &                  + rsurfg_(1:posg) * growthmax * rootlim(pos2(1),&
-     &                   pos2(2)) * reffg(1:posg)))
+
+      rsurfgnew(1:posg) = MIN(2.d0 * epsln_ / rootrad                  &
+     &                  * delzvec(1:posg) - rsurfvec(1:posg),          &
+     &                  MAX(rsurfmin * delzvec(1:posg),                &
+     &                  rsurfg_(1:posg) + rsurfg_(1:posg) * growthmax  &
+     &                  * rootlim(pos2(1),pos2(2)) * reffg(1:posg)))
       rsurfgnew(posg+1:maxlayer) = 0.d0
-      rootlim(:,:)           = 0.d0
-      ruptkvec_d(:)          = 0.d0
-      changef = 0.d0
+
+      rootlim(:,:)  = 0.d0
+      ruptkvec_d(:) = 0.d0
+      changef       = 0.d0
 
       return
       end subroutine vom_adapt_roots
