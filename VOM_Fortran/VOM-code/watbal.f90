@@ -41,7 +41,7 @@
 !***********************************************************************
 
       subroutine waterbalance(init)
-      use vegwatmod
+      use vom_vegwat_mod
       implicit none
 
       INTEGER, INTENT(in) :: init
@@ -106,7 +106,7 @@
 !*-----Run initial run--------------------------------------------------
 
       subroutine waterbalance_init ()
-      use vegwatmod
+      use vom_vegwat_mod
       implicit none
 
       INTEGER :: j
@@ -165,7 +165,7 @@
 !*-----FLUXES (inf, infx, qblvec, esoil__, spgfcf__)--------------------
 
       subroutine waterbalance_fluxes ()
-      use vegwatmod
+      use vom_vegwat_mod
       implicit none
 
       REAL*8  :: dummy
@@ -261,7 +261,7 @@
 !*-----CALCULATION OF MAXIMAL TIME STEP SIZE----------------------------
 
       subroutine waterbalance_timestep ()
-      use vegwatmod
+      use vom_vegwat_mod
       implicit none
 
       REAL*8  :: dtsu
@@ -308,7 +308,7 @@
 !*-----Calculating state variables at next time step--------------------
 
       subroutine waterbalance_update_state ()
-      use vegwatmod
+      use vom_vegwat_mod
       implicit none
 
       INTEGER :: j
@@ -359,7 +359,7 @@
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
       subroutine waterbalance_diag ()
-      use vegwatmod
+      use vom_vegwat_mod
       implicit none
 
       REAL*8  :: wcnew

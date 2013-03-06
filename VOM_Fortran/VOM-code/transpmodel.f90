@@ -33,7 +33,7 @@
 !***********************************************************************
 
       subroutine transpmodel(invar, dim_invar, nrun, netass, option1)
-      use vegwatmod
+      use vom_vegwat_mod
       implicit none
 
       INTEGER, INTENT(in)    :: dim_invar
@@ -257,7 +257,7 @@
 !*-----PARAMETER READING FROM INPUT.PAR---------------------------------
 
       subroutine vom_read_input ()
-      use vegwatmod
+      use vom_vegwat_mod
       implicit none
 
       INTEGER :: iostat
@@ -348,7 +348,7 @@
 !*-----allocate vector sizes--------------------------------------------
 
       subroutine vom_alloc ()
-      use vegwatmod
+      use vom_vegwat_mod
 
       implicit none
 
@@ -424,7 +424,7 @@
 !*-----File opening (saving climate and gstom ass data)-----------------
 
       subroutine vom_open_output ()
-      use vegwatmod
+      use vom_vegwat_mod
       implicit none
 
       open(kfile_resultshourly, FILE=sfile_resultshourly, STATUS='replace')
@@ -473,7 +473,7 @@
 !*-----File opening (saving ncp)----------------------------------------
 
       subroutine vom_open_ncp_output ()
-      use vegwatmod
+      use vom_vegwat_mod
       implicit none
 
       open(kfile_model_output, file=sfile_model_output(1:len_trim(sfile_model_output)))
@@ -487,7 +487,7 @@
 !*-----PARAMETER READING FROM SOILPROFILE.PAR---------------------------
 
       subroutine vom_get_soilprofile ()
-      use vegwatmod
+      use vom_vegwat_mod
       implicit none
 
       INTEGER :: iostat, j
@@ -526,7 +526,7 @@
 !*-----Climate and Calendar data reading--------------------------------
 
       subroutine vom_get_hourly_clim ()
-      use vegwatmod
+      use vom_vegwat_mod
       implicit none
 
       INTEGER :: ii, i, h, oldh, stat
@@ -594,7 +594,7 @@
 !*-----Calculation of derived parameters--------------------------------
 
       subroutine vom_calc_derived ()
-      use vegwatmod
+      use vom_vegwat_mod
       implicit none
 
       INTEGER :: in, ik, ii
@@ -684,7 +684,7 @@
 !*-----Initial values---------------------------------------------------
 
       subroutine vom_init_vegpar ()
-      use vegwatmod
+      use vom_vegwat_mod
       implicit none
 
       INTEGER :: init
@@ -799,7 +799,7 @@
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
       subroutine vom_daily_init ()
-      use vegwatmod
+      use vom_vegwat_mod
       implicit none
 
       rsurfvec(:) = rsurfnewvec(:)
@@ -873,7 +873,7 @@
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
       subroutine vom_hourly_init ()
-      use vegwatmod
+      use vom_vegwat_mod
       implicit none
 
       INTEGER :: ii
@@ -953,7 +953,7 @@
 !*-----calculate gstom, et and ass -------------------------------------
 
       subroutine vom_gstom ()
-      use vegwatmod
+      use vom_vegwat_mod
       implicit none
 
       REAL*8 :: cond1, cond2
@@ -1056,7 +1056,7 @@
 !*----- setting variables from previous loop----------------------------
 
       subroutine vom_subhourly_init ()
-      use vegwatmod
+      use vom_vegwat_mod
       implicit none
 
 !$      if (wlayernew .ge. 1) then
@@ -1099,7 +1099,7 @@
 !*-----root water uptake------------------------------------------------
 
       subroutine vom_rootuptake ()
-      use vegwatmod
+      use vom_vegwat_mod
       implicit none
 
       INTEGER :: i
@@ -1208,7 +1208,7 @@
 !*-----steady-state tissue water (mqss) --------------------------------
 
       subroutine vom_mqss (mqss_out)
-      use vegwatmod
+      use vom_vegwat_mod
       implicit none
 
       REAL*8, INTENT(out) :: mqss_out
@@ -1245,7 +1245,7 @@
 !*-----transpiration, gstom and tissue water ---------------------------
 
       subroutine vom_tissue_water_et (finish, netass)
-      use vegwatmod
+      use vom_vegwat_mod
       implicit none
 
       REAL*8,  INTENT(inout) :: netass
@@ -1294,7 +1294,7 @@
 !*----water balance and conditions at next time step--------------------
 
       subroutine vom_subhourly ()
-      use vegwatmod
+      use vom_vegwat_mod
       implicit none
 
       REAL*8  :: dtss
@@ -1334,7 +1334,7 @@
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
       subroutine vom_add_hourly ()
-      use vegwatmod
+      use vom_vegwat_mod
       implicit none
 
       REAL*8 :: ass__(3)
@@ -1376,7 +1376,7 @@
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
       subroutine vom_add_daily ()
-      use vegwatmod
+      use vom_vegwat_mod
       implicit none
 
       netassvec_(nday)  = netassvec_(nday) + ass_h(2) - 3600.d0 * (cpcc_ + rr_ + tc_)
@@ -1406,7 +1406,7 @@
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
       subroutine vom_write_hourly ()
-      use vegwatmod
+      use vom_vegwat_mod
       implicit none
 
       CHARACTER(60) :: hourlyformat
@@ -1440,7 +1440,7 @@
 !*----- check water balance --------------------------------------------
 
       subroutine vom_check_water (finish)
-      use vegwatmod
+      use vom_vegwat_mod
       implicit none
 
       REAL*8  :: error1
@@ -1476,7 +1476,7 @@
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
       subroutine vom_write_dayyear ()
-      use vegwatmod
+      use vom_vegwat_mod
       implicit none
 
       CHARACTER(60) :: dailyformat
@@ -1525,7 +1525,7 @@
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
       subroutine vom_add_yearly ()
-      use vegwatmod
+      use vom_vegwat_mod
       implicit none
 
       if (fyear(nday) .eq. nyear) then
@@ -1589,7 +1589,7 @@
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
       subroutine vom_write_model_output(netass)
-      use vegwatmod
+      use vom_vegwat_mod
       implicit none
 
       REAL*8, INTENT(in) :: netass
@@ -1605,7 +1605,7 @@
 !*------ADJUSTMENT OF JMAX25 and PC-------------------------------------
 
       subroutine vom_adapt_foliage ()
-      use vegwatmod
+      use vom_vegwat_mod
       implicit none
 
       pos1(:)        = MAXLOC(ass_d(:))
@@ -1628,7 +1628,7 @@
 !*------ADJUSTMENT OF ROOT SURFACE--------------------------------------
 
       subroutine vom_adapt_roots ()
-      use vegwatmod
+      use vom_vegwat_mod
       implicit none
 
 

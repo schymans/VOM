@@ -32,14 +32,15 @@
       use vom_file_mod
       implicit none
 
-      INTEGER       :: command
-      REAL*8        :: invar(6)
-      REAL*8        :: netass
+      INTEGER       :: vom_command
+      REAL*8        :: vom_invar(6)
+      REAL*8        :: vom_objfun
 
       INTEGER       :: npar
       CHARACTER(3)  :: str
 
       INTEGER  :: iostat
+      LOGICAL  :: exist
       INTEGER  :: nrun
 
 !-----------------------------------------------------------------------
@@ -50,69 +51,77 @@
 !     * Parameter definitions
 
       open(kfile_shufflepar, FILE=sfile_shufflepar, STATUS='old')
-      read(kfile_shufflepar,*) command
+      read(kfile_shufflepar,*) vom_command
+
+      inquire(FILE=sfile_finalbest, EXIST=exist)
+      if (exist .and. vom_command .ne. 3) vom_command = 2
 
 !     * now with fourth commmand (3 for compute ncp oonly with pars.txt)
 
-      if (command .eq. 3) then
+      if (vom_command .eq. 2 .or. vom_command .eq. 3) then
         close(kfile_shufflepar)
-        open(kfile_pars, FILE=sfile_pars, STATUS='old', IOSTAT=iostat)
 
-        if (iostat .eq. 0) then
-          rewind(kfile_pars)
-          read(kfile_pars,*) invar(:)
-          close(kfile_pars)
+!       * single model run with given (optimised) parameters
 
-          netass = 0.d0
-          nrun = 1
-
+        if (vom_command .eq. 3) then
           write(*,*) "Start calculation of ncp with parameters..."
-
-          call transpmodel(invar, size(invar), nrun, netass, command)
-
-          write(*,*) "Model run COMPLETE"
-          write(*,*) ' '
-          write(*,'(" The carbon profit achieved is: ",E12.6)') netass
-          write(*,*) "Best ncp is saved in model_output.txt"
         else
-            write(*,*) "ERROR reading ", sfile_pars
-            stop
+          write(*,*) "Calculation of results with optimised parameters..."
         endif
 
-      else
-        open(kfile_finalbest, FILE=sfile_finalbest, STATUS='old', IOSTAT=iostat)
-
-        if (iostat .eq. 0 .or. command .eq. 2) then
-          command = 2
+        if (vom_command .eq. 3) then
+          open(kfile_pars, FILE=sfile_pars, STATUS='old', IOSTAT=iostat)
           if (iostat .ne. 0) then
-            close(kfile_finalbest)
-!           * reads input parameters from previous optimisation
-            open(kfile_finalbest, FILE=sfile_currentbest)
+            write(*,*) "ERROR reading ", sfile_pars
+            stop
           endif
-
-!         * model run with optimised parameters
+          read(kfile_pars,*) vom_invar(:)
+          close(kfile_pars)
+          vom_objfun = 0.d0
 
           nrun = 1
+          call transpmodel(vom_invar, SIZE(vom_invar), nrun, vom_objfun, vom_command)
 
-          write(*,*) "Calculation of results with optimised parameters..."
-
+        else
+          if (exist) then
+            open(kfile_finalbest, FILE=sfile_finalbest, STATUS='old', IOSTAT=iostat)
+            if (iostat .ne. 0) then
+              write(*,*) "ERROR reading ", sfile_finalbest
+              stop
+            endif
+          else
+!           * reads input parameters from previous optimisation
+            open(kfile_finalbest, FILE=sfile_currentbest, STATUS='old', IOSTAT=iostat)
+            if (iostat .ne. 0) then
+              write(*,*) "ERROR reading ", sfile_currentbest
+              stop
+            endif
+          endif
           rewind(kfile_finalbest)
-          read(kfile_finalbest,*) invar(:), netass
+          read(kfile_finalbest,*) vom_invar(:), vom_objfun
           close(kfile_finalbest)
+          write(*,'(" The best carbon profit was: ",E12.6)') vom_objfun
+        endif
 
-          write(*,'(" The best carbon profit was: ",E12.6)') netass
+        nrun = 1
+        call transpmodel(vom_invar, SIZE(vom_invar), nrun, vom_objfun, vom_command)
 
-        call transpmodel(invar, size(invar), nrun, netass, command)
-
+        if (vom_command .eq. 3) then
+          write(*,*) "Model run COMPLETE"
+          write(*,*) ' '
+          write(*,'(" The carbon profit achieved is: ",E12.6)') vom_objfun
+          write(*,*) "Best ncp is saved in model_output.txt"
+        else
           write(*,*) 'Model run COMPLETE'
           write(*,*) ' '
-          write(*,'(" The carbon profit achieved is: ",E12.6)') netass
+          write(*,'(" The carbon profit achieved is: ",E12.6)') vom_objfun
           write(*,*) "Hourly results are saved in resulthourly.txt"
           write(*,*) "Daily results are saved in resultsdaily.txt"
           write(*,*) "Yearly results are saved in yearly.txt"
           write(*,*) "Soil results are saved in delyudaily.txt, rsurfdaily.txt, ruptkhourly.txt, suvechourly.txt"
-        else
+        endif
 
+      else
         npar = 0
         do
           read(kfile_shufflepar,*,IOSTAT=iostat) str
@@ -121,16 +130,13 @@
         enddo
 
         close(kfile_shufflepar)
-        close(kfile_finalbest)
 
         if (npar .ne. 6) then
           write(*,*) "ERROR: shuffle.par has to contain 6 parameters (var)"
           stop
         endif
 
-          call sce()
-
-        endif
+        call sce()
 
       endif
 

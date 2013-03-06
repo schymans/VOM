@@ -43,7 +43,7 @@
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
       subroutine sce ()
-      use sce_mod
+      use vom_sce_mod
       implicit none
 
       INTEGER             :: i_, first, numcv
@@ -233,7 +233,7 @@
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
       subroutine sce_init ()
-      use sce_mod
+      use vom_sce_mod
       implicit none
 
       INTEGER       :: i_, j_
@@ -345,7 +345,7 @@
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
       subroutine initialseed ()
-      use sce_mod
+      use vom_sce_mod
       implicit none
 
       INTEGER       :: i_
@@ -491,7 +491,7 @@
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
       subroutine ck_success ()
-      use sce_mod
+      use vom_sce_mod
       implicit none
 
       call optsensitivity()
@@ -523,7 +523,7 @@
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
       subroutine optsensitivity ()
-      use sce_mod
+      use vom_sce_mod
       implicit none
 
       INTEGER       :: i_, j_, failed10, pos
@@ -660,7 +660,7 @@
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
       subroutine run_cce ()
-      use sce_mod
+      use vom_sce_mod
       implicit none
 
       INTEGER              :: m_, first
@@ -723,7 +723,7 @@
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
       subroutine cce (objfun, invar)
-      use sce_mod
+      use vom_sce_mod
       implicit none
 
 !     * Declarations
@@ -788,7 +788,7 @@
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
       subroutine simplex (invar, objfun)
-      use sce_mod
+      use vom_sce_mod
       implicit none
 
 !     * Declarations
@@ -904,7 +904,7 @@
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
       subroutine runmodel (invar, objfun)
-      use sce_mod
+      use vom_sce_mod
       implicit none
 
 !     * Declarations
@@ -988,7 +988,7 @@
 
 !     * WRITE shufflevar AND ofvec OF LAST LOOP TO FILE AND TERMINATE
       subroutine writeloop ()
-      use sce_mod
+      use vom_sce_mod
       implicit none
 
       INTEGER :: i_
@@ -1012,7 +1012,7 @@
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
       subroutine writepars ()
-      use sce_mod
+      use vom_sce_mod
       implicit none
 
       INTEGER :: i_

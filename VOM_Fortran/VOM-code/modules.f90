@@ -389,7 +389,7 @@
 !     * vegetation model (transpmodel) and water balance model (watbal).
 !     ******************************************************************
 
-      module vegwatmod
+      module vom_vegwat_mod
       use vom_file_mod
       use vegmod
       use watmod
@@ -435,7 +435,7 @@
       REAL*8              :: delz_      ! Thickness of each soil layer (m)
       REAL*8, ALLOCATABLE :: delzvec(:) ! Thickness of each soil layer
 
-      end module vegwatmod
+      end module vom_vegwat_mod
 
 !     ******************************************************************
 !     * Module defining parameters and variables for
@@ -444,7 +444,7 @@
 !     * (1993, J. Opt. Theory and Appl., 76, 501--521).
 !     ******************************************************************
 
-      module sce_mod
+      module vom_sce_mod
       use vom_file_mod
       implicit none
 
@@ -509,4 +509,4 @@
       REAL*8,       ALLOCATABLE :: parmin(:)  ! Minimum parameter values defining search domain
       REAL*8,       ALLOCATABLE :: parmax(:)  ! Maximum parameter values defining search domain
 
-      end module sce_mod
+      end module vom_sce_mod
