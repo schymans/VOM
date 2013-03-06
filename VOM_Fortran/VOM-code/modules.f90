@@ -26,31 +26,33 @@
       INTEGER :: kfile_currentbest   = 704
       INTEGER :: kfile_bestpars      = 705
       INTEGER :: kfile_finalbest     = 706
+      INTEGER :: kfile_pars          = 707
       INTEGER :: kfile_shufflepar    = 708
 
 !     * file names
 
-      CHARACTER(80) :: sfile_dailyweather  = 'dailyweather.prn'
-      CHARACTER(80) :: sfile_hourlyweather = 'hourlyweather.prn'
+      CHARACTER(len=*),parameter :: sfile_dailyweather  = 'dailyweather.prn'
+      CHARACTER(len=*),parameter :: sfile_hourlyweather = 'hourlyweather.prn'
 
-      CHARACTER(80) :: sfile_inputpar      = 'input.par'
-      CHARACTER(80) :: sfile_resultshourly = 'resultshourly.txt'
-      CHARACTER(80) :: sfile_resultsdaily  = 'resultsdaily.txt'
-      CHARACTER(80) :: sfile_yearly        = 'yearly.txt'
-      CHARACTER(80) :: sfile_rsurfdaily    = 'rsurfdaily.txt'
-      CHARACTER(80) :: sfile_delyuhourly   = 'delyuhourly.txt'
-      CHARACTER(80) :: sfile_ruptkhourly   = 'ruptkhourly.txt'
-      CHARACTER(80) :: sfile_suvechourly   = 'suvechourly.txt'
-      CHARACTER(80) :: sfile_soilprofile   = 'soilprofile.par'
-      CHARACTER(80) :: sfile_model_output  = 'model_output.txt'
+      CHARACTER(len=*),parameter :: sfile_inputpar      = 'input.par'
+      CHARACTER(len=*),parameter :: sfile_resultshourly = 'resultshourly.txt'
+      CHARACTER(len=*),parameter :: sfile_resultsdaily  = 'resultsdaily.txt'
+      CHARACTER(len=*),parameter :: sfile_yearly        = 'yearly.txt'
+      CHARACTER(len=*),parameter :: sfile_rsurfdaily    = 'rsurfdaily.txt'
+      CHARACTER(len=*),parameter :: sfile_delyuhourly   = 'delyuhourly.txt'
+      CHARACTER(len=*),parameter :: sfile_ruptkhourly   = 'ruptkhourly.txt'
+      CHARACTER(len=*),parameter :: sfile_suvechourly   = 'suvechourly.txt'
+      CHARACTER(len=*),parameter :: sfile_soilprofile   = 'soilprofile.par'
+      CHARACTER(len=*),parameter :: sfile_model_output  = 'model_output.txt'
 
-      CHARACTER(80) :: sfile_sceout        = 'sce.out'
-      CHARACTER(80) :: sfile_progress      = 'progress.txt'
-      CHARACTER(80) :: sfile_lastloop      = 'lastloop.txt'
-      CHARACTER(80) :: sfile_currentbest   = 'currentbest.txt'
-      CHARACTER(80) :: sfile_bestpars      = 'bestpars.txt'
-      CHARACTER(80) :: sfile_finalbest     = 'finalbest.txt'
-      CHARACTER(80) :: sfile_shufflepar    = 'shuffle.par'
+      CHARACTER(len=*),parameter :: sfile_sceout        = 'sce.out'
+      CHARACTER(len=*),parameter :: sfile_progress      = 'progress.txt'
+      CHARACTER(len=*),parameter :: sfile_lastloop      = 'lastloop.txt'
+      CHARACTER(len=*),parameter :: sfile_currentbest   = 'currentbest.txt'
+      CHARACTER(len=*),parameter :: sfile_bestpars      = 'bestpars.txt'
+      CHARACTER(len=*),parameter :: sfile_finalbest     = 'finalbest.txt'
+      CHARACTER(len=*),parameter :: sfile_pars          = 'pars.txt'
+      CHARACTER(len=*),parameter :: sfile_shufflepar    = 'shuffle.par'
 
       end module vom_file_mod
 

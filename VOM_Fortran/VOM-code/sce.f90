@@ -38,6 +38,10 @@
 !
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
       subroutine sce ()
       use sce_mod
       implicit none
@@ -48,6 +52,8 @@
       REAL*8, ALLOCATABLE :: sumvar(:)
       CHARACTER(24)       :: logdate
       CHARACTER(300)      :: writeformat
+      CHARACTER(len=135)  :: msg
+      character(len=9)    :: tmp3(1)
 
 !EXTERNAL compar
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -78,8 +84,7 @@
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ! INSERTED BY STAN TO ALLOW CONTINUATION OF OPTIMSATION FROM PREVIOUSLY SAVED STEP
 
-      open(kfile_lastloop, file=sfile_lastloop(1:len_trim(sfile_lastloop)), status='old', &
-      & iostat=stat)
+      open(kfile_lastloop, FILE=sfile_lastloop, STATUS='old', IOSTAT=stat)
       if (stat .eq. 0) then
         read(kfile_lastloop,*) ncomp2
         read(kfile_lastloop,*) nloop
@@ -95,21 +100,18 @@
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ! OPEN FILES FOR STORING OBJECTIVE FUNCTION AND PARAMETER VALUES
 
-        open(kfile_sceout, file=sfile_sceout(1:len_trim(sfile_sceout)), status='old', &
-        & position='append')
-        open(kfile_bestpars, file=sfile_bestpars(1:len_trim(sfile_bestpars)), status='old', &
-        & position='append')
-        open(kfile_progress, file=sfile_progress(1:len_trim(sfile_progress)), status='old', &
-        & position='append')
+        open(kfile_sceout, FILE=sfile_sceout, STATUS='old', position='append')
+        open(kfile_bestpars, FILE=sfile_bestpars, STATUS='old', position='append')
+        open(kfile_progress, FILE=sfile_progress, STATUS='old', position='append')
         write(kfile_progress,'(/"  NEW Run time:   ",a)') logdate
       else
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ! OPEN AND EMPTY FILE FOR STORING OBJECTIVE FUNCTION AND PARAMETER VALUES
 
-        open(kfile_sceout, file=sfile_sceout(1:len_trim(sfile_sceout)), status='replace')
-        open(kfile_bestpars, file=sfile_bestpars(1:len_trim(sfile_bestpars)), status='replace')
-        open(kfile_progress, file=sfile_progress(1:len_trim(sfile_progress)), status='replace')
+        open(kfile_sceout, FILE=sfile_sceout, STATUS='replace')
+        open(kfile_bestpars, FILE=sfile_bestpars, STATUS='replace')
+        open(kfile_progress, FILE=sfile_progress, STATUS='replace')
 
 !       * write file header
         write(kfile_progress,'(/"SHUFFLED COMPLEX EVOLUTION OPTIMISER")')
@@ -144,11 +146,12 @@
 
           writeformat = '("Finished ",i4," main loops'
           writeformat(29:66) = ' --- best objective function =",e12.6)'
-          write(*,writeformat) nloop, ofvec(1)
-          write(kfile_progress,writeformat) nloop, ofvec(1)
-          writeformat = '(/"No improvement in OF for",i5," loops")'
-          write(*,writeformat) nsincebest
-          write(kfile_progress,writeformat) nsincebest
+          write(msg,writeformat) nloop, ofvec(1)
+          write(kfile_progress,*) TRIM(msg)
+          write(kfile_progress,*) " "
+          writeformat = '("No improvement in OF for",i5," loops")'
+          write(msg,writeformat) nsincebest
+          write(kfile_progress,*) TRIM(msg)
           nsincebest = nsincebest + 1
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -166,26 +169,30 @@
           maxcv = maxval(cv_(:))             ! maximum distance
           writeformat = '("Greatest parameter range: ",f5.2,"%'
           writeformat(38:67) = ' for optimised parameter ",a9)'
-          write(*,writeformat) maxcv, parname(optid(maxloc(cv_(:))))
-          write(kfile_progress,writeformat) maxcv, parname(optid(maxloc(cv_(:))))
+!         * use temporary variable to prevent warning in ifort
+          tmp3(:) = parname(optid(maxloc(cv_(:))))
+          write(msg,writeformat) maxcv, tmp3
+          write(kfile_progress,*) TRIM(msg)
           if (maxcv .ge. resolution) then
             if (nsincebest .le. patience) then
               call writepars
               call run_cce()
               return
             else
-              writeformat = '(/"No improvement in OF for",i5," loops"/" '
-              writeformat(44:65) = ' About to give up...")'
-              write(*,writeformat) nsincebest
-              write(kfile_progress,writeformat) nsincebest
+              write(kfile_progress,*) " "
+              writeformat = '("No improvement in OF for",i5," loops")'
+              write(msg,writeformat) nsincebest
+              write(kfile_progress,*) TRIM(msg)
+              write(kfile_progress,*) "  About to give up..."
               call ck_success()
               if (success .eq. 1) return
             endif
           else
-            writeformat = '(/"First Convergence criterion satisfied..."/"'
-            writeformat(47:92) = '  parameter ranges are all less than 0.1 %"//)'
-            write(*,writeformat)
-            write(kfile_progress,writeformat)
+            write(kfile_progress,*) " "
+            write(kfile_progress,*) "First Convergence criterion satisfied..."
+            write(kfile_progress,*) "  parameter ranges are all less than 0.1 %"
+            write(kfile_progress,*) " "
+            write(kfile_progress,*) " "
 
 !       * STAN'S MODIFICATION TO ASSESS SENSITIVITY OF OBJECTIVE
 !       * FUNCTION TO EACH PARAMETER:
@@ -197,18 +204,19 @@
       enddo
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-! END OF BLOCK THAT CAN BE PARALLELISED!
-!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ! TERMINATE PROGRAM
 
-          writeformat = '(/"FAILURE TO CONVERGE..."/"  Number of runs has '
-          writeformat(50:96) = 'reached 20000." //"  Program terminated."/,a,a)'
-          write(*,writeformat) char(7), char(7)
-          write(kfile_progress,writeformat) char(7), char(7)
+          write(kfile_progress,*) " "
+          write(kfile_progress,*) "FAILURE TO CONVERGE..."
+          write(kfile_progress,*) "  Number of runs has reached 20000."
+          write(kfile_progress,*) " "
+          write(kfile_progress,*) "  Program terminated."
+          write(msg,'(A,A)') char(7), char(7)
+          write(kfile_progress,*) TRIM(msg)
 !         * [SORT ENTIRE ARRAYS]
           call sortcomp(shufflevar(:,:), shape(shufflevar(:,:)), ofvec(:), SIZE(ofvec(:)))
           call writepars()                     ! PROGRAM STOP
-          open(kfile_finalbest, FILE=sfile_finalbest(1:len_trim(sfile_finalbest)))
+          open(kfile_finalbest, FILE=sfile_finalbest)
             write(kfile_finalbest,outformat) shufflevar(:,1), bestobj
           close(kfile_finalbest)
           close(kfile_sceout)
@@ -238,12 +246,12 @@
 ! FIND AND OPEN PARAMETER FILE, shuffle.par
 ! ESTABLISH NUMBER OF PARAMETERS npar
 
-      open(kfile_shufflepar, file=sfile_shufflepar(1:len_trim(sfile_shufflepar)), status='old')
+      open(kfile_shufflepar, file=sfile_shufflepar, STATUS='old')
       read(kfile_shufflepar,*)
       read(kfile_shufflepar,*)
       npar = 0
       do
-        read(kfile_shufflepar,*,iostat=ios) str
+        read(kfile_shufflepar,*,IOSTAT=ios) str
         if (ios .lt. 0) exit
         if (str .eq. 'var') npar = npar + 1
       enddo
@@ -343,6 +351,7 @@
       INTEGER       :: i_
       INTEGER       :: j_, k_
       INTEGER       :: worstcount       ! worstcount for counting number of negative objective functions
+      character(len=135) :: msg
 
       INTEGER, ALLOCATABLE :: posarray(:,:)
       REAL*8,  ALLOCATABLE :: initpop(:,:)
@@ -353,14 +362,10 @@
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ! PRINT DIMENSION INFORMATION
 
-      write(*,'("  Number of model parameters:",10x,i3)') npar
-      write(*,'("  Number of optimisable parameters:",i7)') nopt
-      write(*,'("  Maximum number of complexes:",9x,i3)') ncomp
-      write(*,'("  Minimum number of runs per complex:",i5,//)') mopt
-      write(kfile_progress,'("  Number of model parameters:",10x,i3)') npar
-      write(kfile_progress,'("  Number of optimisable parameters:",i7)') nopt
-      write(kfile_progress,'("  Maximum number of complexes:",9x,i3)') ncomp
-      write(kfile_progress,'("  Minimum number of runs per complex:",i5,//)') mopt
+      write(kfile_progress,*) '  Number of model parameters:         ',npar
+      write(kfile_progress,*) '  Number of optimisable parameters:   ',nopt
+      write(kfile_progress,*) '  Maximum number of complexes:        ',ncomp
+      write(kfile_progress,*) '  Minimum number of runs per complex: ',mopt
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ! CALCULATING OF USING INITAL GUESS IN SHUFFLE.PAR
@@ -377,10 +382,11 @@
             if (ofvec(1) .le. 0.d0) worstcount = worstcount + 1
             bestobj = ofvec(1)
             bestincomp = bestobj
-            open(kfile_currentbest, FILE=sfile_currentbest(1:len_trim(sfile_currentbest)))
+            open(kfile_currentbest, FILE=sfile_currentbest)
               write(kfile_currentbest,outformat) shufflevar(:,1), bestobj
             close(kfile_currentbest)
-            write(*,'("Systematic seed of",i4," parameters for ",i2," complexes. Initial OF= ",e13.6)') nopt, ncomp, ofvec(1)
+            write(msg,'("Systematic seed of",i4," parameters for ",i2," complexes. Initial OF= ",e13.6)') nopt, ncomp, ofvec(1)
+            write(6,*) TRIM(msg)
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ! GENERATE A SYSTEMATIC ARRAY OF INITIAL PARAMETER VALUES FOLLOWING
@@ -430,6 +436,7 @@
 !       * IF MORE POINTS ARE NEEDED, GENERATE RANDOM POINTS
 
           evolution = 'mutation'
+
 !         * first loop must generate feasible values to start with
           do while (ofvec(i_) .le. 0.d0)
 
@@ -462,7 +469,7 @@
 
           if (ofvec(i_) .gt. bestobj) then
             bestobj = ofvec(i_)
-            open(kfile_currentbest, FILE=sfile_currentbest(1:len_trim(sfile_currentbest)))
+            open(kfile_currentbest, FILE=sfile_currentbest)
               write(kfile_currentbest,outformat) shufflevar(:,i_), bestobj
             close(kfile_currentbest)
           endif
@@ -493,11 +500,7 @@
 !         * [SORT ENTIRE ARRAYS]
           call sortcomp(shufflevar(:,:), shape(shufflevar(:,:)), ofvec(:), SIZE(ofvec(:)))
           call writepars()
-          write(*,'(/"Optimisation completed successfully."/)')
-          write(kfile_progress,'(/"Optimisation completed successfully."/)')
-          print *,char(7)
-          print *,char(7)
-          print *,char(7)
+          write(kfile_progress,*) 'Optimisation completed successfully.'
           close(kfile_sceout)
           close(kfile_bestpars)
           close(kfile_progress)
@@ -528,15 +531,14 @@
       REAL*8        :: oldpar, newpar
       REAL*8        :: ofvec2, ofchange, parchange
       CHARACTER(300)       :: writeformat
+      character(len=135)   :: msg
 
         shufflevar2(:) = shufflevar(:,1)
         ofvec2 = ofvec(1)
         failed10 = 0
 
-        print *,"SENSITIVITY ANALYSIS"
-        print *,"(changes in % of feasible range)"
-        print *
-        write(kfile_progress,'("SENSITIVITY ANALYSIS"/"changes in % of feasible range)" )')
+        write(kfile_progress,*) 'SENSITIVITY ANALYSIS'
+        write(kfile_progress,*) 'changes in % of feasible range)'
         dataarray(1,1:nopt) = shufflevar2(optid(:))
         dataarray(1,nopt+1) = ofvec2
         evolution = 'test'
@@ -551,9 +553,10 @@
 
           distmin = oldpar - parmin(optid(i_))
           distmax = parmax(optid(i_)) - oldpar
-          writeformat = '(/"change of var: ",a9, "(",e9.3,")")'
-          write(*,writeformat) parname(optid(i_)), oldpar
-          write(kfile_progress,writeformat) parname(optid(i_)), oldpar
+          write(kfile_progress,*) " "
+          writeformat = '("change of var: ",A9, "(",E9.3,")")'
+          write(msg,writeformat) parname(optid(i_)), oldpar
+          write(kfile_progress,*) TRIM(msg)
 
         do j_ = 0, 3
 
@@ -565,7 +568,7 @@
 
             if (ofvec2 .gt. bestobj) then
               bestobj = ofvec2
-              open(kfile_currentbest, FILE=sfile_currentbest(1:len_trim(sfile_currentbest)))
+              open(kfile_currentbest, FILE=sfile_currentbest)
                 write(kfile_currentbest,outformat) shufflevar2(:), bestobj
               close(kfile_currentbest)
             endif
@@ -580,8 +583,8 @@
      &                - parmin(optid(i_))) * 100.d0  ! the change of the parameter in % of feasible range
             writeformat = '(f6.3,"% (",f14.6,")",": change of OF by ",'
             writeformat(44:66) = 'e9.3,"%"," (",e9.3,")")'
-            write(*,writeformat) parchange, newpar, ofchange, ofvec2
-            write(kfile_progress,writeformat) parchange, newpar, ofchange, ofvec2
+            write(msg,writeformat) parchange, newpar, ofchange, ofvec2
+            write(kfile_progress,*) TRIM(msg)
 
             if (ofchange .gt. 1.0d-10) then
               shufflevar(:,sopt-pos) = shufflevar2(:)
@@ -597,10 +600,10 @@
           newpar = oldpar + distmax * 10.d0 ** (-j_)
           shufflevar2(optid(i_)) = newpar
           nrun = nrun + 1
-          call transpmodel(shufflevar2(:), size(shufflevar2(:)), nrun, ofvec2, 1)
+          call transpmodel(shufflevar2(:), SIZE(shufflevar2(:)), nrun, ofvec2, 1)
           if (ofvec2 .gt. bestobj) then
             bestobj = ofvec2
-            open(kfile_currentbest, file=sfile_currentbest(1:len_trim(sfile_currentbest)))
+            open(kfile_currentbest, FILE=sfile_currentbest)
             write(kfile_currentbest,outformat) shufflevar2(:), bestobj
             close(kfile_currentbest)
           endif
@@ -611,7 +614,6 @@
      &             / abs(dataarray(1,nopt + 1)) * 100.d0
           parchange = (newpar - oldpar) / (parmax(optid(i_))            &
      &              - parmin(optid(i_))) * 100.d0  ! the change of the parameter in % of feasible range
-          write(*,writeformat) parchange, newpar, ofchange, ofvec2
           write(kfile_progress,writeformat) parchange, newpar, ofchange, ofvec2
           if (ofchange .gt. 1.0d-10) then
             shufflevar(:,sopt-pos) = shufflevar2(:)
@@ -631,17 +633,18 @@
 !     * 10% LEADS TO AN INCREASE IN OBJECTIVE FUNCTION
 
         if (failed10 .gt. 0) then
-          writeformat = '(I2," parameter(s) more than ",F6.3,"% out of '
-          writeformat(47:84) = 'optimum."/"Optimisation continued...")'
-          write(*,writeformat) failed10, resolution
-          write(kfile_progress,writeformat) failed10, resolution
+          writeformat = '(I2," parameter(s) more than ",F6.3,"% out of optimum.")'
+          write(msg,writeformat) failed10, resolution
+          write(kfile_progress,*) TRIM(msg)
+          write(kfile_progress,*) "Optimisation continued..."
         else
-          writeformat = '(//"Second convergence criterion satisfied:"/"'
-          writeformat(47:85) = 'no parameter shift by more than ",F6.3,'
-          writeformat(86:118) = '"% of max distance leads to"/"an '
-          writeformat(119:155) = 'increase in the objective function.")'
-          write(*,writeformat) resolution
-          write(kfile_progress,writeformat) resolution
+          write(kfile_progress,*) " "
+          write(kfile_progress,*) " "
+          write(kfile_progress,*) "Second convergence criterion satisfied:"
+          writeformat = '("no parameter shift by more than ",F6.3,"% of max distance leads to")'
+          write(msg,writeformat) resolution
+          write(kfile_progress,*) TRIM(msg)
+          write(kfile_progress,*) "an increase in the objective function."
           success = 1
         endif
 
@@ -662,6 +665,7 @@
 
       INTEGER              :: m_, first
       CHARACTER(300)       :: writeformat
+      character(len=135)   :: msg
 
 !     * PARTITION THE sopt POINTS INTO ncomp2 COMPLEXES
 !     * EXECUTE CCE ALGORITHM
@@ -674,8 +678,8 @@
               if (worstbest .le. ofvec(1+(ncomp2-1)*mopt)) then
                 writeformat = '("No gene pool mixing ... '
                 writeformat(27:64) = 'reducing number of complexes by one.")'
-                write(*,writeformat)
-                write(kfile_progress,writeformat)
+                write(msg,writeformat)
+                write(kfile_progress,*) TRIM(msg)
                 ncomp2 = ncomp2 - 1
               endif
             endif
@@ -687,8 +691,8 @@
           first = 1 + (m_ - 1) * mopt
           writeformat = '("Start of loop",i4,", complex",i2,'
           writeformat(36:55) = '": best OF =",e12.6)'
-          write(*,writeformat) nloop + 1, m_, ofvec(first)
-          write(kfile_progress,writeformat) nloop + 1, m_ ,ofvec(first)
+          write(msg,writeformat) nloop + 1, m_, ofvec(first)
+          write(kfile_progress,*) TRIM(msg)
           if (m_ .eq. 1) then
             bestincomp = -9999.d0                   ! SET LESS THAN bestobj
           else
@@ -698,8 +702,8 @@
         call cce(ofvec(first:m_*mopt), shufflevar(:,first:m_*mopt))
 
           writeformat(3:7) = '  End'
-          write(*,writeformat) nloop + 1, m_, ofvec(first)
-          write(kfile_progress,writeformat) nloop + 1, m_, ofvec(first)
+          write(msg,writeformat) nloop + 1, m_, ofvec(first)
+          write(kfile_progress,*) TRIM(msg)
 
       enddo
 
@@ -884,8 +888,8 @@
           if (newobjfun .gt. bestobj) then
             bestobj = newobjfun
             bestincomp = newobjfun
-            open(kfile_currentbest, FILE=sfile_currentbest(1:len_trim(sfile_currentbest)))
-            write(kfile_currentbest,outformat) invar(:,1), bestobj
+            open(kfile_currentbest, FILE=sfile_currentbest)
+              write(kfile_currentbest,outformat) invar(:,1), bestobj
             close(kfile_currentbest)
             nsincebest = 0
           elseif (newobjfun .gt. bestincomp) then
@@ -910,6 +914,7 @@
 !     * Definitions
       CHARACTER(1)   :: bestmark
       CHARACTER(300) :: writeformat
+      character(len=135) :: msg
 
         nrun = nrun + 1
 
@@ -923,8 +928,8 @@
         endif
         if (evolution .ne. 'test') then
           writeformat = '("Run",i6,"  (",a,"):",t28,"OF =",e12.6,1x,a)'
-          write(*,writeformat) nrun, TRIM(evolution), objfun, bestmark
-          write(kfile_progress,writeformat) nrun, trim(evolution), objfun, bestmark
+          write(msg,writeformat) nrun, TRIM(evolution), objfun, bestmark
+          write(kfile_progress,*) TRIM(msg)
 
             write(kfile_sceout,outformat) invar(optid(:)), objfun
             flush(kfile_progress)
@@ -988,7 +993,7 @@
 
       INTEGER :: i_
 
-      open(kfile_lastloop, FILE=sfile_lastloop(1:len_trim(sfile_lastloop)))
+      open(kfile_lastloop, FILE=sfile_lastloop)
       write(kfile_lastloop,'(i3)') ncomp2
       write(kfile_lastloop,'(i4)') nloop
       write(kfile_lastloop,'(i10)') nrun
@@ -1011,25 +1016,25 @@
       implicit none
 
       INTEGER :: i_
+      character(len=135) :: msg
 
-      write(*,'(/"PARAMETER|     VALUE   |    MINVAL   |    MAXVAL   |  CV (%)     ")')
-      write(kfile_progress,'(/"PARAMETER|     VALUE   |    MINVAL   |    MAXVAL   |  CV (%)     ")')
+      write(kfile_progress,*) " "
+      write(msg,'("PARAMETER|     VALUE   |    MINVAL   |    MAXVAL   |  CV (%)     ")')
+      write(kfile_progress,*) TRIM(msg)
       do i_ = 1, nopt
-        write(*,'(a9,5e14.6)') parname(optid(i_)), shufflevar(optid(i_),1), parmin(optid(i_)), parmax(optid(i_)), cv_(i_)
-        write(kfile_progress,'(a9,5e14.6)') parname(optid(i_)), shufflevar(optid(i_),1), parmin(optid(i_)), parmax(optid(i_)), cv_(i_)
+        write(msg,'(a9,5e14.6)') parname(optid(i_)), shufflevar(optid(i_),1), parmin(optid(i_)), parmax(optid(i_)), cv_(i_)
+        write(kfile_progress,*) TRIM(msg)
       enddo
-      write(kfile_progress,'(//)')
-      print *
-      print *
+      write(kfile_progress,*) ' '
 
       if (success .eq. 1) then
-        open(kfile_finalbest, FILE=sfile_finalbest(1:len_trim(sfile_finalbest)))
+        open(kfile_finalbest, FILE=sfile_finalbest)
           write(kfile_finalbest,outformat) shufflevar(:,1), bestobj
         close(kfile_finalbest)
       endif
 
       if (success .eq. 2) then
-        open(kfile_finalbest, FILE=sfile_finalbest(1:len_trim(sfile_finalbest)))
+        open(kfile_finalbest, FILE=sfile_finalbest)
           write(kfile_finalbest,'("   0.0E+00  0.0E+00  0.0E+00  0.0E+00  0.0E+00  0.0E+00  0.0E+00")')
         close(kfile_finalbest)
       endif

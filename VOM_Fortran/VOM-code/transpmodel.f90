@@ -264,7 +264,8 @@
 
 !     * Input of variable parameters from the parameter file
 
-      open(kfile_inputpar, FILE=sfile_inputpar(1:len_trim(sfile_inputpar)), STATUS='old')
+      open(kfile_inputpar, FILE=sfile_inputpar, STATUS='old')
+
       read(kfile_inputpar,*) oa_
       read(kfile_inputpar,*) alpha
       read(kfile_inputpar,*) cpccf
@@ -328,7 +329,7 @@
 
       maxlayer = 0
 
-      open(kfile_soilprofile, FILE=sfile_soilprofile(1:len_trim(sfile_soilprofile)),                  &
+      open(kfile_soilprofile, FILE=sfile_soilprofile,                  &
      &                        STATUS='old', IOSTAT=iostat)
       if (iostat .eq. 0) then
         read(kfile_soilprofile,*) maxlayer
@@ -426,14 +427,14 @@
       use vegwatmod
       implicit none
 
-      open(kfile_resultshourly, FILE=sfile_resultshourly(1:len_trim(sfile_resultshourly)), STATUS='replace')
+      open(kfile_resultshourly, FILE=sfile_resultshourly, STATUS='replace')
       write(kfile_resultshourly,'(a6,a7,a7,a7,a7,22a15)') 'year',      &
      &  'month', 'day', 'dcum', 'hour', 'rain', 'tair', 'par', 'vd',   &
      &  'esoil', 'pc', 'jmax25_t', 'jmax25_g', 'mq', 'rl', 'lambda_t', &
      &  'lambda_g', 'rr', 'ass_t', 'ass_g', 'het_t', 'het_g', 'su_1',  &
      &  'ys', 'Ws', 'spgfcf', 'infx'
 
-      open(kfile_resultsdaily, FILE=sfile_resultsdaily(1:len_trim(sfile_resultsdaily)), STATUS='replace')
+      open(kfile_resultsdaily, FILE=sfile_resultsdaily, STATUS='replace')
       write(kfile_resultsdaily,'(a6,a7,a7,a7,a7,25a15)') 'year',       &
      &  'month', 'day', 'dcum', 'hour', 'rain', 'tairmax', 'tairmin',  &
      &  'par', 'vd', 'esoil', 'jmax25_t', 'jmax25_g', 'pc', 'rlt+rlg', &
@@ -441,25 +442,25 @@
      &  'su_avg', 'ys', 'ws', 'spgfcf', 'infx', 'etm_t', 'etm_g',      &
      &  'su_1', 'topt'
 
-      open(kfile_yearly, FILE=sfile_yearly(1:len_trim(sfile_yearly)), STATUS='replace')
+      open(kfile_yearly, FILE=sfile_yearly, STATUS='replace')
       write(kfile_yearly,'(a6,19a16)') "year", "rain_y", "epan_y",     &
      &  "par_y", "srad_y", "vd_y", "esoil_y", "etm_y", "etmg_y",       &
      &  "assg_y", "rlg_y", "rrg_y", "cpccg_y", "tcg_y",                &
      &  "etmt_y", "asst_y", "rlt_y", "rrt_y", "cpcct_y", "tc_y"
 
-      open(kfile_rsurfdaily, FILE=sfile_rsurfdaily(1:len_trim(sfile_rsurfdaily)), STATUS='replace')
+      open(kfile_rsurfdaily, FILE=sfile_rsurfdaily, STATUS='replace')
       write(kfile_rsurfdaily,*) ' year', ' month', ' day', '   dcum',  &
      &  '  rsurfsublayer'
 
-      open(kfile_delyuhourly, FILE=sfile_delyuhourly(1:len_trim(sfile_delyuhourly)), STATUS='replace')
+      open(kfile_delyuhourly, FILE=sfile_delyuhourly, STATUS='replace')
       write(kfile_delyuhourly,*) ' year', ' month', ' day', '   dcum',  &
      &  ' hour', '  delyusublayer'
 
-      open(kfile_ruptkhourly, FILE=sfile_ruptkhourly(1:len_trim(sfile_ruptkhourly)), STATUS='replace')
+      open(kfile_ruptkhourly, FILE=sfile_ruptkhourly, STATUS='replace')
       write(kfile_ruptkhourly,*) ' year', ' month', ' day', '   dcum', &
      &  ' hour', '  delyusublayer'
 
-      open(kfile_suvechourly, FILE=sfile_suvechourly(1:len_trim(sfile_suvechourly)), STATUS='replace')
+      open(kfile_suvechourly, FILE=sfile_suvechourly, STATUS='replace')
       write(kfile_suvechourly,*) ' year', ' month', ' day', '   dcum', &
      &  ' hour', '  susublayer'
 
@@ -495,7 +496,7 @@
 !       and soil properties in each soil layer, with the layer number in
 !       the first column.
 
-      open(kfile_soilprofile, FILE=sfile_soilprofile(1:len_trim(sfile_soilprofile)),                  &
+      open(kfile_soilprofile, FILE=sfile_soilprofile,                  &
      &                        STATUS='old', IOSTAT=iostat)
       if (iostat .eq. 0) then
         do j = 1, maxlayer
@@ -531,14 +532,14 @@
       INTEGER :: ii, i, h, oldh, stat
       INTEGER :: dummyint1, dummyint2, dummyint3, dummyint4
 
-      open(kfile_hourlyweather, FILE=sfile_hourlyweather(1:len_trim(sfile_hourlyweather)),              &
+      open(kfile_hourlyweather, FILE=sfile_hourlyweather,              &
      &                          STATUS='old', IOSTAT=stat)
       if (stat .ne. 0) then
         close(kfile_hourlyweather)
 
 !       * Creating hourly climate data from daily data
 
-        open(kfile_dailyweather, FILE=sfile_dailyweather(1:len_trim(sfile_dailyweather)),              &
+        open(kfile_dailyweather, FILE=sfile_dailyweather,              &
      &                           STATUS='old', IOSTAT=stat)
         read(kfile_dailyweather,*)
         do i = 1, maxday
@@ -548,7 +549,7 @@
         enddo
         close(kfile_dailyweather)
 
-        open(kfile_hourlyweather, FILE=sfile_hourlyweather(1:len_trim(sfile_hourlyweather)), IOSTAT=stat)
+        open(kfile_hourlyweather, FILE=sfile_hourlyweather, IOSTAT=stat)
         write(kfile_hourlyweather,'(5a8,5a11)') 'hour', 'dayyear', 'day', &
      &    'month', 'year', 'tair_h', 'vd_h', 'par_h', 'rain_h', 'ca_h'
 
@@ -562,7 +563,7 @@
 
 !       * Reading hourly climate data if available
 
-        open(kfile_hourlyweather, FILE=sfile_hourlyweather(1:len_trim(sfile_hourlyweather)), STATUS='old', IOSTAT=stat)
+        open(kfile_hourlyweather, FILE=sfile_hourlyweather, STATUS='old', IOSTAT=stat)
         read(kfile_hourlyweather,*)
         ii = 1
         oldh = 99
@@ -1249,6 +1250,7 @@
 
       REAL*8,  INTENT(inout) :: netass
       INTEGER, INTENT(inout) :: finish
+      character(len=135) :: msg
 
 !     * makes sure that tissue water does not get below 0.9mqx
       if (mq_ .le. 0.9d0 * mqx_) then
@@ -1259,8 +1261,9 @@
               transp_ = etm__ * 55555.555555555555d0  ! (Out[249]) mol/s=m/s*10^6 g/m/(18g/mol)
               gstom__ = transp_ / (p_a * vd__)
             else
-              write(*,'(a20,i2,a1,i2,a1,i4)') 'vegetation dies on: ',  &
+              write(msg,'(a20,i2,a1,i2,a1,i4)') 'vegetation dies on: ', &
      &          fday(nday), '/', fmonth(nday), '/', fyear(nday)
+              write(*,*) TRIM(msg)
               netass = 0.d0
 !             * if tissues water depleted, but still loosing water -> death
               finish = 1
@@ -1442,6 +1445,7 @@
 
       REAL*8  :: error1
       INTEGER, INTENT(inout) :: finish
+      character(len=135) :: msg
 
       ioacum = ioacum + io_h
       wsnew  = SUM(cH2Ol_s(:))
@@ -1450,14 +1454,16 @@
 !     * gives an error message if accumulated error exceeds 1 mm
 
       if (abs(error) .gt. 1.d-3) then
-        write(*,*) 'Error in water balance [mm]:', error, 'io=', io__, &
+        write(msg,*) 'Error in water balance [mm]:', error, 'io=', io__, &
      &    'wsold=', wsold, 'wsnew=', wsnew
+        write(*,*) TRIM(msg)
         finish = 1
       elseif (md_ .gt. 0.d0) then
         error1 = mqold + (ruptk_h - etm_h) * 1.d6 - mqnew
         if (abs(error1 / mqnew) .gt. 1.d-6) then
-          write(*,*) 'Error in tree water balance [%]:', error1 * 100.d0, &
+          write(msg,*) 'Error in tree water balance [%]:', error1 * 100.d0, &
      &      'mqold=', mqold, 'mqnew=', mqnew, 'hruptk=', ruptk_h, 'hetm=', etm_h
+          write(*,*) TRIM(msg)
           finish = 1
         endif
       endif

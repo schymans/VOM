@@ -29,6 +29,7 @@
 !***********************************************************************
 
       program vom
+      use vom_file_mod
       implicit none
 
       INTEGER       :: command
@@ -38,8 +39,8 @@
       INTEGER       :: npar
       CHARACTER(3)  :: str
 
-      INTEGER       :: iostatus, stat
-      INTEGER       :: nrun
+      INTEGER  :: iostat
+      INTEGER  :: nrun
 
 !-----------------------------------------------------------------------
 ! for debug purposes:
@@ -48,82 +49,84 @@
 
 !     * Parameter definitions
 
-      open(1, file='shuffle.par', status='old')
-      read(1,*) command
+      open(kfile_shufflepar, FILE=sfile_shufflepar, STATUS='old')
+      read(kfile_shufflepar,*) command
 
 !     * now with fourth commmand (3 for compute ncp oonly with pars.txt)
 
       if (command .eq. 3) then
-        close(1)
-        open(3, file='pars.txt', status='old', iostat=stat)
+        close(kfile_shufflepar)
+        open(kfile_pars, FILE=sfile_pars, STATUS='old', IOSTAT=iostat)
 
-        if (stat .eq. 0) then
-          rewind(3)
-          read(3,*) invar(:)
-          close(3)
+        if (iostat .eq. 0) then
+          rewind(kfile_pars)
+          read(kfile_pars,*) invar(:)
+          close(kfile_pars)
 
           netass = 0.d0
           nrun = 1
 
-          print *, "Pars.txt read. Start calculation of ncp with parameters..."
+          write(*,*) "Start calculation of ncp with parameters..."
 
           call transpmodel(invar, size(invar), nrun, netass, command)
 
-          print *, "Model run COMPLETE"
-          write(*,'(" The carbon profit achieved is: ",e12.6)') netass
-          print *, "Best ncp is saved in model_output.txt"
+          write(*,*) "Model run COMPLETE"
+          write(*,*) ' '
+          write(*,'(" The carbon profit achieved is: ",E12.6)') netass
+          write(*,*) "Best ncp is saved in model_output.txt"
         else
-          write(*,*) "ERROR: pars.txt missing."
-          stop
+            write(*,*) "ERROR reading ", sfile_pars
+            stop
         endif
 
       else
-        open(2, file='finalbest.txt', status='old', iostat=iostatus)
+        open(kfile_finalbest, FILE=sfile_finalbest, STATUS='old', IOSTAT=iostat)
 
-        if (iostatus .eq. 0 .or. command .eq. 2) then
+        if (iostat .eq. 0 .or. command .eq. 2) then
           command = 2
-          if (iostatus .ne. 0) then
-            close(2)
+          if (iostat .ne. 0) then
+            close(kfile_finalbest)
 !           * reads input parameters from previous optimisation
-            open(2, file='currentbest.txt')
+            open(kfile_finalbest, FILE=sfile_currentbest)
           endif
 
 !         * model run with optimised parameters
 
           nrun = 1
 
-          print *,"Calculation of results with optimised parameters..."
+          write(*,*) "Calculation of results with optimised parameters..."
 
-          rewind(2)
-          read(2,*) invar(:), netass
-          close(2)
+          rewind(kfile_finalbest)
+          read(kfile_finalbest,*) invar(:), netass
+          close(kfile_finalbest)
 
-          write(*,'(" The best carbon profit was: ",e12.6)') netass
+          write(*,'(" The best carbon profit was: ",E12.6)') netass
 
-          call transpmodel(invar, size(invar), nrun, netass, command)
+        call transpmodel(invar, size(invar), nrun, netass, command)
 
           write(*,*) 'Model run COMPLETE'
           write(*,*) ' '
-          write(*,'(" The carbon profit achieved is: ",e12.6)') netass
+          write(*,'(" The carbon profit achieved is: ",E12.6)') netass
           write(*,*) "Hourly results are saved in resulthourly.txt"
           write(*,*) "Daily results are saved in resultsdaily.txt"
           write(*,*) "Yearly results are saved in yearly.txt"
           write(*,*) "Soil results are saved in delyudaily.txt, rsurfdaily.txt, ruptkhourly.txt, suvechourly.txt"
         else
-          npar = 0
-          do
-            read(1,*,iostat=iostatus) str
-            if (iostatus .lt. 0) exit
-            if (str .eq. 'var') npar = npar + 1
-          enddo
 
-          close(1)
-          close(2)
+        npar = 0
+        do
+          read(kfile_shufflepar,*,IOSTAT=iostat) str
+          if (iostat .lt. 0) exit
+          if (str .eq. 'var') npar = npar + 1
+        enddo
 
-          if (npar .ne. 6) then
-            write(*,*) "ERROR: shuffle.par has to contain 6 parameters (var)"
-            stop
-          endif
+        close(kfile_shufflepar)
+        close(kfile_finalbest)
+
+        if (npar .ne. 6) then
+          write(*,*) "ERROR: shuffle.par has to contain 6 parameters (var)"
+          stop
+        endif
 
           call sce()
 
