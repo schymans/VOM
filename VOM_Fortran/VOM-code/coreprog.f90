@@ -56,8 +56,6 @@
       inquire(FILE=sfile_finalbest, EXIST=exist)
       if (exist .and. vom_command .ne. 3) vom_command = 2
 
-!     * now with fourth commmand (3 for compute ncp oonly with pars.txt)
-
       if (vom_command .eq. 2 .or. vom_command .eq. 3) then
         close(kfile_shufflepar)
 
@@ -84,14 +82,16 @@
 
         else
           if (exist) then
-            open(kfile_finalbest, FILE=sfile_finalbest, STATUS='old', IOSTAT=iostat)
+            open(kfile_finalbest, FILE=sfile_finalbest,                &
+     &                            STATUS='old', IOSTAT=iostat)
             if (iostat .ne. 0) then
               write(*,*) "ERROR reading ", sfile_finalbest
               stop
             endif
           else
 !           * reads input parameters from previous optimisation
-            open(kfile_finalbest, FILE=sfile_currentbest, STATUS='old', IOSTAT=iostat)
+            open(kfile_finalbest, FILE=sfile_currentbest,              &
+     &                            STATUS='old', IOSTAT=iostat)
             if (iostat .ne. 0) then
               write(*,*) "ERROR reading ", sfile_currentbest
               stop

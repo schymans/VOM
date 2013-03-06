@@ -47,33 +47,17 @@
       implicit none
 
       INTEGER             :: i_, first, numcv
-      INTEGER :: stat
       REAL*8              :: maxcv
       REAL*8, ALLOCATABLE :: sumvar(:)
-      CHARACTER(24)       :: logdate
       CHARACTER(300)      :: writeformat
+      INTEGER             :: run_initialseed
       CHARACTER(len=135)  :: msg
       character(len=9)    :: tmp3(1)
-
-!EXTERNAL compar
-!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-! Initialize the random number generator
-! (standard subroutine, based on the date and time)
-      if (command .ne. 4) then
-        CALL RANDOM_SEED()
-      endif
-
-!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-! WRITE SCREEN HEADER
-
-      write(*,'(/"SHUFFLED COMPLEX EVOLUTION OPTIMISER")')
-      call fdate(logdate)
-      write(*,'(/"  Run time:   ",a)') logdate
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ! INITIALIZATION
 
-      call sce_init()
+      call sce_init(run_initialseed)
 
       allocate(sumvar(nopt))
 
@@ -82,50 +66,12 @@
 ! CALL model SUBROUTINE        (OPEN run.log FOR CONSOLE OUTPUT);
 ! CALCULATE OBJECTIVE FUNCTION FOR DEFAULT PARAMETER VALUES
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-! INSERTED BY STAN TO ALLOW CONTINUATION OF OPTIMSATION FROM PREVIOUSLY SAVED STEP
 
-      open(kfile_lastloop, FILE=sfile_lastloop, STATUS='old', IOSTAT=stat)
-      if (stat .eq. 0) then
-        read(kfile_lastloop,*) ncomp2
-        read(kfile_lastloop,*) nloop
-        read(kfile_lastloop,*) nrun
-        read(kfile_lastloop,*) nsincebest
-        read(kfile_lastloop,loopformat) ofvec(:)
-        do i_ = 1, npar
-          read(kfile_lastloop, loopformat) shufflevar(i_,:)
-        enddo
-        close(kfile_lastloop)
-        bestobj = ofvec(1)
-
-!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-! OPEN FILES FOR STORING OBJECTIVE FUNCTION AND PARAMETER VALUES
-
-        open(kfile_sceout, FILE=sfile_sceout, STATUS='old', position='append')
-        open(kfile_bestpars, FILE=sfile_bestpars, STATUS='old', position='append')
-        open(kfile_progress, FILE=sfile_progress, STATUS='old', position='append')
-        write(kfile_progress,'(/"  NEW Run time:   ",a)') logdate
-      else
-
-!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-! OPEN AND EMPTY FILE FOR STORING OBJECTIVE FUNCTION AND PARAMETER VALUES
-
-        open(kfile_sceout, FILE=sfile_sceout, STATUS='replace')
-        open(kfile_bestpars, FILE=sfile_bestpars, STATUS='replace')
-        open(kfile_progress, FILE=sfile_progress, STATUS='replace')
-
-!       * write file header
-        write(kfile_progress,'(/"SHUFFLED COMPLEX EVOLUTION OPTIMISER")')
-        write(kfile_progress,'(/"  Run time:   ",a)') logdate
-
+      if (run_initialseed == 1) then
         call initialseed
-
-        close(kfile_sceout)
-        close(kfile_bestpars)
-        close(kfile_progress)
         return
       endif
 
-! END OF INSERTION
 !
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ! BEGIN SCE LOOP
@@ -232,52 +178,38 @@
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-      subroutine sce_init ()
+      subroutine sce_init (run_initialseed)
       use vom_sce_mod
       implicit none
 
+      INTEGER, INTENT(out) :: run_initialseed
+
       INTEGER       :: i_, j_
       CHARACTER(3)  :: str
-      INTEGER       :: ios
-      INTEGER, ALLOCATABLE :: paropt(:)
-      CHARACTER(60)  :: informat
+      CHARACTER(24)       :: logdate
+      character(len=135)  :: msg
+
+      call read_shufflepar()
+
+!EXTERNAL compar
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+! Initialize the random number generator
+! (standard subroutine, based on the date and time)
+      if (command .ne. 4) then
+        CALL RANDOM_SEED()
+      endif
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-! FIND AND OPEN PARAMETER FILE, shuffle.par
-! ESTABLISH NUMBER OF PARAMETERS npar
+! WRITE SCREEN HEADER
 
-      open(kfile_shufflepar, file=sfile_shufflepar, STATUS='old')
-      read(kfile_shufflepar,*)
-      read(kfile_shufflepar,*)
-      npar = 0
-      do
-        read(kfile_shufflepar,*,IOSTAT=ios) str
-        if (ios .lt. 0) exit
-        if (str .eq. 'var') npar = npar + 1
-      enddo
-      rewind(kfile_shufflepar)
-      allocate(parname(npar))
-      allocate(parval(npar))
-      allocate(parmin(npar))
-      allocate(parmax(npar))
-      allocate(paropt(npar))
+      write(*,*) 'SHUFFLED COMPLEX EVOLUTION OPTIMISER'
+      call fdate(logdate)
+      write(*,'(/"  Run time:   ",a)') logdate
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-!  LOAD INITIAL PARAMETER VALUES AND PARAMETER RANGES
+! READ PARAMETER FILE shufflevar
 
-      read(kfile_shufflepar,'(i1)') command
-      read(kfile_shufflepar,*) ncomp
-      read(kfile_shufflepar,*) ncompmin
-      read(kfile_shufflepar,*) resolution
-      read(kfile_shufflepar,*) patience
-      read(kfile_shufflepar,*) nsimp
-      read(kfile_shufflepar,*) focus
-      read(kfile_shufflepar,'(a60)') informat
-      do i_ = 1, npar
-        read(kfile_shufflepar,informat) parname(i_), parval(i_), parmin(i_), &
-     &                                  parmax(i_), paropt(i_)
-      enddo
-      close(kfile_shufflepar)
+      call read_shufflevar()
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ! CALCULATE NUMBER OF OPTIMISABLE PARAMETERS
@@ -337,8 +269,138 @@
         wgt(i_) = 2.d0 * (mopt + 1.d0 - i_) / mopt / (mopt + 1.d0)
       enddo
 
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+! INSERTED BY STAN TO ALLOW CONTINUATION OF OPTIMSATION FROM PREVIOUSLY SAVED STEP
+
+      call open_output (logdate, run_initialseed)
+
       return
       end subroutine sce_init
+
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+      subroutine read_shufflepar ()
+      use vom_sce_mod
+      implicit none
+
+      CHARACTER(3)  :: str
+      INTEGER       :: ios
+
+      open(kfile_shufflepar, FILE=sfile_shufflepar, STATUS='old')
+
+      read(kfile_shufflepar,*)
+      read(kfile_shufflepar,*)
+      npar = 0
+      do
+        read(kfile_shufflepar,*,IOSTAT=ios) str
+        if (ios .lt. 0) exit
+        if (str .eq. 'var') npar = npar + 1
+      enddo
+      rewind(kfile_shufflepar)
+
+!     * Input of variable parameters from the parameter file
+      read(kfile_shufflepar,'(i1)') command
+      read(kfile_shufflepar,*) ncomp
+      read(kfile_shufflepar,*) ncompmin
+      read(kfile_shufflepar,*) resolution
+      read(kfile_shufflepar,*) patience
+      read(kfile_shufflepar,*) nsimp
+      read(kfile_shufflepar,*) focus
+
+      return
+      end subroutine read_shufflepar
+
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+      subroutine read_shufflevar ()
+      use vom_sce_mod
+      implicit none
+
+      INTEGER       :: i_
+      CHARACTER(60) :: informat
+
+!     * LOAD INITIAL PARAMETER VALUES AND PARAMETER RANGES
+
+!     * allocate the parameter fields
+
+      allocate(parname(npar))
+      allocate(parval(npar))
+      allocate(parmin(npar))
+      allocate(parmax(npar))
+      allocate(paropt(npar))
+
+      read(kfile_shufflepar,'(a60)') informat
+      do i_ = 1, npar
+        read(kfile_shufflepar,informat) parname(i_), parval(i_), parmin(i_), &
+     &                                  parmax(i_), paropt(i_)
+      enddo
+      close(kfile_shufflepar)
+
+      return
+      end subroutine read_shufflevar
+
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+      subroutine open_output (logdate, run_initialseed)
+      use vom_sce_mod
+      implicit none
+
+      CHARACTER(24), INTENT(in) :: logdate
+      INTEGER,      INTENT(out) :: run_initialseed
+
+      INTEGER :: i_, iostat
+      CHARACTER(len=135) :: msg
+
+      run_initialseed = 0
+
+      open(kfile_lastloop, FILE=sfile_lastloop, STATUS='old', IOSTAT=iostat)
+      if (iostat .eq. 0) then
+        read(kfile_lastloop,*) ncomp2
+        read(kfile_lastloop,*) nloop
+        read(kfile_lastloop,*) nrun
+        read(kfile_lastloop,*) nsincebest
+        read(kfile_lastloop,loopformat) ofvec(:)
+        do i_ = 1, npar
+          read(kfile_lastloop, loopformat) shufflevar(i_,:)
+        enddo
+        close(kfile_lastloop)
+        bestobj = ofvec(1)
+
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+! OPEN FILES FOR STORING OBJECTIVE FUNCTION AND PARAMETER VALUES
+
+          open(kfile_sceout, FILE=sfile_sceout, STATUS='old', POSITION='append')
+        open(kfile_bestpars, FILE=sfile_bestpars, STATUS='old', POSITION='append')
+          open(kfile_progress, FILE=sfile_progress, STATUS='old', POSITION='append')
+        write(kfile_progress,*) " "
+        write(msg,'("  NEW Run time:   ",A)') logdate
+        write(kfile_progress,*) TRIM(msg)
+      else
+
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+! OPEN AND EMPTY FILE FOR STORING OBJECTIVE FUNCTION AND PARAMETER VALUES
+
+          open(kfile_sceout, FILE=sfile_sceout, STATUS='replace')
+        open(kfile_bestpars, FILE=sfile_bestpars, STATUS='replace')
+          open(kfile_progress, FILE=sfile_progress, STATUS='replace')
+
+!       * write file header
+        write(kfile_progress,*) 'SHUFFLED COMPLEX EVOLUTION OPTIMISER'
+        write(kfile_progress,*) " "
+        write(msg,'("  Run time:   ",A)') logdate
+        write(kfile_progress,*) TRIM(msg)
+
+        run_initialseed = 1
+      endif
+
+      return
+      end subroutine open_output
 
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -479,6 +541,9 @@
 
         nloop = -1                           ! FIRST LOOP IS LOOP ZERO
         call writeloop()
+        close(kfile_sceout)
+        close(kfile_bestpars)
+        close(kfile_progress)
 
       deallocate(posarray)
       deallocate(initpop)

@@ -508,5 +508,6 @@
       REAL*8,       ALLOCATABLE :: parval(:)  ! Initial parameter values read from shuffle.par
       REAL*8,       ALLOCATABLE :: parmin(:)  ! Minimum parameter values defining search domain
       REAL*8,       ALLOCATABLE :: parmax(:)  ! Maximum parameter values defining search domain
+      INTEGER,      ALLOCATABLE :: paropt(:)
 
       end module vom_sce_mod
