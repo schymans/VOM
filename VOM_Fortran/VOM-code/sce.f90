@@ -433,6 +433,10 @@
       allocate(posarray(2**nopt,nopt))
       allocate(initpop(nopt,5))
 
+      do i_ = 1,sopt
+
+        if (i_ .eq. 1) then
+
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ! PRINT DIMENSION INFORMATION
 
@@ -483,10 +487,13 @@
               posarray(1:2**(j_-1), j_) = 1
               posarray(2**(j_-1)+1:2**j_, j_) = 2
             enddo
+        endif
 
-      do i_ = 2,sopt
+        if (i_ .gt. 1) then
             shufflevar(:,i_) = parval(:)   ! TO SET NON-OPTIMISING PARAMETERS
-        if (i_ .le. 4) then
+        endif
+
+        if (i_ .gt. 1 .and. i_ .le. 4) then
             do j_ = 1, nopt
               k_ = optid(j_)
               shufflevar(k_,i_) = initpop(j_,i_+1)
@@ -495,8 +502,9 @@
           call runmodel(shufflevar(:,i_), ofvec(i_))
 
             if (ofvec(i_) .le. 0) worstcount = worstcount + 1
+        endif
 
-          elseif (i_ .le. SIZE(posarray(:,:),1)) then
+        if (i_ .gt. 4 .and. i_ .le. SIZE(posarray(:,:),1)) then
             do j_ = 1, nopt
               k_ = optid(j_)
               shufflevar(k_,i_) = initpop(j_, posarray(i_-4, j_))
@@ -505,10 +513,11 @@
           call runmodel(shufflevar(:,i_), ofvec(i_))
 
             if (ofvec(i_) .le. 0) worstcount = worstcount + 1
-        else
+        endif
 
 !       * IF MORE POINTS ARE NEEDED, GENERATE RANDOM POINTS
 
+        if (i_ .gt. SIZE(posarray(:,:),1)) then
           evolution = 'mutation'
 
 !         * first loop must generate feasible values to start with
@@ -609,7 +618,7 @@
       use vom_sce_mod
       implicit none
 
-      INTEGER       :: i_, j_, failed10, pos
+      INTEGER       :: i_, j_, k_, failed10, pos
       REAL*8        :: distmin, distmax
       REAL*8        :: oldpar, newpar
       REAL*8        :: ofvec2, ofchange, parchange
@@ -641,10 +650,19 @@
           writeformat = '("change of var: ",A9, "(",E9.3,")")'
           write(msg,writeformat) parname(optid(i_)), oldpar
           write(kfile_progress,*) TRIM(msg)
+          writeformat = '(f7.3,"% (",e14.7,")",": change of OF by ",'
+          writeformat(44:68) = 'e10.3,"%"," (",e10.3,")")'
 
-        do j_ = 0, 3
+          j_ = 0  ! count from 0 to 3 and than from 3 to 0
+          k_ = 1  ! counter first +1 after 3 it become -1
 
+        do while (j_ .ge. 0)
+
+            if (k_ .eq. 1) then
               newpar = oldpar - distmin * 10.d0 ** (-j_)
+            else
+              newpar = oldpar + distmax * 10.d0 ** (-j_)
+            endif
             nrun = nrun + 1
             shufflevar2(optid(i_)) = newpar
 
@@ -663,14 +681,17 @@
               write(kfile_sceout,outformat) tmp(:), ofvec2
               deallocate(tmp)
 
+            if (k_ .eq. 1) then
               dataarray((i_-1)*8+j_+2,1:nopt) = shufflevar2(optid(:))
               dataarray((i_-1)*8+j_+2,nopt+1) = ofvec2
+            else
+              dataarray((i_-1)*8+j_+6,1:nopt) = shufflevar2(optid(:))
+              dataarray((i_-1)*8+j_+6,nopt+1) = ofvec2
+            endif
             ofchange = (ofvec2 - dataarray(1,nopt + 1))                &
      &               / abs(dataarray(1,nopt + 1)) * 100.d0
             parchange = (newpar - oldpar) / (parmax(optid(i_))         &
      &                - parmin(optid(i_))) * 100.d0  ! the change of the parameter in % of feasible range
-            writeformat = '(f6.3,"% (",f14.6,")",": change of OF by ",'
-            writeformat(44:66) = 'e9.3,"%"," (",e9.3,")")'
             write(msg,writeformat) parchange, newpar, ofchange, ofvec2
             write(kfile_progress,*) TRIM(msg)
             flush(kfile_progress)
@@ -683,35 +704,12 @@
                 failed10 = failed10 + 1
               endif
             endif
-        enddo
 
-        do j_ = 3, 0, -1
-          newpar = oldpar + distmax * 10.d0 ** (-j_)
-          shufflevar2(optid(i_)) = newpar
-          nrun = nrun + 1
-          call transpmodel(shufflevar2(:), SIZE(shufflevar2(:)), nrun, ofvec2, 1)
-          if (ofvec2 .gt. bestobj) then
-            bestobj = ofvec2
-            open(kfile_currentbest, FILE=sfile_currentbest)
-            write(kfile_currentbest,outformat) shufflevar2(:), bestobj
-            close(kfile_currentbest)
-          endif
-          write(kfile_sceout,outformat) shufflevar2(optid(:)), ofvec2
-          dataarray((i_-1)*8+j_+6,1:nopt) = shufflevar2(optid(:))
-          dataarray((i_-1)*8+j_+6,nopt+1) = ofvec2
-          ofchange = (ofvec2 - dataarray(1,nopt + 1))               &
-     &             / abs(dataarray(1,nopt + 1)) * 100.d0
-          parchange = (newpar - oldpar) / (parmax(optid(i_))            &
-     &              - parmin(optid(i_))) * 100.d0  ! the change of the parameter in % of feasible range
-          write(kfile_progress,writeformat) parchange, newpar, ofchange, ofvec2
-          if (ofchange .gt. 1.0d-10) then
-            shufflevar(:,sopt-pos) = shufflevar2(:)
-            ofvec(sopt-pos) = ofvec2
-            pos = pos + 1
-            if (abs(parchange) .gt. resolution) then
-              failed10 = failed10 + 1
+            j_ = j_ + k_
+            if (j_ .eq. 4) then
+              j_ = 3
+              k_ = -1
             endif
-          endif
         enddo
 
           shufflevar2(optid(i_)) = oldpar
@@ -888,7 +886,9 @@
       REAL*8, DIMENSION(qopt),      INTENT(inout) :: objfun
 
 !     * Definitions
+      INTEGER       :: k_
       INTEGER       :: i_, j_
+      INTEGER       :: max_j_
       REAL*8        :: newobjfun
       REAL*8        :: minj, rangej
 
@@ -915,36 +915,28 @@
             evolution = 'mutation'
           endif
 
+          k_ = 1
+        do while (k_ .le. 3)
+
 !         * CALCULATE OBJECTIVE FUNCTION
           call runmodel(newpoint(:), newobjfun)
 
+            j_ = 1
+            if (k_ .eq. 1) then
               if (newobjfun .gt. objfun(qopt)) then
-                do j_ = 1, qopt
-                  if (newobjfun .gt. objfun(j_)) then     ! SORT objfun HERE
-                    objfun(j_+1:qopt) = objfun(j_:qopt-1) ! IN CASE nsimp > 1
-                    invar(:,j_+1:qopt) = invar(:,j_:qopt-1)
-                    objfun(j_) = newobjfun
-                    invar(:,j_) = newpoint(:)
-                    exit
-                  endif
-                enddo
+                max_j_ = qopt
+                k_ = 4
               else
 !               * CONTRACTION STEP
                 newpoint(optid(:)) = (centroid(optid(:)) + invar(optid(:),qopt)) * 0.5d0
                 evolution = 'contraction'
+              endif
+            endif
 
-        call runmodel(newpoint(:), newobjfun)
-
+            if (k_ .eq. 2) then
               if (newobjfun .gt. objfun(qopt)) then
-                do j_ = 1, qopt
-                  if (newobjfun .gt. objfun(j_)) then
-                    objfun(j_+1:qopt) = objfun(j_:qopt-1)
-                    invar(:,j_+1:qopt) = invar(:,j_:qopt-1)
-                    objfun(j_) = newobjfun
-                    invar(:,j_) = newpoint(:)
-                    exit
-                  endif
-                enddo
+                max_j_ = qopt
+                k_ = 4
               else
 !               * ANOTHER MUTATION STEP
                 do i_ = 1, nopt
@@ -955,27 +947,39 @@
                   newpoint(j_) = minj + rangej * ranarr(i_)  ! UNIFORMLY DISTRIBUTED SAMPLE
                 enddo
                 evolution = 'mutation'
-          call runmodel(newpoint(:), newobjfun)
+              endif
+            endif
 
+            if (k_ .eq. 3) then
               if (newobjfun .gt. objfun(qopt-1)) then
-            do j_ = 1, qopt - 1
-              if (newobjfun .gt. objfun(j_)) then
+                max_j_ = qopt - 1
+                k_ = 4
+              elseif (newobjfun .gt. 0.d0) then       ! REPLACE ANYWAY
+                objfun(qopt) = newobjfun
+                invar(:,qopt) = newpoint(:)
+              endif
+            endif
+
+            if (k_ .eq. 4) then
+!            * SORT objfun HERE IN CASE alpha > 1
+              do while (newobjfun .le. objfun(j_) .and. j_ .le. max_j_)
+                j_ = j_ + 1
+              enddo
+              if (j_ .lt. qopt) then
                 objfun(j_+1:qopt) = objfun(j_:qopt-1)
                 invar(:,j_+1:qopt) = invar(:,j_:qopt-1)
+              endif
+              if (j_ .le. qopt) then
                 objfun(j_) = newobjfun
                 invar(:,j_) = newpoint(:)
-                exit
               endif
-            enddo
-          elseif (newobjfun .gt. 0.d0) then       ! REPLACE ANYWAY
-            objfun(qopt) = newobjfun
-            invar(:,qopt) = newpoint(:)
-          endif
-        endif
+            endif
 
-      endif
+            k_ = k_ + 1
 
-!       * UPDATE 'currentbest' IF APPROPRIATE
+          enddo
+
+!         * UPDATE 'currentbest' IF APPROPRIATE
 
           if (newobjfun .gt. bestobj) then
             bestobj = newobjfun
