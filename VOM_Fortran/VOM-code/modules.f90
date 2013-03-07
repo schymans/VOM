@@ -67,6 +67,7 @@
       INTEGER :: optmode                ! Indicator of optimisation mode
       REAL*8  :: time                   ! Seconds of hour
       REAL*8  :: error                  ! Cumulative error in water balance
+      INTEGER :: finish                 ! flag to finish all loops
 
       REAL*8, PARAMETER :: p_a     = 1.6d0        ! Ratio of diffusivities of water vapour to CO2 in air
       REAL*8, PARAMETER :: p_pi    = 3.14159d0    ! Pi-constant

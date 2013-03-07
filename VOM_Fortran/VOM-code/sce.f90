@@ -52,6 +52,7 @@
       CHARACTER(300)      :: writeformat
       INTEGER             :: run_initialseed
       CHARACTER(len=135)  :: msg
+      integer             :: tmp2(2)
       character(len=9)    :: tmp3(1)
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -86,7 +87,9 @@
           first = 1 + (ncomp2 - 1) * mopt
           worstbest = ofvec(first)
 !         * [SORT ENTIRE ARRAYS]
-          call sortcomp(shufflevar(:,:), shape(shufflevar(:,:)), ofvec(:), SIZE(ofvec(:)))
+!         * use temporary variable to prevent warning in ifort
+          tmp2(:) = shape(shufflevar(:,:))
+          call sortcomp(shufflevar(:,:), tmp2(:), ofvec(:), SIZE(ofvec(:)))
 
 !         * WRITE BEST_PARAMETERS FILE FOR PREVIOUS LOOP
 
@@ -160,7 +163,9 @@
           write(msg,'(A,A)') char(7), char(7)
           write(kfile_progress,*) TRIM(msg)
 !         * [SORT ENTIRE ARRAYS]
-          call sortcomp(shufflevar(:,:), shape(shufflevar(:,:)), ofvec(:), SIZE(ofvec(:)))
+!         * use temporary variable to prevent warning in ifort
+          tmp2(:) = shape(shufflevar(:,:))
+          call sortcomp(shufflevar(:,:), tmp2(:), ofvec(:), SIZE(ofvec(:)))
           call writepars()                     ! PROGRAM STOP
           open(kfile_finalbest, FILE=sfile_finalbest)
             write(kfile_finalbest,outformat) shufflevar(:,1), bestobj
@@ -204,7 +209,9 @@
 
       write(*,*) 'SHUFFLED COMPLEX EVOLUTION OPTIMISER'
       call fdate(logdate)
-      write(*,'(/"  Run time:   ",a)') logdate
+      write(*,*) " "
+      write(msg,'("  Run time:   ",A)') logdate
+      write(*,*) TRIM(msg)
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ! READ PARAMETER FILE shufflevar
@@ -356,6 +363,7 @@
 
       INTEGER :: i_, iostat
       CHARACTER(len=135) :: msg
+      real*8, allocatable :: tmp(:)
 
       run_initialseed = 0
 
@@ -366,9 +374,13 @@
         read(kfile_lastloop,*) nrun
         read(kfile_lastloop,*) nsincebest
         read(kfile_lastloop,loopformat) ofvec(:)
+!       * use temporary variable to prevent warning in ifort
+        allocate(tmp(sopt))
         do i_ = 1, npar
-          read(kfile_lastloop, loopformat) shufflevar(i_,:)
+          read(kfile_lastloop, loopformat) tmp(:)
+          shufflevar(i_,:) = tmp(:)
         enddo
+        deallocate(tmp)
         close(kfile_lastloop)
         bestobj = ofvec(1)
 
@@ -559,11 +571,15 @@
       use vom_sce_mod
       implicit none
 
+      integer :: tmp2(2)
+
       call optsensitivity()
 
         if (success .eq. 1) then
 !         * [SORT ENTIRE ARRAYS]
-          call sortcomp(shufflevar(:,:), shape(shufflevar(:,:)), ofvec(:), SIZE(ofvec(:)))
+!         * use temporary variable to prevent warning in ifort
+          tmp2(:) = shape(shufflevar(:,:))
+          call sortcomp(shufflevar(:,:), tmp2(:), ofvec(:), SIZE(ofvec(:)))
           call writepars()
           write(kfile_progress,*) 'Optimisation completed successfully.'
           close(kfile_sceout)
@@ -571,7 +587,9 @@
           close(kfile_progress)
         else
 !         * [SORT ENTIRE ARRAYS]
-          call sortcomp(shufflevar(:,:), shape(shufflevar(:,:)), ofvec(:), SIZE(ofvec(:)))
+!         * use temporary variable to prevent warning in ifort
+          tmp2(:) = shape(shufflevar(:,:))
+          call sortcomp(shufflevar(:,:), tmp2(:), ofvec(:), SIZE(ofvec(:)))
           call writepars()
           nsincebest = 0
           write(kfile_bestpars,outformat) shufflevar(:,1), bestobj
@@ -597,6 +615,7 @@
       REAL*8        :: ofvec2, ofchange, parchange
       CHARACTER(300)       :: writeformat
       character(len=135)   :: msg
+      real*8, allocatable  :: tmp(:)
 
         shufflevar2(:) = shufflevar(:,1)
         ofvec2 = ofvec(1)
@@ -638,7 +657,11 @@
               close(kfile_currentbest)
             endif
 
-            write(kfile_sceout,outformat) shufflevar2(optid(:)), ofvec2
+!             * use temporary variable to prevent warning in ifort
+              allocate(tmp(nopt))
+              tmp(:) = shufflevar2(optid(:))
+              write(kfile_sceout,outformat) tmp(:), ofvec2
+              deallocate(tmp)
 
               dataarray((i_-1)*8+j_+2,1:nopt) = shufflevar2(optid(:))
               dataarray((i_-1)*8+j_+2,nopt+1) = ofvec2
@@ -650,6 +673,7 @@
             writeformat(44:66) = 'e9.3,"%"," (",e9.3,")")'
             write(msg,writeformat) parchange, newpar, ofchange, ofvec2
             write(kfile_progress,*) TRIM(msg)
+            flush(kfile_progress)
 
             if (ofchange .gt. 1.0d-10) then
               shufflevar(:,sopt-pos) = shufflevar2(:)
@@ -799,6 +823,7 @@
       INTEGER       :: l_
       INTEGER       :: i_, nsel, rannum
       INTEGER       :: j_
+      INTEGER       :: tmp2(2)
 
 !     * SELECT PARENTS
 
@@ -841,7 +866,9 @@
 
           objfun(parentsid(:)) = objfunsub(:)
           invar(:, parentsid(:)) = invarsub(:,:)
-          call sortcomp(invar, shape(invar), objfun, SIZE(objfun))
+!         * use temporary variable to prevent warning in ifort
+          tmp2(:) = shape(invar)
+          call sortcomp(invar, tmp2(:), objfun, SIZE(objfun))
 
       enddo
 
@@ -980,6 +1007,7 @@
       CHARACTER(1)   :: bestmark
       CHARACTER(300) :: writeformat
       character(len=135) :: msg
+      real*8, allocatable :: tmp(:)
 
         nrun = nrun + 1
 
@@ -996,8 +1024,12 @@
           write(msg,writeformat) nrun, TRIM(evolution), objfun, bestmark
           write(kfile_progress,*) TRIM(msg)
 
-            write(kfile_sceout,outformat) invar(optid(:)), objfun
+!           * use temporary variable to prevent warning in ifort
+            allocate(tmp(nopt))
+            tmp(:) = invar(optid(:))
+            write(kfile_sceout,outformat) tmp(:), objfun
             flush(kfile_progress)
+            deallocate(tmp)
         endif
 
       return
@@ -1057,6 +1089,7 @@
       implicit none
 
       INTEGER :: i_
+      real*8, allocatable :: tmp(:)
 
       open(kfile_lastloop, FILE=sfile_lastloop)
       write(kfile_lastloop,'(i3)') ncomp2
@@ -1065,7 +1098,11 @@
       write(kfile_lastloop,'(i10)') nsincebest
       write(kfile_lastloop,loopformat) ofvec(:)
       do i_ = 1, npar
-          write(kfile_lastloop,loopformat) shufflevar(i_,:)
+!       * use temporary variable to prevent warning in ifort
+        allocate(tmp(sopt))
+        tmp(:) = shufflevar(i_,:)
+        write(kfile_lastloop,loopformat) tmp(:)
+        deallocate(tmp)
       enddo
       close(kfile_lastloop)
 

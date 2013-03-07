@@ -32,93 +32,21 @@
 !*
 !***********************************************************************
 
-      subroutine transpmodel(invar, dim_invar, nrun, netass, option1)
+      subroutine transpmodel(invar, dim_invar, nrun, tp_netass, option1)
       use vom_vegwat_mod
       implicit none
 
       INTEGER, INTENT(in)    :: dim_invar
       INTEGER, INTENT(in)    :: nrun
-      REAL*8,  INTENT(inout) :: netass
+      REAL*8,  INTENT(inout) :: tp_netass
       INTEGER, INTENT(in)    :: option1
       REAL*8, DIMENSION(dim_invar), INTENT(in) :: invar
 
-      INTEGER :: finish
+      tp_netass = 0.d0
 
-      finish = 0
-
-!dd      if (dim_invar .lt. 8) then
-      if (dim_invar .lt. 6) then
-        write(*,*) "ERROR: Number of input parameters less than 6."
-        stop
-      endif
-
-      netass = 0.d0
-
-      if (option1 .eq. 2) then
-        optmode = 0
-      else
-        optmode = 1
-      endif
-
-      if (option1 .eq. 3) optmode = 2
-
-!*----------------------------------------------------------------------
-!*     Optimised parameters reading from invar
-!*----------------------------------------------------------------------
-
-      lambdagfac = invar(1)
-      wsgexp     = invar(2)
-      lambdafac  = invar(3)
-      wsexp      = invar(4)
-      pc_        = invar(5)
-      rootdepth  = invar(6)
-!dd      mdstore    = invar(7)
-!dd      rgdepth    = invar(8)
-
-      if (parsaved .ne. 1) then
-
-!*-----Reading input parameter------------------------------------------
-
-        call vom_read_input()
-
-!*-----allocate vector sizes--------------------------------------------
-
-        call vom_alloc()
-
-!*-----File opening (saving climate and gstom ass data)-----------------
-
-        if (optmode .eq. 0) call vom_open_output()
-
-        if (optmode .eq. 2) call vom_open_ncp_output()
-
-!*-----PARAMETER READING FROM SOILPROFILE.PAR---------------------------
-
-        call vom_get_soilprofile()
-
-!*-----Climate and Calendar data reading--------------------------------
-
-        call vom_get_hourly_clim()
-
-        parsaved = 1
-      endif
-
-!***********************************************************************
-!*  Calculation of vegetation parameters
-!*
-!*----------------------------------------------------------------------
-!*  Equations in equations.pdf
-!*  (numeration in the commented parentheses)
-!***********************************************************************
-
-!*-----Initial values---------------------------------------------------
-
-      call vom_init_vegpar()
+      call transpmodel_init(invar, dim_invar, option1)
 
 !     * DAILY LOOPS
-
-      nday = 0
-      testday = testyear * 365
-      if (optmode .eq. 0 .or. optmode .eq. 2) testday = maxday
 
       do while (nday  .lt. testday)
         nday = nday + 1
@@ -159,7 +87,7 @@
 
 !             * transpiration, gstom and tissue water
 
-              call vom_tissue_water_et(finish, netass)
+              call vom_tissue_water_et(tp_netass)
               if (finish .eq. 1) return
 
             endif
@@ -180,8 +108,8 @@
           enddo
 
 !         * rl does not need to be included here as ass=-rl if j=0 (at night)
-          netass = netass + ass_h(2) - 3600.d0 * (cpcc_ + rr_ + tc_) &
-     &           + assg_h(2,2) - 3600.d0 * (cpccg(2) + rrg + tcg(2))
+          tp_netass = tp_netass + ass_h(2) - 3600.d0 * (cpcc_ + rr_ + tc_) &
+     &              + assg_h(2,2) - 3600.d0 * (cpccg(2) + rrg + tcg(2))
           ass_d(:)    = ass_d(:)    + ass_h(:)
           assg_d(:,:) = assg_d(:,:) + assg_h(:,:)
           ruptkvec_d(:) = ruptkvec_d(:) + ruptkvec_h(:)
@@ -194,13 +122,34 @@
 
 !           * check water balance
 
-            call vom_check_water(finish)
+            call vom_check_water()
             if (finish .eq. 1) return
 
           endif
         enddo
 
 !       * END OF DAY
+
+        call transpmodel_daily_step(tp_netass)
+
+      enddo
+
+!     * END OF DAILY LOOPS
+
+      call transpmodel_yearly_step(tp_netass)
+
+      return
+      end subroutine transpmodel
+
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+      subroutine transpmodel_daily_step (tp_netass)
+      use vom_vegwat_mod
+      implicit none
+
+      REAL*8,  INTENT(inout) :: tp_netass
 
       if (optmode .eq. 0) then
         call vom_write_dayyear()
@@ -216,18 +165,27 @@
       call vom_adapt_roots()
 
       if ((nday .eq. testday) .and. (nday .lt. maxday)) then
-        if (netass .le. 0.d0) then
+        if (tp_netass .le. 0.d0) then
 !         * estimates how bad the carbon loss would be instead of
 !           running through the whole set
-          netass = netass / testyear * maxyear
+          tp_netass = tp_netass / testyear * maxyear
         else
           testday = maxday
         endif
       endif
 
-      enddo
+      return
+      end subroutine transpmodel_daily_step
 
-!     * END OF DAILY LOOPS
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+      subroutine transpmodel_yearly_step (tp_netass)
+      use vom_vegwat_mod
+      implicit none
+
+      REAL*8, INTENT(in) :: tp_netass
 
       if (optmode .eq. 0) then
         print *,'Cumulative error in water balance (initial Ws+Input-Output-final Ws, in m): ',error
@@ -244,12 +202,108 @@
       endif
 
       if (optmode .eq. 2) then
-        call vom_write_model_output(netass)
+        open(kfile_model_output, FILE=sfile_model_output, STATUS='replace')
+        write(kfile_model_output,'(e12.6)') tp_netass
         close(kfile_model_output)
       endif
 
       return
-      end subroutine transpmodel
+      end subroutine transpmodel_yearly_step
+
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+      subroutine transpmodel_init_once ()
+      use vom_vegwat_mod
+      implicit none
+
+!     * Reading input parameter
+
+      call vom_read_input()
+
+!     * allocate vector sizes
+
+      call vom_alloc()
+
+!     * File opening (saving climate and gstom ass data)
+
+      if (optmode .eq. 0) call vom_open_output()
+
+!     * PARAMETER READING FROM SOILPROFILE.PAR
+
+      call vom_get_soilprofile()
+
+!     * Climate and Calendar data reading
+
+      call vom_get_hourly_clim()
+
+      return
+      end subroutine transpmodel_init_once
+
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+      subroutine transpmodel_init (vom_invar, vom_insize, vom_command)
+      use vom_vegwat_mod
+      implicit none
+
+      INTEGER, INTENT(in)    :: vom_insize
+      INTEGER, INTENT(in)    :: vom_command
+      REAL*8, DIMENSION(vom_insize), INTENT(in) :: vom_invar
+
+!dd   if (vom_insize .lt. 8) then
+      if (vom_insize .lt. 6) then
+        write(0,*) "ERROR: Number of input parameters less than 6."
+        stop
+      endif
+
+      if (vom_command .eq. 2) then
+        optmode = 0
+      elseif (vom_command .eq. 3) then
+        optmode = 2
+      else
+        optmode = 1
+      endif
+
+!*----------------------------------------------------------------------
+!*     Optimised parameters reading from vom_invar
+!*----------------------------------------------------------------------
+
+      lambdagfac = vom_invar(1)
+      wsgexp     = vom_invar(2)
+      lambdafac  = vom_invar(3)
+      wsexp      = vom_invar(4)
+      pc_        = vom_invar(5)
+      rootdepth  = vom_invar(6)
+!dd   mdstore    = vom_invar(7)
+!dd   rgdepth    = vom_invar(8)
+
+      if (parsaved .ne. 1) then
+        call transpmodel_init_once ()
+        parsaved = 1
+      endif
+
+!***********************************************************************
+!*  Calculation of vegetation parameters
+!*
+!*----------------------------------------------------------------------
+!*  Equations in equations.pdf
+!*  (numeration in the commented parentheses)
+!***********************************************************************
+
+!*-----Initial values---------------------------------------------------
+
+      call vom_init_vegpar()
+
+      nday = 0
+      testday = testyear * 365
+      if (optmode .eq. 0 .or. optmode .eq. 2) testday = maxday
+      finish = 0
+
+      return
+      end subroutine transpmodel_init
 
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -349,7 +403,6 @@
 
       subroutine vom_alloc ()
       use vom_vegwat_mod
-
       implicit none
 
       allocate(dayyear(maxday))
@@ -466,20 +519,6 @@
 
       return
       end subroutine vom_open_output
-
-!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-!*-----File opening (saving ncp)----------------------------------------
-
-      subroutine vom_open_ncp_output ()
-      use vom_vegwat_mod
-      implicit none
-
-      open(kfile_model_output, file=sfile_model_output(1:len_trim(sfile_model_output)))
-
-      return
-      end subroutine vom_open_ncp_output
 
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1244,12 +1283,11 @@
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 !*-----transpiration, gstom and tissue water ---------------------------
 
-      subroutine vom_tissue_water_et (finish, netass)
+      subroutine vom_tissue_water_et (netass)
       use vom_vegwat_mod
       implicit none
 
       REAL*8,  INTENT(inout) :: netass
-      INTEGER, INTENT(inout) :: finish
       character(len=135) :: msg
 
 !     * makes sure that tissue water does not get below 0.9mqx
@@ -1439,12 +1477,11 @@
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 !*----- check water balance --------------------------------------------
 
-      subroutine vom_check_water (finish)
+      subroutine vom_check_water ()
       use vom_vegwat_mod
       implicit none
 
       REAL*8  :: error1
-      INTEGER, INTENT(inout) :: finish
       character(len=135) :: msg
 
       ioacum = ioacum + io_h
@@ -1583,21 +1620,6 @@
 
       return
       end subroutine vom_add_yearly
-
-!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-      subroutine vom_write_model_output(netass)
-      use vom_vegwat_mod
-      implicit none
-
-      REAL*8, INTENT(in) :: netass
-
-      write(kfile_model_output,'(e12.6)') netass
-
-      return
-      end subroutine vom_write_model_output
 
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
