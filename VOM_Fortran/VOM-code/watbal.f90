@@ -40,19 +40,11 @@
 !*
 !***********************************************************************
 
-      subroutine waterbalance(init)
+      subroutine waterbalance()
       use vom_vegwat_mod
       implicit none
 
-      INTEGER, INTENT(in) :: init
-
       INTEGER :: j
-
-!     * Run initial run
-      if (init .eq. 1) then
-        call waterbalance_init()
-        return
-      endif
 
 !     * CURRENT SOIL WATER CONTENT
 
