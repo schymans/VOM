@@ -597,10 +597,11 @@
 
         close(kfile_hourlyweather)
 
-      else
+      endif
 
 !       * Reading hourly climate data if available
 
+        open(kfile_hourlyweather, FILE=sfile_hourlyweather, STATUS='old', IOSTAT=stat)
         read(kfile_hourlyweather,*)
         ii = 1
         oldh = 99
@@ -618,7 +619,6 @@
           oldh = h
         enddo
         close(kfile_hourlyweather)
-      endif
 
       return
       end subroutine vom_get_hourly_clim
