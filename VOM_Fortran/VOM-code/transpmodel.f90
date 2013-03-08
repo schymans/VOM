@@ -1678,7 +1678,7 @@
       reffg(:) = 0.d0
       maxval_tmp = MAXVAL(ruptkg_d(1:posg) / rsurfg_(1:posg))
       if (maxval_tmp .ne. 0.d0) then
-        reffg(1:posg) = 0.5d0 * reffg(1:posg) / maxval_tmp  ! (3.48)
+        reffg(1:posg) = 0.5d0 * ruptkg_d(1:posg) / rsurfg_(1:posg) / maxval_tmp  ! (3.48)
       endif
 
 !     * if roots are going to be reduced, reverse effectivity vector
