@@ -1643,7 +1643,6 @@
       use vom_vegwat_mod
       implicit none
 
-      REAL*8 :: maxval_tmp
 
 !     *-----PERENNIAL VEGETATION---------------
 
@@ -1676,10 +1675,8 @@
       rootlim(pos2(1),pos2(2)) = 2.d0 * rootlim(pos2(1),pos2(2)) - 1.d0
 
       reffg(:) = 0.d0
-      maxval_tmp = MAXVAL(ruptkg_d(1:posg) / rsurfg_(1:posg))
-      if (maxval_tmp .ne. 0.d0) then
-        reffg(1:posg) = 0.5d0 * ruptkg_d(1:posg) / rsurfg_(1:posg) / maxval_tmp  ! (3.48)
-      endif
+      reffg(1:posg) = 0.5d0 * ruptkg_d(1:posg) / rsurfg_(1:posg)       &
+     &              / (MAXVAL(ruptkg_d(1:posg) / rsurfg_(1:posg)))  ! (3.48)
 
 !     * if roots are going to be reduced, reverse effectivity vector
 
