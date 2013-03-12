@@ -41,6 +41,7 @@
 
       INTEGER  :: iostat
       LOGICAL  :: exist
+      INTEGER  :: nrun
 
 !-----------------------------------------------------------------------
 ! for debug purposes:
@@ -75,6 +76,10 @@
           read(kfile_pars,*) vom_invar(:)
           close(kfile_pars)
           vom_objfun = 0.d0
+
+          nrun = 1
+          call transpmodel(vom_invar, SIZE(vom_invar), nrun, vom_objfun, vom_command)
+
         else
           if (exist) then
             open(kfile_finalbest, FILE=sfile_finalbest,                &
@@ -98,7 +103,8 @@
           write(*,'(" The best carbon profit was: ",E12.6)') vom_objfun
         endif
 
-        call transpmodel(vom_invar, SIZE(vom_invar), vom_objfun, vom_command)
+        nrun = 1
+        call transpmodel(vom_invar, SIZE(vom_invar), nrun, vom_objfun, vom_command)
 
         if (vom_command .eq. 3) then
           write(*,*) "Model run COMPLETE"
@@ -130,7 +136,7 @@
           stop
         endif
 
-        call sce_main()
+        call sce()
 
       endif
 

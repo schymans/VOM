@@ -42,7 +42,7 @@
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-      subroutine sce_main ()
+      subroutine sce ()
       use vom_sce_mod
       implicit none
 
@@ -133,6 +133,8 @@
               write(msg,writeformat) nsincebest
               write(kfile_progress,*) TRIM(msg)
               write(kfile_progress,*) "  About to give up..."
+              call ck_success()
+              if (success .eq. 1) return
             endif
           else
             write(kfile_progress,*) " "
@@ -140,16 +142,14 @@
             write(kfile_progress,*) "  parameter ranges are all less than 0.1 %"
             write(kfile_progress,*) " "
             write(kfile_progress,*) " "
-          endif
 
 !       * STAN'S MODIFICATION TO ASSESS SENSITIVITY OF OBJECTIVE
 !       * FUNCTION TO EACH PARAMETER:
 
           call ck_success()
 
-          if (success .eq. 1) then
-            return
-          endif
+          if (success .eq. 1) return
+        endif
       enddo
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -177,7 +177,7 @@
       deallocate(sumvar)
 
       return
-      end subroutine sce_main
+      end subroutine sce
 
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -666,7 +666,7 @@
             nrun = nrun + 1
             shufflevar2(optid(i_)) = newpar
 
-          call transpmodel(shufflevar2(:), SIZE(shufflevar2(:)), ofvec2, 1)
+          call transpmodel(shufflevar2(:), SIZE(shufflevar2(:)), nrun, ofvec2, 1)
 
             if (ofvec2 .gt. bestobj) then
               bestobj = ofvec2
@@ -820,6 +820,7 @@
 !     * Definitions
       INTEGER       :: l_
       INTEGER       :: i_, nsel, rannum
+      INTEGER       :: j_
       INTEGER       :: tmp2(2)
 
 !     * SELECT PARENTS
@@ -857,7 +858,9 @@
           objfunsub(:) = objfun(parentsid(:))
           invarsub(:,:) = invar(:, parentsid(:))
 
+      do j_ = 1, nsimp
         call simplex(invarsub(:,:), objfunsub(:))
+      enddo
 
           objfun(parentsid(:)) = objfunsub(:)
           invar(:, parentsid(:)) = invarsub(:,:)
@@ -883,13 +886,11 @@
       REAL*8, DIMENSION(qopt),      INTENT(inout) :: objfun
 
 !     * Definitions
-      INTEGER       :: l_, k_
+      INTEGER       :: k_
       INTEGER       :: i_, j_
       INTEGER       :: max_j_
       REAL*8        :: newobjfun
       REAL*8        :: minj, rangej
-
-      do l_ = 1, nsimp
 
 !         * REFLECTION STEP
 
@@ -991,8 +992,6 @@
             bestincomp = newobjfun
           endif
 
-      enddo
-
       return
       end subroutine simplex
 
@@ -1016,7 +1015,7 @@
 
         nrun = nrun + 1
 
-      call transpmodel(invar(:), npar, objfun, 1)
+      call transpmodel(invar(:), npar, nrun, objfun, 1)
 
         bestmark = ' '
         if (objfun .gt. bestobj) then
