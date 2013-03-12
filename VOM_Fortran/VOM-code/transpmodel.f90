@@ -32,12 +32,11 @@
 !*
 !***********************************************************************
 
-      subroutine transpmodel(invar, dim_invar, nrun, tp_netass, option1)
+      subroutine transpmodel(invar, dim_invar, tp_netass, option1)
       use vom_vegwat_mod
       implicit none
 
       INTEGER, INTENT(in)    :: dim_invar
-      INTEGER, INTENT(in)    :: nrun
       REAL*8,  INTENT(inout) :: tp_netass
       INTEGER, INTENT(in)    :: option1
       REAL*8, DIMENSION(dim_invar), INTENT(in) :: invar
@@ -618,9 +617,6 @@
             ii = ii + 1
           endif
           oldh = h
-          gammastarvec(i) = 0.00004275d0 * p_E ** ((18915.d0 * (-25.d0 &
-   &                      + tair_h(i))) / (149.d0 * p_R_ * (273.d0       &
-   &                      + tair_h(i))))      ! (Out[274], derived from (3.25))
         enddo
         close(kfile_hourlyweather)
 
@@ -706,11 +702,6 @@
      &        fday(in), fmonth(in), fyear(in), tair_h(ii), vd_h(ii),   &
      &        par_h(ii), rain_h(ii), ca_h(ii)
 
-!         * (Out[274], derived from (3.25))
-          gammastarvec(ii) = 0.00004275d0 * p_E ** ((18915.d0          &
-     &                     * (-25.d0 + tair_h(ii))) / (149.d0 * p_R_     &
-     &                     * (273.d0 + tair_h(ii))))
-
         enddo
       enddo
 
@@ -726,16 +717,13 @@
       use vom_vegwat_mod
       implicit none
 
-      INTEGER :: init
       REAL*8  :: dummy
 
       topt_ = toptstart
 
 !     * Set soil moisture and vegetation parameters to initial conditions
 
-!     * Set init=1 to signalise to waterbalance that this is the inital step
-      init = 1
-      call waterbalance(init)
+      call waterbalance_init()
 
       if (rootdepth .gt. cz) then
         write(*,*) 'Root depth greater than soil depth'
@@ -924,6 +912,10 @@
       par__      = par_h(ii)
       ca__       = ca_h(ii) / 1.0d6
 
+!     * (Out[274], derived from (3.25))
+      gammastarvec(ii) = 0.00004275d0                                  &
+     &                 * p_E ** ((18915.d0 * (-25.d0 + tair_h(ii)))    &
+     &                 / (149.d0 * p_R_ * (273.d0 + tair_h(ii))))
       gammastar_ = gammastarvec(ii)
 
 !     * (Out[310], derived from (3.26)) Temperature dependence of Jmax
@@ -1336,9 +1328,7 @@
       implicit none
 
       REAL*8  :: dtss
-      INTEGER :: init
 
-      init = 0
       dtmq = 99999.d0
 
       if (md_ .gt. 0.d0) then
@@ -1362,7 +1352,7 @@
       dtmax = MIN(dtss, dtmq, 3600.d0 - time)
 
 !     * waterbalance uses dtmax for the determination of dt
-      call waterbalance(init)
+      call waterbalance()
 
       return
       end subroutine vom_subhourly
