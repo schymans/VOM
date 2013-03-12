@@ -227,7 +227,6 @@
 
       REAL*8, ALLOCATABLE :: reff(:)    ! Relative root water uptake efficiency for trees in each layer
       REAL*8, ALLOCATABLE :: reffg(:)   ! Relative root water uptake efficiency for grasses in each layer
-      INTEGER             :: pos1(1)    ! Pointer to variable values that achieved maximum assimilation
       INTEGER             :: pos2(2)    ! Pointer to variable values that achieved maximum net assimilation
 
       REAL*8              :: rr_        ! Tree root respiration rate (mol/m2/s)
@@ -242,7 +241,7 @@
       REAL*8, ALLOCATABLE :: ruptkvec_h(:) ! Hourly root water uptake by trees in each layer
       REAL*8, ALLOCATABLE :: ruptkvec_d(:) ! Daily root water uptake by trees in each layer
       REAL*8, ALLOCATABLE :: ruptkg(:)     ! Root water uptake rate seasonal veg (m/s)
-      REAL*8, ALLOCATABLE :: hruptkg(:)    ! Hourly root water uptake by grasses in each layer
+      REAL*8, ALLOCATABLE :: ruptkg_h(:)   ! Hourly root water uptake by grasses in each layer
       REAL*8, ALLOCATABLE :: ruptkg_d(:)   ! Daily root water uptake by grasses in each layer
 
 !     ****************************
@@ -359,10 +358,6 @@
       REAL*8, ALLOCATABLE :: nvgvec(:)     ! Van Genuchten soil parameter n
       REAL*8, ALLOCATABLE :: avgvec(:)     ! Van Genuchten soil parameter a
       REAL*8, ALLOCATABLE :: mvgvec(:)     ! Van Genuchten soil parameter m
-
-      REAL*8  :: daylength              ! Day length (hours)
-      REAL*8  :: netassg_d(3,3)         ! Daily grass net carbon profit
-      REAL*8  :: dtmq                   ! Maximum timestep allowed by tree water content change
 
 !     ****************************
 !     * input parameters input.par
@@ -495,7 +490,7 @@
 !     * input parameters for shuffle.par
 !     ************************************
 
-      INTEGER :: command                ! Indicator of optimisation mode (0 for -optimise, 1 for -continue, 2 for compute, 3 for compute ncp only with pars.txt, 4 for optimise without random_seed)
+      INTEGER :: vom_command            ! Indicator of optimisation mode (0 for -optimise, 1 for -continue, 2 for compute, 3 for compute ncp only with pars.txt, 4 for optimise without random_seed)
 
       INTEGER :: ncomp                  ! Initial number of complexes
       INTEGER :: ncompmin               ! Minimum number of complexes

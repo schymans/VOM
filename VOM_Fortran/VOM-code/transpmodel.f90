@@ -112,7 +112,7 @@
           ass_d(:)    = ass_d(:)    + ass_h(:)
           assg_d(:,:) = assg_d(:,:) + assg_h(:,:)
           ruptkvec_d(:) = ruptkvec_d(:) + ruptkvec_h(:)
-          ruptkg_d(:)   = ruptkg_d(:)   + hruptkg(:)
+          ruptkg_d(:)   = ruptkg_d(:)   + ruptkg_h(:)
 
           if (optmode .eq. 0) then
 
@@ -446,7 +446,7 @@
       allocate(pcapnewvec(maxlayer))
       allocate(ruptkvec_d(maxlayer))
       allocate(ruptkvec_h(maxlayer))
-      allocate(hruptkg(maxlayer))
+      allocate(ruptkg_h(maxlayer))
       allocate(ruptkg_d(maxlayer))
       allocate(reff(maxlayer))
       allocate(reffg(maxlayer))
@@ -634,8 +634,9 @@
 
       INTEGER :: in, ik, ii
       REAL*8  :: sunr, suns
-      REAL*8  :: tamean
-      REAL*8  :: dtr
+      REAL*8  :: tairmean
+      REAL*8  :: dtair
+      REAL*8  :: daylength              ! Day length (hours)
 
       parvec(:) = 2.0804d0 * srad__(:)       ! (Out[17]), par in mol/m2 if srad was MJ/m2
       do in = 1, maxday
@@ -647,8 +648,8 @@
 !       * sets time of sunrise and sunset
         sunr = 12d0 - 0.5d0 * daylength
         suns = 12d0 + 0.5d0 * daylength
-        tamean = (tairmax(in) + tairmin(in)) / 2.d0
-        dtr = tairmax(in) - tairmin(in)
+        tairmean = (tairmax(in) + tairmin(in)) / 2.d0
+        dtair = tairmax(in) - tairmin(in)
         vp_ = vpvec(in) * 100.d0             ! vp in Pa
 
 !       * Loop through every hour of day, where ik=hour
@@ -656,7 +657,7 @@
           ii = in * 24 + ik - 24
 !         * (derived from 3.52+3.53) (Out[38], accounts for diurnal
 !           variation in air temperature
-          tair__ = tamean + dtr * (0.0138d0                        &
+          tair__ = tairmean + dtair * (0.0138d0                        &
      &           * COS(3.513d0 - ((-1.d0 + ik) * p_pi) / 3.d0) + 0.0168d0 &
      &           * COS(0.822d0 - ((-1.d0 + ik) * p_pi) / 4.d0) + 0.0984d0 &
      &           * COS(0.360d0 - ((-1.d0 + ik) * p_pi) / 6.d0) + 0.4632d0 &
@@ -973,7 +974,7 @@
       ass_h(:)      = 0.d0                   ! hourly assimilation
       assg_h(:,:)   = 0.d0
       ruptkvec_h(:) = 0.d0
-      hruptkg(:)    = 0.d0
+      ruptkg_h(:)   = 0.d0
 
       return
       end subroutine vom_hourly_init
@@ -1328,6 +1329,7 @@
       implicit none
 
       REAL*8  :: dtss
+      REAL*8  :: dtmq         ! Maximum timestep allowed by tree water content change
 
       dtmq = 99999.d0
 
@@ -1384,7 +1386,7 @@
      &            + jactg(:,:) + 8.d0 * rlg__(:,:)))) / 8.d0  ! (3.22); (Out[319])
       assg_h(:,:) = assg_h(:,:) + assg__(:,:) * dt_
       ruptkvec_h(:) = ruptkvec_h(:) + ruptkvec(:) * dt_
-      hruptkg(:)    = hruptkg(:)    + ruptkg(:)   * dt_
+      ruptkg_h(:)   = ruptkg_h(:)   + ruptkg(:)   * dt_
       if (optmode .eq. 0) then
         spgfcf_h = spgfcf_h + dt_ * spgfcf__
         infx_h   = infx_h   + dt_ * infx__
@@ -1619,6 +1621,9 @@
       subroutine vom_adapt_foliage ()
       use vom_vegwat_mod
       implicit none
+
+      REAL*8  :: netassg_d(3,3)         ! Daily grass net carbon profit
+      INTEGER :: pos1(1)                ! Pointer to variable values that achieved maximum assimilation
 
       pos1(:)        = MAXLOC(ass_d(:))
       jmax25_(2)     = jmax25_(pos1(1))

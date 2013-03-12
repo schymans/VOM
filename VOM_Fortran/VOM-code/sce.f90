@@ -172,7 +172,7 @@
           close(kfile_finalbest)
           close(kfile_sceout)
           close(kfile_bestpars)
-          close(kfile_progress)
+          if (kfile_progress .ne. 6) close(kfile_progress)
 
       deallocate(sumvar)
 
@@ -200,7 +200,7 @@
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ! Initialize the random number generator
 ! (standard subroutine, based on the date and time)
-      if (command .ne. 4) then
+      if (vom_command .ne. 4) then
         CALL RANDOM_SEED()
       endif
 
@@ -308,7 +308,7 @@
       rewind(kfile_shufflepar)
 
 !     * Input of variable parameters from the parameter file
-      read(kfile_shufflepar,'(i1)') command
+      read(kfile_shufflepar,'(i1)') vom_command
       read(kfile_shufflepar,*) ncomp
       read(kfile_shufflepar,*) ncompmin
       read(kfile_shufflepar,*) resolution
@@ -389,7 +389,9 @@
 
           open(kfile_sceout, FILE=sfile_sceout, STATUS='old', POSITION='append')
         open(kfile_bestpars, FILE=sfile_bestpars, STATUS='old', POSITION='append')
+        if (kfile_progress .ne. 6) then
           open(kfile_progress, FILE=sfile_progress, STATUS='old', POSITION='append')
+        endif
         write(kfile_progress,*) " "
         write(msg,'("  NEW Run time:   ",A)') logdate
         write(kfile_progress,*) TRIM(msg)
@@ -400,7 +402,9 @@
 
           open(kfile_sceout, FILE=sfile_sceout, STATUS='replace')
         open(kfile_bestpars, FILE=sfile_bestpars, STATUS='replace')
+        if (kfile_progress .ne. 6) then
           open(kfile_progress, FILE=sfile_progress, STATUS='replace')
+        endif
 
 !       * write file header
         write(kfile_progress,*) 'SHUFFLED COMPLEX EVOLUTION OPTIMISER'
@@ -564,7 +568,7 @@
         call writeloop()
         close(kfile_sceout)
         close(kfile_bestpars)
-        close(kfile_progress)
+        if (kfile_progress .ne. 6) close(kfile_progress)
 
       deallocate(posarray)
       deallocate(initpop)
@@ -593,7 +597,7 @@
           write(kfile_progress,*) 'Optimisation completed successfully.'
           close(kfile_sceout)
           close(kfile_bestpars)
-          close(kfile_progress)
+          if (kfile_progress .ne. 6) close(kfile_progress)
         else
 !         * [SORT ENTIRE ARRAYS]
 !         * use temporary variable to prevent warning in ifort
@@ -800,7 +804,7 @@
         call writeloop()
         close(kfile_sceout)
         close(kfile_bestpars)
-        close(kfile_progress)
+        if (kfile_progress .ne. 6) close(kfile_progress)
 
       return
       end subroutine run_cce
