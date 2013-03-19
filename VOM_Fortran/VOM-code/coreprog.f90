@@ -39,8 +39,8 @@
       INTEGER       :: npar
       CHARACTER(3)  :: str
 
-      INTEGER  :: iostat
-      LOGICAL  :: exist
+      INTEGER :: iostat
+      LOGICAL :: exist
 
 !-----------------------------------------------------------------------
 ! for debug purposes:
@@ -95,7 +95,7 @@
           rewind(kfile_finalbest)
           read(kfile_finalbest,*) vom_invar(:), vom_objfun
           close(kfile_finalbest)
-          write(*,'(" The best carbon profit was: ",E12.6)') vom_objfun
+          write(*,'(" The best carbon profit was: ",E13.6)') vom_objfun
         endif
 
         call transpmodel(vom_invar, SIZE(vom_invar), vom_objfun, vom_command)
@@ -103,12 +103,12 @@
         if (vom_command .eq. 3) then
           write(*,*) "Model run COMPLETE"
           write(*,*) ' '
-          write(*,'(" The carbon profit achieved is: ",E12.6)') vom_objfun
+          write(*,'(" The carbon profit achieved is: ",E13.6)') vom_objfun
           write(*,*) "Best ncp is saved in model_output.txt"
         else
           write(*,*) 'Model run COMPLETE'
           write(*,*) ' '
-          write(*,'(" The carbon profit achieved is: ",E12.6)') vom_objfun
+          write(*,'(" The carbon profit achieved is: ",E13.6)') vom_objfun
           write(*,*) "Hourly results are saved in resulthourly.txt"
           write(*,*) "Daily results are saved in resultsdaily.txt"
           write(*,*) "Yearly results are saved in yearly.txt"

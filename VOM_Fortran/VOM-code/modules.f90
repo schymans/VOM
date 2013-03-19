@@ -56,10 +56,10 @@
 
       end module vom_file_mod
 
-!***********************************************************************
-!*  Module defining variables and parameters for the vegetation model
-!*  (transpmodel).
-!*----------------------------------------------------------------------
+!     ******************************************************************
+!     * Module defining variables and parameters for the vegetation
+!     * model (transpmodel).
+!     ******************************************************************
 
       module vegmod
       implicit none
@@ -248,20 +248,20 @@
 !     * input parameters input.par
 !     ****************************
 
-      REAL*8  :: alpha                  ! Initial slope of electron transport curve
-      REAL*8  :: cpccf                  ! Water transport costs per m root depth and m^2 cover
-      REAL*8  :: tcf                    ! Turnover cost factor for foliage (tc=tcf*LAI)
-      INTEGER :: maxyear                ! Number of years to process
-      INTEGER :: testyear               ! Number of years after which to perform initial test of netass 
-      REAL*8  :: ha_                    ! Temperature response parameter
-      REAL*8  :: hd_                    ! Temperature response parameter
-      REAL*8  :: toptfac                ! Parameter to calculate adaptation of topt (range 0-1 for no to full adaptation)
-      REAL*8  :: toptstart              ! Start parameter for topt to calculate jmax(temp in K)
-      REAL*8  :: rlratio                ! Ratio of leaf respiration to photosynthetic capacity
+      REAL*8  :: alpha     = 0.3d0      ! Initial slope of electron transport curve
+      REAL*8  :: cpccf     = 1.2d-6     ! Water transport costs per m root depth and m^2 cover
+      REAL*8  :: tcf       = 2.2d-7     ! Turnover cost factor for foliage (tc=tcf*LAI)
+      INTEGER :: maxyear   = 30         ! Number of years to process
+      INTEGER :: testyear  = 1          ! Number of years after which to perform initial test of netass
+      REAL*8  :: ha_       = 43790.0d0  ! Temperature response parameter
+      REAL*8  :: hd_       = 2.0d5      ! Temperature response parameter
+      REAL*8  :: toptfac   = 0.0d0      ! Parameter to calculate adaptation of topt (range 0-1 for no to full adaptation)
+      REAL*8  :: toptstart = 305.0d0    ! Start parameter for topt to calculate jmax(temp in K)
+      REAL*8  :: rlratio   = 0.07d0     ! Ratio of leaf respiration to photosynthetic capacity
 
 !     * Catchment parameters
 
-      REAL*8  :: lat_                   ! geogr. latitude
+      REAL*8  :: lat_      = 12.5d0     ! geogr. latitude
 
 !     * Soil parameters
 
@@ -269,17 +269,19 @@
 
 !     * Vegetation Parameters
 
-      REAL*8  :: mdf                    ! Total dry mass of living tissues of trees per unit pc (g/m^2)
-      REAL*8  :: mqxf                   ! Total water storage capacity in living tissues of trees per unit md
-      REAL*8  :: rrootm                 ! Root water uptake resistivity in soil
-      REAL*8  :: rsurfmin               ! Minimum root area per m^3 to be maintained
-      REAL*8  :: rsurfinit              ! Initial root surface area per m^3
-      REAL*8  :: rootrad                ! Average fine root radius
-      REAL*8  :: prootmg                ! Constant root balance pressure of 1.5 MPa in grasses
-      REAL*8  :: growthmax              ! Parameter determining maximum daily growth increment of root surface area
+      REAL*8  :: mdf       = 10000.0d0  ! Total dry mass of living tissues of trees per unit pc (g/m^2)
+      REAL*8  :: mqxf      = 1.0d0      ! Total water storage capacity in living tissues of trees per unit md
+      REAL*8  :: rrootm    = 1.02d8     ! Root water uptake resistivity in soil
+      REAL*8  :: rsurfmin  = 0.03d0     ! Minimum root area per m^3 to be maintained
+      REAL*8  :: rsurfinit = 0.3d0      ! Initial root surface area per m^3
+      REAL*8  :: rootrad   = 0.3d-3     ! Average fine root radius
+      REAL*8  :: prootmg   = 150.0d0    ! Constant root balance pressure of 1.5 MPa in grasses
+      REAL*8  :: growthmax = 0.1d0      ! Parameter determining maximum daily growth increment of root surface area
 
-      INTEGER :: firstyear              ! First year for the generation of hourly output in computation mode
-      INTEGER :: lastyear               ! Last year for the generation of hourly output in computation mode
+      INTEGER :: firstyear = 2000       ! First year for the generation of hourly output in computation mode
+      INTEGER :: lastyear  = 2000       ! Last year for the generation of hourly output in computation mode
+
+      INTEGER :: write_h   = 0          ! Flag to write out hourly input values after conversation from daily values
 
 !     * Derived parameters
 
@@ -290,18 +292,10 @@
 
       end module vegmod
 
-!***********************************************************************
-!*  Module defining variables and parameters for the water balance 
-!*  model (watbal).
-!*----------------------------------------------------------------------
-!*  Author: Stan Schymanski, Max Planck Institute for Biogeochemistry
-!*  Email: sschym@bgc-jena.mpg.de
-!*  06/2008
-!*----------------------------------------------------------------------
-
-!     ************************************
-!     * Parameters for Water balance model
-!     ************************************
+!     ******************************************************************
+!     * Module defining variables and parameters for the water balance 
+!     * model (watbal).
+!     ******************************************************************
 
       module watmod
       implicit none
@@ -365,17 +359,17 @@
 
 !     * Catchment parameters
 
-      REAL*8  :: cgs                    ! Capital Gamma S (length scale for seepage outflow) (m)
-      REAL*8  :: zr_                    ! Average channel elevation
-      REAL*8  :: go_                    ! Slope close to channel in radians 
+      REAL*8  :: cgs       = 10.0d0     ! Capital Gamma S (length scale for seepage outflow) (m)
+      REAL*8  :: zr_       = 10.0d0     ! Average channel elevation
+      REAL*8  :: go_       = 0.033d0    ! Slope close to channel in radians
 
 !     * Soil parameters
 
-      REAL*8  :: ksat_                  ! Saturated hydraulic conductivity
-      REAL*8  :: thetar_                ! Residual soil water content
-      REAL*8  :: thetas_                ! Saturated soil water content
-      REAL*8  :: nvg_                   ! Van Genuchten soil parameter n
-      REAL*8  :: avg_                   ! Van Genuchten soil parameter a
+      REAL*8  :: ksat_     = 1.23d-5    ! Saturated hydraulic conductivity
+      REAL*8  :: thetar_   = 0.065d0    ! Residual soil water content
+      REAL*8  :: thetas_   = 0.41d0     ! Saturated soil water content
+      REAL*8  :: nvg_      = 1.89d0     ! Van Genuchten soil parameter n
+      REAL*8  :: avg_      = 7.5d0      ! Van Genuchten soil parameter a
       REAL*8  :: mvg_                   ! Van Genuchten soil parameter m
 
       end module watmod
@@ -404,31 +398,18 @@
       REAL*8  :: jmaxg_d                ! Daily grass electron transport capacity
       REAL*8  :: gstom_d                ! Mean daily tree stomatal conductance
       REAL*8  :: gstomg_d               ! Daily average stomatal conductance
-      REAL*8, PARAMETER :: g___   = 9.81d0       ! Gravitational acceleration
-      REAL*8, PARAMETER :: rho    = 1000.d0      ! Density of water
-      REAL*8, PARAMETER :: degree = 0.0174533d0  ! Conversion from degree to radians
       REAL*8, ALLOCATABLE :: epslnvec(:)     ! Soil porosity
       REAL*8, ALLOCATABLE :: gammastarvec(:) ! Hourly value for CO2 compensation point
       REAL*8, ALLOCATABLE :: netassvec_(:)   ! Daily net assimilation by trees
       REAL*8, ALLOCATABLE :: netassvecg(:)   ! Daily net assimilation by grasses
       REAL*8, ALLOCATABLE :: epan__(:)       ! Daily pan evaporation
-!     REAL*8, ALLOCATABLE :: wsnewvec(:)     ! Soil water content in each layer at next time step
-!     REAL*8, ALLOCATABLE :: delznewvec(:)
-!     REAL*8  :: yu__
-!     REAL*8  :: yunew_
-!     REAL*8  :: omgo_
-!     REAL*8  :: omgonew
-!     REAL*8  :: omgu_
-!     REAL*8  :: omgunew
-!d    REAL*8  :: netass_y
-!d    REAL*8  :: gpp_y
 
       INTEGER :: maxlayer               ! Number of soil layers
 
-      REAL*8  :: cz                     ! Average soil elevation in m
+      REAL*8  :: cz        = 15.0d0     ! Average soil elevation in m
       INTEGER :: parsaved = 0           ! Indicator whether input parameter values have been read and saved
 
-      REAL*8              :: delz_      ! Thickness of each soil layer (m)
+      REAL*8  :: delz_     = 0.5d0      ! Thickness of each soil layer (m)
       REAL*8, ALLOCATABLE :: delzvec(:) ! Thickness of each soil layer
 
       end module vom_vegwat_mod
@@ -492,14 +473,15 @@
 
       INTEGER :: vom_command            ! Indicator of optimisation mode (0 for -optimise, 1 for -continue, 2 for compute, 3 for compute ncp only with pars.txt, 4 for optimise without random_seed)
 
-      INTEGER :: ncomp                  ! Initial number of complexes
-      INTEGER :: ncompmin               ! Minimum number of complexes
-      REAL*8  :: resolution             ! Convergence criterion (fraction of max variation when optimisation stops)
-      INTEGER :: patience               ! Number of runs without improvement until optimisation is aborted
-      INTEGER :: nsimp                  ! Number of simplex runs per complex
-      REAL*8  :: focus                  ! Spread of the random seed around the initial values (if <1, then limited)
+      INTEGER :: ncomp      = 2         ! Initial number of complexes
+      INTEGER :: ncompmin   = 2         ! Minimum number of complexes
+      REAL*8  :: resolution = 1.0       ! Convergence criterion (fraction of max variation when optimisation stops)
+      INTEGER :: patience   = 10        ! Number of runs without improvement until optimisation is aborted
+      INTEGER :: nsimp      = 3         ! Number of simplex runs per complex
+      REAL*8  :: focus      = 1.0       ! Spread of the random seed around the initial values (if <1, then limited)
 
-      INTEGER :: npar                   ! Number of model parameters carried through
+
+      INTEGER :: npar       = 8         ! Number of model parameters carried through
       CHARACTER(9), ALLOCATABLE :: parname(:) ! Parameter names
       REAL*8,       ALLOCATABLE :: parval(:)  ! Initial parameter values read from shuffle.par
       REAL*8,       ALLOCATABLE :: parmin(:)  ! Minimum parameter values defining search domain

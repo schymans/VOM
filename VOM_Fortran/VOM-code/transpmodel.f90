@@ -52,79 +52,79 @@
 
         call vom_daily_init()
 
-!       * HOURLY LOOPS (loops through each hour of daily dataset)
-        do nhour = 1, 24
+!     * HOURLY LOOPS (loops through each hour of daily dataset)
+      do nhour = 1, 24
 
-          call vom_hourly_init()
+      call vom_hourly_init()
 
-!         * calculate gstom, et and ass
+!     * calculate gstom, et and ass
 
-          call vom_gstom()
+      call vom_gstom()
 
-!         * SUB-HOURLY LOOPS
+!     * SUB-HOURLY LOOPS
 
-          do while (time .lt. 3600.d0)
+      do while (time .lt. 3600.d0)
 
-!           * setting variables from previous loop
+!       * setting variables from previous loop
 
-            call vom_subhourly_init()
+        call vom_subhourly_init()
 
-!           * root water uptake
+!       * root water uptake
 
-            call vom_rootuptake()
+        call vom_rootuptake()
 
-            if (md_ .gt. 0.d0) then
+        if (md_ .gt. 0.d0) then
 
-!             * steady-state tissue water (mqss)
+!         * steady-state tissue water (mqss)
 
-              if (wlayer_ .ge. 1) then
-                call vom_mqss(mqss_)
-              else
-                mqss_ = 0.9d0 * mqx_
-              endif
-              mqssmin = MIN(mqssmin,mqss_)
-
-!             * transpiration, gstom and tissue water
-
-              call vom_tissue_water_et(tp_netass)
-              if (finish .eq. 1) return
-
-            endif
-
-!           * water balance and conditions at next time step
-
-            call vom_subhourly()
-
-            time = time + dt_
-            mqnew = mq_ + dmq * dt_
-
-!           * adding up hourly fluxes
-
-            call vom_add_hourly()
-
-!           * END OF HOUR
-
-          enddo
-
-!         * rl does not need to be included here as ass=-rl if j=0 (at night)
-          tp_netass = tp_netass + ass_h(2) - 3600.d0 * (cpcc_ + rr_ + tc_) &
-     &              + assg_h(2,2) - 3600.d0 * (cpccg(2) + rrg + tcg(2))
-          ass_d(:)    = ass_d(:)    + ass_h(:)
-          assg_d(:,:) = assg_d(:,:) + assg_h(:,:)
-          ruptkvec_d(:) = ruptkvec_d(:) + ruptkvec_h(:)
-          ruptkg_d(:)   = ruptkg_d(:)   + ruptkg_h(:)
-
-          if (optmode .eq. 0) then
-
-            call vom_add_daily()
-            call vom_write_hourly()
-
-!           * check water balance
-
-            call vom_check_water()
-            if (finish .eq. 1) return
-
+          if (wlayer_ .ge. 1) then
+            call vom_mqss(mqss_)
+          else
+            mqss_ = 0.9d0 * mqx_
           endif
+          mqssmin = MIN(mqssmin,mqss_)
+
+!         * transpiration, gstom and tissue water
+
+          call vom_tissue_water_et(tp_netass)
+          if (finish .eq. 1) return
+
+        endif
+
+!       * water balance and conditions at next time step
+
+        call vom_subhourly()
+
+        time = time + dt_
+        mqnew = mq_ + dmq * dt_
+
+!       * adding up hourly fluxes
+
+        call vom_add_hourly()
+
+!       * END OF HOUR
+
+      enddo
+
+!     * rl does not need to be included here as ass=-rl if j=0 (at night)
+      tp_netass = tp_netass + ass_h(2) - 3600.d0 * (cpcc_ + rr_ + tc_) &
+     &          + assg_h(2,2) - 3600.d0 * (cpccg(2) + rrg + tcg(2))
+      ass_d(:)    = ass_d(:)    + ass_h(:)
+      assg_d(:,:) = assg_d(:,:) + assg_h(:,:)
+      ruptkvec_d(:) = ruptkvec_d(:) + ruptkvec_h(:)
+      ruptkg_d(:)   = ruptkg_d(:)   + ruptkg_h(:)
+
+      if (optmode .eq. 0) then
+
+        call vom_add_daily()
+        call vom_write_hourly()
+
+!       * check water balance
+
+        call vom_check_water()
+        if (finish .eq. 1) return
+
+      endif
         enddo
 
 !       * END OF DAY
@@ -202,7 +202,7 @@
 
       if (optmode .eq. 2) then
         open(kfile_model_output, FILE=sfile_model_output, STATUS='replace')
-        write(kfile_model_output,'(e12.6)') tp_netass
+        write(kfile_model_output,'(E13.6)') tp_netass
         close(kfile_model_output)
       endif
 
@@ -368,6 +368,7 @@
       read(kfile_inputpar,*) rgdepth
       read(kfile_inputpar,*) firstyear
       read(kfile_inputpar,*) lastyear
+!     read(kfile_inputpar,*) write_h
       close(kfile_inputpar)
 
       epsln_ = thetas_ - thetar_        ! epsilon, porosity see Reggiani (2000)
@@ -440,8 +441,6 @@
       allocate(qblvec(maxlayer))
       allocate(dsuvec(maxlayer))
       allocate(phydrostaticvec(maxlayer))
-!     allocate(delznewvec(maxlayer))
-!     allocate(wsnewvec(maxlayer))
       allocate(prootmvec(maxlayer))
       allocate(pcapnewvec(maxlayer))
       allocate(ruptkvec_d(maxlayer))
@@ -569,14 +568,13 @@
 
       INTEGER :: ii, i, h, oldh, stat
       INTEGER :: dummyint1, dummyint2, dummyint3, dummyint4
+      LOGICAL :: exist
 
-      open(kfile_hourlyweather, FILE=sfile_hourlyweather,              &
-     &                          STATUS='old', IOSTAT=stat)
-      if (stat .ne. 0) then
-        close(kfile_hourlyweather)
+      inquire(FILE=sfile_hourlyweather, EXIST=exist)
 
-!       * Creating hourly climate data from daily data
+!     * Creating hourly climate data from daily data
 
+      if (.not. exist) then
         open(kfile_dailyweather, FILE=sfile_dailyweather,              &
      &                           STATUS='old', IOSTAT=stat)
         read(kfile_dailyweather,*)
@@ -587,20 +585,18 @@
         enddo
         close(kfile_dailyweather)
 
-        open(kfile_hourlyweather, FILE=sfile_hourlyweather, IOSTAT=stat)
-        write(kfile_hourlyweather,'(5a8,5a11)') 'hour', 'dayyear', 'day', &
-     &    'month', 'year', 'tair_h', 'vd_h', 'par_h', 'rain_h', 'ca_h'
-
 !       * Calculation of derived parameters
 
         call vom_calc_derived()
 
-        close(kfile_hourlyweather)
+        if (write_h == 1) exist=.TRUE.
+      endif
 
-      else
+!     * Reading hourly climate data if available
 
-!       * Reading hourly climate data if available
-
+      if (exist) then
+        open(kfile_hourlyweather, FILE=sfile_hourlyweather,            &
+     &                            STATUS='old', IOSTAT=stat)
         read(kfile_hourlyweather,*)
         ii = 1
         oldh = 99
@@ -637,6 +633,12 @@
       REAL*8  :: tairmean
       REAL*8  :: dtair
       REAL*8  :: daylength              ! Day length (hours)
+
+      if (write_h == 1) then
+        open(kfile_hourlyweather, FILE=sfile_hourlyweather, STATUS='new')
+        write(kfile_hourlyweather,'(5a8,5a11)') 'hour', 'dayyear', 'day', &
+     &    'month', 'year', 'tair_h', 'vd_h', 'par_h', 'rain_h', 'ca_h'
+      endif
 
       parvec(:) = 2.0804d0 * srad__(:)       ! (Out[17]), par in mol/m2 if srad was MJ/m2
       do in = 1, maxday
@@ -699,12 +701,16 @@
             par_h(ii) = 0.d0
           endif
 
+          if (write_h == 1) then
             write(kfile_hourlyweather,'(5i8,5e11.3)') ik, dayyear(in), &
      &        fday(in), fmonth(in), fyear(in), tair_h(ii), vd_h(ii),   &
      &        par_h(ii), rain_h(ii), ca_h(ii)
+          endif
 
         enddo
       enddo
+
+      if (write_h == 1) close(kfile_hourlyweather)
 
       return
       end subroutine vom_calc_derived
@@ -788,8 +794,6 @@
 !     * Setting yearly, daily and hourly parameters
 
       nyear          = fyear(1)
-!d    netass_y       = 0.d0
-!d    gpp_y          = 0.d0
       rain_y         = 0.d0
       par_y          = 0.d0
       srad_y         = 0.d0
@@ -1091,22 +1095,6 @@
       use vom_vegwat_mod
       implicit none
 
-!$      if (wlayernew .ge. 1) then
-!$        if (wlayer_ .ge. 1) then          ! Need to account for the change in rsurf due to a change in unsaturated soil volume.
-!$          rsurfvec(1:wlayernew) = rsurfvec(1:wlayernew)             &
-!$     &                           / (omgu_ * delzvec(1:wlayernew))   &
-!$     &                           * omgunew * delznewvec(1:wlayernew)
-!$          rsurfg_(1:wlayernew) = rsurfg_(1:wlayernew) / (omgu_      &
-!$     &                          * delzvec(1:wlayernew)) * omgunew   &
-!$     &                          * delznewvec(1:wlayernew)
-!$        else                              ! If nlayers at the previous time step was 0, rsurf was set to rsurfmin.
-!$          rsurfvec(1:wlayernew) = rsurfvec(1:wlayernew) * omgunew  &
-!$     &                           * delzvec(1:wlayernew)
-!$          rsurfg_(1:wlayernew) = rsurfg_(1:wlayernew) * omgunew    &
-!$     &                          * delzvec(1:wlayernew)
-!$        endif
-!$      endif
-
       if (wlayernew .lt. pos_) then
         rsurfvec(wlayernew+1:pos_) = rsurfmin * delz_
       endif
@@ -1116,7 +1104,6 @@
 
       mq_          = mqnew
       ys_          = ysnew
-!     yu__         = yunew_
       wlayer_      = wlayernew
       suvec_(:)    = sunewvec(:)
       pcapvec(:)   = pcapnewvec(:)
@@ -1151,7 +1138,7 @@
           prootmvec(1:postemp_) = prootmg
         endif
 
-!       * soil resistance, (Out[ 241] with svolume=omgu*delzvec(1:postemp_)); derived from (3.32)
+!       * soil resistance, (Out[ 241] with svolume=delzvec(1:postemp_)); derived from (3.32)
         rsoilvec(1:postemp_) = SQRT(p_pi / 2.d0) * SQRT((rootrad       &
      &                       * delzvec(1:postemp_))                    &
      &                       / rsurfvec(1:postemp_))                   &
@@ -1565,9 +1552,6 @@
         vd_y     = vd_y + vd_d / 24.d0
         etm_y    = etm_y + (etm_d + etmg_d) * 1000.d0  ! in[mm]
         esoil_y  = esoil_y + esoil_d * 1000.d0  ! in [mm]
-!d      netass_y = netass_y + ass_d(2) - (cpcc_ + rr_) * 3600.d0       &
-!d   &           * 24.d0 + assg_d(2,2) - (cpccg(2) + rrg) * 3600.d0 * 24.d0
-!d      gpp_y    = gpp_y + (ass_d(2) + rl_d) + assg_d(2,2) + rlg_d
 !       * for grasses
         etmg_y   = etmg_y + etmg_d * 1000.d0 ! in [mm]
         assg_y   = assg_y + assg_d(2,2)
@@ -1591,9 +1575,6 @@
         vd_y     = vd_d / 24.d0
         etm_y    = (etmg_d + etm_d) * 1000.d0
         esoil_y  = esoil_d * 1000.d0
-!d      netass_y = ass_d(2) - (cpcc_ + rr_) * 3600.d0 * 24.d0          &
-!d  &           + assg_d(2,2) - (cpccg(2) + rrg) * 3600.d0 * 24.d0
-!d      gpp_y    = (ass_d(2) + rl_d) + assg_d(2,2) + rlg_d
 !       * for grasses
         etmg_y   = etmg_d * 1000.d0
         assg_y   = assg_d(2,2)

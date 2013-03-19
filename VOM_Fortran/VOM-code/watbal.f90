@@ -145,8 +145,6 @@
       pcapnewvec   = pcapvec
       sunewvec     = suvec_
       kunsatnewvec = kunsatvec
-!     omgu_        = 1.d0               ! In this version, the hill slope is vertical, thus there is no saturated surface fraction
-!     omgunew      = omgu_
 
       return
       end subroutine waterbalance_init
@@ -354,6 +352,7 @@
       use vom_vegwat_mod
       implicit none
 
+      character(len=135) :: msg
       REAL*8  :: wcnew
 
 !$    INTEGER :: i
@@ -378,9 +377,12 @@
 !$    print*,"errorstep=",(wc+dt*io-wcnew)
 
       if (ABS(wc_ + dt_ * io__ - wcnew) .gt. 1.d-6) then
-        write(*,*) "error=", (wc_ + dt_ * io__ - wcnew), " ys=", ysnew
-        write(*,*) "sum(iovec) = ", SUM(iovec(:)), "; io = ", io__
-        write(*,*) "day = ", nday, "; hour = ", nhour
+        write(msg,*) "error=", (wc_ + dt_ * io__ - wcnew), " ys=", ysnew
+        write(*,*) TRIM(msg)
+        write(msg,*) "sum(iovec) = ", SUM(iovec(:)), "; io = ", io__
+        write(*,*) TRIM(msg)
+        write(msg,*) "day = ", nday, "; hour = ", nhour
+        write(*,*) TRIM(msg)
       endif
 
       return
