@@ -558,6 +558,7 @@
       INTEGER :: ii, i, h, oldh, stat
       INTEGER :: dummyint1, dummyint2, dummyint3, dummyint4
       LOGICAL :: exist
+      CHARACTER(len=99) :: str
 
       inquire(FILE=sfile_hourlyweather, EXIST=exist)
 
@@ -566,7 +567,11 @@
       if (.not. exist) then
         open(kfile_dailyweather, FILE=sfile_dailyweather,              &
      &                           STATUS='old', IOSTAT=stat)
-        read(kfile_dailyweather,*)
+        read(kfile_dailyweather,'(A)') str
+        if (LEN(TRIM(str)) .ne. 88) then
+          write(*,*) "ERROR: ", TRIM(sfile_dailyweather), ": Wrong file format"
+          stop
+        endif
         do i = 1, maxday
           read(kfile_dailyweather,'(4i8,7f8.2)') dayyear(i), fday(i),  &
      &      fmonth(i), fyear(i), tairmax(i), tairmin(i), rainvec(i),   &
