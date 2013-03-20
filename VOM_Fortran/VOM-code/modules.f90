@@ -108,8 +108,8 @@
       REAL*8, ALLOCATABLE :: ca_h(:)    ! Hourly atmospheric CO2 mole fraction
       REAL*8, ALLOCATABLE :: cavec(:)   ! Daily atmospheric CO2 mole fraction
 
-      REAL*8              :: vp_        ! Atmospheric vapour deficit (VPD/air pressure)
-      REAL*8, ALLOCATABLE :: vpvec(:)   ! Daily vapour pressure (Pa)
+      REAL*8              :: vp_        ! Absolute vapour pressure in the air (Pa)
+      REAL*8, ALLOCATABLE :: vpvec(:)   ! Daily absolute vapour pressure (Pa)
 
       REAL*8              :: vd__       ! Atmospheric vapour deficit (VPD/air pressure)
       REAL*8, ALLOCATABLE :: vd_h(:)    ! Hourly vapour deficit (VPD/air pressure)
@@ -384,25 +384,6 @@
       use vegmod
       use watmod
       implicit none
-
-!     * unused
-      REAL*8  :: oa_                    ! O2 mole fraction
-      REAL*8  :: k25                    ! Temperature response parameter
-      REAL*8  :: kopt                   ! Temperature response parameter
-      REAL*8  :: zs_                    ! Reference elevation point (set to 0)
-      REAL*8  :: inf_h                  ! Hourly infiltration rate
-      REAL*8  :: ruptk_d                ! Daily tree root water uptake
-      REAL*8  :: epan_y                 ! Annual pan evaporation
-      REAL*8  :: mqssnew                ! Tree water content in next time step
-      REAL*8  :: jmax_d                 ! Mean daily tree electron transport capacity
-      REAL*8  :: jmaxg_d                ! Daily grass electron transport capacity
-      REAL*8  :: gstom_d                ! Mean daily tree stomatal conductance
-      REAL*8  :: gstomg_d               ! Daily average stomatal conductance
-      REAL*8, ALLOCATABLE :: epslnvec(:)     ! Soil porosity
-      REAL*8, ALLOCATABLE :: gammastarvec(:) ! Hourly value for CO2 compensation point
-      REAL*8, ALLOCATABLE :: netassvec_(:)   ! Daily net assimilation by trees
-      REAL*8, ALLOCATABLE :: netassvecg(:)   ! Daily net assimilation by grasses
-      REAL*8, ALLOCATABLE :: epan__(:)       ! Daily pan evaporation
 
       INTEGER :: maxlayer               ! Number of soil layers
 

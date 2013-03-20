@@ -319,14 +319,11 @@
 
       open(kfile_inputpar, FILE=sfile_inputpar, STATUS='old')
 
-      read(kfile_inputpar,*) oa_
       read(kfile_inputpar,*) alpha
       read(kfile_inputpar,*) cpccf
       read(kfile_inputpar,*) tcf
       read(kfile_inputpar,*) maxyear
       read(kfile_inputpar,*) testyear
-      read(kfile_inputpar,*) k25
-      read(kfile_inputpar,*) kopt
       read(kfile_inputpar,*) ha_
       read(kfile_inputpar,*) hd_
       read(kfile_inputpar,*) toptfac
@@ -337,7 +334,6 @@
 
       read(kfile_inputpar,*) lat_
       read(kfile_inputpar,*) cz
-      read(kfile_inputpar,*) zs_
       read(kfile_inputpar,*) cgs
       read(kfile_inputpar,*) zr_
       read(kfile_inputpar,*) go_
@@ -413,7 +409,6 @@
       allocate(tairmax(maxday))
       allocate(tairmin(maxday))
       allocate(rainvec(maxday))
-      allocate(epan__(maxday))
       allocate(srad__(maxday))
       allocate(vpvec(maxday))
       allocate(press(maxday))
@@ -426,9 +421,6 @@
       allocate(ca_h(maxhour))
 
       allocate(parvec(maxday))
-      allocate(netassvec_(maxday))
-      allocate(netassvecg(maxday))
-      allocate(gammastarvec(maxhour))
 
       allocate(pcapvec(maxlayer))
       allocate(suvec_(maxlayer))
@@ -456,7 +448,6 @@
       allocate(kunsatnewvec(maxlayer))
 
       allocate(ksatvec(maxlayer))
-      allocate(epslnvec(maxlayer))
       allocate(thetasvec(maxlayer))
       allocate(thetarvec(maxlayer))
       allocate(sueqvec(maxlayer))
@@ -494,7 +485,7 @@
      &  'su_1', 'topt'
 
       open(kfile_yearly, FILE=sfile_yearly, STATUS='replace')
-      write(kfile_yearly,'(a6,19a16)') "year", "rain_y", "epan_y",     &
+      write(kfile_yearly,'(a6,18a16)') "year", "rain_y",               &
      &  "par_y", "srad_y", "vd_y", "esoil_y", "etm_y", "etmg_y",       &
      &  "assg_y", "rlg_y", "rrg_y", "cpccg_y", "tcg_y",                &
      &  "etmt_y", "asst_y", "rlt_y", "rrt_y", "cpcct_y", "tc_y"
@@ -539,7 +530,6 @@
         do j = 1, maxlayer
           read(kfile_soilprofile,*) maxlayer, delzvec(j), ksatvec(j),  &
      &      nvgvec(j), avgvec(j), thetasvec(j), thetarvec(j)
-          epslnvec(j) = thetasvec(j) - thetarvec(j)  ! porosity
           mvgvec(j) = 1.d0 - (1.d0 / nvgvec(j))  ! van Genuchten soil parameter m
         enddo
       else
@@ -549,7 +539,6 @@
         avgvec(:)    = avg_
         thetasvec(:) = thetas_
         thetarvec(:) = thetar_
-        epslnvec(:)  = epsln_
         mvgvec(:)    = mvg_
       endif
       close(kfile_soilprofile)
@@ -579,9 +568,9 @@
      &                           STATUS='old', IOSTAT=stat)
         read(kfile_dailyweather,*)
         do i = 1, maxday
-          read(kfile_dailyweather,'(4i8,8f8.2)') dayyear(i), fday(i),  &
+          read(kfile_dailyweather,'(4i8,7f8.2)') dayyear(i), fday(i),  &
      &      fmonth(i), fyear(i), tairmax(i), tairmin(i), rainvec(i),   &
-     &      epan__(i), srad__(i), vpvec(i), press(i), cavec(i)
+     &      srad__(i), vpvec(i), press(i), cavec(i)
         enddo
         close(kfile_dailyweather)
 
@@ -799,14 +788,11 @@
       srad_y         = 0.d0
       vd_y           = 0.d0
       etm_y          = 0.d0
-      epan_y         = 0.d0
       esoil_y        = 0.d0             ! = yearly esoil
       ruptkvec_d(:)  = 0.d0
       ruptkg_d(:)    = 0.d0
       ass_d(:)       = 0.d0
       assg_d(:,:)    = 0.d0
-      netassvec_(:)  = 0.d0
-      netassvecg(:)  = 0.d0
       ioacum         = 0.d0
 !     * for grasses
       etmg_y         = 0.d0
@@ -882,12 +868,7 @@
       endif
 
       if (optmode .eq. 0) then
-        ruptk_d  = 0.d0
         vd_d     = 0.d0
-        jmax_d   = 0.d0
-        jmaxg_d  = 0.d0
-        gstom_d  = 0.d0
-        gstomg_d = 0.d0
         etm_d    = 0.d0
         etmg_d   = 0.d0
         esoil_d  = 0.d0
@@ -918,10 +899,9 @@
       ca__       = ca_h(ii) / 1.0d6
 
 !     * (Out[274], derived from (3.25))
-      gammastarvec(ii) = 0.00004275d0                                  &
-     &                 * p_E ** ((18915.d0 * (-25.d0 + tair_h(ii)))    &
-     &                 / (149.d0 * p_R_ * (273.d0 + tair_h(ii))))
-      gammastar_ = gammastarvec(ii)
+      gammastar_ = 0.00004275d0                                        &
+     &           * p_E ** ((18915.d0 * (-25.d0 + tair_h(ii)))          &
+     &           / (149.d0 * p_R_ * (273.d0 + tair_h(ii))))
 
 !     * (Out[310], derived from (3.26)) Temperature dependence of Jmax
       jmax__(:) = (p_E ** ((ha_ * (-25.d0 + tair__) * (-273.d0 + topt_ &
@@ -965,7 +945,6 @@
       if (optmode .eq. 0) then
         mqold    = mqnew
         spgfcf_h = 0.d0
-        inf_h    = 0.d0
         infx_h   = 0.d0
         io_h     = 0.d0
         esoil_h  = 0.d0
@@ -1382,7 +1361,6 @@
         etm_h    = etm_h    + dt_ * etm__
         etmg_h   = etmg_h   + dt_ * etmg__(2,2)
         ruptk_h  = ruptk_h  + dt_ * SUM(ruptkvec(:))
-        inf_h    = inf_h    + dt_ * inf__
       endif
 
       return
@@ -1396,17 +1374,7 @@
       use vom_vegwat_mod
       implicit none
 
-      netassvec_(nday)  = netassvec_(nday) + ass_h(2) - 3600.d0 * (cpcc_ + rr_ + tc_)
-!     * rl does not need to be included here as ass=-rl if j=0 (at night)
-      netassvecg(nday) = netassvecg(nday) + assg_h(2,2) - 3600.d0      &
-     &                 * (cpccg(2) + rrg + tcg(2))
-
-      ruptk_d  = ruptk_d  + SUM(ruptkvec(:)) * 3600.d0
       vd_d     = vd_d     + vd__
-      jmax_d   = jmax_d   + jmax__(2)
-      jmaxg_d  = jmaxg_d  + jmaxg__(2)
-      gstom_d  = gstom_d  + gstom__
-      gstomg_d = gstomg_d + gstomg__(2,2)
       etm_d    = etm_d    + etm_h
       etmg_d   = etmg_d   + etmg_h
       esoil_d  = esoil_d  + esoil_h
@@ -1516,7 +1484,7 @@
 
       if (fyear(nday) .ne. nyear) then
 !       * for calculation of vd_y a -1 is added to nday for using dayyear of correct year
-        write(kfile_yearly,'(i6,19e16.6)') nyear, rain_y, epan_y,      &
+        write(kfile_yearly,'(i6,18e16.6)') nyear, rain_y,              &
      &    par_y, srad_y, vd_y / (dayyear(nday-1)), esoil_y, etm_y,     &
      &    etmg_y, assg_y, rlg_y, rrg_y, cpccg_y, tcg_y,                &
      &    etmt_y, asst_y, rlt_y, rrt_y, cpcct_y, tct_y
@@ -1527,7 +1495,7 @@
       if (nday .eq. maxday) then
 !       * call subroutine there to get yearly data for the output
         call vom_add_yearly()
-        write(kfile_yearly,'(i6,19e16.6)') nyear, rain_y, epan_y,      &
+        write(kfile_yearly,'(i6,18e16.6)') nyear, rain_y,              &
      &    par_y, srad_y, vd_y / (dayyear(nday)), esoil_y, etm_y,       &
      &    etmg_y, assg_y, rlg_y, rrg_y, cpccg_y, tcg_y,                &
      &    etmt_y, asst_y, rlt_y, rrt_y, cpcct_y, tct_y
@@ -1546,7 +1514,6 @@
 
       if (fyear(nday) .eq. nyear) then
         rain_y   = rain_y + rainvec(nday)    ! in [mm]
-        epan_y   = epan_y + epan__(nday)     ! epan originally in [mm]/day
         par_y    = par_y + parvec(nday)
         srad_y   = srad_y + srad__(nday)     ! srad originally in MJ/day
         vd_y     = vd_y + vd_d / 24.d0
@@ -1569,7 +1536,6 @@
       else
         nyear    = fyear(nday)
         rain_y   = rainvec(nday)
-        epan_y   = epan__(nday)              ! epan originally in [mm]/day
         par_y    = parvec(nday)
         srad_y   = srad__(nday)              ! srad originally in MJ/day
         vd_y     = vd_d / 24.d0
