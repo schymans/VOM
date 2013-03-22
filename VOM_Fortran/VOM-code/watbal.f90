@@ -20,7 +20,7 @@
 !* This subroutine calculates the water balance for a time step <=dtmax.
 !* The calling program must transfer the new variables ('new' in their names)
 !* to the old variables for the next time step, before calling 'waterbalance'
-!* again. Example: call waterbalance(init) , time=time+dt, ys=ysnew...
+!* again. Example: call waterbalance(init) , time=time+dt, zw=zwnew...
 !*
 !*----------------------------------------------------------------------
 !*  Copyright (C) 2008  Stan Schymanski
@@ -48,42 +48,42 @@
 
 !     * CURRENT SOIL WATER CONTENT
 
-      cH2Ol_s(:) = (-suvec_(:) * thetarvec(:) + suvec_(:)              &
-     &           * thetasvec(:) + thetarvec(:)) * delzvec(:)
+      cH2Ol_s(:) = (-su__(:) * s_thetar(:) + su__(:) * s_thetas(:)     &
+     &           + s_thetar(:)) * s_delz(:)
       wc_ = SUM(cH2Ol_s)
 
-!     * FLUXES (inf, infx, qblvec, esoil__, spgfcf__)
+!     * FLUXES (inf, infx, qbl, esoil__, spgfcf__)
 
       call waterbalance_fluxes()
 
 !     * changes in water storage (waterbalance)
 
-      io__     = inf__ - esoil__ - spgfcf__ - SUM(ruptkvec(:)) - SUM(ruptkg(:))  ! (3.19)
+      io__     = inf__ - esoil__ - spgfcf__ - SUM(ruptkt__(:)) - SUM(ruptkg__(:))  ! (3.19)
       iovec(:) = 0.d0
-      iovec(1) = qblvec(1) + inf__ - esoil__ - ruptkvec(1) - ruptkg(1)
+      iovec(1) = qbl(1) + inf__ - esoil__ - ruptkt__(1) - ruptkg__(1)
       if (wlayer_ .eq. 1) then
         iovec(1) = iovec(1) - spgfcf__
       endif
       if (wlayer_ .gt. 2) then
         do j = 2, wlayer_ - 1
-          iovec(j) = qblvec(j) - qblvec(j-1) - ruptkvec(j) - ruptkg(j)
+          iovec(j) = qbl(j) - qbl(j-1) - ruptkt__(j) - ruptkg__(j)
         enddo
       endif
       if (wlayer_ .gt. 1) then
-        iovec(wlayer_) = qblvec(wlayer_) - qblvec(wlayer_-1)           &
-     &                 - ruptkvec(wlayer_) - ruptkg(wlayer_) - spgfcf__
+        iovec(wlayer_) = qbl(wlayer_) - qbl(wlayer_-1)                 &
+     &                 - ruptkt__(wlayer_) - ruptkg__(wlayer_) - spgfcf__
       endif
 
 !     * change in saturation degree
 
-      dsuvec(:) = -iovec(:) / ((thetarvec(:) - thetasvec(:)) * delzvec(:))
+      dsu(:) = -iovec(:) / ((s_thetar(:) - s_thetas(:)) * s_delz(:))
 
 !     * calculation of maximal time step size
 
       call waterbalance_timestep()
 
 !     Calculating state variables at next time step
-!     (sunewvec, wlayernew, pcapnewvec, kunsatnewvec, ysnew)
+!     (sunew, wlayernew, pcapnew, kunsatnew, zwnew)
 
       call waterbalance_update_state()
 
@@ -103,48 +103,47 @@
 
       INTEGER :: j
 
-      dtsu_count = 0
+      dtsu_count  = 0
       dtmax_count = 0
-      ys_ = cz
-      wlayer_ = 0
+      zw_         = i_cz
+      wlayer_     = 0
 
 !     * Adapt the number of unsaturated layers such that ys = zr
 
-      do while (ys_ .gt. zr_)
+      do while (zw_ .gt. i_zr)
         wlayer_ = wlayer_ + 1
-        ys_ = ys_ - delzvec(wlayer_)
+        zw_     = zw_ - s_delz(wlayer_)
       enddo
-      pcapvec(wlayer_+1:maxlayer) = 0.d0
+      pcap_(wlayer_+1:s_maxlayer) = 0.d0
 
 !     * Equilibrium pressure head
 
       do j = wlayer_, 1, -1
-        pcapvec(j) = 0.5d0 * delzvec(j+1) + 0.5d0 * delzvec(j) + pcapvec(j+1)
+        pcap_(j) = 0.5d0 * s_delz(j+1) + 0.5d0 * s_delz(j) + pcap_(j+1)
       enddo
 
 !     * equilibrium su above a saturated layer (after eq_sueq1 in Watbal3)
 
-      do j = 1, maxlayer - 1
-        sueqvec(j) = (1.d0 / ((0.5d0 * (delzvec(j+1) +  delzvec(j))    &
-     &             * avgvec(j)) ** nvgvec(j) + 1.d0)) ** mvgvec(j)
+      do j = 1, s_maxlayer - 1
+        sueq(j) = (1.d0 / ((0.5d0 * (s_delz(j+1) +  s_delz(j))         &
+     &          * s_avg(j)) ** s_nvg(j) + 1.d0)) ** c_mvg(j)
       enddo
-      sueqvec(maxlayer) = (1.d0 / ((0.5d0 * delzvec(j) * avgvec(j))    &
-     &              ** nvgvec(j) + 1.d0)) ** mvgvec(j)
-      suvec_(:) = (1.d0 / ((pcapvec(:) * avgvec(:)) ** nvgvec(:)       &
-     &          + 1.d0)) ** mvgvec(:)
+      sueq(s_maxlayer) = (1.d0 / ((0.5d0 * s_delz(j) * s_avg(j))       &
+     &                 ** s_nvg(j) + 1.d0)) ** c_mvg(j)
+      su__(:) = (1.d0 / ((pcap_(:) * s_avg(:)) ** s_nvg(:) + 1.d0)) ** c_mvg(:)
 
 !     * unsat. hydrol. cond. as a function of su
 
-      kunsatvec(:) = ((-suvec_(:) ** (1.d0 / mvgvec(:)) + 1.d0)        &
-     &             ** mvgvec(:) - 1.d0) ** 2.d0 * ksatvec(:) * SQRT(suvec_(:))
-      cH2Ol_s(:) = (-suvec_(:) * thetarvec(:) + suvec_(:)              &
-     &           * thetasvec(:) + thetarvec(:)) * delzvec(:)
+      kunsat_(:) = ((-su__(:) ** (1.d0 / c_mvg(:)) + 1.d0) ** c_mvg(:) &
+     &           - 1.d0) ** 2.d0 * s_ksat(:) * SQRT(su__(:))
+      cH2Ol_s(:) = (-su__(:) * s_thetar(:) + su__(:) * s_thetas(:)     &
+     &           + s_thetar(:)) * s_delz(:)
 
-      ysnew        = ys_
-      wlayernew    = wlayer_
-      pcapnewvec   = pcapvec
-      sunewvec     = suvec_
-      kunsatnewvec = kunsatvec
+      zwnew     = zw_
+      wlayernew = wlayer_
+      pcapnew   = pcap_
+      sunew     = su__
+      kunsatnew = kunsat_
 
       return
       end subroutine waterbalance_init
@@ -152,7 +151,7 @@
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-!*-----FLUXES (inf, infx, qblvec, esoil__, spgfcf__)--------------------
+!*-----FLUXES (inf, infx, qbl, esoil__, spgfcf__)--------------------
 
       subroutine waterbalance_fluxes ()
       use vom_vegwat_mod
@@ -163,14 +162,14 @@
 
 !     * infiltration
 
-      if (rain__ .gt. 0.d0) then
+      if (rain_h(th_) .gt. 0.d0) then
         if (wlayer_ .ge. 1) then
-          inf__ = MIN((ksatvec(1) + kunsatvec(1)) / 2.d0 *(1.d0        &
-     &          + (2.d0 * pcapvec(1)) / delzvec(1)), rain__)  ! (3.6), (Out[60])
+          inf__ = MIN((s_ksat(1) + kunsat_(1)) / 2.d0 *(1.d0           &
+     &          + (2.d0 * pcap_(1)) / s_delz(1)), rain_h(th_))  ! (3.6), (Out[60])
         else
           inf__ = 0.d0
         endif
-        infx__ = rain__ - inf__
+        infx__ = rain_h(th_) - inf__
       else
         inf__  = 0.d0
         infx__ = 0.d0
@@ -178,64 +177,64 @@
 
 !     * unsaturated flow
 
-      qblvec(:) = 0.d0
+      qbl(:) = 0.d0
       if (wlayer_ .gt. 1) then
 !       * Runoff occurs only from the layer 'wlayer_',
 !         therefore no downward flow into the layers below is allowed.
         do j = 1, wlayer_ - 1
-          qblvec(j) = -0.5d0 * (2.d0 * (pcapvec(j+1) - pcapvec(j))     &
-     &              / (delzvec(j+1) + delzvec(j)) + 1.d0)              &
-     &              * (kunsatvec(j+1) + kunsatvec(j))
+          qbl(j) = -0.5d0 * (2.d0 * (pcap_(j+1) - pcap_(j)) / (s_delz(j+1) &
+     &           + s_delz(j)) + 1.d0) * (kunsat_(j+1) + kunsat_(j))
         enddo
       endif
 
 !     * soil evaporation
 
-      esoil__  = 0.0002d0 * (1.d0 - 0.8d0 * (pc_ + pcg_(2))) * par__ * suvec_(1)
+      esoil__  = 0.0002d0 * (1.d0 - 0.8d0 * (o_pct + pcg_d(2)))        &
+     &         * par_h(th_) * su__(1)
 
-!     * Seepage face flow as a function of ys_ following eq_spgfcf in Watbal3.
+!     * Seepage face flow as a function of zw_ following eq_spgfcf in Watbal3.
 
       spgfcf__ = 0.d0
-      if (ys_ .gt. zr_) then
-        spgfcf__ = MAX(0.d0, 0.5d0 * (SQRT(cz - zr_) - SQRT(cz - ys_)) &
-     &           * (ys_ - zr_) * ksatvec(wlayer_) / (SQRT(cz - zr_)    &
-     &           * cgs * COS(go_)))
+      if (zw_ .gt. i_zr) then
+        spgfcf__ = MAX(0.d0, 0.5d0 * (SQRT(i_cz - i_zr)                &
+     &           - SQRT(i_cz - zw_)) * (zw_ - i_zr) * s_ksat(wlayer_)  &
+     &           / (SQRT(i_cz - i_zr) * i_cgs * COS(i_go)))
       endif
 
 !     * MAKING SURE THAT NO SUBLAYER 'OVERFLOWS'
 !     * 1.d-16 makes sure that 0 does not get transformed to tiny positive
 
-      if (MAXVAL(suvec_(1:wlayer_)) .ge. 1.d0) then
+      if (MAXVAL(su__(1:wlayer_)) .ge. 1.d0) then
 
         if (wlayer_ .gt. 1) then
-          if (suvec_(1) .ge. 0.99d0) then
-            dummy = esoil__ - inf__ + ruptkvec(1) + ruptkg(1)
-            if (qblvec(1) - dummy .gt. 0.d0) then
-              qblvec(1) = dummy - 1.d-16     ! (Out[156])+ruptkg(1)
+          if (su__(1) .ge. 0.99d0) then
+            dummy = esoil__ - inf__ + ruptkt__(1) + ruptkg__(1)
+            if (qbl(1) - dummy .gt. 0.d0) then
+              qbl(1) = dummy - 1.d-16   ! (Out[156])+ruptkg__(1)
             endif
           endif
         endif
 
         if (wlayer_ .gt. 2) then
           do i = 2, wlayer_ - 1
-            if (suvec_(i) .ge. 0.99d0) then
-              dummy = qblvec(i-1) + ruptkvec(i) + ruptkg(i)
-              if (qblvec(i) - dummy .gt. 0.d0) then
-                qblvec(i) = dummy - 1.d-16   ! (Out[158])+ruptkg(i)
+            if (su__(i) .ge. 0.99d0) then
+              dummy = qbl(i-1) + ruptkt__(i) + ruptkg__(i)
+              if (qbl(i) - dummy .gt. 0.d0) then
+                qbl(i) = dummy - 1.d-16 ! (Out[158])+ruptkg__(i)
               endif
             endif
           enddo
         endif
 
         if (wlayer_ .gt. 1) then
-          if (suvec_(wlayer_) .ge. 1.d0) then
-            dummy = -qblvec(wlayer_-1) - ruptkvec(wlayer_) - ruptkg(wlayer_)
+          if (su__(wlayer_) .ge. 1.d0) then
+            dummy = -qbl(wlayer_-1) - ruptkt__(wlayer_) - ruptkg__(wlayer_)
 !           * make sure that any surplus water runs off
             spgfcf__ = MAX(spgfcf__, dummy + 1.d-16)
           endif
         else
-          if (suvec_(wlayer_) .ge. 1.d0) then
-            dummy = inf__ - esoil__ - ruptkvec(1) - ruptkg(1)
+          if (su__(wlayer_) .ge. 1.d0) then
+            dummy = inf__ - esoil__ - ruptkt__(1) - ruptkg__(1)
             spgfcf__ = MAX(spgfcf__, dummy + 1.d-16)
           endif
         endif
@@ -261,21 +260,21 @@
 !$
 !$!*  for debugging in pgf90:
 !$    do i = 1, wlayer_
-!$      if (isnand(dsuvec(i))) then
+!$      if (isnand(dsu(i))) then
 !$        print *, "Its a NaN"
-!$      elseif (isinfd(dsuvec(i))) then
+!$      elseif (isinfd(dsu(i))) then
 !$        print *, "Its a Inf"
 !$      endif
 !$    enddo
 
       dtsu = 999999.d0
       do j = 1, wlayer_
-        if (dsuvec(j) .lt. 0.d0) then
-          dtsu = MIN(dtsu, -0.1d0 * suvec_(j) / dsuvec(j))
+        if (dsu(j) .lt. 0.d0) then
+          dtsu = MIN(dtsu, -0.1d0 * su__(j) / dsu(j))
         endif
-        if (dsuvec(j) .gt. 0.d0) then
-          dtsu = MIN(dtsu, 0.1d0 * suvec_(j) / dsuvec(j),              &
-     &               (1.d0 - suvec_(j)) / dsuvec(j))
+        if (dsu(j) .gt. 0.d0) then
+          dtsu = MIN(dtsu, 0.1d0 * su__(j) / dsu(j),              &
+     &               (1.d0 - su__(j)) / dsu(j))
         endif
       enddo
 
@@ -303,13 +302,13 @@
 
       INTEGER :: j
 
-      sunewvec(:) = suvec_(:) + dt_ * dsuvec(:)
-      j = maxlayer
-      wlayernew = maxlayer
+      sunew(:) = su__(:) + dt_ * dsu(:)
+      j = s_maxlayer
+      wlayernew = s_maxlayer
 
 !     * Find the lowest unsaturated layer and set the one below it as wlayernew
 
-      do while (sunewvec(j) .gt. 0.999999d0 .and. j .gt. 1)
+      do while (sunew(j) .gt. 0.999999d0 .and. j .gt. 1)
         j = j - 1
         wlayernew = j
       enddo
@@ -317,28 +316,28 @@
 !     * If there is not enough moisture in the layer above the saturated
 !       layers, the water table is in the top saturated layer.
 
-      if (sunewvec(wlayernew) .lt. sueqvec(wlayernew)) then
+      if (sunew(wlayernew) .lt. sueq(wlayernew)) then
         wlayernew = wlayernew + 1
       endif
 
-      sunewvec(wlayernew+1:maxlayer) = 1.d0
+      sunew(wlayernew+1:s_maxlayer) = 1.d0
 
-      pcapnewvec(:) = 1.d0 / avgvec(:) * (sunewvec(:) ** (-1.d0        &
-     &              / mvgvec(:)) - 1.d0) ** (1.d0 / nvgvec(:))
+      pcapnew(:) = 1.d0 / s_avg(:) * (sunew(:) ** (-1.d0 / c_mvg(:))   &
+     &           - 1.d0) ** (1.d0 / s_nvg(:))
 
-      kunsatnewvec(:) = ksatvec(:) * ((-sunewvec(:) ** (1.d0           &
-     &                / mvgvec(:)) + 1.d0) ** mvgvec(:) - 1.d0)        &
-     &                ** 2.d0 * SQRT(sunewvec(:))
+      kunsatnew(:) = s_ksat(:) * ((-sunew(:) ** (1.d0                  &
+     &             / c_mvg(:)) + 1.d0) ** c_mvg(:)                     &
+     &             - 1.d0) ** 2.d0 * SQRT(sunew(:))
 
 !     * Position of the water table after eq_wt1 in watbal3:
 
-      if (wlayernew .lt. maxlayer) then
-        ysnew = SUM(delzvec(wlayernew:maxlayer)) - 2.d0                &
-     &        * delzvec(wlayernew) * pcapnewvec(wlayernew)             &
-     &        / (delzvec(wlayernew+1) + delzvec(wlayernew))
+      if (wlayernew .lt. s_maxlayer) then
+        zwnew = SUM(s_delz(wlayernew:s_maxlayer)) - 2.d0               &
+     &        * s_delz(wlayernew) * pcapnew(wlayernew)                 &
+     &        / (s_delz(wlayernew+1) + s_delz(wlayernew))
       else
-        ysnew = delzvec(wlayernew) - 2.d0 * delzvec(wlayernew)         &
-     &        * pcapnewvec(wlayernew) / delzvec(wlayernew)
+        zwnew = s_delz(wlayernew) - 2.d0 * s_delz(wlayernew)           &
+     &        * pcapnew(wlayernew) / s_delz(wlayernew)
       endif
 
       return
@@ -360,24 +359,24 @@
 !$
 !$!*  For debugging in pgf90:
 !$    do i = 1, nlayers
-!$      if (isnand(sunewvec(i))) then
+!$      if (isnand(sunew(i))) then
 !$        print *, "Its a NaN"
-!$      elseif (isinfd(sunewvec(i))) then
+!$      elseif (isinfd(sunew(i))) then
 !$        print *, "Its a Inf"
 !$      endif
 !$    enddo
 
 !     * CHECK WATER BALANCE
 
-      cH2Ol_s(:) = (-sunewvec(:) * thetarvec(:) + sunewvec(:)          &
-     &           * thetasvec(:) + thetarvec(:)) * delzvec(:)
+      cH2Ol_s(:) = (-sunew(:) * s_thetar(:) + sunew(:) * s_thetas(:)   &
+     &           + s_thetar(:)) * s_delz(:)
 
       wcnew = SUM(cH2Ol_s(:))
 
 !$    print*,"errorstep=",(wc+dt*io-wcnew)
 
       if (ABS(wc_ + dt_ * io__ - wcnew) .gt. 1.d-6) then
-        write(msg,*) "error=", (wc_ + dt_ * io__ - wcnew), " ys=", ysnew
+        write(msg,*) "error=", (wc_ + dt_ * io__ - wcnew), " ys=", zwnew
         write(*,*) TRIM(msg)
         write(msg,*) "sum(iovec) = ", SUM(iovec(:)), "; io = ", io__
         write(*,*) TRIM(msg)

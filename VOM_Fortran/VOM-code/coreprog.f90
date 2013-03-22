@@ -1,13 +1,13 @@
 !***********************************************************************
-!        Optimised Vegetation Optimality Model (VOM)
-!        Core program to run optimisation (sce) and transpmodel
+!  Optimised Vegetation Optimality Model (VOM)
+!  Core program to run optimisation (sce) and transpmodel
 !-----------------------------------------------------------------------
-!        Author: Stan Schymanski, CWR, University of Western Australia
-!        05/05/2004
+!    Author: Stan Schymanski, CWR, University of Western Australia
+!    05/05/2004
 !
-!        Now at: MPI for Biogeochemistry, Jena, Germany
-!        30/07/2007
-!   sschym@bgc-jena.mpg.de
+!    Now at: MPI for Biogeochemistry, Jena, Germany
+!    30/07/2007
+!    sschym@bgc-jena.mpg.de
 !
 !-----------------------------------------------------------------------
 !
@@ -32,15 +32,15 @@
       use vom_file_mod
       implicit none
 
-      INTEGER       :: vom_command
-      REAL*8        :: vom_invar(6)
-      REAL*8        :: vom_objfun
+      INTEGER      :: vom_command
+      REAL*8       :: vom_invar(6)
+      REAL*8       :: vom_objfun
 
-      INTEGER       :: npar
-      CHARACTER(3)  :: str
+      INTEGER      :: npar
+      CHARACTER(3) :: str
 
-      INTEGER :: iostat
-      LOGICAL :: exist
+      INTEGER      :: iostat
+      LOGICAL      :: exist
 
 !-----------------------------------------------------------------------
 ! for debug purposes:
