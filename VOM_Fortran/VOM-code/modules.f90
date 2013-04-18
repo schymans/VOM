@@ -12,7 +12,7 @@
       INTEGER :: kfile_inputpar      = 201
       INTEGER :: kfile_resultshourly = 201
       INTEGER :: kfile_resultsdaily  = 202
-      INTEGER :: kfile_yearly        = 203
+      INTEGER :: kfile_resultsyearly = 203
       INTEGER :: kfile_rsurfdaily    = 204
       INTEGER :: kfile_delzhourly    = 205
       INTEGER :: kfile_ruptkthourly  = 206
@@ -23,9 +23,9 @@
       INTEGER :: kfile_sceout        = 701
       INTEGER :: kfile_progress      = 702
       INTEGER :: kfile_lastloop      = 703
-      INTEGER :: kfile_currentbest   = 704
+      INTEGER :: kfile_lastbest      = 704
       INTEGER :: kfile_bestpars      = 705
-      INTEGER :: kfile_finalbest     = 706
+      INTEGER :: kfile_beststat      = 706
       INTEGER :: kfile_pars          = 707
       INTEGER :: kfile_shufflepar    = 708
 
@@ -37,7 +37,7 @@
       CHARACTER(len=*),parameter :: sfile_inputpar      = 'input.par'
       CHARACTER(len=*),parameter :: sfile_resultshourly = 'results_hourly.txt'
       CHARACTER(len=*),parameter :: sfile_resultsdaily  = 'results_daily.txt'
-      CHARACTER(len=*),parameter :: sfile_yearly        = 'results_yearly.txt'
+      CHARACTER(len=*),parameter :: sfile_resultsyearly = 'results_yearly.txt'
       CHARACTER(len=*),parameter :: sfile_rsurfdaily    = 'rsurf_daily.txt'
       CHARACTER(len=*),parameter :: sfile_delzhourly    = 'delz_hourly.txt'
       CHARACTER(len=*),parameter :: sfile_ruptkthourly  = 'ruptkt_hourly.txt'
@@ -45,12 +45,12 @@
       CHARACTER(len=*),parameter :: sfile_soilprofile   = 'soilprofile.par'
       CHARACTER(len=*),parameter :: sfile_model_output  = 'model_output.txt'
 
-      CHARACTER(len=*),parameter :: sfile_sceout        = 'sce.out'
-      CHARACTER(len=*),parameter :: sfile_progress      = 'progress.txt'
-      CHARACTER(len=*),parameter :: sfile_lastloop      = 'lastloop.txt'
-      CHARACTER(len=*),parameter :: sfile_currentbest   = 'currentbest.txt'
-      CHARACTER(len=*),parameter :: sfile_bestpars      = 'bestpars.txt'
-      CHARACTER(len=*),parameter :: sfile_finalbest     = 'finalbest.txt'
+      CHARACTER(len=*),parameter :: sfile_sceout        = 'sce_out.txt'
+      CHARACTER(len=*),parameter :: sfile_progress      = 'sce_progress.txt'
+      CHARACTER(len=*),parameter :: sfile_lastloop      = 'sce_lastloop.txt'
+      CHARACTER(len=*),parameter :: sfile_lastbest      = 'sce_lastbest.txt'
+      CHARACTER(len=*),parameter :: sfile_bestpars      = 'sce_bestpars.txt'
+      CHARACTER(len=*),parameter :: sfile_beststat      = 'sce_status.txt'
       CHARACTER(len=*),parameter :: sfile_pars          = 'pars.txt'
       CHARACTER(len=*),parameter :: sfile_shufflepar    = 'shuffle.par'
 

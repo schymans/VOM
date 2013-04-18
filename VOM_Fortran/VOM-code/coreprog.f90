@@ -1,13 +1,13 @@
 !***********************************************************************
-!  Optimised Vegetation Optimality Model (VOM)
-!  Core program to run optimisation (sce) and transpmodel
+!        Optimised Vegetation Optimality Model (VOM)
+!        Core program to run optimisation (sce) and transpmodel
 !-----------------------------------------------------------------------
-!    Author: Stan Schymanski, CWR, University of Western Australia
-!    05/05/2004
+!        Author: Stan Schymanski, CWR, University of Western Australia
+!        05/05/2004
 !
-!    Now at: MPI for Biogeochemistry, Jena, Germany
-!    30/07/2007
-!    sschym@bgc-jena.mpg.de
+!        Now at: MPI for Biogeochemistry, Jena, Germany
+!        30/07/2007
+!   sschym@bgc-jena.mpg.de
 !
 !-----------------------------------------------------------------------
 !
@@ -32,28 +32,33 @@
       use vom_file_mod
       implicit none
 
-      INTEGER      :: vom_command
-      REAL*8       :: vom_invar(6)
-      REAL*8       :: vom_objfun
+      INTEGER             :: vom_command
+      REAL*8              :: vom_invar(6)
+      REAL*8              :: vom_objfun
+      INTEGER             :: npar
+      CHARACTER(3)        :: str
+      INTEGER             :: beststat
+      INTEGER             :: iostat
+      LOGICAL             :: exist
 
-      INTEGER      :: npar
-      CHARACTER(3) :: str
-
-      INTEGER      :: iostat
-      LOGICAL      :: exist
-
-!-----------------------------------------------------------------------
-! for debug purposes:
-! option1='-optimise'
-!-----------------------------------------------------------------------
+      beststat = 0
 
 !     * Parameter definitions
 
       open(kfile_shufflepar, FILE=sfile_shufflepar, STATUS='old')
       read(kfile_shufflepar,*) vom_command
 
-      inquire(FILE=sfile_finalbest, EXIST=exist)
-      if (exist .and. vom_command .ne. 3) vom_command = 2
+!     * read restart status
+
+        inquire(FILE=sfile_beststat, EXIST=exist)
+        if (exist) then
+          open(kfile_beststat, FILE=sfile_beststat, STATUS='old')
+            read(kfile_beststat,*) beststat
+          close(kfile_beststat)
+        endif
+      if (beststat == 1 .and. vom_command .ne. 3) then
+        vom_command = 2
+      endif
 
       if (vom_command .eq. 2 .or. vom_command .eq. 3) then
         close(kfile_shufflepar)
@@ -69,32 +74,25 @@
         if (vom_command .eq. 3) then
           open(kfile_pars, FILE=sfile_pars, STATUS='old', IOSTAT=iostat)
           if (iostat .ne. 0) then
-            write(*,*) "ERROR reading ", sfile_pars
+            write(0,*) "ERROR reading ", sfile_pars
             stop
           endif
           read(kfile_pars,*) vom_invar(:)
           close(kfile_pars)
           vom_objfun = 0.d0
         else
-          if (exist) then
-            open(kfile_finalbest, FILE=sfile_finalbest,                &
-     &                            STATUS='old', IOSTAT=iostat)
-            if (iostat .ne. 0) then
-              write(*,*) "ERROR reading ", sfile_finalbest
-              stop
-            endif
-          else
-!           * reads input parameters from previous optimisation
-            open(kfile_finalbest, FILE=sfile_currentbest,              &
-     &                            STATUS='old', IOSTAT=iostat)
-            if (iostat .ne. 0) then
-              write(*,*) "ERROR reading ", sfile_currentbest
-              stop
-            endif
-          endif
-          rewind(kfile_finalbest)
-          read(kfile_finalbest,*) vom_invar(:), vom_objfun
-          close(kfile_finalbest)
+!         * reads input parameters from previous optimisation
+
+            open(kfile_lastbest, FILE=sfile_lastbest,                     &
+     &                           STATUS='old', IOSTAT=iostat)
+              if (iostat .ne. 0) then
+                write(0,*) "ERROR opening ", sfile_lastbest
+                stop
+              endif
+              rewind(kfile_lastbest)
+              read(kfile_lastbest,*) vom_invar(:), vom_objfun
+            close(kfile_lastbest)
+
           write(*,'(" The best carbon profit was: ",E13.6)') vom_objfun
         endif
 

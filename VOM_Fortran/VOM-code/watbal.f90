@@ -44,7 +44,7 @@
       use vom_vegwat_mod
       implicit none
 
-      INTEGER :: j
+      INTEGER :: jj
 
 !     * CURRENT SOIL WATER CONTENT
 
@@ -65,8 +65,8 @@
         iovec(1) = iovec(1) - spgfcf__
       endif
       if (wlayer_ .gt. 2) then
-        do j = 2, wlayer_ - 1
-          iovec(j) = qbl(j) - qbl(j-1) - ruptkt__(j) - ruptkg__(j)
+        do jj = 2, wlayer_ - 1
+          iovec(jj) = qbl(jj) - qbl(jj-1) - ruptkt__(jj) - ruptkg__(jj)
         enddo
       endif
       if (wlayer_ .gt. 1) then
@@ -101,7 +101,7 @@
       use vom_vegwat_mod
       implicit none
 
-      INTEGER :: j
+      INTEGER :: jj
 
       dtsu_count  = 0
       dtmax_count = 0
@@ -118,18 +118,18 @@
 
 !     * Equilibrium pressure head
 
-      do j = wlayer_, 1, -1
-        pcap_(j) = 0.5d0 * s_delz(j+1) + 0.5d0 * s_delz(j) + pcap_(j+1)
+      do jj = wlayer_, 1, -1
+        pcap_(jj) = 0.5d0 * s_delz(jj+1) + 0.5d0 * s_delz(jj) + pcap_(jj+1)
       enddo
 
 !     * equilibrium su above a saturated layer (after eq_sueq1 in Watbal3)
 
-      do j = 1, s_maxlayer - 1
-        sueq(j) = (1.d0 / ((0.5d0 * (s_delz(j+1) +  s_delz(j))         &
-     &          * s_avg(j)) ** s_nvg(j) + 1.d0)) ** c_mvg(j)
+      do jj = 1, s_maxlayer - 1
+        sueq(jj) = (1.d0 / ((0.5d0 * (s_delz(jj+1) +  s_delz(jj))      &
+     &           * s_avg(jj)) ** s_nvg(jj) + 1.d0)) ** c_mvg(jj)
       enddo
-      sueq(s_maxlayer) = (1.d0 / ((0.5d0 * s_delz(j) * s_avg(j))       &
-     &                 ** s_nvg(j) + 1.d0)) ** c_mvg(j)
+      sueq(s_maxlayer) = (1.d0 / ((0.5d0 * s_delz(jj) * s_avg(jj))     &
+     &                 ** s_nvg(jj) + 1.d0)) ** c_mvg(jj)
       su__(:) = (1.d0 / ((pcap_(:) * s_avg(:)) ** s_nvg(:) + 1.d0)) ** c_mvg(:)
 
 !     * unsat. hydrol. cond. as a function of su
@@ -158,7 +158,7 @@
       implicit none
 
       REAL*8  :: dummy
-      INTEGER :: i, j
+      INTEGER :: ii, jj
 
 !     * infiltration
 
@@ -181,9 +181,9 @@
       if (wlayer_ .gt. 1) then
 !       * Runoff occurs only from the layer 'wlayer_',
 !         therefore no downward flow into the layers below is allowed.
-        do j = 1, wlayer_ - 1
-          qbl(j) = -0.5d0 * (2.d0 * (pcap_(j+1) - pcap_(j)) / (s_delz(j+1) &
-     &           + s_delz(j)) + 1.d0) * (kunsat_(j+1) + kunsat_(j))
+        do jj = 1, wlayer_ - 1
+          qbl(jj) = -0.5d0 * (2.d0 * (pcap_(jj+1) - pcap_(jj)) / (s_delz(jj+1) &
+     &            + s_delz(jj)) + 1.d0) * (kunsat_(jj+1) + kunsat_(jj))
         enddo
       endif
 
@@ -216,11 +216,11 @@
         endif
 
         if (wlayer_ .gt. 2) then
-          do i = 2, wlayer_ - 1
-            if (su__(i) .ge. 0.99d0) then
-              dummy = qbl(i-1) + ruptkt__(i) + ruptkg__(i)
-              if (qbl(i) - dummy .gt. 0.d0) then
-                qbl(i) = dummy - 1.d-16 ! (Out[158])+ruptkg__(i)
+          do ii = 2, wlayer_ - 1
+            if (su__(ii) .ge. 0.99d0) then
+              dummy = qbl(ii-1) + ruptkt__(ii) + ruptkg__(ii)
+              if (qbl(ii) - dummy .gt. 0.d0) then
+                qbl(ii) = dummy - 1.d-16 ! (Out[158])+ruptkg__(ii)
               endif
             endif
           enddo
@@ -254,27 +254,28 @@
       implicit none
 
       REAL*8  :: dtsu
-      INTEGER :: i, j
+      INTEGER :: jj
 
+!$    INTEGER :: ii
 !$    LOGICAL :: isnand, isinfd
 !$
 !$!*  for debugging in pgf90:
-!$    do i = 1, wlayer_
-!$      if (isnand(dsu(i))) then
+!$    do ii = 1, wlayer_
+!$      if (isnand(dsu(ii))) then
 !$        print *, "Its a NaN"
-!$      elseif (isinfd(dsu(i))) then
+!$      elseif (isinfd(dsu(ii))) then
 !$        print *, "Its a Inf"
 !$      endif
 !$    enddo
 
       dtsu = 999999.d0
-      do j = 1, wlayer_
-        if (dsu(j) .lt. 0.d0) then
-          dtsu = MIN(dtsu, -0.1d0 * su__(j) / dsu(j))
+      do jj = 1, wlayer_
+        if (dsu(jj) .lt. 0.d0) then
+          dtsu = MIN(dtsu, -0.1d0 * su__(jj) / dsu(jj))
         endif
-        if (dsu(j) .gt. 0.d0) then
-          dtsu = MIN(dtsu, 0.1d0 * su__(j) / dsu(j),              &
-     &               (1.d0 - su__(j)) / dsu(j))
+        if (dsu(jj) .gt. 0.d0) then
+          dtsu = MIN(dtsu, 0.1d0 * su__(jj) / dsu(jj),                 &
+     &               (1.d0 - su__(jj)) / dsu(jj))
         endif
       enddo
 
@@ -300,17 +301,17 @@
       use vom_vegwat_mod
       implicit none
 
-      INTEGER :: j
+      INTEGER :: jj
 
       sunew(:) = su__(:) + dt_ * dsu(:)
-      j = s_maxlayer
+      jj = s_maxlayer
       wlayernew = s_maxlayer
 
 !     * Find the lowest unsaturated layer and set the one below it as wlayernew
 
-      do while (sunew(j) .gt. 0.999999d0 .and. j .gt. 1)
-        j = j - 1
-        wlayernew = j
+      do while (sunew(jj) .gt. 0.999999d0 .and. jj .gt. 1)
+        jj = jj - 1
+        wlayernew = jj
       enddo
 
 !     * If there is not enough moisture in the layer above the saturated
@@ -354,14 +355,14 @@
       character(len=135) :: msg
       REAL*8  :: wcnew
 
-!$    INTEGER :: i
+!$    INTEGER :: ii
 !$    LOGICAL :: isnand, isinfd
 !$
 !$!*  For debugging in pgf90:
-!$    do i = 1, nlayers
-!$      if (isnand(sunew(i))) then
+!$    do ii = 1, nlayers
+!$      if (isnand(sunew(ii))) then
 !$        print *, "Its a NaN"
-!$      elseif (isinfd(sunew(i))) then
+!$      elseif (isinfd(sunew(ii))) then
 !$        print *, "Its a Inf"
 !$      endif
 !$    enddo

@@ -167,12 +167,10 @@
 !         * use temporary variable to prevent warning in ifort
           tmp2(:) = SHAPE(shufflevar(:,:))
           call sortcomp(shufflevar(:,:), tmp2(:), ofvec(:), SIZE(ofvec(:)))
-          call writepars()                     ! PROGRAM STOP
-          open(kfile_finalbest, FILE=sfile_finalbest)
-            write(kfile_finalbest,outformat) shufflevar(:,1), bestobj
-          close(kfile_finalbest)
-          close(kfile_sceout)
-          close(kfile_bestpars)
+          call writepars()              ! PROGRAM STOP
+          call write_lastbest(shufflevar(:,1), npar, bestobj, 1)
+            close(kfile_sceout)
+            close(kfile_bestpars)
           if (kfile_progress .ne. 6) close(kfile_progress)
 
       deallocate(sumvar)
@@ -190,8 +188,8 @@
 
       INTEGER, INTENT(out) :: run_initialseed
 
-      INTEGER       :: ii, jj
-      CHARACTER(3)  :: str
+      INTEGER             :: ii, jj
+      CHARACTER(3)        :: str
       CHARACTER(24)       :: logdate
       CHARACTER(len=135)  :: msg
 
@@ -296,7 +294,7 @@
       implicit none
 
       CHARACTER(3)  :: str
-      INTEGER       :: ios
+      INTEGER :: iostat
 
       open(kfile_shufflepar, FILE=sfile_shufflepar, STATUS='old')
 
@@ -304,13 +302,14 @@
       read(kfile_shufflepar,*)
       npar = 0
       do
-        read(kfile_shufflepar,*,IOSTAT=ios) str
-        if (ios .lt. 0) exit
+        read(kfile_shufflepar,*,IOSTAT=iostat) str
+        if (iostat .lt. 0) exit
         if (str .eq. 'var') npar = npar + 1
       enddo
       rewind(kfile_shufflepar)
 
 !     * Input of variable parameters from the parameter file
+
       read(kfile_shufflepar,'(i1)') vom_command
       read(kfile_shufflepar,*) i_ncomp_
       read(kfile_shufflepar,*) i_ncompmin
@@ -366,57 +365,61 @@
 
       INTEGER             :: ii, iostat
       CHARACTER(len=135)  :: msg
-      REAL*8, ALLOCATABLE :: tmp(:)
+      REAL*8, ALLOCATABLE :: tmp_8(:)
 
       run_initialseed = 0
 
-      open(kfile_lastloop, FILE=sfile_lastloop, STATUS='old', IOSTAT=iostat)
-      if (iostat .eq. 0) then
-        read(kfile_lastloop,*) ncomp2
-        read(kfile_lastloop,*) nloop
-        read(kfile_lastloop,*) nrun
-        read(kfile_lastloop,*) nsincebest
-        read(kfile_lastloop,loopformat) ofvec(:)
-!       * use temporary variable to prevent warning in ifort
-        allocate(tmp(sopt))
-        do ii = 1, npar
-          read(kfile_lastloop, loopformat) tmp(:)
-          shufflevar(ii,:) = tmp(:)
-        enddo
-        deallocate(tmp)
-        close(kfile_lastloop)
-        bestobj = ofvec(1)
+        open(kfile_lastloop, FILE=sfile_lastloop, STATUS='old', IOSTAT=iostat)
+        if (iostat .eq. 0) then
 
-!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-! OPEN FILES FOR STORING OBJECTIVE FUNCTION AND PARAMETER VALUES
+!         * read parameter values to continue from last run
 
-          open(kfile_sceout, FILE=sfile_sceout, STATUS='old', POSITION='append')
-        open(kfile_bestpars, FILE=sfile_bestpars, STATUS='old', POSITION='append')
-        if (kfile_progress .ne. 6) then
-          open(kfile_progress, FILE=sfile_progress, STATUS='old', POSITION='append')
+          read(kfile_lastloop,*) ncomp2
+          read(kfile_lastloop,*) nloop
+          read(kfile_lastloop,*) nrun
+          read(kfile_lastloop,*) nsincebest
+          read(kfile_lastloop,loopformat) ofvec(:)
+!         * use temporary variable to prevent warning in ifort
+          allocate(tmp_8(sopt))
+          do ii = 1, npar
+            read(kfile_lastloop, loopformat) tmp_8(:)
+            shufflevar(ii,:) = tmp_8(:)
+          enddo
+          deallocate(tmp_8)
+          close(kfile_lastloop)
+          bestobj = ofvec(1)
+
+!         * open files for storing objective function and parameter values
+
+            open(kfile_sceout, FILE=sfile_sceout, STATUS='old', POSITION='append')
+            open(kfile_bestpars, FILE=sfile_bestpars, STATUS='old', POSITION='append')
+          if (kfile_progress .ne. 6) then
+            open(kfile_progress, FILE=sfile_progress, STATUS='old', POSITION='append')
+          endif
+          write(kfile_progress,*) " "
+          write(msg,'("  NEW Run time:   ",A)') logdate
+          write(kfile_progress,*) TRIM(msg)
+        else
+
+!         * open empty files for storing objective function and parameter values
+
+            open(kfile_sceout, FILE=sfile_sceout, STATUS='replace')
+            open(kfile_bestpars, FILE=sfile_bestpars, STATUS='replace')
+          if (kfile_progress .ne. 6) then
+            open(kfile_progress, FILE=sfile_progress, STATUS='replace')
+          endif
+
+!         * write output header
+
+          write(kfile_progress,*) 'SHUFFLED COMPLEX EVOLUTION OPTIMISER'
+          write(kfile_progress,*) " "
+          write(msg,'("  Run time:   ",A)') logdate
+          write(kfile_progress,*) TRIM(msg)
+
+          bestobj = 0.0
+          bestincomp = 0.0
+          run_initialseed = 1
         endif
-        write(kfile_progress,*) " "
-        write(msg,'("  NEW Run time:   ",A)') logdate
-        write(kfile_progress,*) TRIM(msg)
-      else
-
-!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-! OPEN AND EMPTY FILE FOR STORING OBJECTIVE FUNCTION AND PARAMETER VALUES
-
-          open(kfile_sceout, FILE=sfile_sceout, STATUS='replace')
-        open(kfile_bestpars, FILE=sfile_bestpars, STATUS='replace')
-        if (kfile_progress .ne. 6) then
-          open(kfile_progress, FILE=sfile_progress, STATUS='replace')
-        endif
-
-!       * write file header
-        write(kfile_progress,*) 'SHUFFLED COMPLEX EVOLUTION OPTIMISER'
-        write(kfile_progress,*) " "
-        write(msg,'("  Run time:   ",A)') logdate
-        write(kfile_progress,*) TRIM(msg)
-
-        run_initialseed = 1
-      endif
 
       return
       end subroutine open_output
@@ -467,9 +470,7 @@
             if (ofvec(1) .le. 0.d0) worstcount = worstcount + 1
             bestobj = ofvec(1)
             bestincomp = bestobj
-            open(kfile_currentbest, FILE=sfile_currentbest)
-              write(kfile_currentbest,outformat) shufflevar(:,1), bestobj
-            close(kfile_currentbest)
+            call write_lastbest(shufflevar(:,1), npar, bestobj, 0)
             write(msg,'("Systematic seed of",i4," parameters for ",i2," complexes. Initial OF= ",e13.6)') nopt, i_ncomp_, ofvec(1)
             write(6,*) TRIM(msg)
 
@@ -560,9 +561,7 @@
 
           if (ofvec(ii) .gt. bestobj) then
             bestobj = ofvec(ii)
-            open(kfile_currentbest, FILE=sfile_currentbest)
-              write(kfile_currentbest,outformat) shufflevar(:,ii), bestobj
-            close(kfile_currentbest)
+            call write_lastbest(shufflevar(:,ii), npar, bestobj, 0)
           endif
 
         if (success .eq. 2) exit
@@ -609,7 +608,7 @@
           call sortcomp(shufflevar(:,:), tmp2(:), ofvec(:), SIZE(ofvec(:)))
           call writepars()
           nsincebest = 0
-          write(kfile_bestpars,outformat) shufflevar(:,1), bestobj
+            write(kfile_bestpars,outformat) shufflevar(:,1), bestobj
         endif
 
       return
@@ -632,7 +631,7 @@
       REAL*8               :: ofvec2, ofchange, parchange
       CHARACTER(300)       :: writeformat
       CHARACTER(len=135)   :: msg
-      REAL*8, ALLOCATABLE  :: tmp(:)
+      REAL*8, ALLOCATABLE  :: tmp_8(:)
 
         shufflevar2(:) = shufflevar(:,1)
         ofvec2 = ofvec(1)
@@ -678,16 +677,14 @@
 
             if (ofvec2 .gt. bestobj) then
               bestobj = ofvec2
-              open(kfile_currentbest, FILE=sfile_currentbest)
-                write(kfile_currentbest,outformat) shufflevar2(:), bestobj
-              close(kfile_currentbest)
+              call write_lastbest(shufflevar2(:), npar, bestobj, 0)
             endif
 
 !             * use temporary variable to prevent warning in ifort
-              allocate(tmp(nopt))
-              tmp(:) = shufflevar2(optid(:))
-              write(kfile_sceout,outformat) tmp(:), ofvec2
-              deallocate(tmp)
+              allocate(tmp_8(nopt))
+              tmp_8(:) = shufflevar2(optid(:))
+              write(kfile_sceout,outformat) tmp_8(:), ofvec2
+              deallocate(tmp_8)
 
             if (kk .eq. 1) then
               dataarray((ii-1)*8+jj+2,1:nopt) = shufflevar2(optid(:))
@@ -822,8 +819,8 @@
       implicit none
 
 !     * Declarations
-      REAL*8, DIMENSION(mopt),      INTENT(inout) :: objfun
-      REAL*8, DIMENSION(npar,mopt), INTENT(inout) :: invar
+      REAL*8, DIMENSION(mopt),          INTENT(inout) :: objfun
+      REAL*8, DIMENSION(npar,mopt),     INTENT(inout) :: invar
 
 !     * Definitions
       INTEGER       :: l_
@@ -991,9 +988,7 @@
           if (newobjfun .gt. bestobj) then
             bestobj = newobjfun
             bestincomp = newobjfun
-            open(kfile_currentbest, FILE=sfile_currentbest)
-              write(kfile_currentbest,outformat) invar(:,1), bestobj
-            close(kfile_currentbest)
+            call write_lastbest(invar(:,1), npar, bestobj, 0)
             nsincebest = 0
           elseif (newobjfun .gt. bestincomp) then
             bestincomp = newobjfun
@@ -1020,7 +1015,7 @@
       CHARACTER(1)        :: bestmark
       CHARACTER(300)      :: writeformat
       CHARACTER(len=135)  :: msg
-      REAL*8, ALLOCATABLE :: tmp(:)
+      REAL*8, ALLOCATABLE :: tmp_8(:)
 
         nrun = nrun + 1
 
@@ -1038,11 +1033,11 @@
           write(kfile_progress,*) TRIM(msg)
 
 !           * use temporary variable to prevent warning in ifort
-            allocate(tmp(nopt))
-            tmp(:) = invar(optid(:))
-            write(kfile_sceout,outformat) tmp(:), objfun
+            allocate(tmp_8(nopt))
+            tmp_8(:) = invar(optid(:))
+            write(kfile_sceout,outformat) tmp_8(:), objfun
             flush(kfile_progress)
-            deallocate(tmp)
+            deallocate(tmp_8)
         endif
 
       return
@@ -1095,29 +1090,29 @@
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
 !     * WRITE shufflevar AND ofvec OF LAST LOOP TO FILE AND TERMINATE
+
       subroutine writeloop ()
       use vom_sce_mod
       implicit none
 
       INTEGER             :: ii
-      REAL*8, ALLOCATABLE :: tmp(:)
+      REAL*8, ALLOCATABLE :: tmp_8(:)
 
-      open(kfile_lastloop, FILE=sfile_lastloop)
-      write(kfile_lastloop,'(i3)')  ncomp2
-      write(kfile_lastloop,'(i4)')  nloop
-      write(kfile_lastloop,'(i10)') nrun
-      write(kfile_lastloop,'(i10)') nsincebest
-      write(kfile_lastloop,loopformat) ofvec(:)
-      do ii = 1, npar
-!       * use temporary variable to prevent warning in ifort
-        allocate(tmp(sopt))
-        tmp(:) = shufflevar(ii,:)
-        write(kfile_lastloop,loopformat) tmp(:)
-        deallocate(tmp)
-      enddo
-      close(kfile_lastloop)
+        open(kfile_lastloop, FILE=sfile_lastloop)
+          write(kfile_lastloop,'(i3)')  ncomp2
+          write(kfile_lastloop,'(i4)')  nloop
+          write(kfile_lastloop,'(i10)') nrun
+          write(kfile_lastloop,'(i10)') nsincebest
+          write(kfile_lastloop,loopformat) ofvec(:)
+          allocate(tmp_8(sopt))
+          do ii = 1, npar
+!           * use temporary variable to prevent warning in ifort
+            tmp_8(:) = shufflevar(ii,:)
+            write(kfile_lastloop,loopformat) tmp_8(:)
+          enddo
+          deallocate(tmp_8)
+        close(kfile_lastloop)
 
       return
       end subroutine writeloop
@@ -1143,15 +1138,11 @@
       write(kfile_progress,*) ' '
 
       if (success .eq. 1) then
-        open(kfile_finalbest, FILE=sfile_finalbest)
-          write(kfile_finalbest,outformat) shufflevar(:,1), bestobj
-        close(kfile_finalbest)
+        call write_lastbest(shufflevar(:,1), npar, bestobj, 1)
       endif
 
       if (success .eq. 2) then
-        open(kfile_finalbest, FILE=sfile_finalbest)
-          write(kfile_finalbest,'("   0.0E+00  0.0E+00  0.0E+00  0.0E+00  0.0E+00  0.0E+00  0.0E+00")')
-        close(kfile_finalbest)
+        call write_lastbest(shufflevar(:,1)*0.d0, npar, 0.d0, 1)
       endif
 
       return
@@ -1161,7 +1152,36 @@
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+      subroutine write_lastbest (var, nvar, obj, final)
+      use vom_sce_mod
+      implicit none
+
+      INTEGER                              :: nvar
+      REAL*8, DIMENSION(nvar) , INTENT(in) :: var
+      REAL*8                               :: obj
+      INTEGER                              :: final
+
+      REAL         :: stat
+      CHARACTER*80 :: sfile
+
+        open(kfile_lastbest, FILE=sfile_lastbest)
+          write(kfile_lastbest,outformat) var(:), obj
+        close(kfile_lastbest)
+
+        if (final == 1) then
+          open(kfile_beststat, FILE=sfile_beststat)
+            write(kfile_beststat,*) 1
+          close(kfile_beststat)
+        endif
+
+      return
+      end subroutine write_lastbest
+
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 !     * SORTS THE VECTOR OBJFUN IN DESCENDING ORDER AND RETURNS IT
+
       subroutine qsort (objfun, dim_objfun)
       implicit none
 

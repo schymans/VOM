@@ -111,6 +111,7 @@
       tp_netass = tp_netass + asst_h(2) - 3600.d0 * (q_cpcct_d + rrt_d &
      &          + q_tct_d) + assg_h(2,2) - 3600.d0 * (cpccg_d(2)       &
      &          + rrg_d + tcg_d(2))
+
       asst_d(:)   = asst_d(:)   + asst_h(:)
       assg_d(:,:) = assg_d(:,:) + assg_h(:,:)
       ruptkt_d(:) = ruptkt_d(:) + ruptkt_h(:)
@@ -142,9 +143,10 @@
       return
       end subroutine transpmodel
 
-!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!     +++ Post-daily step
 
       subroutine transpmodel_daily_step (tp_netass)
       use vom_vegwat_mod
@@ -178,9 +180,10 @@
       return
       end subroutine transpmodel_daily_step
 
-!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!     +++ Post-yearly step
 
       subroutine transpmodel_yearly_step (tp_netass)
       use vom_vegwat_mod
@@ -188,25 +191,25 @@
 
       REAL*8, INTENT(in) :: tp_netass
 
-      if (optmode .eq. 0) then
-        print *,'Cumulative error in water balance (initial Ws+Input-Output-final Ws, in m): ',error
-        print *,'Number of times dtsu was limiting: ',dtsu_count
-        print *,'Number of times dtmax was limiting: ',dtmax_count
+        if (optmode .eq. 0) then
+          print *,'Cumulative error in water balance (initial Ws+Input-Output-final Ws, in m): ',error
+          print *,'Number of times dtsu was limiting: ',dtsu_count
+          print *,'Number of times dtmax was limiting: ',dtmax_count
 
-        close(kfile_resultshourly)
-        close(kfile_resultsdaily)
-        close(kfile_yearly)
-        close(kfile_rsurfdaily)
-        close(kfile_delzhourly)
-        close(kfile_ruptkthourly)
-        close(kfile_suhourly)
-      endif
+          close(kfile_resultshourly)
+          close(kfile_resultsdaily)
+          close(kfile_resultsyearly)
+            close(kfile_rsurfdaily)
+            close(kfile_delzhourly)
+            close(kfile_ruptkthourly)
+            close(kfile_suhourly)
+        endif
 
-      if (optmode .eq. 2) then
-        open(kfile_model_output, FILE=sfile_model_output, STATUS='replace')
-        write(kfile_model_output,'(E13.6)') tp_netass
-        close(kfile_model_output)
-      endif
+        if (optmode .eq. 2) then
+          open(kfile_model_output, FILE=sfile_model_output, STATUS='replace')
+          write(kfile_model_output,'(E13.6)') tp_netass
+          close(kfile_model_output)
+        endif
 
       return
       end subroutine transpmodel_yearly_step
@@ -485,26 +488,26 @@
      &  'lambdat', 'lambdag', 'rrt', 'rrg', 'asst', 'assg', 'su_avg',  &
      &  'zw', 'ws', 'spgfcf', 'infx', 'etmt', 'etmg', 'su_1', 'topt'
 
-      open(kfile_yearly, FILE=sfile_yearly, STATUS='replace')
-      write(kfile_yearly,'(A6,18A16)') "nyear", "rain", "par", "srad", &
-     &  "vd", "esoil", "etmt", "etmg", "assg", "rlg", "rrg", "cpccg",  &
-     &  "tcg", "etmt", "asst", "rlt", "rrt", "cpcct", "tct"
+      open(kfile_resultsyearly, FILE=sfile_resultsyearly, STATUS='replace')
+      write(kfile_resultsyearly,'(A6,18A16)') "nyear", "rain", "par",  &
+     &  "srad", "vd", "esoil", "etmt", "etmg", "assg", "rlg", "rrg",   &
+     &  "cpccg", "tcg", "etmt", "asst", "rlt", "rrt", "cpcct", "tct"
 
-      open(kfile_rsurfdaily, FILE=sfile_rsurfdaily, STATUS='replace')
-      write(kfile_rsurfdaily,'(2A6,A4,A7,A)') 'fyear', 'fmonth',       &
-     &  'fday', 'nday', 'rsurft_sublayer'
+        open(kfile_rsurfdaily, FILE=sfile_rsurfdaily, STATUS='replace')
+        write(kfile_rsurfdaily,'(2A6,A4,A7,A)') 'fyear', 'fmonth',     &
+     &    'fday', 'nday', 'rsurft_sublayer'
 
-      open(kfile_delzhourly, FILE=sfile_delzhourly, STATUS='replace')
-      write(kfile_delzhourly,'(2A6,A4,A7,A5,A)') 'fyear', 'fmonth',    &
-     &  'fday', 'nday', 'nhour', 'delz_sublayer'
+        open(kfile_delzhourly, FILE=sfile_delzhourly, STATUS='replace')
+        write(kfile_delzhourly,'(2A6,A4,A7,A5,A)') 'fyear', 'fmonth',  &
+     &    'fday', 'nday', 'nhour', 'delz_sublayer'
 
-      open(kfile_ruptkthourly, FILE=sfile_ruptkthourly, STATUS='replace')
-      write(kfile_ruptkthourly,'(2A6,A4,A7,A5,A)') 'fyear', 'fmonth',  &
-     &  'fday', 'nday', 'nhour', 'ruptkt_sublayer'
+        open(kfile_ruptkthourly, FILE=sfile_ruptkthourly, STATUS='replace')
+        write(kfile_ruptkthourly,'(2A6,A4,A7,A5,A)') 'fyear', 'fmonth',&
+     &    'fday', 'nday', 'nhour', 'ruptkt_sublayer'
 
-      open(kfile_suhourly, FILE=sfile_suhourly, STATUS='replace')
-      write(kfile_suhourly,'(2A6,A4,A7,A5,A)') 'fyear', 'fmonth',      &
-     &  'fday', 'nday', 'nhour', 'su_sublayer'
+        open(kfile_suhourly, FILE=sfile_suhourly, STATUS='replace')
+        write(kfile_suhourly,'(2A6,A4,A7,A5,A)') 'fyear', 'fmonth',    &
+     &    'fday', 'nday', 'nhour', 'su_sublayer'
 
       return
       end subroutine vom_open_output
@@ -573,7 +576,7 @@
      &                           STATUS='old', IOSTAT=stat)
         read(kfile_dailyweather,'(A)') str
         if (LEN(TRIM(str)) .ne. 88) then
-          write(*,*) "ERROR: ", TRIM(sfile_dailyweather), ": Wrong file format"
+          write(0,*) "ERROR: ", TRIM(sfile_dailyweather), ": Wrong file format"
           stop
         endif
         do i = 1, c_maxday
@@ -629,11 +632,15 @@
       implicit none
 
       INTEGER :: in, ik, ii
+      INTEGER :: in1, in2
       REAL*8  :: sunr, suns
       REAL*8  :: tairmean
       REAL*8  :: dtair
       REAL*8  :: daylength              ! Day length (hours)
       REAL*8  :: vp__                   ! Absolute vapour pressure in the air (Pa)
+
+        in1 = 1
+        in2 = c_maxday
 
       if (i_write_h == 1) then
         open(kfile_hourlyweather, FILE=sfile_hourlyweather, STATUS='new')
@@ -641,7 +648,7 @@
      &    'fmonth', 'fyear', 'tair_h', 'vd_h', 'par_h', 'rain_h', 'ca_h'
       endif
 
-      do in = 1, c_maxday
+      do in = in1, in2
         par_d(in) = 2.0804d0 * srad_d(in)  ! (Out[17]), par in mol/m2 if srad was MJ/m2
         daylength = 12.d0 - 7.639437d0 * ASIN((0.397949d0              &
      &            * COS(0.172142d0 + 0.017214d0 * dayyear(in))         &
@@ -784,7 +791,7 @@
       jmax25g_d(2) = 0.0003d0
       c_pcgmin     = 0.02d0             ! minimum grass pc; initial point for growth
       pcg_d(2)     = MIN(1.d0 - o_pct, c_pcgmin)
-      pcg_d(:)     = pcg_d(2) + (/-0.02,0.0,0.02/)  ! vector with values varying by 1%
+      pcg_d(:)     = pcg_d(2) + (/-0.02d0,0.0d0,0.02d0/)  ! vector with values varying by 1%
       pcg_d(3)     = MIN(MAX(c_pcgmin, pcg_d(3)), 1.d0 - o_pct)
       rootlim(:,:) = 0.d0
 
@@ -838,13 +845,13 @@
       lambdat_d    = o_lambdatf * (SUM(pcapnew(1:pos_slt)) / pos_slt) ** o_wstexp  ! (3.45)
       lambdag_d    = o_lambdagf * pcapnew(1) ** o_wsgexp  ! (3.44)
 !     * vector with values varying by 1%
-      jmax25t_d(:) = jmax25t_d(2) * (/0.99,1.0,1.01/)
+      jmax25t_d(:) = jmax25t_d(2) * (/0.99d0,1.0d0,1.01d0/)
 !     * making sure that the values don't become too low, otherwise
 !       they could never pick up again
       jmax25t_d(:) = MAX(jmax25t_d(:), 50.0d-6)
-      jmax25g_d(:) = jmax25g_d(2) * (/0.99,1.0,1.01/)
+      jmax25g_d(:) = jmax25g_d(2) * (/0.99d0,1.0d0,1.01d0/)
       jmax25g_d(:) = MAX(jmax25g_d(:), 50.0d-6)
-      pcg_d(:)     = pcg_d(2) + (/-0.02,0.0,0.02/)  ! vector with values varying by 1%
+      pcg_d(:)     = pcg_d(2) + (/-0.02d0,0.0d0,0.02d0/)  ! vector with values varying by 1%
       pcg_d(:)     = MAX(pcg_d(:), 0.d0)
       pcg_d(3)     = MIN(MAX(c_pcgmin, pcg_d(3)), 1.d0 - o_pct)
 !     * (3.38) foliage turnover costs, assuming LAI/pc of 2.5
@@ -1109,8 +1116,6 @@
       subroutine vom_rootuptake ()
       use vom_vegwat_mod
       implicit none
-
-      INTEGER :: i
 
       if (wlayernew .ge. 1) then
         pos_ult = MIN(pos_slt, wlayer_)
@@ -1407,6 +1412,7 @@
         write(str,'(i3)') wlayer_
 !       * includes a column for each sublayer
         hourlyformat = '(I6,I6,I4,I7,I5,'//str//'E14.6)'
+
         write(kfile_resultshourly,'(I6,I7,I7,I7,I7,22E15.5)')          &
      &    fyear(nday), fmonth(nday), fday(nday), nday, nhour,          &
      &    rain_h(th_), tair_h(th_), par_h(th_), vd_h(th_), esoil_h,    &
@@ -1414,12 +1420,15 @@
      &    rlt_h(2) + rlg_h(2,2), lambdat_d, lambdag_d, rrt_d + rrg_d,  &
      &    asst_h(2), assg_h(2,2), etmt_h, etmg_h, su__(1), zw_, wsnew, &
      &    spgfcf_h, infx_h
-        write(kfile_delzhourly,hourlyformat) fyear(nday),              &
-     &    fmonth(nday), fday(nday), nday, nhour, s_delz(1:wlayer_)
-        write(kfile_ruptkthourly,hourlyformat) fyear(nday),            &
-     &    fmonth(nday), fday(nday), nday, nhour, ruptkt_h(1:wlayer_)
-        write(kfile_suhourly,hourlyformat) fyear(nday),                &
-     &    fmonth(nday), fday(nday), nday, nhour, su__(1:wlayer_)
+
+          write(kfile_delzhourly,hourlyformat) fyear(nday),            &
+     &      fmonth(nday), fday(nday), nday, nhour, s_delz(1:wlayer_)
+
+          write(kfile_ruptkthourly,hourlyformat) fyear(nday),          &
+     &      fmonth(nday), fday(nday), nday, nhour, ruptkt_h(1:wlayer_)
+
+          write(kfile_suhourly,hourlyformat) fyear(nday),              &
+     &      fmonth(nday), fday(nday), nday, nhour, su__(1:wlayer_)
       endif
 
       return
@@ -1486,12 +1495,13 @@
      &  rrt_d * 3600.d0 * 24.d0, rrg_d * 3600.d0 * 24.d0, asst_d(2),   &
      &  assg_d(2,2), SUM(su__(1:wlayer_)) / wlayer_, zw_, wsnew,       &
      &  spgfcf_d, infx_d, etmt_d, etmg_d, su__(1), topt_
-      write(kfile_rsurfdaily,dailyformat) fyear(nday), fmonth(nday),   &
-     &  fday(nday), nday, rsurft_(1:wlayer_)
+
+        write(kfile_rsurfdaily,dailyformat) fyear(nday), fmonth(nday), &
+     &    fday(nday), nday, rsurft_(1:wlayer_)
 
       if (fyear(nday) .ne. nyear) then
 !       * for calculation of vd_y a -1 is added to nday for using dayyear of correct year
-        write(kfile_yearly,'(i6,18e16.6)') nyear, rain_y,              &
+        write(kfile_resultsyearly,'(i6,18e16.6)') nyear, rain_y,       &
      &    par_y, srad_y, vd_y / (dayyear(nday-1)), esoil_y, etm_y,     &
      &    etmg_y, assg_y, rlg_y, rrg_y, cpccg_y, tcg_y,                &
      &    etmt_y, asst_y, rlt_y, rrt_y, cpcct_y, tct_y
@@ -1502,7 +1512,7 @@
       if (nday .eq. c_maxday) then
 !       * call subroutine there to get yearly data for the output
         call vom_add_yearly()
-        write(kfile_yearly,'(i6,18e16.6)') nyear, rain_y,              &
+        write(kfile_resultsyearly,'(i6,18e16.6)') nyear, rain_y,       &
      &    par_y, srad_y, vd_y / (dayyear(nday)), esoil_y, etm_y,       &
      &    etmg_y, assg_y, rlg_y, rrg_y, cpccg_y, tcg_y,                &
      &    etmt_y, asst_y, rlt_y, rrt_y, cpcct_y, tct_y
