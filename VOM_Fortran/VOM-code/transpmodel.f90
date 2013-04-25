@@ -138,15 +138,15 @@
 
 !     * END OF DAILY LOOPS
 
-      call transpmodel_yearly_step(tp_netass)
+      call transpmodel_last_step(tp_netass)
 
       return
       end subroutine transpmodel
 
-!     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-!     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-!     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-!     +++ Post-daily step
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!+++ Post-daily step
 
       subroutine transpmodel_daily_step (tp_netass)
       use vom_vegwat_mod
@@ -180,47 +180,62 @@
       return
       end subroutine transpmodel_daily_step
 
-!     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-!     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-!     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-!     +++ Post-yearly step
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!+++ Post-yearly step
 
-      subroutine transpmodel_yearly_step (tp_netass)
+      subroutine transpmodel_last_step (tp_netass)
       use vom_vegwat_mod
       implicit none
 
       REAL*8, INTENT(in) :: tp_netass
 
-        if (optmode .eq. 0) then
-          print *,'Cumulative error in water balance (initial Ws+Input-Output-final Ws, in m): ',error
-          print *,'Number of times dtsu was limiting: ',dtsu_count
-          print *,'Number of times dtmax was limiting: ',dtmax_count
+      if (optmode .eq. 0) then
+        print *,'Cumulative error in water balance (initial Ws+Input-Output-final Ws, in m): ',error
+        print *,'Number of times dtsu was limiting: ',dtsu_count
+        print *,'Number of times dtmax was limiting: ',dtmax_count
 
-          close(kfile_resultshourly)
-          close(kfile_resultsdaily)
-          close(kfile_resultsyearly)
-            close(kfile_rsurfdaily)
-            close(kfile_delzhourly)
-            close(kfile_ruptkthourly)
-            close(kfile_suhourly)
-        endif
+        close(kfile_resultshourly)
+        close(kfile_resultsdaily)
+        close(kfile_resultsyearly)
+          close(kfile_rsurfdaily)
+          close(kfile_delzhourly)
+          close(kfile_ruptkthourly)
+          close(kfile_suhourly)
 
-        if (optmode .eq. 2) then
-          open(kfile_model_output, FILE=sfile_model_output, STATUS='replace')
-          write(kfile_model_output,'(E13.6)') tp_netass
-          close(kfile_model_output)
-        endif
+        write(*,*) "Model run COMPLETE"
+        write(*,*) " "
+        write(*,*) "The carbon profit achieved is: ",tp_netass
+        write(*,*) "Hourly results are saved in resulthourly.txt"
+        write(*,*) "Daily results are saved in resultsdaily.txt"
+        write(*,*) "Yearly results are saved in yearly.txt"
+        write(*,*) "Soil results are saved in delyudaily.txt, rsurfdaily.txt, ruptkhourly.txt, suvechourly.txt"
+      endif
+
+      if (optmode .eq. 2) then
+        open(kfile_model_output, FILE=sfile_model_output, STATUS='replace')
+        write(kfile_model_output,'(E13.6)') tp_netass
+        close(kfile_model_output)
+
+        write(*,*) "Model run COMPLETE"
+        write(*,*) " "
+        write(*,*) "The carbon profit achieved is: ",tp_netass
+        write(*,*) "Best ncp is saved in model_output.txt"
+      endif
 
       return
-      end subroutine transpmodel_yearly_step
+      end subroutine transpmodel_last_step
 
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-      subroutine transpmodel_init_once ()
+      subroutine transpmodel_init_once (vom_command)
       use vom_vegwat_mod
       implicit none
+
+      INTEGER, INTENT(in) :: vom_command
 
 !     * Reading input parameter
 
@@ -232,7 +247,7 @@
 
 !     * File opening (saving climate and gstom ass data)
 
-      if (optmode .eq. 0) call vom_open_output()
+      if (vom_command .eq. 2) call vom_open_output()
 
 !     * PARAMETER READING FROM SOILPROFILE.PAR
 
@@ -249,19 +264,13 @@
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-      subroutine transpmodel_init (vom_invar, vom_insize, vom_command)
+      subroutine transpmodel_init (vom_invar, vom_npar, vom_command)
       use vom_vegwat_mod
       implicit none
 
-      INTEGER, INTENT(in)    :: vom_insize
+      INTEGER, INTENT(in)    :: vom_npar
       INTEGER, INTENT(in)    :: vom_command
-      REAL*8, DIMENSION(vom_insize), INTENT(in) :: vom_invar
-
-!dd   if (vom_insize .lt. 8) then
-      if (vom_insize .lt. 6) then
-        write(0,*) "ERROR: Number of input parameters less than 6."
-        stop
-      endif
+      REAL*8, DIMENSION(vom_npar), INTENT(in) :: vom_invar
 
       if (vom_command .eq. 2) then
         optmode = 0
@@ -275,19 +284,14 @@
 !*     Optimised parameters reading from vom_invar
 !*----------------------------------------------------------------------
 
-      o_lambdagf = vom_invar(1)
-      o_wsgexp   = vom_invar(2)
-      o_lambdatf = vom_invar(3)
-      o_wstexp   = vom_invar(4)
-      o_pct      = vom_invar(5)
-      o_rtdepth  = vom_invar(6)
-!dd   o_mdstore  = vom_invar(7)
-!dd   o_rgdepth  = vom_invar(8)
-
-      if (parsaved .ne. 1) then
-        call transpmodel_init_once ()
-        parsaved = 1
-      endif
+      if (vom_npar .ge. 1) o_lambdagf = vom_invar(1)
+      if (vom_npar .ge. 2) o_wsgexp   = vom_invar(2)
+      if (vom_npar .ge. 3) o_lambdatf = vom_invar(3)
+      if (vom_npar .ge. 4) o_wstexp   = vom_invar(4)
+      if (vom_npar .ge. 5) o_pct      = vom_invar(5)
+      if (vom_npar .ge. 6) o_rtdepth  = vom_invar(6)
+      if (vom_npar .ge. 7) o_mdstore  = vom_invar(7)
+      if (vom_npar .ge. 8) o_rgdepth  = vom_invar(8)
 
 !***********************************************************************
 !*  Calculation of vegetation parameters
@@ -320,57 +324,29 @@
 
       INTEGER :: iostat
 
+!     * Definition of variable parameters
+
+      namelist /inputpar/ i_alpha, i_cpccf, i_tcf, i_maxyear,          &
+     &                    i_testyear, i_ha, i_hd, i_toptf,             &
+     &                    i_toptstart, i_rlratio, i_mdtf, i_mqxtf,     &
+     &                    i_rrootm, i_rsurfmin, i_rsurf_, i_rootrad,   &
+     &                    i_prootmg, i_growthmax, i_firstyear,         &
+     &                    i_lastyear, i_write_h,                       &
+     &                    o_lambdagf, o_wsgexp, o_lambdatf, o_wstexp,  &
+     &                    o_pct, o_rtdepth, o_mdstore, o_rgdepth
+
+      namelist /input2par/ i_lat, i_cz, i_cgs, i_zr, i_go, i_ksat,     &
+     &                     i_thetar, i_thetas, i_nvg, i_avg, i_delz
+
 !     * Input of variable parameters from the parameter file
 
-      open(kfile_inputpar, FILE=sfile_inputpar, STATUS='old')
-
-      read(kfile_inputpar,*) i_alpha
-      read(kfile_inputpar,*) i_cpccf
-      read(kfile_inputpar,*) i_tcf
-      read(kfile_inputpar,*) i_maxyear
-      read(kfile_inputpar,*) i_testyear
-      read(kfile_inputpar,*) i_ha
-      read(kfile_inputpar,*) i_hd
-      read(kfile_inputpar,*) i_toptf
-      read(kfile_inputpar,*) i_toptstart
-      read(kfile_inputpar,*) i_rlratio
-
-!     * Catchment parameters
-
-      read(kfile_inputpar,*) i_lat
-      read(kfile_inputpar,*) i_cz
-      read(kfile_inputpar,*) i_cgs
-      read(kfile_inputpar,*) i_zr
-      read(kfile_inputpar,*) i_go
-
-!     * Soil parameters
-
-      read(kfile_inputpar,*) i_ksat
-      read(kfile_inputpar,*) i_thetar
-      read(kfile_inputpar,*) i_thetas
-      read(kfile_inputpar,*) i_nvg
-      read(kfile_inputpar,*) i_avg
-
-!     * Vertical Resolution
-
-      read(kfile_inputpar,*) i_delz
-
-!     * Vegetation Parameters
-
-      read(kfile_inputpar,*) i_mdtf
-      read(kfile_inputpar,*) i_mqxtf
-      read(kfile_inputpar,*) i_rrootm
-      read(kfile_inputpar,*) i_rsurfmin
-      read(kfile_inputpar,*) i_rsurf_
-      read(kfile_inputpar,*) i_rootrad
-      read(kfile_inputpar,*) i_prootmg
-      read(kfile_inputpar,*) i_growthmax
-      read(kfile_inputpar,*) o_mdstore
-      read(kfile_inputpar,*) o_rgdepth
-      read(kfile_inputpar,*) i_firstyear
-      read(kfile_inputpar,*) i_lastyear
-!     read(kfile_inputpar,*) i_write_h
-      close(kfile_inputpar)
+      open(kfile_namelist, FILE=sfile_namelist, STATUS='old',          &
+     &                     FORM='formatted', IOSTAT=iostat)
+      if (iostat .eq. 0) then
+        read(kfile_namelist, inputpar)
+        read(kfile_namelist, input2par)
+      endif
+      close(kfile_namelist)
 
       c_epsln = i_thetas - i_thetar     ! epsilon, porosity see Reggiani (2000)
       i_mvg = 1.d0 - (1.d0 / i_nvg)     ! van Genuchten soil parameter m

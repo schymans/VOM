@@ -9,7 +9,7 @@
       INTEGER :: kfile_dailyweather  = 101
       INTEGER :: kfile_hourlyweather = 102
 
-      INTEGER :: kfile_inputpar      = 201
+      INTEGER :: kfile_namelist      = 201
       INTEGER :: kfile_resultshourly = 201
       INTEGER :: kfile_resultsdaily  = 202
       INTEGER :: kfile_resultsyearly = 203
@@ -27,14 +27,13 @@
       INTEGER :: kfile_bestpars      = 705
       INTEGER :: kfile_beststat      = 706
       INTEGER :: kfile_pars          = 707
-      INTEGER :: kfile_shufflepar    = 708
 
 !     * file names
 
       CHARACTER(len=*),parameter :: sfile_dailyweather  = 'dailyweather.prn'
       CHARACTER(len=*),parameter :: sfile_hourlyweather = 'hourlyweather.prn'
 
-      CHARACTER(len=*),parameter :: sfile_inputpar      = 'input.par'
+      CHARACTER(len=*),parameter :: sfile_namelist      = 'vom_namelist'
       CHARACTER(len=*),parameter :: sfile_resultshourly = 'results_hourly.txt'
       CHARACTER(len=*),parameter :: sfile_resultsdaily  = 'results_daily.txt'
       CHARACTER(len=*),parameter :: sfile_resultsyearly = 'results_yearly.txt'
@@ -52,7 +51,6 @@
       CHARACTER(len=*),parameter :: sfile_bestpars      = 'sce_bestpars.txt'
       CHARACTER(len=*),parameter :: sfile_beststat      = 'sce_status.txt'
       CHARACTER(len=*),parameter :: sfile_pars          = 'pars.txt'
-      CHARACTER(len=*),parameter :: sfile_shufflepar    = 'shuffle.par'
 
       end module vom_file_mod
 
@@ -383,7 +381,6 @@
       INTEGER :: s_maxlayer             ! Number of soil layers
 
       REAL*8  :: i_cz      = 15.0d0     ! Average soil elevation in m
-      INTEGER :: parsaved  = 0          ! Indicator whether input parameter values have been read and saved
 
       REAL*8  :: i_delz    = 0.5d0      ! Thickness of each soil layer (m)
       REAL*8, ALLOCATABLE :: s_delz(:)  ! Thickness of each soil layer
@@ -429,6 +426,13 @@
       CHARACTER(12)  :: evolution       ! Character string explaining how parameter set was generated
       CHARACTER(60)  :: outformat, loopformat
 
+!     * allocated variables for sce()
+      REAL*8, ALLOCATABLE :: sumvar(:)
+
+!     * allocated variables for initialseed()
+      INTEGER, ALLOCATABLE :: posarray(:,:)
+      REAL*8,  ALLOCATABLE :: initpop(:,:)
+
 !     * allocated variables for optsensitivity()
       REAL*8, ALLOCATABLE :: dataarray(:,:)  ! Parameter sets and objective functions used for sensitivity analysis
       REAL*8, ALLOCATABLE :: shufflevar2(:)  ! Parameter sets used for sensitivity analysis
@@ -443,8 +447,10 @@
       REAL*8, ALLOCATABLE :: centroid(:)  ! Centroid of parameter sets for simplex procedure
       REAL*8, ALLOCATABLE :: newpoint(:)  ! New parameter set resulting from simplex procedure
 
+      INTEGER, parameter  :: nparmax = 9
+
 !     ************************************
-!     * input parameters for shuffle.par
+!     * namelist parameters for shufflepar
 !     ************************************
 
       INTEGER :: vom_command            ! Indicator of optimisation mode (0 for -optimise, 1 for -continue, 2 for compute, 3 for compute ncp only with pars.txt, 4 for optimise without random_seed)
@@ -456,8 +462,12 @@
       INTEGER :: i_nsimp      = 3       ! Number of simplex runs per complex
       REAL*8  :: i_focus      = 1.0     ! Spread of the random seed around the initial values (if <1, then limited)
 
+      INTEGER :: vom_npar     = 8       ! Number of model parameters carried through
 
-      INTEGER :: npar       = 8         ! Number of model parameters carried through
+!     ************************************
+!     * namelist parameters for shufflevar
+!     ************************************
+
       CHARACTER(9), ALLOCATABLE :: parname(:) ! Parameter names
       REAL*8,       ALLOCATABLE :: parval(:)  ! Initial parameter values read from shuffle.par
       REAL*8,       ALLOCATABLE :: parmin(:)  ! Minimum parameter values defining search domain

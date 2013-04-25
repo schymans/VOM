@@ -46,11 +46,10 @@
       use vom_sce_mod
       implicit none
 
+      INTEGER             :: run_initialseed
       INTEGER             :: ii, first, numcv
       REAL*8              :: maxcv
-      REAL*8, ALLOCATABLE :: sumvar(:)
       CHARACTER(300)      :: writeformat
-      INTEGER             :: run_initialseed
       CHARACTER(len=135)  :: msg
       INTEGER             :: tmp2(2)
       CHARACTER(len=9)    :: tmp3(1)
@@ -59,8 +58,6 @@
 ! INITIALIZATION
 
       call sce_init(run_initialseed)
-
-      allocate(sumvar(nopt))
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ! BEGIN MODEL LOOP (EXECUTE s PASSES)
@@ -125,7 +122,7 @@
           write(kfile_progress,*) TRIM(msg)
           if (maxcv .ge. i_resolution) then
             if (nsincebest .le. i_patience) then
-              call writepars
+              call writepars()
               call run_cce()
               return
             else
@@ -149,13 +146,17 @@
           call ck_success()
 
           if (success .eq. 1) then
-            return
+            close(kfile_sceout)
+            close(kfile_bestpars)
+            if (kfile_progress .ne. 6) call close(kfile_progress)
+            exit
           endif
       enddo
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ! TERMINATE PROGRAM
 
+        if (success .ne. 1) then
           write(kfile_progress,*) " "
           write(kfile_progress,*) "FAILURE TO CONVERGE..."
           write(kfile_progress,*) "  Number of runs has reached 20000."
@@ -168,12 +169,11 @@
           tmp2(:) = SHAPE(shufflevar(:,:))
           call sortcomp(shufflevar(:,:), tmp2(:), ofvec(:), SIZE(ofvec(:)))
           call writepars()              ! PROGRAM STOP
-          call write_lastbest(shufflevar(:,1), npar, bestobj, 1)
+          call write_lastbest(shufflevar(:,1), vom_npar, bestobj, 1)
             close(kfile_sceout)
             close(kfile_bestpars)
           if (kfile_progress .ne. 6) close(kfile_progress)
-
-      deallocate(sumvar)
+        endif
 
       return
       end subroutine sce_main
@@ -192,8 +192,6 @@
       CHARACTER(3)        :: str
       CHARACTER(24)       :: logdate
       CHARACTER(len=135)  :: msg
-
-      call read_shufflepar()
 
 !EXTERNAL compar
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -233,25 +231,28 @@
 ! ALLOCATE GLOBAL FIELDS
 
       allocate(optid(nopt))
-      allocate(shufflevar(npar,sopt))
+      allocate(shufflevar(vom_npar,sopt))
       allocate(ofvec(sopt))
       allocate(wgt(mopt))
       allocate(cv_(nopt))
       allocate(ranarr(nopt))
       allocate(dataarray(nopt*8+1,nopt+1))
-      allocate(shufflevar2(npar))
+      allocate(shufflevar2(vom_npar))
       allocate(parentsid(qopt))
       allocate(objfunsub(qopt))
-      allocate(invarsub(npar,qopt))
+      allocate(invarsub(vom_npar,qopt))
       allocate(selected(mopt))
-      allocate(centroid(npar))
-      allocate(newpoint(npar))
+      allocate(centroid(vom_npar))
+      allocate(newpoint(vom_npar))
+      allocate(posarray(2**nopt,nopt))
+      allocate(initpop(nopt,5))
+      allocate(sumvar(nopt))
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ! INITIALISE OUTPUT FORMAT STRING
 ! INTRODUCED BY STAN TO HAVE ONE COLUMN PER PARAMETER AND ONE FOR OF
 
-      write(str,'(i2)') npar + 1        ! internal write to convert from integer to string
+      write(str,'(i2)') vom_npar + 1    ! internal write to convert from integer to string
       outformat = '('//str//'e24.15)'   ! includes a column for each parameter and a column for the value of OF
 
 !     * ADDED BY STAN TO WRITE shufflevar AND ofvec OF LAST LOOP TO FILE
@@ -262,7 +263,7 @@
 ! INITIALISE optid: THE INDEX OF THOSE PARAMETERS THAT ARE OPTIMISABLE
 
       jj = 0
-      do ii = 1, npar
+      do ii = 1, vom_npar
         if (paropt(ii) .gt. 0) then
           jj = jj + 1
           optid(jj) = ii
@@ -293,30 +294,28 @@
       use vom_sce_mod
       implicit none
 
-      CHARACTER(3)  :: str
       INTEGER :: iostat
 
-      open(kfile_shufflepar, FILE=sfile_shufflepar, STATUS='old')
+!     * Definition of variable parameters
 
-      read(kfile_shufflepar,*)
-      read(kfile_shufflepar,*)
-      npar = 0
-      do
-        read(kfile_shufflepar,*,IOSTAT=iostat) str
-        if (iostat .lt. 0) exit
-        if (str .eq. 'var') npar = npar + 1
-      enddo
-      rewind(kfile_shufflepar)
+      namelist /shufflepar/ vom_command, i_ncomp_, i_ncompmin,         &
+     &                      i_resolution, i_patience, i_nsimp,         &
+     &                      i_focus, vom_npar
 
 !     * Input of variable parameters from the parameter file
 
-      read(kfile_shufflepar,'(i1)') vom_command
-      read(kfile_shufflepar,*) i_ncomp_
-      read(kfile_shufflepar,*) i_ncompmin
-      read(kfile_shufflepar,*) i_resolution
-      read(kfile_shufflepar,*) i_patience
-      read(kfile_shufflepar,*) i_nsimp
-      read(kfile_shufflepar,*) i_focus
+      open(kfile_namelist, FILE=sfile_namelist, STATUS='old',          &
+     &                     FORM='formatted', IOSTAT=iostat)
+      if (iostat .eq. 0) then
+        read(kfile_namelist, shufflepar)
+      endif
+      close(kfile_namelist)
+
+      if (vom_npar > nparmax) then
+        write(0,*) "ERROR: Number of parameters in shufflevar larger as nparmax"
+        write(0,*) "HINT: change the parameter nparmax in the module definitions"
+        stop
+      endif
 
       return
       end subroutine read_shufflepar
@@ -329,25 +328,39 @@
       use vom_sce_mod
       implicit none
 
-      INTEGER       :: ii
-      CHARACTER(60) :: informat
+      INTEGER :: iostat
+      CHARACTER(9) :: parname0 (nparmax)
+      REAL*8       :: parval0  (nparmax)
+      REAL*8       :: parmin0  (nparmax)
+      REAL*8       :: parmax0  (nparmax)
+      INTEGER      :: paropt0  (nparmax)
+
+!     * Definition of variable parameters
+
+      namelist /shuffle2par/ parname0, parval0, parmin0, parmax0, paropt0
 
 !     * LOAD INITIAL PARAMETER VALUES AND PARAMETER RANGES
 
-!     * allocate the parameter fields
+      open(kfile_namelist, FILE=sfile_namelist, STATUS='old',          &
+     &                     FORM='formatted', IOSTAT=iostat)
+      if (iostat .eq. 0) then
+        read(kfile_namelist, shuffle2par)
+      endif
+      close(kfile_namelist)
 
-      allocate(parname(npar))
-      allocate(parval(npar))
-      allocate(parmin(npar))
-      allocate(parmax(npar))
-      allocate(paropt(npar))
+!     * allocate and set the parameter fields
 
-      read(kfile_shufflepar,'(a60)') informat
-      do ii = 1, npar
-        read(kfile_shufflepar,informat) parname(ii), parval(ii), parmin(ii), &
-     &                                  parmax(ii), paropt(ii)
-      enddo
-      close(kfile_shufflepar)
+      __allocate(parname,(vom_npar))
+      __allocate(parval,(vom_npar))
+      __allocate(parmin,(vom_npar))
+      __allocate(parmax,(vom_npar))
+      __allocate(paropt,(vom_npar))
+
+      parname(:) = parname0(1:vom_npar)
+      parval(:)  = parval0(1:vom_npar)
+      parmin(:)  = parmin0(1:vom_npar)
+      parmax(:)  = parmax0(1:vom_npar)
+      paropt(:)  = paropt0(1:vom_npar)
 
       return
       end subroutine read_shufflevar
@@ -381,7 +394,7 @@
           read(kfile_lastloop,loopformat) ofvec(:)
 !         * use temporary variable to prevent warning in ifort
           allocate(tmp_8(sopt))
-          do ii = 1, npar
+          do ii = 1, vom_npar
             read(kfile_lastloop, loopformat) tmp_8(:)
             shufflevar(ii,:) = tmp_8(:)
           enddo
@@ -411,7 +424,7 @@
 
 !         * write output header
 
-          write(kfile_progress,*) 'SHUFFLED COMPLEX EVOLUTION OPTIMISER'
+          write(kfile_progress,*) "SHUFFLED COMPLEX EVOLUTION OPTIMISER"
           write(kfile_progress,*) " "
           write(msg,'("  Run time:   ",A)') logdate
           write(kfile_progress,*) TRIM(msg)
@@ -437,12 +450,6 @@
       INTEGER            :: worstcount  ! worstcount for counting number of negative objective functions
       CHARACTER(len=135) :: msg
 
-      INTEGER, ALLOCATABLE :: posarray(:,:)
-      REAL*8,  ALLOCATABLE :: initpop(:,:)
-
-      allocate(posarray(2**nopt,nopt))
-      allocate(initpop(nopt,5))
-
       do ii = 1,sopt
 
         if (ii .eq. 1) then
@@ -450,10 +457,10 @@
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ! PRINT DIMENSION INFORMATION
 
-      write(kfile_progress,*) '  Number of model parameters:         ',npar
-      write(kfile_progress,*) '  Number of optimisable parameters:   ',nopt
-      write(kfile_progress,*) '  Maximum number of complexes:        ',i_ncomp_
-      write(kfile_progress,*) '  Minimum number of runs per complex: ',mopt
+            write(kfile_progress,*) '  Number of model parameters:         ',vom_npar
+            write(kfile_progress,*) '  Number of optimisable parameters:   ',nopt
+            write(kfile_progress,*) '  Maximum number of complexes:        ',i_ncomp_
+            write(kfile_progress,*) '  Minimum number of runs per complex: ',mopt
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ! CALCULATING OF USING INITAL GUESS IN SHUFFLE.PAR
@@ -470,7 +477,7 @@
             if (ofvec(1) .le. 0.d0) worstcount = worstcount + 1
             bestobj = ofvec(1)
             bestincomp = bestobj
-            call write_lastbest(shufflevar(:,1), npar, bestobj, 0)
+            call write_lastbest(shufflevar(:,1), vom_npar, bestobj, 0)
             write(msg,'("Systematic seed of",i4," parameters for ",i2," complexes. Initial OF= ",e13.6)') nopt, i_ncomp_, ofvec(1)
             write(6,*) TRIM(msg)
 
@@ -561,7 +568,7 @@
 
           if (ofvec(ii) .gt. bestobj) then
             bestobj = ofvec(ii)
-            call write_lastbest(shufflevar(:,ii), npar, bestobj, 0)
+            call write_lastbest(shufflevar(:,ii), vom_npar, bestobj, 0)
           endif
 
         if (success .eq. 2) exit
@@ -572,9 +579,6 @@
         close(kfile_sceout)
         close(kfile_bestpars)
         if (kfile_progress .ne. 6) close(kfile_progress)
-
-      deallocate(posarray)
-      deallocate(initpop)
 
       return
       end subroutine initialseed
@@ -677,7 +681,7 @@
 
             if (ofvec2 .gt. bestobj) then
               bestobj = ofvec2
-              call write_lastbest(shufflevar2(:), npar, bestobj, 0)
+              call write_lastbest(shufflevar2(:), vom_npar, bestobj, 0)
             endif
 
 !             * use temporary variable to prevent warning in ifort
@@ -820,7 +824,7 @@
 
 !     * Declarations
       REAL*8, DIMENSION(mopt),          INTENT(inout) :: objfun
-      REAL*8, DIMENSION(npar,mopt),     INTENT(inout) :: invar
+      REAL*8, DIMENSION(vom_npar,mopt), INTENT(inout) :: invar
 
 !     * Definitions
       INTEGER       :: l_
@@ -884,7 +888,7 @@
       implicit none
 
 !     * Declarations
-      REAL*8, DIMENSION(npar,qopt),     INTENT(inout) :: invar
+      REAL*8, DIMENSION(vom_npar,qopt), INTENT(inout) :: invar
       REAL*8, DIMENSION(qopt),          INTENT(inout) :: objfun
 
 !     * Definitions
@@ -988,7 +992,7 @@
           if (newobjfun .gt. bestobj) then
             bestobj = newobjfun
             bestincomp = newobjfun
-            call write_lastbest(invar(:,1), npar, bestobj, 0)
+            call write_lastbest(invar(:,1), vom_npar, bestobj, 0)
             nsincebest = 0
           elseif (newobjfun .gt. bestincomp) then
             bestincomp = newobjfun
@@ -1008,7 +1012,7 @@
       implicit none
 
 !     * Declarations
-      REAL*8, DIMENSION(npar),     INTENT(in)    :: invar
+      REAL*8, DIMENSION(vom_npar), INTENT(in)    :: invar
       REAL*8,                      INTENT(out)   :: objfun
 
 !     * Definitions
@@ -1019,7 +1023,7 @@
 
         nrun = nrun + 1
 
-      call transpmodel(invar(:), npar, objfun, 1)
+      call transpmodel(invar(:), vom_npar, objfun, 1)
 
         bestmark = ' '
         if (objfun .gt. bestobj) then
@@ -1106,7 +1110,7 @@
           write(kfile_lastloop,'(i10)') nsincebest
           write(kfile_lastloop,loopformat) ofvec(:)
           allocate(tmp_8(sopt))
-          do ii = 1, npar
+          do ii = 1, vom_npar
 !           * use temporary variable to prevent warning in ifort
             tmp_8(:) = shufflevar(ii,:)
             write(kfile_lastloop,loopformat) tmp_8(:)
@@ -1138,11 +1142,11 @@
       write(kfile_progress,*) ' '
 
       if (success .eq. 1) then
-        call write_lastbest(shufflevar(:,1), npar, bestobj, 1)
+        call write_lastbest(shufflevar(:,1), vom_npar, bestobj, 1)
       endif
 
       if (success .eq. 2) then
-        call write_lastbest(shufflevar(:,1)*0.d0, npar, 0.d0, 1)
+        call write_lastbest(shufflevar(:,1)*0.d0, vom_npar, 0.d0, 1)
       endif
 
       return

@@ -29,14 +29,12 @@
 !***********************************************************************
 
       program vom
-      use vom_file_mod
+      use vom_sce_mod
       implicit none
 
-      INTEGER             :: vom_command
-      REAL*8              :: vom_invar(6)
+      REAL*8, ALLOCATABLE :: vom_invar(:)
       REAL*8              :: vom_objfun
-      INTEGER             :: npar
-      CHARACTER(3)        :: str
+
       INTEGER             :: beststat
       INTEGER             :: iostat
       LOGICAL             :: exist
@@ -45,8 +43,9 @@
 
 !     * Parameter definitions
 
-      open(kfile_shufflepar, FILE=sfile_shufflepar, STATUS='old')
-      read(kfile_shufflepar,*) vom_command
+      call read_shufflepar()
+
+      allocate(vom_invar(vom_npar))
 
 !     * read restart status
 
@@ -60,8 +59,9 @@
         vom_command = 2
       endif
 
+      call transpmodel_init_once(vom_command)
+
       if (vom_command .eq. 2 .or. vom_command .eq. 3) then
-        close(kfile_shufflepar)
 
 !       * single model run with given (optimised) parameters
 
@@ -93,44 +93,18 @@
               read(kfile_lastbest,*) vom_invar(:), vom_objfun
             close(kfile_lastbest)
 
-          write(*,'(" The best carbon profit was: ",E13.6)') vom_objfun
+          write(*,*) "The best carbon profit was: ",vom_objfun
         endif
 
         call transpmodel(vom_invar, SIZE(vom_invar), vom_objfun, vom_command)
 
-        if (vom_command .eq. 3) then
-          write(*,*) "Model run COMPLETE"
-          write(*,*) ' '
-          write(*,'(" The carbon profit achieved is: ",E13.6)') vom_objfun
-          write(*,*) "Best ncp is saved in model_output.txt"
-        else
-          write(*,*) 'Model run COMPLETE'
-          write(*,*) ' '
-          write(*,'(" The carbon profit achieved is: ",E13.6)') vom_objfun
-          write(*,*) "Hourly results are saved in resulthourly.txt"
-          write(*,*) "Daily results are saved in resultsdaily.txt"
-          write(*,*) "Yearly results are saved in yearly.txt"
-          write(*,*) "Soil results are saved in delyudaily.txt, rsurfdaily.txt, ruptkhourly.txt, suvechourly.txt"
-        endif
-
       else
-        npar = 0
-        do
-          read(kfile_shufflepar,*,IOSTAT=iostat) str
-          if (iostat .lt. 0) exit
-          if (str .eq. 'var') npar = npar + 1
-        enddo
-
-        close(kfile_shufflepar)
-
-        if (npar .ne. 6) then
-          write(*,*) "ERROR: shuffle.par has to contain 6 parameters (var)"
-          stop
-        endif
 
         call sce_main()
 
       endif
+
+      deallocate(vom_invar)
 
       write(*,*) "Program terminated"
 
