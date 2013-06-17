@@ -148,7 +148,7 @@
           if (success .eq. 1) then
             close(kfile_sceout)
             close(kfile_bestpars)
-            if (kfile_progress .ne. 6) call close(kfile_progress)
+            if (kfile_progress .ne. 6) close(kfile_progress)
             exit
           endif
       enddo
@@ -350,11 +350,11 @@
 
 !     * allocate and set the parameter fields
 
-      __allocate(parname,(vom_npar))
-      __allocate(parval,(vom_npar))
-      __allocate(parmin,(vom_npar))
-      __allocate(parmax,(vom_npar))
-      __allocate(paropt,(vom_npar))
+      allocate(parname(vom_npar))
+      allocate(parval(vom_npar))
+      allocate(parmin(vom_npar))
+      allocate(parmax(vom_npar))
+      allocate(paropt(vom_npar))
 
       parname(:) = parname0(1:vom_npar)
       parval(:)  = parval0(1:vom_npar)
