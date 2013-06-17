@@ -1,15 +1,9 @@
 #!/bin/sh
 
-# the model-folder (look at computer_start.script for path)
+# The model-folder (look at calling script (e.g. computer_start.sh) for path)
 CODEDIR=$(pwd)
-# makes a result-folder inside your model-folder
-STOREDIR=$CODEDIR/results
-mkdir -p $STOREDIR
-# copies all inside the result-folder
-cp $CODEDIR/* $STOREDIR/
-cd $STOREDIR
-chmod u=rwx,g=rwx,o=r *
-# starts vomrun.script as batch job until finalbest.txt is written
+
+# Starts vomrun.script as batch job until finalbest.txt is written
 until test -e finalbest.txt; do
-	$STOREDIR/computer_vomrun.script >> logfile.txt
+	$CODEDIR/computer_vomrun.script >> logfile.txt
 done

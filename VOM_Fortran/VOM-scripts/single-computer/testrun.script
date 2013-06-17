@@ -1,0 +1,39 @@
+#!/bin/sh
+
+MYNAME=$(whoami)
+echo $MYNAME
+
+# Path where the code files are stored:
+CODEDIR=../../VOM-code
+# Path where input data is stored:
+INPUTDIR=../../VOM-input
+# Create folder for testrun
+TESTRUNDIR=../../testrun
+mkdir $TESTRUNDIR
+# Copy all files from CODEDIR to TESTRUNDIR
+cp $CODEDIR/* $TESTRUNDIR/
+# Copy all input files into TESTRUNDIR
+cp $INPUTDIR/* $TESTRUNDIR/
+# Copy relevant script files into TESTRUNDIR
+cp computer_job.script $TESTRUNDIR/
+cp computer_vomrun.script $TESTRUNDIR/
+
+# Enter newly created directory
+
+cd $TESTRUNDIR
+
+
+# Run looping script non-interactively, i.e. the script will continue even if the terminal is closed:
+nohup ./computer_job.script &
+
+# show that looping script is running:
+ps aux | grep $MYNAME
+
+# To stop the standalone looping script (computer_job.script), use its process-id displayed in the list and type: kill -9 process-id
+# the process-id should be the first number in the nohup.out-file, relating to the below commands
+pgrep -u $(whoami) -x computer_job.sc -n >> nohup.out
+# pgrep only displays 15 characters, therefore only 'computer_job.sc' is used.
+
+# Display progress on screen (saved in sce_progress.txt):
+sleep 10
+tail -f tmp/sce_progress.txt

@@ -1,5 +1,6 @@
 #!/bin/sh
-
+# This sript creates a temporary subfolder and runs calulations there
+# to prevent corruption of previous runs in case of a computer crash
 
 STOREDIR=$(pwd)
 # path for the temp-folder
@@ -12,17 +13,17 @@ CODE4=transpmodel.f90
 CODE5=watbal.f90
 # makes the temp-folder and copies all in
 mkdir -p $TMPDIR
-cd $TMPDIR
 cp $STOREDIR/* $TMPDIR/
+cd $TMPDIR
 # compiles the code
-pgf90 -o model.x $CODE1 $CODE2 $CODE3 $CODE4 $CODE5
+gfortran -o model.x $CODE1 $CODE2 $CODE3 $CODE4 $CODE5
 #echo run information to home dir
 cat > $STOREDIR/vomrun.info <<EOI
 $STOREDIR
 $HOSTNAME
 $TMPDIR
 EOI
-# runs the the compiled model
+# runs the compiled model
 $TMPDIR/model.x >>$STOREDIR/job1.info
 # makes sure that the file system had enough time to write data to disk!
 sleep 10
