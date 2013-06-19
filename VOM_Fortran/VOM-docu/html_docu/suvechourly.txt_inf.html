@@ -9,40 +9,41 @@
 </p>
 <h1>VOM - Model Description</h1>
 <h2>VOM - info</h2>
-<h3>suvechourly.txt</h3>
+<h3>su_hourly.txt</h3>
 <hr style="clear: right;">
 <hr>
-<h2>Description of suvechourly.txt</h2>
-<p>The file "suvechourly.txt" is an output file from VOM, containing hourly soil saturation degrees
+<h2>Description of su_hourly.txt</h2>
+<p>The file "su_hourly.txt" is an output file from VOM, containing hourly soil saturation degrees
 in each soil layer during the last few years of the model run in ascii format.</p>
 <p>As the number of soil layers also depends on input given soil depth, this file has a variably
 number of rows. These rows don't have their own variable names. They are all saved within and behind
-the last variable name (susublayer).</p>
+the last variable name (su_sublayer), e.g.:</p>
+<pre>
+ fyearfmonthfday   ndaynhoursu_sublayer
+  2000     1   1  10586    1  0.487854E+00  0.414344E+00  0.363678E+00  0.390602E+00  0.397773E+00  0.307590E+00  0.233383E+00  0.232432E+00  0.233833E+00  0.631791E+00
+</pre>
+
 <h3>Fields</h3>
 <table border="1">
 <tbody><tr>
-	<td align="center">year</td>
-	<td align="center">year</td>
+	<td align="center">fyear</td>
+	<td align="center">Year</td>
 </tr>
 <tr>
-	<td align="center">month</td>
-	<td align="center">month</td>
+	<td align="center">fmonth</td>
+	<td align="center">Month</td>
 </tr>
 <tr>
-	<td align="center">day</td>
-	<td align="center">day of the month</td>
+	<td align="center">fday</td>
+	<td align="center">Day of the month</td>
 </tr>
 <tr>
-	<td align="center">dcum</td>
-	<td align="center">day of the model</td>
+	<td align="center">nday</td>
+	<td align="center">Day of the model run</td>
 </tr>
 <tr>
-	<td align="center">hour</td>
-	<td align="center">hour of day</td>
-</tr>
-<tr>
-	<td align="center">susublayer</td>
-	<td align="center">soil saturation degree in each sublayer (1.0 means fully saturated)</td>
+	<td align="center">su_sublayer</td>
+	<td align="center">Soil saturation degree in each sublayer (1.0 means fully saturated)</td>
 </tr>
 </tbody></table>
 <p>The first line contains the variable names.</p>

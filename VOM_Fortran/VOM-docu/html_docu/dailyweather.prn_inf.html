@@ -54,11 +54,6 @@ weather data in ascii format.</p>
 	<td align="center">Decimal, #.##</td>
 </tr>
 <tr>
-	<td align="center">Evap</td>
-	<td align="center">Daily pan evap. in mm</td>
-	<td align="center">Decimal, #.##</td>
-</tr>
-<tr>
 	<td align="center">Radn</td>
 	<td align="center">Global solar irradiance in MJ/m<sup>2</sup></td>
 	<td align="center">Decimal, #.##</td>
@@ -84,7 +79,8 @@ The first line contains the variable names and is omitted when reading
 the file. All fields are 8 characters long and need to be filled from
 behind, e.g.:</p>
 <pre>
-       1       1       1    1976   30.50   25.00    0.70    4.00    9.00   29.00  999.32  350.00
+    Dcum     Day   Month    Year   T.Max   T.Min    Rain    Radn      VP    Pres      Ca
+       1       1       1    1971   32.87   24.75    0.00   16.44   33.17  999.32  350.00
 </pre>
 <h3>What is needed?</h3>
 <ul>
@@ -97,7 +93,6 @@ behind, e.g.:</p>
 	<li>Pres: needed for calculating hourly VD</li>
 	<li>Ca: needed to calculate some vegetation variables</li>
 </ul>
-<p>Note: Evap is not needed and can be substituted with a dummy number in the right format.</p>
 <hr>
 </body>
 </html>

@@ -9,94 +9,95 @@
 </p>
 <h1>VOM - Model Description</h1>
 <h2>VOM - info</h2>
-<h3>yearly.txt</h3>
+<h3>results_yearly.txt</h3>
 <hr style="clear: right;">
 <hr>
-<h2>Description of yearly.txt</h2>
-<p>The file "yearly.txt" is an output file from VOM, containing annual weather and flux data in
-ascii format for all years of the model run.</p>
+<h2>Description of results_yearly.txt</h2>
+<p>The file "results_yearly.txt" is an output file from VOM, containing annual weather and flux data in
+ascii format for all years of the model run, e.g.:</p>
+<pre>
+ nyear            rain             par            srad              vd           esoil            etmt            etmg            assg             rlg             rrg           cpccg             tcg            etmt            asst             rlt             rrt           cpcct             tct
+  1971    0.187668E+04    0.148130E+05    0.712025E+04    0.114804E-01    0.566351E+03    0.000000E+00    0.000000E+00    0.000000E+00   -0.489900E-02    0.286296E+00    0.207360E-02    0.950400E-03    0.000000E+00    0.000000E+00   -0.796850E+01    0.104224E+01    0.348315E+02    0.520344E+01
+</pre>
+
 <h3>Fields</h3>
 <table border="1">
 <tbody><tr>
-	<td align="center">year</td>
-	<td align="center">year</td>
+	<td align="center">nyear</td>
+	<td align="center">Year</td>
 </tr>
 <tr>
-	<td align="center">rainyr</td>
-	<td align="center">yearly rainfall (in mm/a)</td>
+	<td align="center">rain</td>
+	<td align="center">Annual rainfall (in mm/a)</td>
 </tr>
 <tr>
-	<td align="center">epanyr</td>
-	<td align="center">None</td>
-</tr>
-<tr>
-	<td align="center">paryr</td>
+	<td align="center">par</td>
 	<td align="center">Photosynthetically active Photon Flux Density 
 	(in mol m<sup>-2</sup> a<sup>-1</sup>)</td>
 </tr>
 <tr>
-	<td align="center">radyr</td>
+	<td align="center">srad</td>
 	<td align="center">Global solar irradiance (in MJ m<sup>-2</sup> a<sup>-1</sup>)</td>
 </tr>
 <tr>
-	<td align="center">vdyr</td>
+	<td align="center">vd</td>
 	<td align="center">Yearly average (of daily averaged) atmospheric vapour deficit
 	(in mol mol<sup>-1</sup>)</td>
 </tr>
 <tr>
-	<td align="center">esoilyr</td>
+	<td align="center">esoil</td>
 	<td align="center">Yearly soil evaporation rate (in m a<sup>-1</sup>)</td>
 </tr>
 <tr>
-	<td align="center">etyr</td>
+	<td align="center">etmt</td>
 	<td align="center">Yearly transpiration rate by vegetation (in m a<sup>-1</sup>)</td>
 </tr>
 <tr>
-	<td align="center">etmgyr</td>
+	<td align="center">etmg</td>
 	<td align="center">Yearly transpiration rate by seasonal vegetation (in m a<sup>-1</sup>)</td>
 </tr>
 <tr>
-	<td align="center">assgyr</td>
+	<td align="center">assg</td>
 	<td align="center">CO<sub>2</sub> uptake rate by seasonal vegetation (in mol m<sup>-2</sup> a<sup>-1</sup>)</td>
 </tr>
 <tr>
-	<td align="center">rlgyr</td>
+	<td align="center">rlg</td>
 	<td align="center">Leaf respiration rate by seasonal vegetation (in mol m<sup>-2</sup> a<sup>-1</sup>)</td>
 </tr>
 <tr>
-	<td align="center">rrgyr</td>
+	<td align="center">rrg</td>
 	<td align="center">Root respiration rate by seasonal vegetation (in mol m<sup>-2</sup> a<sup>-1</sup>)</td>
 </tr>
 <tr>
-	<td align="center">cpccgyr</td>
+	<td align="center">cpccg</td>
 	<td align="center">Carbon costs related to water distribution and storage for seasonal vegetation (in mol m<sup>-2</sup> a<sup>-1</sup>)</td>
 </tr>
 <tr>
-	<td align="center">tcgyr</td>
+	<td align="center">tcg</td>
 	<td align="center">Carbon costs related to maintenance of gras foliage (in mol m<sup>-2</sup> a<sup>-1</sup>)</td>
 </tr>
 <tr>
-	<td align="center">etmtyr</td>
+	<td align="center">etmt</td>
 	<td align="center">Yearly transpiration rate by perennial vegetation (in m a<sup>-1</sup>)</td>
 </tr>
 <tr>
-	<td align="center">asstyr</td>
+	<td align="center">asst</td>
 	<td align="center">CO<sub>2</sub> uptake rate by perennial vegetation (in mol m<sup>-2</sup> a<sup>-1</sup>)</td>
 </tr>
 <tr>
-	<td align="center">rltyr</td>
+	<td align="center">rlt</td>
 	<td align="center">Leaf respiration rate by perennial vegetation (in mol m<sup>-2</sup> a<sup>-1</sup>)</td>
 </tr>
 <tr>
-	<td align="center">rrtyr</td>
+	<td align="center">rrt</td>
 	<td align="center">Root respiration rate by perennial vegetation (in mol m<sup>-2</sup> a<sup>-1</sup>)</td>
 </tr>
 <tr>
-	<td align="center">cpcctyr</td>
+	<td align="center">cpcct</td>
 	<td align="center">Carbon costs related to water distribution and storage for perennial vegetation (in mol m<sup>-2</sup> a<sup>-1</sup>)</td>
 </tr>
 <tr>
-	<td align="center">tctyr</td>
+	<td align="center">tct</td>
 	<td align="center">Carbon costs related to maintenance of tree foliage (in mol m<sup>-2</sup> a<sup>-1</sup>)</td>
 </tr>
 </tbody></table>

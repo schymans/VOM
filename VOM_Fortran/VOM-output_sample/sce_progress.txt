@@ -1,0 +1,1789 @@
+ SHUFFLED COMPLEX EVOLUTION OPTIMISER
+  
+   Run time:   Tue Jun 18 11:07:48 2013
+   Number of model parameters:                    6
+   Number of optimisable parameters:              6
+   Maximum number of complexes:                   6
+   Minimum number of runs per complex:           13
+ Run     1  (seed):         OF =0.273837E+04 +
+ Run     2  (seed):         OF =0.753549E+03
+ Run     3  (seed):         OF =0.217298E+04
+ Run     4  (seed):         OF =-.152036E+04
+ Run     5  (seed):         OF =0.212013E+04
+ Run     6  (seed):         OF =0.176281E+04
+ Run     7  (seed):         OF =-.119743E+01
+ Run     8  (seed):         OF =-.240937E+05
+ Run     9  (seed):         OF =0.214330E+04
+ Run    10  (seed):         OF =0.188449E+04
+ Run    11  (seed):         OF =-.281500E+05
+ Run    12  (seed):         OF =-.218235E+05
+ Run    13  (seed):         OF =0.236675E+04
+ Run    14  (seed):         OF =0.195045E+04
+ Run    15  (seed):         OF =-.167077E+05
+ Run    16  (seed):         OF =-.139842E+05
+ Run    17  (seed):         OF =0.201300E+04
+ Run    18  (seed):         OF =0.137284E+04
+ Run    19  (seed):         OF =-.139861E+05
+ Run    20  (seed):         OF =-.141336E+05
+ Run    21  (seed):         OF =0.117441E+04
+ Run    22  (seed):         OF =0.853271E+03
+ Run    23  (seed):         OF =-.274644E+04
+ Run    24  (seed):         OF =-.108873E+05
+ Run    25  (seed):         OF =0.945364E+03
+ Run    26  (seed):         OF =0.804606E+03
+ Run    27  (seed):         OF =-.384586E+04
+ Run    28  (seed):         OF =-.161024E+03
+ Run    29  (seed):         OF =0.144033E+04
+ Run    30  (seed):         OF =0.103059E+04
+ Run    31  (seed):         OF =-.318804E+03
+ Run    32  (seed):         OF =-.554197E+04
+ Run    33  (seed):         OF =-.170456E+03
+ Run    34  (seed):         OF =-.317285E+03
+ Run    35  (seed):         OF =-.904024E+04
+ Run    36  (seed):         OF =-.114275E+04
+ Run    37  (seed):         OF =0.164224E+04
+ Run    38  (seed):         OF =0.127480E+04
+ Run    39  (seed):         OF =-.659015E+03
+ Run    40  (seed):         OF =-.247974E+05
+ Run    41  (seed):         OF =0.182284E+04
+ Run    42  (seed):         OF =0.144597E+04
+ Run    43  (seed):         OF =-.642219E+03
+ Run    44  (seed):         OF =-.277114E+05
+ Run    45  (seed):         OF =0.174927E+04
+ Run    46  (seed):         OF =0.159766E+04
+ Run    47  (seed):         OF =-.440775E+03
+ Run    48  (seed):         OF =-.195384E+05
+ Run    49  (seed):         OF =0.177419E+04
+ Run    50  (seed):         OF =0.102749E+04
+ Run    51  (seed):         OF =-.210265E+05
+ Run    52  (seed):         OF =-.195935E+05
+ Run    53  (seed):         OF =-.171346E+04
+ Run    54  (seed):         OF =-.184068E+04
+ Run    55  (seed):         OF =-.240941E+04
+ Run    56  (seed):         OF =-.399721E+04
+ Run    57  (seed):         OF =-.107028E+04
+ Run    58  (seed):         OF =-.108391E+04
+ Run    59  (seed):         OF =-.171223E+04
+ Run    60  (seed):         OF =-.344771E+04
+ Run    61  (seed):         OF =-.113819E+04
+ Run    62  (seed):         OF =-.969805E+03
+ Run    63  (seed):         OF =-.123898E+04
+ Run    64  (seed):         OF =-.179116E+04
+ Run    65  (mutation):     OF =-.764280E+04
+ Run    66  (mutation):     OF =0.227434E+04
+ Run    67  (mutation):     OF =0.191592E+04
+ Run    68  (mutation):     OF =0.117317E+04
+ Run    69  (mutation):     OF =-.109938E+05
+ Run    70  (mutation):     OF =-.101190E+05
+ Run    71  (mutation):     OF =-.353655E+04
+ Run    72  (mutation):     OF =-.108605E+05
+ Run    73  (mutation):     OF =-.168119E+05
+ Run    74  (mutation):     OF =-.821487E+04
+ Run    75  (mutation):     OF =-.110061E+05
+ Run    76  (mutation):     OF =-.118528E+04
+ Run    77  (mutation):     OF =0.630933E+03
+ Run    78  (mutation):     OF =0.740947E+03
+ Run    79  (mutation):     OF =0.201847E+04
+ Run    80  (mutation):     OF =-.934658E+04
+ Run    81  (mutation):     OF =0.211568E+04
+ Run    82  (mutation):     OF =0.120437E+04
+ Run    83  (mutation):     OF =-.264319E+05
+ Run    84  (mutation):     OF =-.255860E+04
+ Run    85  (mutation):     OF =-.109786E+04
+ Run    86  (mutation):     OF =-.245275E+03
+ Run    87  (mutation):     OF =-.100885E+05
+ Run    88  (mutation):     OF =-.929195E+04
+ Run    89  (mutation):     OF =-.105956E+05
+ Run    90  (mutation):     OF =0.199376E+04
+ Run    91  (mutation):     OF =-.882841E+04
+ Run    92  (mutation):     OF =-.277879E+04
+ Run    93  (mutation):     OF =-.267715E+04
+ Run    94  (mutation):     OF =-.241625E+05
+ Run    95  (mutation):     OF =-.118383E+04
+ Run    96  (mutation):     OF =0.221131E+04
+ Run    97  (mutation):     OF =-.115398E+03
+ Run    98  (mutation):     OF =-.123287E+04
+ Run    99  (mutation):     OF =-.177241E+04
+ Run   100  (mutation):     OF =-.459243E+01
+ Run   101  (mutation):     OF =0.272645E+03
+ Run   102  (mutation):     OF =0.165782E+04
+ Run   103  (mutation):     OF =-.168221E+04
+ Run   104  (mutation):     OF =-.160107E+04
+ Run   105  (mutation):     OF =0.178060E+04
+ Run   106  (mutation):     OF =-.118720E+04
+ Run   107  (mutation):     OF =-.107994E+04
+ Run   108  (mutation):     OF =-.109026E+04
+ Run   109  (mutation):     OF =-.186180E+05
+ Run   110  (mutation):     OF =0.591819E+03
+  
+   NEW Run time:   Tue Jun 18 11:11:55 2013
+ Finished    0 main loops --- best objective function =0.273837E+04
+  
+ No improvement in OF for    0 loops
+ Greatest parameter range: 49.90% for optimised parameter rtdepth
+  
+ PARAMETER|     VALUE   |    MINVAL   |    MAXVAL   |  CV (%)
+ lambdagf   0.779827E+03  0.000000E+00  0.100000E+05  0.437854E+02
+ wsgexp    -0.132889E+01 -0.300000E+01  0.100000E+01  0.451256E+02
+ lambdatf   0.160181E+04  0.000000E+00  0.100000E+05  0.392012E+02
+ wstexp    -0.564496E+00 -0.300000E+01  0.100000E+01  0.444418E+02
+ pct        0.300000E+00  0.000000E+00  0.100000E+01  0.444706E+02
+ rtdepth    0.300000E+01  0.100000E+01  0.900000E+01  0.499033E+02
+  
+ Start of loop   1, complex 1: best OF =0.273837E+04
+ Run   111  (mutation):     OF =0.351248E+03 .
+ Run   112  (contraction):  OF =0.220506E+04 .
+ Run   113  (mutation):     OF =-.629705E+03
+ Run   114  (contraction):  OF =0.223050E+04 .
+ Run   115  (reflection):   OF =0.209392E+04
+ Run   116  (contraction):  OF =0.222728E+04
+ Run   117  (mutation):     OF =0.445119E+03
+ Run   118  (contraction):  OF =0.226516E+04 .
+ Run   119  (mutation):     OF =-.256390E+04
+ Run   120  (contraction):  OF =0.230415E+04 .
+ Run   121  (reflection):   OF =0.238590E+04 .
+ Run   122  (mutation):     OF =0.594229E+03
+ Run   123  (contraction):  OF =0.222628E+04
+ Run   124  (reflection):   OF =0.229839E+04
+ Run   125  (mutation):     OF =-.386654E+04
+ Run   126  (contraction):  OF =0.233481E+04
+ Run   127  (mutation):     OF =0.179977E+04
+ Run   128  (contraction):  OF =0.214382E+04
+ Run   129  (mutation):     OF =-.207858E+03
+ Run   130  (contraction):  OF =0.227846E+04
+ Run   131  (mutation):     OF =0.215947E+04
+ Run   132  (contraction):  OF =0.231796E+04
+ Run   133  (mutation):     OF =0.216313E+04
+ Run   134  (contraction):  OF =0.243734E+04 .
+ Run   135  (mutation):     OF =0.105959E+04
+ Run   136  (contraction):  OF =0.239042E+04
+ Run   137  (mutation):     OF =-.822084E+03
+ Run   138  (contraction):  OF =0.241073E+04
+ Run   139  (mutation):     OF =-.245275E+03
+ Run   140  (contraction):  OF =0.239668E+04
+ Run   141  (mutation):     OF =-.100885E+05
+ Run   142  (contraction):  OF =0.242823E+04
+ Run   143  (reflection):   OF =0.252002E+04 .
+ Run   144  (mutation):     OF =-.383329E+05
+ Run   145  (contraction):  OF =0.229685E+04
+ Run   146  (reflection):   OF =0.230854E+04
+ Run   147  (mutation):     OF =0.104997E+04
+ Run   148  (contraction):  OF =0.248143E+04
+ Run   149  (reflection):   OF =0.260101E+04 .
+ Run   150  (reflection):   OF =0.274354E+04 +
+ Run   151  (mutation):     OF =-.184881E+04
+ Run   152  (contraction):  OF =0.254762E+04
+ Run   153  (mutation):     OF =0.142916E+04
+ Run   154  (contraction):  OF =0.251063E+04
+ Run   155  (mutation):     OF =0.449828E+03
+ Run   156  (contraction):  OF =0.255216E+04
+ Run   157  (reflection):   OF =0.263617E+04
+ Run   158  (reflection):   OF =0.243093E+04
+ Run   159  (reflection):   OF =-.178353E+05
+ Run   160  (contraction):  OF =0.259294E+04
+ Run   161  (reflection):   OF =0.242308E+04
+ Run   162  (contraction):  OF =0.268530E+04
+ Run   163  (mutation):     OF =0.272645E+03
+ Run   164  (contraction):  OF =0.261150E+04
+ Run   165  (reflection):   OF =0.259110E+04
+ Run   166  (reflection):   OF =0.252002E+04
+ Run   167  (contraction):  OF =0.269767E+04
+ Run   168  (reflection):   OF =-.565483E+03
+ Run   169  (contraction):  OF =0.252011E+04
+ Run   170  (reflection):   OF =0.194358E+04
+ Run   171  (contraction):  OF =0.261849E+04
+ Run   172  (reflection):   OF =0.179101E+04
+ Run   173  (contraction):  OF =0.267231E+04
+ Run   174  (reflection):   OF =0.278372E+04 +
+ Run   175  (mutation):     OF =-.513967E+04
+ Run   176  (contraction):  OF =0.264613E+04
+ Run   177  (reflection):   OF =-.217333E+05
+ Run   178  (contraction):  OF =0.268107E+04
+   End of loop   1, complex 1: best OF =0.278372E+04
+ Start of loop   1, complex 2: best OF =0.188449E+04
+ Run   179  (mutation):     OF =0.153999E+04
+ Run   180  (mutation):     OF =-.482899E+03
+ Run   181  (contraction):  OF =0.207968E+04 .
+ Run   182  (mutation):     OF =0.123333E+04
+ Run   183  (contraction):  OF =0.179702E+04
+ Run   184  (mutation):     OF =0.207453E+04
+ Run   185  (mutation):     OF =-.168356E+05
+ Run   186  (contraction):  OF =0.194706E+04
+ Run   187  (mutation):     OF =-.174940E+04
+ Run   188  (contraction):  OF =0.184051E+04
+ Run   189  (mutation):     OF =0.750669E+03
+ Run   190  (contraction):  OF =0.186926E+04
+ Run   191  (mutation):     OF =0.195620E+04
+ Run   192  (mutation):     OF =-.155388E+05
+ Run   193  (contraction):  OF =0.198000E+04
+ Run   194  (reflection):   OF =0.204265E+04
+ Run   195  (reflection):   OF =0.218393E+04 .
+ Run   196  (mutation):     OF =-.110215E+04
+ Run   197  (contraction):  OF =0.209627E+04
+ Run   198  (mutation):     OF =-.714613E+04
+ Run   199  (contraction):  OF =0.213513E+04
+ Run   200  (mutation):     OF =0.153361E+04
+ Run   201  (contraction):  OF =0.214301E+04
+ Run   202  (reflection):   OF =0.219854E+04 .
+ Run   203  (mutation):     OF =-.394912E+04
+ Run   204  (contraction):  OF =0.187726E+04
+ Run   205  (mutation):     OF =-.107721E+05
+ Run   206  (contraction):  OF =0.180429E+04
+ Run   207  (reflection):   OF =0.226493E+04 .
+ Run   208  (reflection):   OF =0.233771E+04 .
+ Run   209  (mutation):     OF =0.221725E+04
+ Run   210  (reflection):   OF =0.227204E+04
+ Run   211  (mutation):     OF =-.126694E+05
+ Run   212  (contraction):  OF =0.225910E+04
+ Run   213  (reflection):   OF =0.236601E+04 .
+ Run   214  (reflection):   OF =0.237810E+04 .
+ Run   215  (mutation):     OF =-.932737E+04
+ Run   216  (contraction):  OF =0.214642E+04
+ Run   217  (mutation):     OF =-.588370E+03
+ Run   218  (contraction):  OF =0.225414E+04
+ Run   219  (mutation):     OF =0.174466E+04
+ Run   220  (contraction):  OF =0.225446E+04
+ Run   221  (reflection):   OF =0.189448E+04
+ Run   222  (contraction):  OF =0.236674E+04
+ Run   223  (reflection):   OF =0.256329E+04 .
+ Run   224  (reflection):   OF =0.177099E+04
+ Run   225  (contraction):  OF =0.239859E+04
+ Run   226  (mutation):     OF =0.164889E+04
+ Run   227  (mutation):     OF =-.681504E+04
+ Run   228  (contraction):  OF =0.204129E+04
+ Run   229  (mutation):     OF =-.556922E+04
+ Run   230  (contraction):  OF =0.222636E+04
+ Run   231  (mutation):     OF =-.118104E+04
+ Run   232  (contraction):  OF =0.242318E+04
+ Run   233  (reflection):   OF =0.209539E+04
+ Run   234  (contraction):  OF =0.246527E+04
+ Run   235  (mutation):     OF =0.102291E+04
+ Run   236  (contraction):  OF =0.240715E+04
+ Run   237  (mutation):     OF =0.123627E+04
+ Run   238  (contraction):  OF =0.232151E+04
+ Run   239  (reflection):   OF =0.239227E+04
+ Run   240  (reflection):   OF =0.259560E+04 .
+   End of loop   1, complex 2: best OF =0.259560E+04
+ Start of loop   1, complex 3: best OF =0.120437E+04
+ Run   241  (reflection):   OF =-.869851E+03
+ Run   242  (contraction):  OF =0.733967E+03
+ Run   243  (mutation):     OF =0.308470E+03
+ Run   244  (reflection):   OF =-.497638E+03
+ Run   245  (contraction):  OF =0.592102E+03
+ Run   246  (reflection):   OF =-.204608E+03
+ Run   247  (contraction):  OF =0.691336E+03
+ Run   248  (mutation):     OF =0.408190E+03
+ Run   249  (contraction):  OF =0.114875E+04
+ Run   250  (mutation):     OF =-.364181E+04
+ Run   251  (contraction):  OF =0.876289E+03
+ Run   252  (reflection):   OF =0.777852E+03
+ Run   253  (contraction):  OF =0.735457E+03
+ Run   254  (mutation):     OF =0.150912E+04 .
+ Run   255  (mutation):     OF =-.111649E+04
+ Run   256  (contraction):  OF =0.569208E+03
+ Run   257  (mutation):     OF =0.135028E+04
+ Run   258  (mutation):     OF =0.182134E+04 .
+ Run   259  (mutation):     OF =0.121019E+04
+ Run   260  (reflection):   OF =0.158394E+04
+ Run   261  (mutation):     OF =-.225115E+03
+ Run   262  (contraction):  OF =0.118935E+04
+ Run   263  (mutation):     OF =0.119541E+03
+ Run   264  (contraction):  OF =0.102700E+04
+ Run   265  (mutation):     OF =0.196401E+04 .
+ Run   266  (mutation):     OF =0.427113E+03
+ Run   267  (contraction):  OF =0.750292E+03
+ Run   268  (mutation):     OF =-.840438E+03
+ Run   269  (mutation):     OF =0.733603E+02
+ Run   270  (contraction):  OF =0.750292E+03
+ Run   271  (mutation):     OF =0.148890E+04
+ Run   272  (reflection):   OF =0.162490E+04
+ Run   273  (mutation):     OF =0.114601E+03
+ Run   274  (contraction):  OF =0.102108E+04
+ Run   275  (reflection):   OF =0.206947E+04 .
+ Run   276  (reflection):   OF =0.215929E+04 .
+ Run   277  (mutation):     OF =-.344201E+04
+ Run   278  (contraction):  OF =0.942092E+03
+ Run   279  (mutation):     OF =0.158004E+04
+ Run   280  (reflection):   OF =0.150071E+04
+ Run   281  (mutation):     OF =0.177870E+04
+ Run   282  (mutation):     OF =-.544378E+03
+ Run   283  (contraction):  OF =0.168758E+04
+ Run   284  (reflection):   OF =0.220188E+04 .
+ Run   285  (reflection):   OF =0.215464E+04
+ Run   286  (mutation):     OF =0.389794E+03
+ Run   287  (contraction):  OF =0.201726E+04
+ Run   288  (reflection):   OF =0.125688E+04
+ Run   289  (contraction):  OF =0.192812E+04
+ Run   290  (mutation):     OF =0.118887E+04
+ Run   291  (contraction):  OF =0.211163E+04
+ Run   292  (reflection):   OF =0.190477E+04
+ Run   293  (contraction):  OF =0.201535E+04
+ Run   294  (reflection):   OF =0.197954E+04
+ Run   295  (reflection):   OF =0.196401E+04
+ Run   296  (contraction):  OF =0.213917E+04
+ Run   297  (mutation):     OF =0.209116E+04
+ Run   298  (reflection):   OF =0.236394E+04 .
+ Run   299  (reflection):   OF =0.726859E+03
+ Run   300  (contraction):  OF =0.221335E+04
+ Run   301  (reflection):   OF =0.231097E+04
+ Run   302  (reflection):   OF =0.222379E+04
+ Run   303  (mutation):     OF =0.898690E+03
+ Run   304  (contraction):  OF =0.223641E+04
+ Run   305  (reflection):   OF =0.155463E+04
+ Run   306  (contraction):  OF =0.209841E+04
+ Run   307  (reflection):   OF =0.230492E+04
+ Run   308  (reflection):   OF =0.231184E+04
+   End of loop   1, complex 3: best OF =0.236394E+04
+ Start of loop   1, complex 4: best OF =-.119743E+01
+ Run   309  (mutation):     OF =0.327928E+03 .
+ Run   310  (mutation):     OF =-.330654E+04
+ Run   311  (contraction):  OF =-.745685E+03
+ Run   312  (reflection):   OF =-.140304E+04
+ Run   313  (contraction):  OF =0.160897E+03
+ Run   314  (mutation):     OF =-.315154E+04
+ Run   315  (contraction):  OF =-.702997E+04
+ Run   316  (mutation):     OF =0.106721E+04 .
+ Run   317  (reflection):   OF =-.618277E+04
+ Run   318  (contraction):  OF =0.155289E+03
+ Run   319  (reflection):   OF =-.145369E+05
+ Run   320  (contraction):  OF =0.369112E+03
+ Run   321  (mutation):     OF =-.232003E+05
+ Run   322  (contraction):  OF =-.225811E+04
+ Run   323  (mutation):     OF =-.267112E+03
+ Run   324  (mutation):     OF =-.144393E+03
+ Run   325  (reflection):   OF =0.213316E+04 .
+ Run   326  (mutation):     OF =0.152429E+04
+ Run   327  (mutation):     OF =-.135091E+04
+ Run   328  (contraction):  OF =0.164117E+04
+ Run   329  (mutation):     OF =-.220005E+04
+ Run   330  (contraction):  OF =0.222333E+04 .
+ Run   331  (mutation):     OF =-.442692E+03
+ Run   332  (mutation):     OF =0.185326E+04
+ Run   333  (mutation):     OF =-.216006E+05
+ Run   334  (contraction):  OF =0.784994E+03
+ Run   335  (mutation):     OF =0.433066E+03
+ Run   336  (mutation):     OF =-.259559E+05
+ Run   337  (contraction):  OF =0.663031E+03
+ Run   338  (mutation):     OF =0.202729E+04
+ Run   339  (mutation):     OF =0.181928E+04
+ Run   340  (mutation):     OF =0.161195E+04
+ Run   341  (mutation):     OF =-.575831E+04
+ Run   342  (contraction):  OF =0.142712E+04
+ Run   343  (reflection):   OF =0.250629E+04 .
+ Run   344  (mutation):     OF =-.181011E+04
+ Run   345  (contraction):  OF =0.195988E+04
+ Run   346  (mutation):     OF =-.747060E+03
+ Run   347  (contraction):  OF =0.191201E+04
+ Run   348  (mutation):     OF =0.202457E+04
+ Run   349  (mutation):     OF =-.198126E+03
+ Run   350  (contraction):  OF =0.213368E+04
+ Run   351  (mutation):     OF =-.102564E+05
+ Run   352  (contraction):  OF =0.198621E+04
+ Run   353  (mutation):     OF =-.127720E+04
+ Run   354  (contraction):  OF =0.154707E+04
+ Run   355  (mutation):     OF =-.843615E+04
+ Run   356  (contraction):  OF =0.199703E+04
+ Run   357  (reflection):   OF =0.249949E+04
+ Run   358  (reflection):   OF =0.234598E+04
+ Run   359  (mutation):     OF =-.109179E+04
+ Run   360  (contraction):  OF =0.230193E+04
+ Run   361  (reflection):   OF =0.938792E+03
+ Run   362  (contraction):  OF =0.233045E+04
+ Run   363  (mutation):     OF =-.604539E+04
+ Run   364  (contraction):  OF =0.802948E+03
+ Run   365  (mutation):     OF =-.110546E+04
+ Run   366  (contraction):  OF =0.199227E+04
+ Run   367  (reflection):   OF =0.227664E+04
+ Run   368  (reflection):   OF =-.386894E+04
+ Run   369  (contraction):  OF =0.239324E+04
+ Run   370  (mutation):     OF =-.970860E+04
+ Run   371  (contraction):  OF =0.249318E+04
+ Run   372  (reflection):   OF =0.215279E+04
+ Run   373  (contraction):  OF =0.252056E+04 .
+   End of loop   1, complex 4: best OF =0.252056E+04
+ Start of loop   1, complex 5: best OF =-.123898E+04
+ Run   374  (mutation):     OF =-.415180E+03 .
+ Run   375  (reflection):   OF =-.440379E+04
+ Run   376  (contraction):  OF =-.102032E+04
+ Run   377  (mutation):     OF =-.203412E+05
+ Run   378  (contraction):  OF =-.950465E+03
+ Run   379  (mutation):     OF =-.246118E+04
+ Run   380  (mutation):     OF =0.142333E+04 .
+ Run   381  (mutation):     OF =0.120741E+04
+ Run   382  (mutation):     OF =-.268643E+04
+ Run   383  (mutation):     OF =-.154553E+04
+ Run   384  (mutation):     OF =-.220463E+04
+ Run   385  (contraction):  OF =-.487601E+03
+ Run   386  (mutation):     OF =-.222909E+05
+ Run   387  (contraction):  OF =-.341740E+02
+ Run   388  (reflection):   OF =-.274137E+03
+ Run   389  (mutation):     OF =0.114083E+04
+ Run   390  (mutation):     OF =0.200322E+04 .
+ Run   391  (reflection):   OF =-.123336E+04
+ Run   392  (reflection):   OF =-.154553E+04
+ Run   393  (contraction):  OF =-.302231E+03
+ Run   394  (mutation):     OF =0.242200E+04 .
+ Run   395  (mutation):     OF =-.398138E+03
+ Run   396  (mutation):     OF =0.587276E+03
+ Run   397  (mutation):     OF =0.179634E+04
+ Run   398  (reflection):   OF =0.186574E+04
+ Run   399  (mutation):     OF =-.606428E+04
+ Run   400  (contraction):  OF =0.742433E+03
+ Run   401  (mutation):     OF =0.751602E+03
+ Run   402  (mutation):     OF =-.546482E+02
+ Run   403  (contraction):  OF =0.133370E+04
+ Run   404  (mutation):     OF =0.144885E+04
+ Run   405  (mutation):     OF =-.174982E+03
+ Run   406  (contraction):  OF =0.151914E+04
+ Run   407  (mutation):     OF =-.165101E+04
+ Run   408  (contraction):  OF =0.179103E+04
+ Run   409  (mutation):     OF =-.260500E+05
+ Run   410  (contraction):  OF =0.180038E+04
+ Run   411  (reflection):   OF =0.253184E+04 .
+ Run   412  (mutation):     OF =-.174281E+03
+ Run   413  (contraction):  OF =0.190943E+04
+ Run   414  (reflection):   OF =0.248235E+04
+ Run   415  (mutation):     OF =0.105373E+04
+ Run   416  (mutation):     OF =-.118278E+03
+ Run   417  (mutation):     OF =0.989954E+03
+ Run   418  (mutation):     OF =-.286037E+04
+ Run   419  (contraction):  OF =0.146951E+04
+ Run   420  (reflection):   OF =0.219131E+04
+ Run   421  (mutation):     OF =-.108711E+04
+ Run   422  (contraction):  OF =0.223210E+04
+ Run   423  (mutation):     OF =-.188078E+03
+ Run   424  (contraction):  OF =0.194052E+04
+ Run   425  (mutation):     OF =0.232817E+04
+ Run   426  (mutation):     OF =-.455965E+04
+ Run   427  (contraction):  OF =0.230956E+04
+   End of loop   1, complex 5: best OF =0.253184E+04
+ Start of loop   1, complex 6: best OF =-.108873E+05
+ Run   428  (mutation):     OF =-.733497E+04 .
+ Run   429  (mutation):     OF =0.126822E+04 .
+ Run   430  (reflection):   OF =-.817075E+04
+ Run   431  (mutation):     OF =-.887245E+03
+ Run   432  (mutation):     OF =0.229510E+04 .
+ Run   433  (reflection):   OF =0.930918E+03
+ Run   434  (mutation):     OF =-.814500E+03
+ Run   435  (mutation):     OF =-.579096E+04
+ Run   436  (mutation):     OF =-.200715E+04
+ Run   437  (mutation):     OF =-.498903E+03
+ Run   438  (mutation):     OF =-.285934E+03
+ Run   439  (reflection):   OF =-.622415E+04
+ Run   440  (contraction):  OF =0.519532E+03
+ Run   441  (mutation):     OF =-.667320E+04
+ Run   442  (mutation):     OF =-.340478E+04
+ Run   443  (mutation):     OF =-.946441E+04
+ Run   444  (contraction):  OF =-.405429E+04
+ Run   445  (mutation):     OF =-.616278E+03
+ Run   446  (mutation):     OF =0.179696E+04
+ Run   447  (mutation):     OF =-.167464E+04
+ Run   448  (contraction):  OF =0.544967E+03
+ Run   449  (mutation):     OF =-.443563E+04
+ Run   450  (contraction):  OF =0.875712E+03
+ Run   451  (mutation):     OF =0.282663E+03
+ Run   452  (reflection):   OF =0.190357E+04
+ Run   453  (reflection):   OF =-.571210E+04
+ Run   454  (contraction):  OF =0.852298E+03
+ Run   455  (mutation):     OF =0.383765E+03
+ Run   456  (mutation):     OF =-.654374E+03
+ Run   457  (contraction):  OF =0.105096E+04
+ Run   458  (reflection):   OF =0.204928E+04
+ Run   459  (mutation):     OF =0.776586E+03
+ Run   460  (mutation):     OF =-.512998E+04
+ Run   461  (contraction):  OF =0.102316E+04
+ Run   462  (mutation):     OF =-.135450E+04
+ Run   463  (contraction):  OF =0.152707E+04
+ Run   464  (mutation):     OF =-.154587E+04
+ Run   465  (contraction):  OF =0.157904E+04
+ Run   466  (reflection):   OF =0.229423E+04
+ Run   467  (reflection):   OF =0.232514E+04 .
+ Run   468  (mutation):     OF =-.370655E+04
+ Run   469  (contraction):  OF =0.180338E+04
+ Run   470  (mutation):     OF =0.149437E+04
+ Run   471  (mutation):     OF =-.259249E+04
+ Run   472  (contraction):  OF =0.351385E+03
+ Run   473  (mutation):     OF =-.131089E+04
+ Run   474  (mutation):     OF =-.406526E+04
+ Run   475  (contraction):  OF =0.655615E+03
+ Run   476  (mutation):     OF =0.590334E+03
+ Run   477  (mutation):     OF =0.174691E+04
+ Run   478  (reflection):   OF =0.203518E+04
+ Run   479  (mutation):     OF =0.188241E+04
+ Run   480  (mutation):     OF =0.207875E+04
+ Run   481  (mutation):     OF =0.104708E+03
+ Run   482  (contraction):  OF =0.226830E+04
+   End of loop   1, complex 6: best OF =0.232514E+04
+  
+   NEW Run time:   Tue Jun 18 11:30:18 2013
+ Finished    1 main loops --- best objective function =0.278372E+04
+  
+ No improvement in OF for    0 loops
+ Greatest parameter range: 65.26% for optimised parameter pct
+  
+ PARAMETER|     VALUE   |    MINVAL   |    MAXVAL   |  CV (%)
+ lambdagf   0.102268E+04  0.000000E+00  0.100000E+05  0.628014E+02
+ wsgexp    -0.966558E+00 -0.300000E+01  0.100000E+01  0.510169E+02
+ lambdatf   0.103116E+04  0.000000E+00  0.100000E+05  0.568107E+02
+ wstexp    -0.238352E+00 -0.300000E+01  0.100000E+01  0.479644E+02
+ pct        0.338159E+00  0.000000E+00  0.100000E+01  0.652557E+02
+ rtdepth    0.297143E+01  0.100000E+01  0.900000E+01  0.384127E+02
+  
+ Start of loop   2, complex 1: best OF =0.278372E+04
+ Run   483  (reflection):   OF =-.793082E+04 .
+ Run   484  (contraction):  OF =0.270155E+04 .
+ Run   485  (reflection):   OF =0.275961E+04 .
+ Run   486  (mutation):     OF =0.351248E+03
+ Run   487  (contraction):  OF =0.273598E+04
+ Run   488  (reflection):   OF =0.233635E+04
+ Run   489  (contraction):  OF =0.270364E+04
+ Run   490  (reflection):   OF =0.283636E+04 +
+ Run   491  (reflection):   OF =0.220698E+04
+ Run   492  (contraction):  OF =0.276047E+04
+ Run   493  (reflection):   OF =0.280082E+04
+ Run   494  (reflection):   OF =0.134177E+04
+ Run   495  (contraction):  OF =0.278021E+04
+ Run   496  (reflection):   OF =0.283137E+04
+ Run   497  (reflection):   OF =0.252746E+04
+ Run   498  (contraction):  OF =0.276380E+04
+ Run   499  (reflection):   OF =0.257485E+04
+ Run   500  (contraction):  OF =0.275112E+04
+ Run   501  (reflection):   OF =0.274463E+04
+ Run   502  (reflection):   OF =0.281011E+04
+ Run   503  (reflection):   OF =0.278290E+04
+ Run   504  (reflection):   OF =0.277495E+04
+ Run   505  (reflection):   OF =0.265335E+04
+ Run   506  (contraction):  OF =0.277315E+04
+ Run   507  (reflection):   OF =0.284004E+04 +
+ Run   508  (reflection):   OF =0.275575E+04
+ Run   509  (contraction):  OF =0.280659E+04
+ Run   510  (reflection):   OF =-.781293E+04
+ Run   511  (contraction):  OF =0.273346E+04
+ Run   512  (reflection):   OF =0.240008E+04
+ Run   513  (contraction):  OF =0.276993E+04
+ Run   514  (reflection):   OF =0.281685E+04
+ Run   515  (reflection):   OF =0.276365E+04
+ Run   516  (contraction):  OF =0.283523E+04
+ Run   517  (reflection):   OF =0.286443E+04 +
+ Run   518  (reflection):   OF =0.282434E+04
+ Run   519  (reflection):   OF =0.285566E+04
+ Run   520  (reflection):   OF =0.279041E+04
+ Run   521  (contraction):  OF =0.282979E+04
+ Run   522  (reflection):   OF =0.285356E+04
+ Run   523  (reflection):   OF =-.771415E+04
+ Run   524  (contraction):  OF =0.281548E+04
+ Run   525  (reflection):   OF =0.229854E+04
+ Run   526  (contraction):  OF =0.283550E+04
+ Run   527  (reflection):   OF =0.286303E+04
+ Run   528  (reflection):   OF =0.281890E+04
+ Run   529  (contraction):  OF =0.285098E+04
+ Run   530  (reflection):   OF =0.285079E+04
+ Run   531  (reflection):   OF =0.284988E+04
+ Run   532  (reflection):   OF =0.261875E+04
+ Run   533  (contraction):  OF =0.282882E+04
+ Run   534  (reflection):   OF =0.286896E+04 +
+ Run   535  (reflection):   OF =0.221411E+04
+ Run   536  (contraction):  OF =0.286381E+04
+ Run   537  (reflection):   OF =-.353313E+04
+ Run   538  (contraction):  OF =0.278022E+04
+ Run   539  (reflection):   OF =0.266428E+04
+ Run   540  (contraction):  OF =0.281141E+04
+ Run   541  (reflection):   OF =0.246843E+04
+ Run   542  (contraction):  OF =0.282004E+04
+   End of loop   2, complex 1: best OF =0.286896E+04
+ Start of loop   2, complex 2: best OF =0.253184E+04
+ Run   543  (reflection):   OF =0.266044E+04 .
+ Run   544  (reflection):   OF =0.188938E+04
+ Run   545  (contraction):  OF =0.256152E+04
+ Run   546  (reflection):   OF =0.249150E+04
+ Run   547  (contraction):  OF =0.256370E+04
+ Run   548  (reflection):   OF =0.273715E+04 .
+ Run   549  (reflection):   OF =0.221806E+04
+ Run   550  (contraction):  OF =0.267437E+04
+ Run   551  (reflection):   OF =0.263766E+04
+ Run   552  (reflection):   OF =0.276454E+04 .
+ Run   553  (reflection):   OF =-.125506E+04
+ Run   554  (contraction):  OF =0.263742E+04
+ Run   555  (reflection):   OF =0.261516E+04
+ Run   556  (reflection):   OF =0.251516E+04
+ Run   557  (contraction):  OF =0.267325E+04
+ Run   558  (reflection):   OF =0.280167E+04 .
+ Run   559  (reflection):   OF =-.385677E+02
+ Run   560  (contraction):  OF =0.275585E+04
+ Run   561  (mutation):     OF =-.274375E+03
+ Run   562  (contraction):  OF =0.270047E+04
+ Run   563  (mutation):     OF =-.308122E+04
+ Run   564  (contraction):  OF =0.263344E+04
+ Run   565  (reflection):   OF =0.263766E+04
+ Run   566  (reflection):   OF =0.259366E+04
+ Run   567  (contraction):  OF =0.277017E+04
+ Run   568  (reflection):   OF =0.287535E+04 +
+ Run   569  (reflection):   OF =-.218795E+04
+ Run   570  (contraction):  OF =0.278042E+04
+ Run   571  (reflection):   OF =0.393304E+03
+ Run   572  (contraction):  OF =0.262835E+04
+ Run   573  (reflection):   OF =0.283188E+04
+ Run   574  (reflection):   OF =0.278109E+04
+ Run   575  (reflection):   OF =0.270813E+04
+ Run   576  (contraction):  OF =0.283514E+04
+ Run   577  (reflection):   OF =-.971522E+04
+ Run   578  (contraction):  OF =0.280664E+04
+ Run   579  (reflection):   OF =0.279912E+04
+ Run   580  (reflection):   OF =0.261447E+04
+ Run   581  (contraction):  OF =0.276923E+04
+ Run   582  (reflection):   OF =0.294157E+04 +
+ Run   583  (reflection):   OF =0.288857E+04
+ Run   584  (reflection):   OF =0.606618E+03
+ Run   585  (contraction):  OF =0.268862E+04
+ Run   586  (reflection):   OF =-.341127E+04
+ Run   587  (contraction):  OF =0.280891E+04
+ Run   588  (reflection):   OF =0.272232E+04
+ Run   589  (contraction):  OF =0.288517E+04
+ Run   590  (reflection):   OF =0.283713E+04
+ Run   591  (reflection):   OF =0.484646E+03
+ Run   592  (contraction):  OF =0.286628E+04
+ Run   593  (reflection):   OF =0.201596E+04
+ Run   594  (contraction):  OF =0.291110E+04
+ Run   595  (reflection):   OF =0.282266E+04
+ Run   596  (contraction):  OF =0.290009E+04
+ Run   597  (reflection):   OF =0.281189E+04
+ Run   598  (contraction):  OF =0.291948E+04
+ Run   599  (reflection):   OF =0.231089E+04
+ Run   600  (contraction):  OF =0.290487E+04
+ Run   601  (mutation):     OF =-.195226E+04
+ Run   602  (contraction):  OF =0.279500E+04
+ Run   603  (reflection):   OF =0.276423E+04
+ Run   604  (contraction):  OF =0.286042E+04
+ Run   605  (reflection):   OF =0.293376E+04
+   End of loop   2, complex 2: best OF =0.294157E+04
+ Start of loop   2, complex 3: best OF =0.239227E+04
+ Run   606  (reflection):   OF =0.222962E+04
+ Run   607  (contraction):  OF =0.244979E+04 .
+ Run   608  (mutation):     OF =-.557044E+04
+ Run   609  (contraction):  OF =0.247458E+04 .
+ Run   610  (reflection):   OF =0.229478E+04
+ Run   611  (contraction):  OF =0.248175E+04 .
+ Run   612  (reflection):   OF =0.253746E+04 .
+ Run   613  (reflection):   OF =0.231427E+04
+ Run   614  (reflection):   OF =0.230956E+04
+ Run   615  (contraction):  OF =0.243122E+04
+ Run   616  (mutation):     OF =-.474809E+04
+ Run   617  (contraction):  OF =0.246796E+04
+ Run   618  (reflection):   OF =0.231616E+04
+ Run   619  (contraction):  OF =0.253338E+04
+ Run   620  (mutation):     OF =0.711895E+03
+ Run   621  (contraction):  OF =0.250657E+04
+ Run   622  (reflection):   OF =0.243835E+04
+ Run   623  (reflection):   OF =0.243122E+04
+ Run   624  (contraction):  OF =0.252283E+04
+ Run   625  (reflection):   OF =0.259044E+04 .
+ Run   626  (reflection):   OF =0.234835E+04
+ Run   627  (contraction):  OF =0.244723E+04
+ Run   628  (reflection):   OF =0.250617E+04
+ Run   629  (reflection):   OF =0.254314E+04
+ Run   630  (reflection):   OF =0.244841E+04
+ Run   631  (reflection):   OF =0.197034E+04
+ Run   632  (contraction):  OF =0.251381E+04
+ Run   633  (reflection):   OF =0.241496E+04
+ Run   634  (contraction):  OF =0.249842E+04
+ Run   635  (reflection):   OF =0.258310E+04
+ Run   636  (reflection):   OF =0.260896E+04 .
+ Run   637  (mutation):     OF =0.807478E+03
+ Run   638  (contraction):  OF =0.257632E+04
+ Run   639  (reflection):   OF =0.257344E+04
+ Run   640  (mutation):     OF =-.175259E+04
+ Run   641  (contraction):  OF =0.254367E+04
+ Run   642  (reflection):   OF =0.256095E+04
+ Run   643  (reflection):   OF =0.252858E+04
+ Run   644  (contraction):  OF =0.260334E+04
+ Run   645  (reflection):   OF =0.251664E+04
+ Run   646  (contraction):  OF =0.259190E+04
+ Run   647  (reflection):   OF =0.258111E+04
+ Run   648  (reflection):   OF =0.249884E+04
+ Run   649  (reflection):   OF =0.236674E+04
+ Run   650  (contraction):  OF =0.260353E+04
+ Run   651  (mutation):     OF =-.350876E+03
+ Run   652  (contraction):  OF =0.258841E+04
+ Run   653  (reflection):   OF =0.249866E+04
+ Run   654  (contraction):  OF =0.263624E+04 .
+ Run   655  (reflection):   OF =0.256030E+04
+ Run   656  (contraction):  OF =0.263788E+04 .
+ Run   657  (reflection):   OF =0.257355E+04
+ Run   658  (contraction):  OF =0.259524E+04
+ Run   659  (reflection):   OF =0.229458E+04
+ Run   660  (contraction):  OF =0.261448E+04
+ Run   661  (reflection):   OF =0.257095E+04
+ Run   662  (contraction):  OF =0.261955E+04
+ Run   663  (reflection):   OF =0.259215E+04
+ Run   664  (reflection):   OF =0.255178E+04
+ Run   665  (contraction):  OF =0.262121E+04
+ Run   666  (reflection):   OF =0.257626E+04
+ Run   667  (contraction):  OF =0.262921E+04
+ Run   668  (reflection):   OF =0.264152E+04 .
+   End of loop   2, complex 3: best OF =0.264152E+04
+ Start of loop   2, complex 4: best OF =0.230193E+04
+ Run   669  (reflection):   OF =0.216673E+04
+ Run   670  (contraction):  OF =0.227159E+04
+ Run   671  (reflection):   OF =0.235814E+04 .
+ Run   672  (mutation):     OF =-.173961E+04
+ Run   673  (contraction):  OF =0.231915E+04
+ Run   674  (reflection):   OF =0.221376E+04
+ Run   675  (contraction):  OF =0.239321E+04 .
+ Run   676  (reflection):   OF =0.244251E+04 .
+ Run   677  (reflection):   OF =-.764250E+04
+ Run   678  (contraction):  OF =0.240276E+04
+ Run   679  (reflection):   OF =0.201568E+04
+ Run   680  (contraction):  OF =0.246311E+04 .
+ Run   681  (reflection):   OF =0.253186E+04 .
+ Run   682  (reflection):   OF =0.225492E+04
+ Run   683  (contraction):  OF =0.242463E+04
+ Run   684  (reflection):   OF =0.235733E+04
+ Run   685  (reflection):   OF =0.249542E+04
+ Run   686  (reflection):   OF =0.240322E+04
+ Run   687  (reflection):   OF =0.258290E+04 .
+ Run   688  (reflection):   OF =0.193290E+04
+ Run   689  (contraction):  OF =0.239959E+04
+ Run   690  (reflection):   OF =0.237463E+04
+ Run   691  (contraction):  OF =0.250825E+04
+ Run   692  (reflection):   OF =0.224857E+04
+ Run   693  (contraction):  OF =0.248474E+04
+ Run   694  (reflection):   OF =0.256335E+04
+ Run   695  (reflection):   OF =0.235647E+04
+ Run   696  (contraction):  OF =0.250948E+04
+ Run   697  (mutation):     OF =0.119975E+04
+ Run   698  (contraction):  OF =0.223941E+04
+ Run   699  (mutation):     OF =0.206897E+04
+ Run   700  (mutation):     OF =-.345208E+03
+ Run   701  (contraction):  OF =0.224435E+04
+ Run   702  (reflection):   OF =0.262106E+04 .
+ Run   703  (mutation):     OF =-.104884E+04
+ Run   704  (contraction):  OF =0.255754E+04
+ Run   705  (reflection):   OF =0.249635E+04
+ Run   706  (reflection):   OF =0.249542E+04
+ Run   707  (contraction):  OF =0.256383E+04
+ Run   708  (mutation):     OF =-.155714E+04
+ Run   709  (contraction):  OF =0.239580E+04
+ Run   710  (mutation):     OF =0.171302E+04
+ Run   711  (contraction):  OF =0.248404E+04
+ Run   712  (reflection):   OF =0.122006E+04
+ Run   713  (contraction):  OF =0.250721E+04
+ Run   714  (reflection):   OF =0.238661E+04
+ Run   715  (contraction):  OF =0.250245E+04
+ Run   716  (mutation):     OF =0.259884E+04
+ Run   717  (reflection):   OF =0.254261E+04
+ Run   718  (reflection):   OF =0.152070E+04
+ Run   719  (contraction):  OF =0.258111E+04
+ Run   720  (reflection):   OF =0.251642E+04
+ Run   721  (contraction):  OF =0.264790E+04 .
+ Run   722  (reflection):   OF =0.205869E+04
+ Run   723  (contraction):  OF =0.257140E+04
+ Run   724  (reflection):   OF =0.262165E+04
+ Run   725  (mutation):     OF =-.108336E+05
+ Run   726  (contraction):  OF =0.253209E+04
+ Run   727  (mutation):     OF =0.172127E+04
+ Run   728  (contraction):  OF =0.263379E+04
+ Run   729  (reflection):   OF =0.259193E+04
+ Run   730  (reflection):   OF =0.275230E+04 .
+ Run   731  (reflection):   OF =0.254154E+04
+ Run   732  (contraction):  OF =0.258235E+04
+ Run   733  (reflection):   OF =0.264211E+04
+   End of loop   2, complex 4: best OF =0.275230E+04
+ Start of loop   2, complex 5: best OF =0.219854E+04
+ Run   734  (mutation):     OF =-.672087E+04
+ Run   735  (contraction):  OF =0.209137E+04
+ Run   736  (mutation):     OF =-.637856E+04
+ Run   737  (contraction):  OF =0.209584E+04
+ Run   738  (mutation):     OF =-.177694E+05
+ Run   739  (contraction):  OF =0.220597E+04 .
+ Run   740  (reflection):   OF =0.221410E+04 .
+ Run   741  (reflection):   OF =0.216274E+04
+ Run   742  (mutation):     OF =-.668385E+04
+ Run   743  (contraction):  OF =0.237121E+04 .
+ Run   744  (reflection):   OF =0.245663E+04 .
+ Run   745  (mutation):     OF =-.250253E+04
+ Run   746  (contraction):  OF =0.226919E+04
+ Run   747  (reflection):   OF =0.165102E+04
+ Run   748  (contraction):  OF =0.237672E+04
+ Run   749  (mutation):     OF =-.861881E+03
+ Run   750  (contraction):  OF =0.235658E+04
+ Run   751  (mutation):     OF =-.121900E+04
+ Run   752  (contraction):  OF =0.229068E+04
+ Run   753  (reflection):   OF =0.208757E+04
+ Run   754  (contraction):  OF =0.248140E+04 .
+ Run   755  (reflection):   OF =0.220195E+04
+ Run   756  (reflection):   OF =0.215464E+04
+ Run   757  (contraction):  OF =0.229972E+04
+ Run   758  (mutation):     OF =-.138745E+05
+ Run   759  (contraction):  OF =0.231383E+04
+ Run   760  (reflection):   OF =0.141233E+04
+ Run   761  (contraction):  OF =0.237963E+04
+ Run   762  (mutation):     OF =-.422484E+04
+ Run   763  (contraction):  OF =0.231761E+04
+ Run   764  (reflection):   OF =0.240925E+04
+ Run   765  (mutation):     OF =-.725810E+03
+ Run   766  (contraction):  OF =0.236942E+04
+ Run   767  (reflection):   OF =0.251975E+04 .
+ Run   768  (reflection):   OF =0.244965E+04
+ Run   769  (mutation):     OF =0.453243E+03
+ Run   770  (contraction):  OF =0.221677E+04
+ Run   771  (reflection):   OF =0.244626E+04
+ Run   772  (reflection):   OF =0.221236E+04
+ Run   773  (contraction):  OF =0.243469E+04
+ Run   774  (reflection):   OF =0.242259E+04
+ Run   775  (reflection):   OF =0.194779E+04
+ Run   776  (contraction):  OF =0.247151E+04
+ Run   777  (reflection):   OF =0.241451E+04
+ Run   778  (mutation):     OF =0.171574E+04
+ Run   779  (contraction):  OF =0.243311E+04
+ Run   780  (reflection):   OF =0.237017E+04
+ Run   781  (contraction):  OF =0.248216E+04
+ Run   782  (reflection):   OF =0.229084E+04
+ Run   783  (contraction):  OF =0.256638E+04 .
+ Run   784  (reflection):   OF =0.229734E+04
+ Run   785  (contraction):  OF =0.247889E+04
+ Run   786  (reflection):   OF =0.245782E+04
+ Run   787  (reflection):   OF =0.193482E+04
+ Run   788  (contraction):  OF =0.248647E+04
+ Run   789  (reflection):   OF =0.256006E+04
+ Run   790  (reflection):   OF =0.253963E+04
+ Run   791  (reflection):   OF =0.251244E+04
+ Run   792  (reflection):   OF =0.260568E+04 .
+ Run   793  (reflection):   OF =0.257588E+04
+ Run   794  (reflection):   OF =0.248855E+04
+   End of loop   2, complex 5: best OF =0.260568E+04
+  
+   NEW Run time:   Tue Jun 18 11:47:17 2013
+ Finished    2 main loops --- best objective function =0.294157E+04
+  
+ No improvement in OF for    0 loops
+ Greatest parameter range: 46.47% for optimised parameter lambdagf
+  
+ PARAMETER|     VALUE   |    MINVAL   |    MAXVAL   |  CV (%)
+ lambdagf   0.108134E+04  0.000000E+00  0.100000E+05  0.464685E+02
+ wsgexp    -0.616485E+00 -0.300000E+01  0.100000E+01  0.252796E+02
+ lambdatf   0.175352E+04  0.000000E+00  0.100000E+05  0.464202E+02
+ wstexp    -0.486837E+00 -0.300000E+01  0.100000E+01  0.225370E+02
+ pct        0.205551E+00  0.000000E+00  0.100000E+01  0.126139E+02
+ rtdepth    0.265997E+01  0.100000E+01  0.900000E+01  0.185273E+02
+  
+ Start of loop   3, complex 1: best OF =0.294157E+04
+ Run   795  (reflection):   OF =0.288059E+04 +
+ Run   796  (reflection):   OF =0.273331E+04
+ Run   797  (contraction):  OF =0.291164E+04 +
+ Run   798  (reflection):   OF =0.288433E+04
+ Run   799  (reflection):   OF =0.288096E+04
+ Run   800  (contraction):  OF =0.292473E+04 +
+ Run   801  (reflection):   OF =0.296094E+04 +
+ Run   802  (reflection):   OF =0.294783E+04
+ Run   803  (reflection):   OF =0.287572E+04
+ Run   804  (reflection):   OF =0.286896E+04
+ Run   805  (contraction):  OF =0.294976E+04
+ Run   806  (reflection):   OF =0.295640E+04
+ Run   807  (reflection):   OF =0.242846E+04
+ Run   808  (contraction):  OF =0.291926E+04
+ Run   809  (reflection):   OF =0.263022E+04
+ Run   810  (contraction):  OF =0.292820E+04
+ Run   811  (reflection):   OF =0.293409E+04
+ Run   812  (reflection):   OF =0.253576E+04
+ Run   813  (contraction):  OF =0.295844E+04
+ Run   814  (reflection):   OF =0.277592E+04
+ Run   815  (contraction):  OF =0.295660E+04
+ Run   816  (reflection):   OF =0.290862E+04
+ Run   817  (contraction):  OF =0.296262E+04 +
+ Run   818  (reflection):   OF =0.292080E+04
+ Run   819  (contraction):  OF =0.295608E+04
+ Run   820  (reflection):   OF =0.291409E+04
+ Run   821  (contraction):  OF =0.296163E+04
+ Run   822  (reflection):   OF =0.293497E+04
+ Run   823  (contraction):  OF =0.296226E+04
+ Run   824  (reflection):   OF =0.289976E+04
+ Run   825  (reflection):   OF =0.288857E+04
+ Run   826  (contraction):  OF =0.295290E+04
+ Run   827  (reflection):   OF =0.284522E+04
+ Run   828  (contraction):  OF =0.294966E+04
+ Run   829  (reflection):   OF =0.296130E+04
+ Run   830  (reflection):   OF =0.294006E+04
+ Run   831  (contraction):  OF =0.296080E+04
+ Run   832  (reflection):   OF =0.296403E+04 +
+ Run   833  (reflection):   OF =0.294787E+04
+ Run   834  (contraction):  OF =0.296552E+04 +
+ Run   835  (reflection):   OF =0.293116E+04
+ Run   836  (contraction):  OF =0.296537E+04
+ Run   837  (reflection):   OF =0.295846E+04
+ Run   838  (contraction):  OF =0.297295E+04 +
+ Run   839  (reflection):   OF =0.292753E+04
+ Run   840  (contraction):  OF =0.294916E+04
+ Run   841  (mutation):     OF =0.291905E+04
+ Run   842  (reflection):   OF =0.296041E+04
+ Run   843  (reflection):   OF =0.291905E+04
+ Run   844  (contraction):  OF =0.296926E+04
+ Run   845  (reflection):   OF =0.295148E+04
+ Run   846  (contraction):  OF =0.296160E+04
+ Run   847  (reflection):   OF =0.296057E+04
+ Run   848  (contraction):  OF =0.296534E+04
+ Run   849  (reflection):   OF =0.296793E+04
+ Run   850  (reflection):   OF =0.288309E+04
+ Run   851  (contraction):  OF =0.295569E+04
+ Run   852  (reflection):   OF =0.291973E+04
+ Run   853  (contraction):  OF =0.296633E+04
+ Run   854  (reflection):   OF =0.295639E+04
+ Run   855  (reflection):   OF =0.295456E+04
+ Run   856  (contraction):  OF =0.296733E+04
+ Run   857  (reflection):   OF =0.296333E+04
+ Run   858  (contraction):  OF =0.296425E+04
+ Run   859  (mutation):     OF =0.296386E+04
+ Run   860  (reflection):   OF =0.297198E+04
+   End of loop   3, complex 1: best OF =0.297295E+04
+ Start of loop   3, complex 2: best OF =0.285566E+04
+ Run   861  (mutation):     OF =-.184118E+05
+ Run   862  (contraction):  OF =0.289353E+04 .
+ Run   863  (reflection):   OF =0.288821E+04
+ Run   864  (reflection):   OF =0.269022E+04
+ Run   865  (contraction):  OF =0.284869E+04
+ Run   866  (reflection):   OF =0.292648E+04 .
+ Run   867  (reflection):   OF =0.290185E+04
+ Run   868  (reflection):   OF =0.284384E+04
+ Run   869  (contraction):  OF =0.289957E+04
+ Run   870  (reflection):   OF =0.467501E+02
+ Run   871  (contraction):  OF =0.284782E+04
+ Run   872  (mutation):     OF =0.328134E+03
+ Run   873  (contraction):  OF =0.284404E+04
+ Run   874  (reflection):   OF =0.289389E+04
+ Run   875  (reflection):   OF =0.290644E+04
+ Run   876  (reflection):   OF =0.294623E+04 .
+ Run   877  (reflection):   OF =0.288213E+04
+ Run   878  (reflection):   OF =0.273524E+04
+ Run   879  (contraction):  OF =0.285119E+04
+ Run   880  (reflection):   OF =0.252594E+04
+ Run   881  (contraction):  OF =0.287256E+04
+ Run   882  (reflection):   OF =0.289399E+04
+ Run   883  (reflection):   OF =0.281780E+04
+ Run   884  (contraction):  OF =0.291960E+04
+ Run   885  (reflection):   OF =0.288939E+04
+ Run   886  (contraction):  OF =0.292939E+04
+ Run   887  (reflection):   OF =0.292967E+04
+ Run   888  (reflection):   OF =0.291372E+04
+ Run   889  (reflection):   OF =0.289747E+04
+ Run   890  (contraction):  OF =0.292210E+04
+ Run   891  (reflection):   OF =0.288968E+04
+ Run   892  (contraction):  OF =0.292477E+04
+ Run   893  (reflection):   OF =0.284767E+04
+ Run   894  (contraction):  OF =0.289978E+04
+ Run   895  (reflection):   OF =0.294924E+04 .
+ Run   896  (reflection):   OF =0.295686E+04 .
+ Run   897  (reflection):   OF =0.208146E+04
+ Run   898  (contraction):  OF =0.290333E+04
+ Run   899  (reflection):   OF =0.287142E+04
+ Run   900  (contraction):  OF =0.293255E+04
+ Run   901  (reflection):   OF =0.287672E+04
+ Run   902  (contraction):  OF =0.292765E+04
+ Run   903  (reflection):   OF =0.295956E+04 .
+ Run   904  (reflection):   OF =0.291848E+04
+ Run   905  (contraction):  OF =0.294295E+04
+ Run   906  (reflection):   OF =0.296482E+04 .
+ Run   907  (reflection):   OF =0.289792E+04
+ Run   908  (reflection):   OF =0.263944E+04
+ Run   909  (contraction):  OF =0.293182E+04
+ Run   910  (reflection):   OF =0.288341E+04
+ Run   911  (contraction):  OF =0.296110E+04
+ Run   912  (reflection):   OF =0.289694E+04
+ Run   913  (contraction):  OF =0.294696E+04
+ Run   914  (reflection):   OF =0.292321E+04
+ Run   915  (contraction):  OF =0.294592E+04
+ Run   916  (reflection):   OF =0.295864E+04
+ Run   917  (reflection):   OF =0.292625E+04
+ Run   918  (reflection):   OF =0.292477E+04
+ Run   919  (contraction):  OF =0.295414E+04
+ Run   920  (reflection):   OF =0.292532E+04
+ Run   921  (contraction):  OF =0.296005E+04
+   End of loop   3, complex 2: best OF =0.296482E+04
+ Start of loop   3, complex 3: best OF =0.264790E+04
+ Run   922  (reflection):   OF =0.243245E+04
+ Run   923  (contraction):  OF =0.265759E+04 .
+ Run   924  (reflection):   OF =0.252550E+04
+ Run   925  (contraction):  OF =0.263650E+04
+ Run   926  (reflection):   OF =0.275961E+04 .
+ Run   927  (reflection):   OF =0.251520E+04
+ Run   928  (contraction):  OF =0.259699E+04
+ Run   929  (mutation):     OF =0.249001E+04
+ Run   930  (reflection):   OF =0.263422E+04
+ Run   931  (reflection):   OF =0.277821E+04 .
+ Run   932  (mutation):     OF =-.175259E+04
+ Run   933  (contraction):  OF =0.261939E+04
+ Run   934  (mutation):     OF =0.253972E+04
+ Run   935  (reflection):   OF =0.265575E+04
+ Run   936  (mutation):     OF =-.107223E+04
+ Run   937  (contraction):  OF =0.266224E+04
+ Run   938  (reflection):   OF =0.181483E+04
+ Run   939  (contraction):  OF =0.267922E+04
+ Run   940  (mutation):     OF =-.982147E+04
+ Run   941  (contraction):  OF =0.267674E+04
+ Run   942  (reflection):   OF =0.256409E+04
+ Run   943  (contraction):  OF =0.271210E+04
+ Run   944  (mutation):     OF =-.137085E+04
+ Run   945  (contraction):  OF =0.268533E+04
+ Run   946  (reflection):   OF =0.270377E+04
+ Run   947  (reflection):   OF =0.260445E+04
+ Run   948  (contraction):  OF =0.268313E+04
+ Run   949  (reflection):   OF =0.272490E+04
+ Run   950  (reflection):   OF =0.272587E+04
+ Run   951  (reflection):   OF =0.210341E+04
+ Run   952  (contraction):  OF =0.270886E+04
+ Run   953  (reflection):   OF =0.265602E+04
+ Run   954  (contraction):  OF =0.268088E+04
+ Run   955  (reflection):   OF =0.269770E+04
+ Run   956  (reflection):   OF =0.254047E+04
+ Run   957  (contraction):  OF =0.271111E+04
+ Run   958  (reflection):   OF =0.278307E+04 .
+ Run   959  (mutation):     OF =-.213085E+04
+ Run   960  (contraction):  OF =0.274015E+04
+ Run   961  (reflection):   OF =0.269290E+04
+ Run   962  (contraction):  OF =0.270369E+04
+ Run   963  (mutation):     OF =0.275042E+04
+ Run   964  (mutation):     OF =-.127834E+05
+ Run   965  (contraction):  OF =0.267975E+04
+ Run   966  (reflection):   OF =0.251297E+04
+ Run   967  (contraction):  OF =0.270100E+04
+ Run   968  (reflection):   OF =0.273676E+04
+ Run   969  (reflection):   OF =0.273468E+04
+ Run   970  (reflection):   OF =0.278441E+04 .
+ Run   971  (reflection):   OF =0.276234E+04
+ Run   972  (reflection):   OF =0.278391E+04
+ Run   973  (reflection):   OF =0.234762E+04
+ Run   974  (contraction):  OF =0.276992E+04
+ Run   975  (reflection):   OF =0.270838E+04
+ Run   976  (contraction):  OF =0.278801E+04 .
+ Run   977  (reflection):   OF =0.283625E+04 .
+ Run   978  (reflection):   OF =0.277373E+04
+ Run   979  (reflection):   OF =0.279582E+04
+ Run   980  (reflection):   OF =0.259667E+04
+ Run   981  (contraction):  OF =0.277557E+04
+ Run   982  (reflection):   OF =0.282069E+04
+ Run   983  (reflection):   OF =0.280405E+04
+   End of loop   3, complex 3: best OF =0.283625E+04
+ Start of loop   3, complex 4: best OF =0.260896E+04
+ Run   984  (reflection):   OF =0.256467E+04
+ Run   985  (contraction):  OF =0.261603E+04 .
+ Run   986  (reflection):   OF =0.220396E+04
+ Run   987  (contraction):  OF =0.260060E+04
+ Run   988  (reflection):   OF =0.247075E+04
+ Run   989  (contraction):  OF =0.263109E+04 .
+ Run   990  (reflection):   OF =0.256642E+04
+ Run   991  (mutation):     OF =-.155714E+04
+ Run   992  (contraction):  OF =0.262853E+04
+ Run   993  (reflection):   OF =0.257389E+04
+ Run   994  (reflection):   OF =0.241462E+04
+ Run   995  (contraction):  OF =0.266674E+04 .
+ Run   996  (reflection):   OF =0.240494E+04
+ Run   997  (contraction):  OF =0.261015E+04
+ Run   998  (reflection):   OF =0.263159E+04
+ Run   999  (reflection):   OF =0.265337E+04
+ Run  1000  (reflection):   OF =0.253955E+04
+ Run  1001  (contraction):  OF =0.265288E+04
+ Run  1002  (mutation):     OF =-.112824E+04
+ Run  1003  (contraction):  OF =0.264265E+04
+ Run  1004  (reflection):   OF =0.258926E+04
+ Run  1005  (reflection):   OF =0.257632E+04
+ Run  1006  (contraction):  OF =0.265993E+04
+ Run  1007  (reflection):   OF =0.270622E+04 .
+ Run  1008  (reflection):   OF =0.262313E+04
+ Run  1009  (reflection):   OF =0.261015E+04
+ Run  1010  (contraction):  OF =0.265680E+04
+ Run  1011  (reflection):   OF =0.260825E+04
+ Run  1012  (contraction):  OF =0.264321E+04
+ Run  1013  (reflection):   OF =0.269660E+04
+ Run  1014  (reflection):   OF =0.243200E+04
+ Run  1015  (contraction):  OF =0.265360E+04
+ Run  1016  (reflection):   OF =0.266107E+04
+ Run  1017  (reflection):   OF =0.258482E+04
+ Run  1018  (reflection):   OF =0.257389E+04
+ Run  1019  (contraction):  OF =0.266125E+04
+ Run  1020  (reflection):   OF =0.267793E+04
+ Run  1021  (reflection):   OF =0.267853E+04
+ Run  1022  (reflection):   OF =0.268887E+04
+ Run  1023  (reflection):   OF =0.268880E+04
+ Run  1024  (reflection):   OF =0.200586E+04
+ Run  1025  (contraction):  OF =0.267207E+04
+ Run  1026  (reflection):   OF =0.262425E+04
+ Run  1027  (contraction):  OF =0.271613E+04 .
+ Run  1028  (reflection):   OF =0.268834E+04
+ Run  1029  (reflection):   OF =0.252401E+04
+ Run  1030  (contraction):  OF =0.270592E+04
+ Run  1031  (reflection):   OF =0.269354E+04
+ Run  1032  (reflection):   OF =0.272410E+04 .
+ Run  1033  (reflection):   OF =0.265816E+04
+ Run  1034  (contraction):  OF =0.272717E+04 .
+ Run  1035  (reflection):   OF =0.268281E+04
+ Run  1036  (contraction):  OF =0.270504E+04
+ Run  1037  (reflection):   OF =0.269601E+04
+ Run  1038  (reflection):   OF =0.269920E+04
+ Run  1039  (reflection):   OF =0.269601E+04
+ Run  1040  (contraction):  OF =0.271058E+04
+ Run  1041  (reflection):   OF =0.268884E+04
+ Run  1042  (contraction):  OF =0.272534E+04
+   End of loop   3, complex 4: best OF =0.272717E+04
+  
+   NEW Run time:   Tue Jun 18 12:00:42 2013
+ Finished    3 main loops --- best objective function =0.297295E+04
+  
+ No improvement in OF for    0 loops
+ Greatest parameter range: 29.69% for optimised parameter lambdatf
+  
+ PARAMETER|     VALUE   |    MINVAL   |    MAXVAL   |  CV (%)
+ lambdagf   0.897042E+03  0.000000E+00  0.100000E+05  0.578565E+01
+ wsgexp    -0.617784E+00 -0.300000E+01  0.100000E+01  0.184257E+02
+ lambdatf   0.111553E+04  0.000000E+00  0.100000E+05  0.296900E+02
+ wstexp    -0.316312E+00 -0.300000E+01  0.100000E+01  0.131142E+02
+ pct        0.222374E+00  0.000000E+00  0.100000E+01  0.598739E+01
+ rtdepth    0.271457E+01  0.100000E+01  0.900000E+01  0.930895E+01
+  
+ Start of loop   4, complex 1: best OF =0.297295E+04
+ Run  1043  (reflection):   OF =0.296142E+04 .
+ Run  1044  (contraction):  OF =0.296638E+04 .
+ Run  1045  (reflection):   OF =0.296082E+04
+ Run  1046  (contraction):  OF =0.296110E+04
+ Run  1047  (mutation):     OF =0.297419E+04 +
+ Run  1048  (reflection):   OF =0.296389E+04
+ Run  1049  (contraction):  OF =0.296888E+04
+ Run  1050  (reflection):   OF =0.297192E+04
+ Run  1051  (reflection):   OF =0.295956E+04
+ Run  1052  (contraction):  OF =0.296769E+04
+ Run  1053  (reflection):   OF =0.295759E+04
+ Run  1054  (contraction):  OF =0.296687E+04
+ Run  1055  (mutation):     OF =0.297579E+04 +
+ Run  1056  (reflection):   OF =0.295822E+04
+ Run  1057  (contraction):  OF =0.296346E+04
+ Run  1058  (mutation):     OF =0.296643E+04
+ Run  1059  (reflection):   OF =0.295848E+04
+ Run  1060  (contraction):  OF =0.297173E+04
+ Run  1061  (reflection):   OF =0.296704E+04
+ Run  1062  (contraction):  OF =0.296270E+04
+ Run  1063  (mutation):     OF =0.296253E+04
+ Run  1064  (reflection):   OF =0.296473E+04
+ Run  1065  (reflection):   OF =0.296403E+04
+ Run  1066  (contraction):  OF =0.297242E+04
+ Run  1067  (reflection):   OF =0.296638E+04
+ Run  1068  (reflection):   OF =0.297300E+04
+ Run  1069  (reflection):   OF =0.296496E+04
+ Run  1070  (contraction):  OF =0.297340E+04
+ Run  1071  (reflection):   OF =0.297287E+04
+ Run  1072  (reflection):   OF =0.296710E+04
+ Run  1073  (reflection):   OF =0.296638E+04
+ Run  1074  (contraction):  OF =0.296615E+04
+ Run  1075  (mutation):     OF =0.295659E+04
+ Run  1076  (reflection):   OF =0.296640E+04
+ Run  1077  (reflection):   OF =0.297096E+04
+ Run  1078  (reflection):   OF =0.296888E+04
+ Run  1079  (contraction):  OF =0.297268E+04
+ Run  1080  (reflection):   OF =0.297317E+04
+ Run  1081  (reflection):   OF =0.295217E+04
+ Run  1082  (contraction):  OF =0.297447E+04
+ Run  1083  (reflection):   OF =0.296665E+04
+ Run  1084  (reflection):   OF =0.296640E+04
+ Run  1085  (contraction):  OF =0.296876E+04
+ Run  1086  (reflection):   OF =0.297471E+04
+ Run  1087  (reflection):   OF =0.297507E+04
+ Run  1088  (reflection):   OF =0.296932E+04
+ Run  1089  (contraction):  OF =0.297274E+04
+ Run  1090  (mutation):     OF =0.297314E+04
+ Run  1091  (reflection):   OF =0.296905E+04
+ Run  1092  (contraction):  OF =0.296536E+04
+ Run  1093  (mutation):     OF =0.297109E+04
+ Run  1094  (reflection):   OF =0.296816E+04
+ Run  1095  (contraction):  OF =0.297056E+04
+ Run  1096  (mutation):     OF =0.297783E+04 +
+ Run  1097  (reflection):   OF =0.297639E+04
+ Run  1098  (reflection):   OF =0.296627E+04
+ Run  1099  (contraction):  OF =0.297314E+04
+ Run  1100  (reflection):   OF =0.297490E+04
+ Run  1101  (reflection):   OF =0.297840E+04 +
+ Run  1102  (reflection):   OF =0.297045E+04
+ Run  1103  (contraction):  OF =0.297660E+04
+ Run  1104  (reflection):   OF =0.297199E+04
+ Run  1105  (contraction):  OF =0.297648E+04
+ Run  1106  (reflection):   OF =0.297281E+04
+ Run  1107  (contraction):  OF =0.297457E+04
+ Run  1108  (mutation):     OF =0.296774E+04
+ Run  1109  (reflection):   OF =0.297351E+04
+ Run  1110  (reflection):   OF =0.296876E+04
+ Run  1111  (contraction):  OF =0.297705E+04
+ Run  1112  (reflection):   OF =0.297063E+04
+ Run  1113  (contraction):  OF =0.297429E+04
+ Run  1114  (mutation):     OF =0.297562E+04
+   End of loop   4, complex 1: best OF =0.297840E+04
+ Start of loop   4, complex 2: best OF =0.296110E+04
+ Run  1115  (reflection):   OF =0.289795E+04
+ Run  1116  (contraction):  OF =0.295819E+04
+ Run  1117  (reflection):   OF =0.294295E+04
+ Run  1118  (contraction):  OF =0.296446E+04 .
+ Run  1119  (reflection):   OF =0.293250E+04
+ Run  1120  (contraction):  OF =0.296179E+04
+ Run  1121  (reflection):   OF =0.294020E+04
+ Run  1122  (contraction):  OF =0.295694E+04
+ Run  1123  (reflection):   OF =0.296064E+04
+ Run  1124  (reflection):   OF =0.296157E+04
+ Run  1125  (reflection):   OF =0.295066E+04
+ Run  1126  (reflection):   OF =0.294623E+04
+ Run  1127  (contraction):  OF =0.296510E+04 .
+ Run  1128  (reflection):   OF =0.293970E+04
+ Run  1129  (contraction):  OF =0.296154E+04
+ Run  1130  (reflection):   OF =0.295748E+04
+ Run  1131  (contraction):  OF =0.296053E+04
+ Run  1132  (reflection):   OF =0.296977E+04 .
+ Run  1133  (reflection):   OF =0.296351E+04
+ Run  1134  (reflection):   OF =0.293832E+04
+ Run  1135  (reflection):   OF =0.294233E+04
+ Run  1136  (reflection):   OF =0.294988E+04
+ Run  1137  (reflection):   OF =0.297014E+04 .
+ Run  1138  (reflection):   OF =0.295892E+04
+ Run  1139  (contraction):  OF =0.296647E+04
+ Run  1140  (reflection):   OF =0.295423E+04
+ Run  1141  (contraction):  OF =0.297046E+04 .
+ Run  1142  (reflection):   OF =0.293452E+04
+ Run  1143  (contraction):  OF =0.296447E+04
+ Run  1144  (reflection):   OF =0.294949E+04
+ Run  1145  (contraction):  OF =0.295802E+04
+ Run  1146  (mutation):     OF =0.292093E+04
+ Run  1147  (reflection):   OF =0.296236E+04
+ Run  1148  (reflection):   OF =0.295942E+04
+ Run  1149  (contraction):  OF =0.296329E+04
+ Run  1150  (mutation):     OF =0.296694E+04
+ Run  1151  (reflection):   OF =0.297377E+04 .
+ Run  1152  (reflection):   OF =0.295834E+04
+ Run  1153  (contraction):  OF =0.296383E+04
+ Run  1154  (mutation):     OF =0.295980E+04
+ Run  1155  (reflection):   OF =0.296828E+04
+ Run  1156  (reflection):   OF =0.293332E+04
+ Run  1157  (contraction):  OF =0.297186E+04
+ Run  1158  (reflection):   OF =0.297288E+04
+ Run  1159  (reflection):   OF =0.297657E+04 .
+ Run  1160  (reflection):   OF =0.296293E+04
+ Run  1161  (contraction):  OF =0.296872E+04
+ Run  1162  (reflection):   OF =0.296386E+04
+ Run  1163  (contraction):  OF =0.297217E+04
+ Run  1164  (reflection):   OF =0.292138E+04
+ Run  1165  (contraction):  OF =0.296727E+04
+ Run  1166  (reflection):   OF =0.294528E+04
+ Run  1167  (contraction):  OF =0.297236E+04
+ Run  1168  (reflection):   OF =0.297369E+04
+ Run  1169  (reflection):   OF =0.294188E+04
+ Run  1170  (contraction):  OF =0.296234E+04
+ Run  1171  (reflection):   OF =0.296782E+04
+ Run  1172  (reflection):   OF =0.296234E+04
+ Run  1173  (contraction):  OF =0.296820E+04
+ Run  1174  (reflection):   OF =0.296845E+04
+ Run  1175  (contraction):  OF =0.296965E+04
+ Run  1176  (reflection):   OF =0.297376E+04
+ Run  1177  (reflection):   OF =0.297004E+04
+   End of loop   4, complex 2: best OF =0.297657E+04
+ Start of loop   4, complex 3: best OF =0.283625E+04
+ Run  1178  (reflection):   OF =0.283728E+04 .
+ Run  1179  (reflection):   OF =0.284635E+04 .
+ Run  1180  (mutation):     OF =0.694979E+03
+ Run  1181  (contraction):  OF =0.280352E+04
+ Run  1182  (reflection):   OF =0.285323E+04 .
+ Run  1183  (reflection):   OF =0.282058E+04
+ Run  1184  (reflection):   OF =0.281346E+04
+ Run  1185  (mutation):     OF =-.387526E+03
+ Run  1186  (contraction):  OF =0.277671E+04
+ Run  1187  (reflection):   OF =0.242766E+04
+ Run  1188  (contraction):  OF =0.282108E+04
+ Run  1189  (reflection):   OF =0.280996E+04
+ Run  1190  (reflection):   OF =0.282385E+04
+ Run  1191  (reflection):   OF =0.280742E+04
+ Run  1192  (contraction):  OF =0.285446E+04 .
+ Run  1193  (reflection):   OF =0.282750E+04
+ Run  1194  (reflection):   OF =0.188672E+04
+ Run  1195  (contraction):  OF =0.280225E+04
+ Run  1196  (reflection):   OF =0.279620E+04
+ Run  1197  (contraction):  OF =0.282679E+04
+ Run  1198  (reflection):   OF =0.280544E+04
+ Run  1199  (contraction):  OF =0.284700E+04
+ Run  1200  (reflection):   OF =0.281243E+04
+ Run  1201  (reflection):   OF =0.280996E+04
+ Run  1202  (contraction):  OF =0.284478E+04
+ Run  1203  (reflection):   OF =0.283940E+04
+ Run  1204  (reflection):   OF =0.280014E+04
+ Run  1205  (contraction):  OF =0.283686E+04
+ Run  1206  (reflection):   OF =0.285186E+04
+ Run  1207  (reflection):   OF =0.284285E+04
+ Run  1208  (reflection):   OF =0.272435E+04
+ Run  1209  (contraction):  OF =0.284681E+04
+ Run  1210  (reflection):   OF =0.283422E+04
+ Run  1211  (contraction):  OF =0.286043E+04 .
+ Run  1212  (reflection):   OF =0.282724E+04
+ Run  1213  (contraction):  OF =0.286354E+04 .
+ Run  1214  (reflection):   OF =0.283592E+04
+ Run  1215  (contraction):  OF =0.285118E+04
+ Run  1216  (reflection):   OF =0.284733E+04
+ Run  1217  (reflection):   OF =0.285781E+04
+ Run  1218  (reflection):   OF =0.283032E+04
+ Run  1219  (reflection):   OF =0.282750E+04
+ Run  1220  (contraction):  OF =0.285740E+04
+ Run  1221  (reflection):   OF =0.280142E+04
+ Run  1222  (contraction):  OF =0.285615E+04
+ Run  1223  (reflection):   OF =0.281229E+04
+ Run  1224  (reflection):   OF =0.272717E+04
+ Run  1225  (contraction):  OF =0.282135E+04
+ Run  1226  (reflection):   OF =0.280995E+04
+ Run  1227  (contraction):  OF =0.287390E+04 .
+ Run  1228  (reflection):   OF =0.283763E+04
+ Run  1229  (contraction):  OF =0.285800E+04
+ Run  1230  (reflection):   OF =0.284723E+04
+ Run  1231  (contraction):  OF =0.286119E+04
+ Run  1232  (reflection):   OF =0.285800E+04
+ Run  1233  (reflection):   OF =0.282147E+04
+ Run  1234  (contraction):  OF =0.285440E+04
+ Run  1235  (reflection):   OF =0.283120E+04
+ Run  1236  (contraction):  OF =0.286168E+04
+ Run  1237  (reflection):   OF =0.285574E+04
+   End of loop   4, complex 3: best OF =0.287390E+04
+  
+   NEW Run time:   Tue Jun 18 12:11:13 2013
+ Finished    4 main loops --- best objective function =0.297840E+04
+  
+ No improvement in OF for    0 loops
+ Greatest parameter range:  8.12% for optimised parameter rtdepth
+  
+ PARAMETER|     VALUE   |    MINVAL   |    MAXVAL   |  CV (%)
+ lambdagf   0.872923E+03  0.000000E+00  0.100000E+05  0.193351E+01
+ wsgexp    -0.593076E+00 -0.300000E+01  0.100000E+01  0.717478E+01
+ lambdatf   0.129933E+04  0.000000E+00  0.100000E+05  0.404709E+01
+ wstexp    -0.394728E+00 -0.300000E+01  0.100000E+01  0.412544E+01
+ pct        0.211538E+00  0.000000E+00  0.100000E+01  0.641956E+01
+ rtdepth    0.285662E+01  0.100000E+01  0.900000E+01  0.811523E+01
+  
+ Start of loop   5, complex 1: best OF =0.297840E+04
+ Run  1238  (reflection):   OF =0.296203E+04 .
+ Run  1239  (contraction):  OF =0.297721E+04 .
+ Run  1240  (reflection):   OF =0.297551E+04
+ Run  1241  (reflection):   OF =0.297419E+04
+ Run  1242  (contraction):  OF =0.297588E+04
+ Run  1243  (reflection):   OF =0.297097E+04
+ Run  1244  (contraction):  OF =0.297586E+04
+ Run  1245  (reflection):   OF =0.297380E+04
+ Run  1246  (contraction):  OF =0.297528E+04
+ Run  1247  (mutation):     OF =0.297433E+04
+ Run  1248  (reflection):   OF =0.297402E+04
+ Run  1249  (contraction):  OF =0.298083E+04 +
+ Run  1250  (reflection):   OF =0.296638E+04
+ Run  1251  (contraction):  OF =0.296922E+04
+ Run  1252  (mutation):     OF =0.297272E+04
+ Run  1253  (reflection):   OF =0.297222E+04
+ Run  1254  (contraction):  OF =0.297352E+04
+ Run  1255  (reflection):   OF =0.297497E+04
+ Run  1256  (reflection):   OF =0.296981E+04
+ Run  1257  (contraction):  OF =0.296911E+04
+ Run  1258  (mutation):     OF =0.297215E+04
+ Run  1259  (reflection):   OF =0.297321E+04
+ Run  1260  (reflection):   OF =0.297215E+04
+ Run  1261  (contraction):  OF =0.296872E+04
+ Run  1262  (mutation):     OF =0.297351E+04
+ Run  1263  (reflection):   OF =0.297315E+04
+ Run  1264  (contraction):  OF =0.297900E+04
+ Run  1265  (reflection):   OF =0.297824E+04
+ Run  1266  (reflection):   OF =0.298010E+04
+ Run  1267  (reflection):   OF =0.297481E+04
+ Run  1268  (contraction):  OF =0.296868E+04
+ Run  1269  (mutation):     OF =0.297250E+04
+ Run  1270  (reflection):   OF =0.297101E+04
+ Run  1271  (contraction):  OF =0.297939E+04
+ Run  1272  (reflection):   OF =0.297148E+04
+ Run  1273  (contraction):  OF =0.298218E+04 +
+ Run  1274  (reflection):   OF =0.298000E+04
+ Run  1275  (reflection):   OF =0.297488E+04
+ Run  1276  (contraction):  OF =0.297838E+04
+ Run  1277  (reflection):   OF =0.297738E+04
+ Run  1278  (contraction):  OF =0.297638E+04
+ Run  1279  (mutation):     OF =0.297101E+04
+ Run  1280  (reflection):   OF =0.296909E+04
+ Run  1281  (contraction):  OF =0.297233E+04
+ Run  1282  (reflection):   OF =0.297542E+04
+ Run  1283  (reflection):   OF =0.297608E+04
+ Run  1284  (reflection):   OF =0.297227E+04
+ Run  1285  (contraction):  OF =0.297692E+04
+ Run  1286  (reflection):   OF =0.297713E+04
+ Run  1287  (reflection):   OF =0.297692E+04
+ Run  1288  (contraction):  OF =0.297427E+04
+ Run  1289  (mutation):     OF =0.297826E+04
+ Run  1290  (reflection):   OF =0.297487E+04
+ Run  1291  (contraction):  OF =0.297792E+04
+ Run  1292  (mutation):     OF =0.297600E+04
+ Run  1293  (reflection):   OF =0.297288E+04
+ Run  1294  (contraction):  OF =0.297843E+04
+ Run  1295  (reflection):   OF =0.297603E+04
+ Run  1296  (contraction):  OF =0.297990E+04
+ Run  1297  (reflection):   OF =0.297406E+04
+ Run  1298  (contraction):  OF =0.297403E+04
+ Run  1299  (mutation):     OF =0.297255E+04
+ Run  1300  (reflection):   OF =0.297403E+04
+ Run  1301  (reflection):   OF =0.297255E+04
+ Run  1302  (contraction):  OF =0.297714E+04
+ Run  1303  (reflection):   OF =0.297655E+04
+ Run  1304  (contraction):  OF =0.297742E+04
+ Run  1305  (reflection):   OF =0.297641E+04
+ Run  1306  (contraction):  OF =0.298197E+04
+ Run  1307  (reflection):   OF =0.297916E+04
+ Run  1308  (reflection):   OF =0.296972E+04
+ Run  1309  (contraction):  OF =0.297838E+04
+ Run  1310  (mutation):     OF =0.297981E+04
+ Run  1311  (reflection):   OF =0.297661E+04
+ Run  1312  (contraction):  OF =0.297776E+04
+ Run  1313  (mutation):     OF =0.298047E+04
+ Run  1314  (reflection):   OF =0.297320E+04
+ Run  1315  (contraction):  OF =0.297278E+04
+ Run  1316  (mutation):     OF =0.297827E+04
+   End of loop   5, complex 1: best OF =0.298218E+04
+ Start of loop   5, complex 2: best OF =0.297369E+04
+ Run  1317  (reflection):   OF =0.297158E+04
+ Run  1318  (reflection):   OF =0.294456E+04
+ Run  1319  (contraction):  OF =0.297498E+04 .
+ Run  1320  (reflection):   OF =0.295170E+04
+ Run  1321  (contraction):  OF =0.296964E+04
+ Run  1322  (reflection):   OF =0.295720E+04
+ Run  1323  (contraction):  OF =0.297517E+04 .
+ Run  1324  (reflection):   OF =0.297089E+04
+ Run  1325  (reflection):   OF =0.297004E+04
+ Run  1326  (contraction):  OF =0.296922E+04
+ Run  1327  (mutation):     OF =0.297586E+04 .
+ Run  1328  (reflection):   OF =0.296548E+04
+ Run  1329  (contraction):  OF =0.297263E+04
+ Run  1330  (reflection):   OF =0.297505E+04
+ Run  1331  (reflection):   OF =0.297231E+04
+ Run  1332  (reflection):   OF =0.297187E+04
+ Run  1333  (reflection):   OF =0.297046E+04
+ Run  1334  (contraction):  OF =0.297081E+04
+ Run  1335  (mutation):     OF =0.297525E+04
+ Run  1336  (reflection):   OF =0.296341E+04
+ Run  1337  (contraction):  OF =0.297491E+04
+ Run  1338  (reflection):   OF =0.296645E+04
+ Run  1339  (contraction):  OF =0.297633E+04 .
+ Run  1340  (reflection):   OF =0.296730E+04
+ Run  1341  (contraction):  OF =0.297388E+04
+ Run  1342  (reflection):   OF =0.296524E+04
+ Run  1343  (contraction):  OF =0.297119E+04
+ Run  1344  (mutation):     OF =0.296561E+04
+ Run  1345  (reflection):   OF =0.297078E+04
+ Run  1346  (contraction):  OF =0.297274E+04
+ Run  1347  (reflection):   OF =0.297087E+04
+ Run  1348  (contraction):  OF =0.297726E+04 .
+ Run  1349  (reflection):   OF =0.298026E+04 .
+ Run  1350  (reflection):   OF =0.296912E+04
+ Run  1351  (contraction):  OF =0.297196E+04
+ Run  1352  (mutation):     OF =0.296759E+04
+ Run  1353  (reflection):   OF =0.297202E+04
+ Run  1354  (reflection):   OF =0.296759E+04
+ Run  1355  (contraction):  OF =0.298072E+04 .
+ Run  1356  (reflection):   OF =0.296625E+04
+ Run  1357  (contraction):  OF =0.297338E+04
+ Run  1358  (reflection):   OF =0.296864E+04
+ Run  1359  (contraction):  OF =0.297939E+04
+ Run  1360  (reflection):   OF =0.297481E+04
+ Run  1361  (contraction):  OF =0.297121E+04
+ Run  1362  (mutation):     OF =0.297326E+04
+ Run  1363  (reflection):   OF =0.297193E+04
+ Run  1364  (reflection):   OF =0.295980E+04
+ Run  1365  (contraction):  OF =0.297251E+04
+ Run  1366  (reflection):   OF =0.297394E+04
+ Run  1367  (reflection):   OF =0.297118E+04
+ Run  1368  (contraction):  OF =0.297086E+04
+ Run  1369  (mutation):     OF =0.296903E+04
+ Run  1370  (reflection):   OF =0.297385E+04
+ Run  1371  (reflection):   OF =0.296903E+04
+ Run  1372  (contraction):  OF =0.297156E+04
+ Run  1373  (mutation):     OF =0.297284E+04
+ Run  1374  (reflection):   OF =0.297208E+04
+ Run  1375  (contraction):  OF =0.296920E+04
+ Run  1376  (mutation):     OF =0.297376E+04
+ Run  1377  (reflection):   OF =0.296448E+04
+ Run  1378  (contraction):  OF =0.297201E+04
+ Run  1379  (mutation):     OF =0.297469E+04
+ Run  1380  (reflection):   OF =0.297440E+04
+ Run  1381  (contraction):  OF =0.297534E+04
+ Run  1382  (reflection):   OF =0.297443E+04
+ Run  1383  (reflection):   OF =0.297284E+04
+ Run  1384  (contraction):  OF =0.297530E+04
+ Run  1385  (reflection):   OF =0.297147E+04
+ Run  1386  (contraction):  OF =0.297631E+04
+ Run  1387  (reflection):   OF =0.297025E+04
+ Run  1388  (contraction):  OF =0.297718E+04
+ Run  1389  (reflection):   OF =0.297486E+04
+ Run  1390  (contraction):  OF =0.297503E+04
+ Run  1391  (mutation):     OF =0.297866E+04
+ Run  1392  (reflection):   OF =0.297554E+04
+ Run  1393  (contraction):  OF =0.297668E+04
+   End of loop   5, complex 2: best OF =0.298072E+04
+  
+   NEW Run time:   Tue Jun 18 12:19:49 2013
+ Finished    5 main loops --- best objective function =0.298218E+04
+  
+ No improvement in OF for    0 loops
+ Greatest parameter range:  1.42% for optimised parameter wstexp
+  
+ PARAMETER|     VALUE   |    MINVAL   |    MAXVAL   |  CV (%)
+ lambdagf   0.878851E+03  0.000000E+00  0.100000E+05  0.268697E+00
+ wsgexp    -0.595740E+00 -0.300000E+01  0.100000E+01  0.545370E+00
+ lambdatf   0.137315E+04  0.000000E+00  0.100000E+05  0.894986E+00
+ wstexp    -0.374751E+00 -0.300000E+01  0.100000E+01  0.141772E+01
+ pct        0.210875E+00  0.000000E+00  0.100000E+01  0.382861E+00
+ rtdepth    0.286710E+01  0.100000E+01  0.900000E+01  0.816983E+00
+  
+ Start of loop   6, complex 1: best OF =0.298218E+04
+ Run  1394  (reflection):   OF =0.298212E+04 .
+ Run  1395  (reflection):   OF =0.296940E+04
+ Run  1396  (contraction):  OF =0.297668E+04
+ Run  1397  (mutation):     OF =0.297997E+04
+ Run  1398  (reflection):   OF =0.297083E+04
+ Run  1399  (contraction):  OF =0.297551E+04
+ Run  1400  (mutation):     OF =0.297936E+04
+ Run  1401  (reflection):   OF =0.297358E+04
+ Run  1402  (contraction):  OF =0.297615E+04
+ Run  1403  (mutation):     OF =0.297351E+04
+ Run  1404  (reflection):   OF =0.297924E+04
+ Run  1405  (reflection):   OF =0.297351E+04
+ Run  1406  (contraction):  OF =0.297786E+04
+ Run  1407  (mutation):     OF =0.297949E+04
+ Run  1408  (reflection):   OF =0.297763E+04
+ Run  1409  (contraction):  OF =0.297243E+04
+ Run  1410  (mutation):     OF =0.297940E+04
+ Run  1411  (reflection):   OF =0.297555E+04
+ Run  1412  (contraction):  OF =0.297446E+04
+ Run  1413  (mutation):     OF =0.298000E+04
+ Run  1414  (reflection):   OF =0.297657E+04
+ Run  1415  (contraction):  OF =0.297391E+04
+ Run  1416  (mutation):     OF =0.297625E+04
+ Run  1417  (reflection):   OF =0.296831E+04
+ Run  1418  (contraction):  OF =0.297115E+04
+ Run  1419  (mutation):     OF =0.297630E+04
+ Run  1420  (reflection):   OF =0.297413E+04
+ Run  1421  (contraction):  OF =0.298108E+04
+ Run  1422  (reflection):   OF =0.297861E+04
+ Run  1423  (contraction):  OF =0.297909E+04
+ Run  1424  (mutation):     OF =0.297667E+04
+ Run  1425  (reflection):   OF =0.297091E+04
+ Run  1426  (contraction):  OF =0.297554E+04
+ Run  1427  (mutation):     OF =0.296742E+04
+ Run  1428  (reflection):   OF =0.297357E+04
+ Run  1429  (reflection):   OF =0.296742E+04
+ Run  1430  (contraction):  OF =0.298185E+04
+ Run  1431  (reflection):   OF =0.297197E+04
+ Run  1432  (contraction):  OF =0.297757E+04
+ Run  1433  (mutation):     OF =0.297996E+04
+ Run  1434  (reflection):   OF =0.297023E+04
+ Run  1435  (contraction):  OF =0.297839E+04
+ Run  1436  (mutation):     OF =0.297852E+04
+ Run  1437  (reflection):   OF =0.297686E+04
+ Run  1438  (contraction):  OF =0.297539E+04
+ Run  1439  (mutation):     OF =0.298086E+04
+ Run  1440  (reflection):   OF =0.297886E+04
+ Run  1441  (reflection):   OF =0.297226E+04
+ Run  1442  (contraction):  OF =0.297239E+04
+ Run  1443  (mutation):     OF =0.298254E+04 +
+ Run  1444  (reflection):   OF =0.297770E+04
+ Run  1445  (contraction):  OF =0.297844E+04
+ Run  1446  (mutation):     OF =0.298094E+04
+ Run  1447  (reflection):   OF =0.297363E+04
+ Run  1448  (contraction):  OF =0.297860E+04
+ Run  1449  (mutation):     OF =0.297665E+04
+ Run  1450  (reflection):   OF =0.297513E+04
+ Run  1451  (contraction):  OF =0.297780E+04
+ Run  1452  (reflection):   OF =0.297853E+04
+ Run  1453  (reflection):   OF =0.297247E+04
+ Run  1454  (contraction):  OF =0.297621E+04
+ Run  1455  (mutation):     OF =0.297651E+04
+ Run  1456  (reflection):   OF =0.297721E+04
+ Run  1457  (reflection):   OF =0.297651E+04
+ Run  1458  (contraction):  OF =0.297695E+04
+ Run  1459  (mutation):     OF =0.297668E+04
+ Run  1460  (reflection):   OF =0.297680E+04
+ Run  1461  (contraction):  OF =0.298358E+04 +
+ Run  1462  (reflection):   OF =0.297469E+04
+ Run  1463  (contraction):  OF =0.297061E+04
+ Run  1464  (mutation):     OF =0.298134E+04
+ Run  1465  (reflection):   OF =0.297395E+04
+ Run  1466  (contraction):  OF =0.297511E+04
+ Run  1467  (mutation):     OF =0.297473E+04
+ Run  1468  (reflection):   OF =0.297257E+04
+ Run  1469  (contraction):  OF =0.297906E+04
+ Run  1470  (reflection):   OF =0.297366E+04
+ Run  1471  (contraction):  OF =0.297836E+04
+ Run  1472  (mutation):     OF =0.297790E+04
+ Run  1473  (reflection):   OF =0.297304E+04
+ Run  1474  (contraction):  OF =0.297811E+04
+ Run  1475  (reflection):   OF =0.297272E+04
+ Run  1476  (contraction):  OF =0.297804E+04
+ Run  1477  (reflection):   OF =0.298020E+04
+ Run  1478  (reflection):   OF =0.297804E+04
+ Run  1479  (contraction):  OF =0.297845E+04
+ Run  1480  (mutation):     OF =0.298363E+04 +
+ Run  1481  (reflection):   OF =0.297176E+04
+ Run  1482  (contraction):  OF =0.297483E+04
+ Run  1483  (mutation):     OF =0.297921E+04
+ Run  1484  (reflection):   OF =0.297506E+04
+ Run  1485  (contraction):  OF =0.298029E+04
+ Run  1486  (reflection):   OF =0.297971E+04
+ Run  1487  (contraction):  OF =0.297757E+04
+ Run  1488  (mutation):     OF =0.298184E+04
+   End of loop   6, complex 1: best OF =0.298363E+04
+ Start of loop   6, complex 2: best OF =0.297826E+04
+ Run  1489  (reflection):   OF =0.297686E+04
+ Run  1490  (reflection):   OF =0.297260E+04
+ Run  1491  (contraction):  OF =0.297635E+04
+ Run  1492  (reflection):   OF =0.297750E+04
+ Run  1493  (reflection):   OF =0.297886E+04 .
+ Run  1494  (reflection):   OF =0.297157E+04
+ Run  1495  (contraction):  OF =0.297360E+04
+ Run  1496  (mutation):     OF =0.297079E+04
+ Run  1497  (reflection):   OF =0.297844E+04
+ Run  1498  (reflection):   OF =0.297284E+04
+ Run  1499  (contraction):  OF =0.297292E+04
+ Run  1500  (mutation):     OF =0.297436E+04
+ Run  1501  (reflection):   OF =0.297114E+04
+ Run  1502  (contraction):  OF =0.297322E+04
+ Run  1503  (mutation):     OF =0.297482E+04
+ Run  1504  (reflection):   OF =0.297709E+04
+ Run  1505  (reflection):   OF =0.297489E+04
+ Run  1506  (contraction):  OF =0.297773E+04
+ Run  1507  (reflection):   OF =0.297822E+04
+ Run  1508  (reflection):   OF =0.297739E+04
+ Run  1509  (reflection):   OF =0.297763E+04
+ Run  1510  (reflection):   OF =0.297417E+04
+ Run  1511  (contraction):  OF =0.298053E+04 .
+ Run  1512  (reflection):   OF =0.297270E+04
+ Run  1513  (contraction):  OF =0.297934E+04
+ Run  1514  (reflection):   OF =0.296918E+04
+ Run  1515  (reflection):   OF =0.296561E+04
+ Run  1516  (contraction):  OF =0.297630E+04
+ Run  1517  (reflection):   OF =0.297112E+04
+ Run  1518  (contraction):  OF =0.297585E+04
+ Run  1519  (reflection):   OF =0.297177E+04
+ Run  1520  (contraction):  OF =0.297347E+04
+ Run  1521  (mutation):     OF =0.297138E+04
+ Run  1522  (reflection):   OF =0.297652E+04
+ Run  1523  (reflection):   OF =0.297138E+04
+ Run  1524  (contraction):  OF =0.297739E+04
+ Run  1525  (reflection):   OF =0.297688E+04
+ Run  1526  (contraction):  OF =0.297457E+04
+ Run  1527  (mutation):     OF =0.297719E+04
+ Run  1528  (reflection):   OF =0.297546E+04
+ Run  1529  (contraction):  OF =0.298006E+04
+ Run  1530  (reflection):   OF =0.297418E+04
+ Run  1531  (contraction):  OF =0.297843E+04
+ Run  1532  (reflection):   OF =0.297324E+04
+ Run  1533  (reflection):   OF =0.297186E+04
+ Run  1534  (contraction):  OF =0.297374E+04
+ Run  1535  (reflection):   OF =0.297840E+04
+ Run  1536  (reflection):   OF =0.298033E+04
+ Run  1537  (reflection):   OF =0.297623E+04
+ Run  1538  (contraction):  OF =0.297723E+04
+ Run  1539  (mutation):     OF =0.297721E+04
+ Run  1540  (reflection):   OF =0.297542E+04
+ Run  1541  (contraction):  OF =0.297826E+04
+ Run  1542  (reflection):   OF =0.297134E+04
+ Run  1543  (contraction):  OF =0.297793E+04
+ Run  1544  (mutation):     OF =0.297161E+04
+ Run  1545  (reflection):   OF =0.297798E+04
+ Run  1546  (reflection):   OF =0.297161E+04
+ Run  1547  (contraction):  OF =0.297841E+04
+ Run  1548  (reflection):   OF =0.297784E+04
+ Run  1549  (contraction):  OF =0.297880E+04
+ Run  1550  (reflection):   OF =0.297195E+04
+ Run  1551  (contraction):  OF =0.297753E+04
+ Run  1552  (mutation):     OF =0.297621E+04
+ Run  1553  (reflection):   OF =0.297585E+04
+ Run  1554  (contraction):  OF =0.297819E+04
+ Run  1555  (reflection):   OF =0.297445E+04
+ Run  1556  (contraction):  OF =0.297651E+04
+ Run  1557  (reflection):   OF =0.296983E+04
+ Run  1558  (contraction):  OF =0.297816E+04
+ Run  1559  (reflection):   OF =0.297671E+04
+ Run  1560  (contraction):  OF =0.297983E+04
+   End of loop   6, complex 2: best OF =0.298053E+04
+  
+   NEW Run time:   Tue Jun 18 12:29:04 2013
+ Finished    6 main loops --- best objective function =0.298363E+04
+  
+ No improvement in OF for    0 loops
+ Greatest parameter range:  0.80% for optimised parameter wstexp
+  
+ First Convergence criterion satisfied...
+   parameter ranges are all less than 0.1 %
+  
+  
+ SENSITIVITY ANALYSIS
+ changes in % of feasible range)
+  
+ change of var: lambdagf (0.873E+03)
+  -8.730% ( 0.0000000E+00): change of OF by -0.723E+02% ( 0.827E+03)
+  -0.873% ( 0.7857269E+03): change of OF by -0.467E+00% ( 0.297E+04)
+  -0.087% ( 0.8642996E+03): change of OF by -0.328E+00% ( 0.297E+04)
+  -0.009% ( 0.8721569E+03): change of OF by -0.822E-01% ( 0.298E+04)
+   0.091% ( 0.8821569E+03): change of OF by -0.144E+00% ( 0.298E+04)
+   0.913% ( 0.9642996E+03): change of OF by -0.671E+00% ( 0.296E+04)
+   9.127% ( 0.1785727E+04): change of OF by -0.345E+02% ( 0.195E+04)
+  91.270% ( 0.1000000E+05): change of OF by -0.575E+03% (-0.142E+05)
+  
+ change of var: wsgexp   (-.594E+00)
+ -60.145% (-0.3000000E+01): change of OF by -0.175E+02% ( 0.246E+04)
+  -6.014% (-0.8347904E+00): change of OF by -0.320E+01% ( 0.289E+04)
+  -0.601% (-0.6182694E+00): change of OF by -0.385E+00% ( 0.297E+04)
+  -0.060% (-0.5966173E+00): change of OF by -0.274E+00% ( 0.298E+04)
+   0.040% (-0.5926173E+00): change of OF by -0.134E+00% ( 0.298E+04)
+   0.399% (-0.5782694E+00): change of OF by -0.324E+00% ( 0.297E+04)
+   3.986% (-0.4347904E+00): change of OF by -0.205E+02% ( 0.237E+04)
+  39.855% ( 0.1000000E+01): change of OF by -0.415E+03% (-0.940E+04)
+  
+ change of var: lambdatf (0.133E+04)
+ -13.349% ( 0.0000000E+00): change of OF by -0.524E+02% ( 0.142E+04)
+  -1.335% ( 0.1201404E+04): change of OF by -0.278E+00% ( 0.298E+04)
+  -0.133% ( 0.1321544E+04): change of OF by -0.135E+00% ( 0.298E+04)
+  -0.013% ( 0.1333558E+04): change of OF by  0.266E-01% ( 0.298E+04)
+   0.087% ( 0.1343558E+04): change of OF by -0.762E-02% ( 0.298E+04)
+   0.867% ( 0.1421544E+04): change of OF by -0.171E+00% ( 0.298E+04)
+   8.665% ( 0.2201404E+04): change of OF by -0.216E+01% ( 0.292E+04)
+  86.651% ( 0.1000000E+05): change of OF by -0.171E+02% ( 0.247E+04)
+  
+ change of var: wstexp   (-.378E+00)
+ -65.552% (-0.3000000E+01): change of OF by -0.227E+02% ( 0.231E+04)
+  -6.555% (-0.6401353E+00): change of OF by -0.227E+01% ( 0.292E+04)
+  -0.656% (-0.4041488E+00): change of OF by -0.160E+00% ( 0.298E+04)
+  -0.066% (-0.3805502E+00): change of OF by  0.285E-01% ( 0.298E+04)
+   0.034% (-0.3765502E+00): change of OF by  0.736E-03% ( 0.298E+04)
+   0.344% (-0.3641488E+00): change of OF by -0.415E-01% ( 0.298E+04)
+   3.445% (-0.2401353E+00): change of OF by -0.570E+00% ( 0.297E+04)
+  34.448% ( 0.1000000E+01): change of OF by -0.781E+01% ( 0.275E+04)
+  
+ change of var: pct      (0.213E+00)
+ -21.297% ( 0.0000000E+00): change of OF by -0.117E+02% ( 0.263E+04)
+  -2.130% ( 0.1916767E+00): change of OF by -0.651E+00% ( 0.296E+04)
+  -0.213% ( 0.2108444E+00): change of OF by -0.915E-01% ( 0.298E+04)
+  -0.021% ( 0.2127611E+00): change of OF by -0.145E-01% ( 0.298E+04)
+   0.079% ( 0.2137611E+00): change of OF by -0.112E+00% ( 0.298E+04)
+   0.787% ( 0.2208444E+00): change of OF by -0.341E+00% ( 0.297E+04)
+   7.870% ( 0.2916767E+00): change of OF by -0.244E+01% ( 0.291E+04)
+  78.703% ( 0.1000000E+01): change of OF by -0.599E+02% ( 0.120E+04)
+  
+ change of var: rtdepth  (0.285E+01)
+ -23.140% ( 0.1000000E+01): change of OF by -0.176E+02% ( 0.246E+04)
+  -2.314% ( 0.2666065E+01): change of OF by  0.152E-13% ( 0.298E+04)
+  -0.231% ( 0.2832672E+01): change of OF by  0.152E-13% ( 0.298E+04)
+  -0.023% ( 0.2849333E+01): change of OF by  0.152E-13% ( 0.298E+04)
+   0.077% ( 0.2857333E+01): change of OF by  0.152E-13% ( 0.298E+04)
+   0.769% ( 0.2912672E+01): change of OF by  0.152E-13% ( 0.298E+04)
+   7.686% ( 0.3466065E+01): change of OF by -0.156E+01% ( 0.294E+04)
+  76.860% ( 0.9000000E+01): change of OF by -0.420E+02% ( 0.173E+04)
+  
+  
+ Second convergence criterion satisfied:
+ no parameter shift by more than  1.000% of max distance leads to
+ an increase in the objective function.
+  
+ PARAMETER|     VALUE   |    MINVAL   |    MAXVAL   |  CV (%)
+ lambdagf   0.873030E+03  0.000000E+00  0.100000E+05  0.253312E+00
+ wsgexp    -0.594212E+00 -0.300000E+01  0.100000E+01  0.325228E+00
+ lambdatf   0.133489E+04  0.000000E+00  0.100000E+05  0.573616E+00
+ wstexp    -0.380550E+00 -0.300000E+01  0.100000E+01  0.799285E+00
+ pct        0.212974E+00  0.000000E+00  0.100000E+01  0.338920E+00
+ rtdepth    0.285118E+01  0.100000E+01  0.900000E+01  0.472062E+00
+  
+ Optimisation completed successfully.

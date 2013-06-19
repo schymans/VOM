@@ -3,7 +3,7 @@
 # The model-folder (look at calling script (e.g. computer_start.sh) for path)
 CODEDIR=$(pwd)
 
-# Starts vomrun.script as batch job until finalbest.txt is written
-until test -e finalbest.txt; do
+# Starts vomrun.script as batch job until sce_status.txt is written
+until test -e sce_status.txt; do
 	$CODEDIR/computer_vomrun.script >> logfile.txt
 done

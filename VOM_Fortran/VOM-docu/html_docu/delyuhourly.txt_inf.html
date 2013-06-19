@@ -9,40 +9,46 @@
 </p>
 <h1>VOM - Model Description</h1>
 <h2>VOM - info</h2>
-<h3>delyuhourly.txt</h3>
+<h3>delz_hourly.txt</h3>
 <hr style="clear: right;">
 <hr>
-<h2>Description of delyuhourly.txt</h2>
-<p>The file "delyuhourly.txt" is an output file from VOM, containing the thickness of each
+<h2>Description of delz_hourly.txt</h2>
+<p>The file "delz_hourly.txt" is an output file from VOM, containing the thickness of each
 unsaturated soil layers in ascii format.</p>
-<p>As the number of soil layers also depends on input given soil depth, this file has a variably
-number of rows. These rows don't have their own variable names. They are all saved within and behind
-the last variable name (delyusublayer).</p>
+<p>As the number of soil layers also depends on the position of the water table, this file has a variable
+number of rows. These rows do not have their own variable names. They are all saved within and behind
+the last variable name (delz_sublayer), e.g.:</p>
+<pre>
+ fyearfmonthfday   ndaynhourdelz_sublayer
+  2000     1   1  10586    1  0.500000E+00  0.500000E+00  0.500000E+00  0.500000E+00  0.500000E+00  0.500000E+00  0.500000E+00  0.500000E+00  0.500000E+00  0.500000E+00
+</pre>
+
+
 <h3>Fields</h3>
 <table border="1">
 <tbody><tr>
-	<td align="center">year</td>
-	<td align="center">year</td>
+	<td align="center">fyear</td>
+	<td align="center">Year</td>
 </tr>
 <tr>
-	<td align="center">month</td>
-	<td align="center">month</td>
+	<td align="center">fmonth</td>
+	<td align="center">Month</td>
 </tr>
 <tr>
-	<td align="center">day</td>
-	<td align="center">day of the month</td>
+	<td align="center">fday</td>
+	<td align="center">Day of the month</td>
 </tr>
 <tr>
-	<td align="center">dcum</td>
-	<td align="center">day of the model</td>
+	<td align="center">nday</td>
+	<td align="center">Day of the model run</td>
 </tr>
 <tr>
-	<td align="center">hour</td>
-	<td align="center">hour of day</td>
+	<td align="center">nhour</td>
+	<td align="center">Hour of day</td>
 </tr>
 <tr>
-	<td align="center">delyusublayer</td>
-	<td align="center">thickness of all/each unsaturated soil layers (in m)</td>
+	<td align="center">delz_sublayer</td>
+	<td align="center">Thickness of each unsaturated soil layer (in m)</td>
 </tr>
 </tbody></table>
 <p>The first line contains the variable names.</p>

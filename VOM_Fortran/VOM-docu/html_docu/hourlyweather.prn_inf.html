@@ -29,42 +29,42 @@ hourly weather data in ascii format.</p>
 	<td align="center">Integer, starting with 1 on 1 January</td>
 </tr>
 <tr>
-	<td align="center">day</td>
+	<td align="center">fday</td>
 	<td align="center">Day of the month</td>
 	<td align="center">Integer</td>
 </tr>
 <tr>
-	<td align="center">month</td>
+	<td align="center">fmonth</td>
 	<td align="center">month</td>
 	<td align="center">Integer,starting with 1 on January</td>
 </tr>
 <tr>
-	<td align="center">year</td>
+	<td align="center">fyear</td>
 	<td align="center">year</td>
 	<td align="center">Integer</td>
 </tr>
 <tr>
-	<td align="center">tair</td>
+	<td align="center">tair_h</td>
 	<td align="center">Air temp (in °C)</td>
 	<td align="center">positive: #.###e±##, negative: -#.###e±##</td>
 </tr>
 <tr>
-	<td align="center">vd</td>
+	<td align="center">vd_h</td>
 	<td align="center">Water vapour deficit (dimensionless, i.e. vd=VPD/P)</td>
 	<td align="center">#.###e±##</td>
 </tr>
 <tr>
-	<td align="center">parh</td>
+	<td align="center">par_h</td>
 	<td align="center">Photosynthetically active Photon Flux Density (in mol m<sup>2</sup> s<sup>-1</sup>)</td>
 	<td align="center">#.###e±##</td>
 </tr>
 <tr>
-	<td align="center">rainh</td>
+	<td align="center">rain_h</td>
 	<td align="center">Precipitation (in m s<sup>-1</sup>)</td>
 	<td align="center">#.###e±##</td>
 </tr>
 <tr>
-	<td align="center">cah</td>
+	<td align="center">ca_h</td>
 	<td align="center">ambient air CO<sub>2</sub> concentration (in &micro;mol)</td>
 	<td align="center">#.###e±##</td>
 </tr>
@@ -74,8 +74,8 @@ omitted when reading the file. The first five fields are 8 characters
 long, the remaining five have 10 characters. The fields need to be
 filled from behind, e.g.:</p>
 <pre>
-       1       1       1       1    2000 3.469e+00 2.119e-03 2.446e-07 0.000e+00 0.350E+03
-       2       1       1       1    2000-4.843e-01 1.513e-04 0.000e+00 0.000e+00 0.350E+03
+    hour dayyear    fday  fmonth   fyear     tair_h       vd_h      par_h     rain_h       ca_h
+       1       1       1       1    1971  0.266E+02  0.162E-02  0.000E+00  0.000E+00  0.350E-03
 </pre>
 <hr>
 </body>

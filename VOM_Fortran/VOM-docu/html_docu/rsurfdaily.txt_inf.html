@@ -9,37 +9,44 @@
 </p>
 <h1>VOM - Model Description</h1>
 <h2>VOM - info</h2>
-<h3>rsurfdaily.txt</h3>
+<h3>rsurf_daily.txt</h3>
 <hr style="clear: right;">
 <hr>
-<h2>Description of rsurfdaily.txt</h2>
-<p>The file "rsurfdaily.txt" is an output file from VOM, containing a
+<h2>Description of rsurf_daily.txt</h2>
+<p>The file "rsurf_daily.txt" is an output file from VOM, containing a
 midnight snapshots of the root surface distributions in the soil profile in ascii format.</p>
-<p>As the number of soil layers also depends on input given soil depth, this file has a variably
-number of rows. These rows don't have their own variable names. They are all saved within and behind
-the last variable name (rsurfsublayer).</p>
+<p>As the number of soil layers also depends on given soil depth, this file has a variable
+number of columns. These columns do not have their own variable names. They are all saved within and behind
+the last variable name (rsurft_sublayer), e.g.:</p>
+<pre>
+ fyearfmonthfday   ndayrsurft_sublayer
+  1971     1   1      1  0.150000E+00  0.150000E+00  0.150000E+00  0.150000E+00  0.150000E+00  0.150000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00  0.000000E+00
+
+</pre>
+
+
 <h3>Fields</h3>
 <table border="1">
 <tbody><tr>
-	<td align="center">year</td>
-	<td align="center">year</td>
+	<td align="center">fyear</td>
+	<td align="center">Year</td>
 </tr>
 <tr>
-	<td align="center">month</td>
-	<td align="center">month</td>
+	<td align="center">fmonth</td>
+	<td align="center">Month</td>
 </tr>
 <tr>
-	<td align="center">day</td>
-	<td align="center">day of the month</td>
+	<td align="center">fday</td>
+	<td align="center">Day of the month</td>
 </tr>
 <tr>
-	<td align="center">dcum</td>
-	<td align="center">day of the model</td>
+	<td align="center">nday</td>
+	<td align="center">Day of the model run</td>
 </tr>
 <tr>
-	<td align="center">rsurfsublayer</td>
-	<td align="center">root surface area density (root surface area per unit soil volume)
-	in each soil layers (in m<sup>2</sup> m<sup>-3</sup> d<sup>-1</sup>)</td>
+	<td align="center">rsurft_sublayer</td>
+	<td align="center">Root surface area density (root surface area per unit soil volume)
+	in each soil layer (in m<sup>2</sup> m<sup>-3</sup> d<sup>-1</sup>)</td>
 </tr>
 </tbody></table>
 <p>The first line contains the variable names.</p>
