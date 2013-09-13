@@ -1,307 +1,266 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<head>
-<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
-<title>VOM-info</title>
-</head>
-<body>
-<p style="float:right; border-width:1px; border-style:solid">
-<object data="navi-bar.html" type="text/html" ></object>
-</p>
-<h1> VOM - Model Description </h1>
-<h2>VOM - info</h2>
-<hr style="clear:right;">
-<hr>
-<h2>Files needed</h2>
-<ul>
-	<li>model code</li>
-		<ul>
-			<li>coreprog.f90: main program code</li>
-			<li>sce.f90: optimisation subroutine</li>
-			<li>watbal.f90: water balance subroutine</li>
-			<li>transpmodel.f90: gas exchange subroutine</li>
-			<li>modules.f90: module defining variables and parameters</li>
-		</ul>
-	<li>input files to start optimisation</li>
-		<ul>
-			<li>vom_namelist: ascii file with program options</li>
-			<li>dailyweather.prn: ascii file with daily weather data </li>
-		</ul>
-		<ul style="list-style-type:none">
-			<li>OR</li>
-		</ul>
-		<ul>
-			<li>hourlyweather.prn: ascii file with hourly weather data </li>
-		</ul>
-	<li>input files to calculate results</li>
-		<ul>
-			<li>files mentioned above</li>
-			<li>sce_lastbest.txt: ascii file with optimal values, created by the model after optimisation completed</li>
-			<li>sce_status.txt: ascii file containing the number '1', created by the model after optimisation completed</li>
-		</ul>
-		<ul style="list-style-type:none">
-			<li>OR</li>
-		</ul>
-		<ul>
-			<li>sce_bestpars.txt: ascii file with optimal values during the model run, created by the model during optimisation</li>
-		</ul>
-		<ul style="list-style-type:none">
-			<li>OR</li>
-		</ul>
-		<ul>
-			<li>pars.txt: ascii file with optimal values, has to be created by yourself</li>
-		</ul>
-</ul>
-
-<p>A set of compatible files are available from the repository. </p>
-<hr>
-<hr>
-<h2>How to compile an run the model</h2>
-<p>The model code is written in Fortran 90. Therefore you need a Fortran compiler. After compilation 
-the model needs to be started repeatedly until the file "sce_status" appears in the directory. At the same time,
-a file 'sce_finalbest' is writting, which contains the optimal values after the model converged. 
-A description of how to compile and run the model you can find in an extra section: 
-<a href="HowToRun.html">VOM - how to run</a></p>
-<hr>
-<hr>
-<h2>Settings in vom_namelist</h2>
-<h3>Settings in Section 'inputpar':</h3>
-
-<p>The parameters are explained in the text file itself. Parameters that
-need to be adapted:</p>
-<ul>
-	<li>i_maxyear</li>
-	<li>i_toptstart</li>
-	<li>i_firstyear</li>
-	<li>i_lastyear</li>
-</ul>
-<h3>Settings in Section 'input2par':</h3>
-
-<p>The parameters are explained in the text file itself. Parameters that
-need to be adapted:</p>
-<ul>
-    <li>i_lat</li>
-	<li>catchment geogmetry:</li>
-	<ul>
-		<li>i_cz</li>
-		<li>i_zs</li>
-		<li>i_cgs</li>
-		<li>i_zr (has to be &gt;0)</li>
-		<li>i_go </li>
-	</ul>
-	<li>soil properties after van Genuchten (<a href="SoilValueTable.html">need to find the
-appropriate ones for the dominant soil type on the site</a>):</li>
-	<ul>
-		<li>i_ksat</li>
-		<li>i_thetar</li>
-		<li>i_thetas</li>
-		<li>i_nvg</li>
-		<li>i_avg </li>
-	</ul>
-</ul>
-
-<h3>Settings in Section 'shufflepar':</h3>
-<ul>
-	<li>To run in optimisation mode, change the appropriate line to 'vom_command=4'.</li>
-	<li>Set the initial number of complexes to a high value if you
-want to increase the probability of finding the global maximum. The
-computation time will increase considerably. Good values are 2 or 4.</li>
-	<li>Set the resolution of the optimisation (the model stops if
-the parameters don't change by more than this fraction of their search
-range)</li>
-	<li>Set the number of unsuccessful loops before the model gives up searching for an improved 
-	objective function.</li>
-	<li>Set the number of simplex optimisations per set of parents
-(a larger number may lead to faster convergence on local optimum)</li>
-	<li>Set the spread of the random seed around the initial guess
-(a value of 1 does not restrict it)</li>
-	<li>Set which parameters need to be optimised by changing their
-'optimisable' option to '1', and define their bounds and starting
-values. (Definition of the starting values is obsolete as of version
-sceStan3.f90.). Prescribe values of non-optimisable parameters by
-setting the 'initial value' in shuffle.par. </li>
-</ul>
-<p>The following parameters are included and can be optimised:</p>
-<ul>
-	<li><span style="font-weight:bold">lambdagf</span> : dE/dA in grasses (targeted slope between transpiration rate and CO<sub>2</sub> uptake rate)</li>
-	<li style="line-height:1.8em"><span style="font-weight:bold">wsgexp</span> : value for the relationship between lambdagf and soil water</li>
-	<li style="line-height:1.8em"><span style="font-weight:bold">lambdafac</span> : dE/dA in trees (targeted slope between transpiration rate and CO<sub>2</sub> uptake rate)</li>
-	<li style="line-height:1.8em"><span style="font-weight:bold">wsexp</span> : value for the relationship between lambdafac and soil water</li>
-	<li style="line-height:1.8em"><span style="font-weight:bold">pc</span> : Area fraction covered by trees</li>
-	<li style="line-height:1.8em"><span style="font-weight:bold">rootdepth</span> : Rootdepth for trees</li>
-</ul>
-
-
-<h3>Settings for random values</h3>
-<p>The SCE algorithm generates random numbers as part of the optimisation routine. These are
-initialised using a random seed based on the date and time. For debugging purposes, the initialisation
-can be made independent of the date and time and only machine-specific. This will result in exactly
-identical optimisation runs if the model is run repeatedly with the same data on the same machine.
-To achieve this, set the 'command' option in shuffle.par to 4 (first line in the file).
-Our experience revealed that the model should be run several times in order to reduce the risk of
-converging to a local maximum.</p>
-<h3>Description of dailyweather.prn:</h3>
-<p>The file "dailyweather.prn" is an input file for VOM, containing daily
-weather data in ascii format and is described here:
-<a href="dailyweather.prn_inf.html">dailyweather.prn_inf</a>.</p>
-<h3>Description of hourlyweather.prn:</h3>
-<p>The file "hourlyweather.prn" is an alternative input file for VOM. If
-available, the model uses the "hourlyweather.prn" instead of the
-"dailyweather.prn". The file containing hourly weather data in ascii
-format and is described here:
-<a href="hourlyweather.prn_inf.html">hourlyweather.prn_inf</a>.</p>
-<h3>Description of sce_bestpars.txt, sce_lastbest.txt and pars.txt:</h3>
-<p>Files have a list directed format with a sequence of values. Value separators are a set of adjacent blanks.
-Sce_bestpars.txt and sce_lastbest.txt contain the optimised parameters (as in Section shufflepar of VOM_namelist), followed by a value for netass (ncp).
-Pars.txt contains only the parameter values without netass.</p>
-<hr>
-<hr>
-<h2>Model Output</h2>
-<p>During the optimisation, the model writes a few files, of which the
-file sce_progress.txt is the most useful, as it contains information about
-the progress made by the optimisation algorithm and the currently best
-parameter values. Below, the different output files will be described.</p>
-<h3>results_hourly.txt</h3>
-<p>The file containing hourly model output in ascii format for the last
-few years of the model run is described here:
-<a href="resultshourly.txt_inf.html">results_hourly.txt_inf</a></p>
-<h3>results_daily.txt</h3>
-<p>The file containing daily model output in ascii format of all days of
-the model run is described here:
-<a href="resultsdaily.txt_inf.html">results_daily.txt_inf</a></p>
-<h3>results_yearly.txt</h3>
-<p>The file containing annual model output in ascii format for all years
-of the model run is described here:
-<a href="yearly.txt_inf.html">results_yearly.txt_inf</a></p>
-<h3>rsurf_daily.txt</h3>
-<p>The file containing midnight snapshots of the root surface
-distributions in the soil profile is described here:
-<a href="rsurfdaily.txt_inf.html">rsurf_daily.txt_inf</a></p>
-<h3>delz_hourly.txt</h3>
-<p>The file containing midnight snapshots of the thickness of each
-unsaturated soil layer is described here:
-<a href="delyuhourly.txt_inf.html">delzhourly.txt_inf</a></p>
-<h3>ruptkt_hourly.txt</h3>
-<p>The file containing hourly root water uptake rates in each soil layer
-during the last few years of the model run is described here:
-<a href="ruptkhourly.txt_inf.html">ruptkt_hourly.txt_inf</a></p>
-<h3>su_hourly.txt</h3>
-<p>The file containing hourly soil saturation degrees in each soil layer
-during the last few years of the model run is described here:
-<a href="suvechourly.txt_inf.html">su_hourly.txt_inf</a></p>
-<h3>model_output.txt</h3>
-<p>The file contains the best ncp.</p>
-<hr>
-<hr>
-<h2>Code Information</h2>
-<h3>Main program code file name: coreprog.f90</h3>
-<p>Core program to read model options from shuffle.par and run
-optimisation (sce.f90), gas exchange and water balance model (transpmodel.f90, watbal.f90)
-Needs shuffle.par, sce.f90, transpmodel.f90 and watbal.f90.</p>
-<h4>Reads data from [file name: type of data]:</h4>
-<ul>
-	<li>vom_namelist: model options </li>
-</ul>
-<p>IF vom_command=0</p>
-<ul>
-	<li>None OR sce_lastbest.txt: optimal vegetation parameters</li>
-</ul>
-<p>IF vom_command=2</p>
-<ul>
-	<li>sce_bestpars.txt OR sce_lastbest.txt: optimal vegetation parameters</li>
-</ul>
-<p>IF vom_command=3</p>
-<ul>
-	<li>pars.txt: optimal vegetation parameters</li>
-</ul>
-<h4>Calls subroutines [file name: data exchanged]:</h4>
-<p>IF vom_command=0 AND <span style="font-weight:bold">no file</span> "sce_lastbest.txt" exists</p>
-<ul>
-	<li>sce.f90: no data exchanged </li>
-</ul>
-<p>IF vom_command=0 AND file "sce_lastbest.txt" exists</p>
-<ul>
-	<li>transpmodel.f90 and watbal.f90: sends optimised parameter values, receives NCP value</li>
-</ul>
-<p>IF vom_command=2 OR file "sce_lastbest.txt" exists in directory</p>
-<ul>
-	<li>transpmodel.f90 and watbal.f90: sends optimised parameter values, receives NCP value </li>
-</ul>
-<p>IF vom_command=3 AND file "pars.txt" exists in directory</p>
-<ul>
-	<li>transpmodel.f90 and watbal.f90: sends optimised parameter values, receives NCP value </li>
-</ul>
-<h4>Writes data to [file name: type of data]:</h4>
-<p>None</p>
-<hr>
-<h3>Subroutine: sce.f90</h3>
-<p>Shuffled complex algorithm, searching for the optimal values of
-optimisable parameters.</p>
-<h4>Reads data from [file name: type of data]:</h4>
-<ul>
-	<li>vom_namelist: model options </li>
-</ul>
-<h4>Calls subroutines [file name: data exchanged]:</h4>
-<ul>
-	<li>transpmodel.f90: sends optimised parameter values,
-receives NCP value </li>
-</ul>
-<h4>Writes data to [file name: type of data]:</h4>
-<ul>
-	<li>sce_out.txt: ascii-file of optimisable parameter values and
-objective function value for each run</li>
-	<li>sce_bestpars.txt: ascii-file of best runs of each population</li>
-	<li>sce_progress.txt: ascii-file of all screen output</li>
-	<li>sce_lastloop.txt: ascii-file of values to be used for the next
-optimisation loop </li>
-</ul>
-<hr>
-<h3>Subroutine: transpmodel.f90</h3>
-<p>Subroutine reading model parameters from input.par and weather data
-from hourlyweather.prn, or, if not available, from dailyweaterh.prn.
-Computes ET and CO2 uptake rates. Saves
-hourly fluxes and state variables in resultshourly.txt, daily values in
-resultsdaily.txt and annual values in yearly.txt.</p>
-<h4>Reads data from [file name: type of data]:</h4>
-<ul>
-	<li>vom_namelist: ascii file with model parameters</li>
-	<li>dailyweather.prn: ascii file with daily weather data </li>
-</ul>
-<p>OR, if available:</p>
-<ul>
-	<li>hourlyweather.prn: ascii file with hourly weather data </li>
-</ul>
-<h4>Calls subroutines [file name: data exchanged]:</h4>
-<ul>
-	<li>watbal.f90: calculates water balance </li>
-</ul>
-<h4>Writes data to [file name: type of data]:</h4>
-<p>IF hourlyweather.prn did not exist, it will be created.</p>
-<p>IF optimisation completed:</p>
-<ul>
-	<li>results_hourly.txt: ascii file of hourly fluxes and state
-variables for last few years of model run</li>
-	<li>results_daily.txt: daily values</li>
-	<li>results_yearly.txt: annual values </li>
-	<li>rsurf_daily.txt: daily values</li>
-	<li>delz_hourly.txt: hourly values </li>
-	<li>ruptkt_hourly.txt: hourly values</li>
-	<li>su_hourly.txt: hourly values </li>
-</ul>
-<hr>
-<h3>Subroutine: watbal.f90</h3>
-<p>Subroutine calculating (and computing) sub-hourly water balance.</p>
-<h4>Reads data from [file name: type of data]:</h4>
-<p>None</p>
-<h4>Calls subroutines [file name: data exchanged]:</h4>
-<p>None</p>
-<h4>Writes data to [file name: type of data]:</h4>
-<p>None</p>
-<hr>
-<hr>
-<h2>Other sources</h2>
-<p>Derivations of some of the equations are given in the Mathematica file
-equations.pdf. </p>
-<hr>
-</body>
+  <head>
+    <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
+    <title>VOM-info</title>
+  </head>
+  <body>
+    <p style="float:right; border-width:1px; border-style:solid"> <object data="navi-bar.html"
+        type="text/html"></object> </p>
+    <h1> VOM - Model Description </h1>
+    <h2>VOM - info</h2>
+    <hr style="clear:right;">
+    <hr>
+    <h2>Files needed</h2>
+    <p>The model consists of code to compute the soil water balance and
+      vegetation dynamics and an optimisation code to find the optimal
+      vegetation properties for a given site and climate. Below is a list of
+      files needed to compile and run the model, both in optimisation mode, i.e.
+      to find the optimal vegetation properties, and in calculation mode, i.e.
+      to write the variables related to water balance and vegetation dynamics to
+      files, provided the desired or optimised vegetation properties.</p>
+    <ul>
+      <li>model code</li>
+      <ul>
+        <li>coreprog.f90: main program code</li>
+        <li>sce.f90: optimisation subroutine</li>
+        <li>watbal.f90: water balance subroutine</li>
+        <li>transpmodel.f90: gas exchange subroutine</li>
+        <li>modules.f90: module defining variables and parameters</li>
+      </ul>
+      <li>input files to start optimisation</li>
+      <ul>
+        <li><a href="vom_namelist.html">vom_namelist</a>: ascii file with
+          program options</li>
+        <li><a href="dailyweather.html">dailyweather.prn</a>: ascii file with
+          daily weather data </li>
+      </ul>
+      <ul style="list-style-type:none">
+        <li>OR</li>
+      </ul>
+      <ul>
+        <li><a href="hourlyweather.html">hourlyweather.prn</a>: ascii file with
+          hourly weather data </li>
+      </ul>
+      <li>input files to calculate results</li>
+      <ul>
+        <li>files mentioned above</li>
+        <li>sce_lastbest.txt: ascii file with optimal values, created by the
+          model when optimisation completed successfully</li>
+        <li>sce_status.txt: ascii file containing the number '1', created by the
+          model after optimisation completed successfully</li>
+      </ul>
+      <ul style="list-style-type:none">
+        <li>OR</li>
+      </ul>
+      <ul>
+        <li>sce_bestpars.txt: ascii file with currently best values, updated
+          during the optimisation</li>
+      </ul>
+      <ul style="list-style-type:none">
+        <li>OR</li>
+      </ul>
+      <ul>
+        <li>pars.txt: ascii file with parameter values, provided externally,
+          e.g. created using a text editor</li>
+      </ul>
+    </ul>
+    <p>A set of compatible files are available from the repository. </p>
+    <hr>
+    <hr>
+    <h2>How to compile an run the model</h2>
+    <p>The model code is written in Fortran 90. Therefore you need a Fortran
+      compiler. After compilation the model needs to be started repeatedly until
+      the file "sce_status" appears in the directory. At the same time, a file
+      'sce_finalbest' is written, which contains the optimal values after the
+      optimisation converged. A description of how to compile and run the model
+      can be found in a separate section: <a href="HowToRun.html">VOM - how to
+        run</a></p>
+    <hr>
+    <hr>
+    <h3>Description of vom_namelist:</h3>
+    <p>The file 'vom_namelist' contains site-specific and general parameters and
+      a range of model options and switches to control the model run and
+      parameter optimisation. It is written in ascii format and is described
+      here: <a href="vom_namelist.html">vom_namelist</a>.</p>
+    <p>The following parameters are included and can be optimised:</p>
+    <ul>
+      <li><span style="font-weight:bold">lambdagf</span> : Multiplicator for
+        calculating dE/dA (targeted slope between transpiration rate and CO<sub>2</sub>
+        uptake rate) as function of soil water in grasses <br>
+      </li>
+      <li style="line-height:1.8em"><span style="font-weight:bold">wsgexp</span>
+        : Exponent for calculating dE/dA in grasses</li>
+      <li style="line-height:1.8em"><span style="font-weight:bold">lambdafac</span>
+        : Multiplicator for dE/dA in trees <br>
+      </li>
+      <li style="line-height:1.8em"><span style="font-weight:bold">wsexp</span>
+        : Exponent for dE/dA in trees </li>
+      <li style="line-height:1.8em"><span style="font-weight:bold">pc</span> :
+        Area fraction covered by trees</li>
+      <li style="line-height:1.8em"><span style="font-weight:bold">rootdepth</span>
+        : Rootdepth for trees</li>
+    </ul>
+    <p></p>
+    <h3>Description of dailyweather.prn:</h3>
+    <p>The file "dailyweather.prn" is an input file for VOM, containing daily
+      weather data in ascii format and is described here: <a href="dailyweather.prn_inf.html">dailyweather.prn_inf</a>.</p>
+    <h3>Description of hourlyweather.prn:</h3>
+    <p>The file "hourlyweather.prn" is an alternative input file for VOM. If
+      available, the model uses the "hourlyweather.prn" instead of the
+      "dailyweather.prn". The file containing hourly weather data in ascii
+      format and is described here: <a href="hourlyweather.prn_inf.html">hourlyweather.prn_inf</a>.</p>
+    <h3>Description of sce_bestpars.txt, sce_lastbest.txt and pars.txt:</h3>
+    <p>Files have a list directed format with a sequence of values. Value
+      separators are a set of adjacent blanks. Sce_bestpars.txt and
+      sce_lastbest.txt contain the optimised parameters (as in Section
+      shufflepar of VOM_namelist), followed by a value for netass (ncp).
+      Pars.txt contains only the parameter values without netass.</p>
+    <hr>
+    <hr>
+    <h2>Model Output</h2>
+    <p>During the optimisation, the model writes a few files, of which the file
+      sce_progress.txt is the most useful, as it contains information about the
+      progress made by the optimisation algorithm and the currently best
+      parameter values. Below, the different output files will be described.</p>
+    <h3>results_hourly.txt</h3>
+    <p>The file containing hourly model output in ascii format for the last few
+      years of the model run is described here: <a href="resultshourly.txt_inf.html">results_hourly.txt_inf</a></p>
+    <h3>results_daily.txt</h3>
+    <p>The file containing daily model output in ascii format of all days of the
+      model run is described here: <a href="resultsdaily.txt_inf.html">results_daily.txt_inf</a></p>
+    <h3>results_yearly.txt</h3>
+    <p>The file containing annual model output in ascii format for all years of
+      the model run is described here: <a href="yearly.txt_inf.html">results_yearly.txt_inf</a></p>
+    <h3>rsurf_daily.txt</h3>
+    <p>The file containing midnight snapshots of the root surface distributions
+      in the soil profile is described here: <a href="rsurfdaily.txt_inf.html">rsurf_daily.txt_inf</a></p>
+    <h3>delz_hourly.txt</h3>
+    <p>The file containing midnight snapshots of the thickness of each
+      unsaturated soil layer is described here: <a href="delyuhourly.txt_inf.html">delzhourly.txt_inf</a></p>
+    <h3>ruptkt_hourly.txt</h3>
+    <p>The file containing hourly root water uptake rates in each soil layer
+      during the last few years of the model run is described here: <a href="ruptkhourly.txt_inf.html">ruptkt_hourly.txt_inf</a></p>
+    <h3>su_hourly.txt</h3>
+    <p>The file containing hourly soil saturation degrees in each soil layer
+      during the last few years of the model run is described here: <a href="suvechourly.txt_inf.html">su_hourly.txt_inf</a></p>
+    <h3>model_output.txt</h3>
+    <p>The file contains the best ncp.</p>
+    <hr>
+    <hr>
+    <h2>Code Information</h2>
+    <h3>Main program code file name: coreprog.f90</h3>
+    <p>Core program to read model options from shuffle.par and run optimisation
+      (sce.f90), gas exchange and water balance model (transpmodel.f90,
+      watbal.f90) Needs shuffle.par, sce.f90, transpmodel.f90 and watbal.f90.</p>
+    <h4>Reads data from [file name: type of data]:</h4>
+    <ul>
+      <li>vom_namelist: model options </li>
+    </ul>
+    <p>IF vom_command=0</p>
+    <ul>
+      <li>None OR sce_lastbest.txt: optimal vegetation parameters</li>
+    </ul>
+    <p>IF vom_command=2</p>
+    <ul>
+      <li>sce_bestpars.txt OR sce_lastbest.txt: optimal vegetation parameters</li>
+    </ul>
+    <p>IF vom_command=3</p>
+    <ul>
+      <li>pars.txt: optimal vegetation parameters</li>
+    </ul>
+    <h4>Calls subroutines [file name: data exchanged]:</h4>
+    <p>IF vom_command=0 AND <span style="font-weight:bold">no file</span>
+      "sce_lastbest.txt" exists</p>
+    <ul>
+      <li>sce.f90: no data exchanged </li>
+    </ul>
+    <p>IF vom_command=0 AND file "sce_lastbest.txt" exists</p>
+    <ul>
+      <li>transpmodel.f90 and watbal.f90: sends optimised parameter values,
+        receives NCP value</li>
+    </ul>
+    <p>IF vom_command=2 OR file "sce_lastbest.txt" exists in directory</p>
+    <ul>
+      <li>transpmodel.f90 and watbal.f90: sends optimised parameter values,
+        receives NCP value </li>
+    </ul>
+    <p>IF vom_command=3 AND file "pars.txt" exists in directory</p>
+    <ul>
+      <li>transpmodel.f90 and watbal.f90: sends optimised parameter values,
+        receives NCP value </li>
+    </ul>
+    <h4>Writes data to [file name: type of data]:</h4>
+    <p>None</p>
+    <hr>
+    <h3>Subroutine: sce.f90</h3>
+    <p>Shuffled complex algorithm, searching for the optimal values of
+      optimisable parameters.</p>
+    <h4>Reads data from [file name: type of data]:</h4>
+    <ul>
+      <li>vom_namelist: model options </li>
+    </ul>
+    <h4>Calls subroutines [file name: data exchanged]:</h4>
+    <ul>
+      <li>transpmodel.f90: sends optimised parameter values, receives NCP value
+      </li>
+    </ul>
+    <h4>Writes data to [file name: type of data]:</h4>
+    <ul>
+      <li>sce_out.txt: ascii-file of optimisable parameter values and objective
+        function value for each run</li>
+      <li>sce_bestpars.txt: ascii-file of best runs of each population</li>
+      <li>sce_progress.txt: ascii-file of all screen output</li>
+      <li>sce_lastloop.txt: ascii-file of values to be used for the next
+        optimisation loop </li>
+    </ul>
+    <hr>
+    <h3>Subroutine: transpmodel.f90</h3>
+    <p>Subroutine reading model parameters from input.par and weather data from
+      hourlyweather.prn, or, if not available, from dailyweaterh.prn. Computes
+      ET and CO2 uptake rates. Saves hourly fluxes and state variables in
+      resultshourly.txt, daily values in resultsdaily.txt and annual values in
+      yearly.txt.</p>
+    <h4>Reads data from [file name: type of data]:</h4>
+    <ul>
+      <li>vom_namelist: ascii file with model parameters</li>
+      <li>dailyweather.prn: ascii file with daily weather data </li>
+    </ul>
+    <p>OR, if available:</p>
+    <ul>
+      <li>hourlyweather.prn: ascii file with hourly weather data </li>
+    </ul>
+    <h4>Calls subroutines [file name: data exchanged]:</h4>
+    <ul>
+      <li>watbal.f90: calculates water balance </li>
+    </ul>
+    <h4>Writes data to [file name: type of data]:</h4>
+    <p>IF hourlyweather.prn did not exist, it will be created.</p>
+    <p>IF optimisation completed:</p>
+    <ul>
+      <li>results_hourly.txt: ascii file of hourly fluxes and state variables
+        for last few years of model run</li>
+      <li>results_daily.txt: daily values</li>
+      <li>results_yearly.txt: annual values </li>
+      <li>rsurf_daily.txt: daily values</li>
+      <li>delz_hourly.txt: hourly values </li>
+      <li>ruptkt_hourly.txt: hourly values</li>
+      <li>su_hourly.txt: hourly values </li>
+    </ul>
+    <hr>
+    <h3>Subroutine: watbal.f90</h3>
+    <p>Subroutine calculating (and computing) sub-hourly water balance.</p>
+    <h4>Reads data from [file name: type of data]:</h4>
+    <p>None</p>
+    <h4>Calls subroutines [file name: data exchanged]:</h4>
+    <p>None</p>
+    <h4>Writes data to [file name: type of data]:</h4>
+    <p>None</p>
+    <hr>
+    <hr>
+    <h2>Other sources</h2>
+    <p>Derivations of some of the equations are given in the Mathematica file
+      equations.pdf. </p>
+    <hr>
+  </body>
 </html>
