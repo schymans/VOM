@@ -1,0 +1,98 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
+<title>dailyweather.prn_inf</title>
+</head>
+<body>
+<p style="float:right; border-width:1px; border-style:solid">
+<object data="navi-bar.html" type="text/html" ></object>
+</p>
+<h1>VOM - Model Description</h1>
+<h2>VOM - info</h2>
+<h3>dailyweather.prn</h3>
+<hr style="clear:right;">
+<hr>
+<h2>Description of dailyweather.prn</h2>
+<p>The file "dailyweather.prn" is an input file for VOM, containing daily
+weather data in ascii format.</p>
+<h3>Fields</h3>
+<table border="1">
+<tr>
+	<td align="center">Dcum</td>
+	<td align="center">Day of the year</td>
+	<td align="center">Integer, starting with 1 on 1 January</td>
+</tr>
+<tr>
+	<td align="center">Day</td>
+	<td align="center">Day of the month</td>
+	<td align="center">Integer</td>
+</tr>
+<tr>
+	<td align="center">Month</td>
+	<td align="center">Month of the year</td>
+	<td align="center">Integer, starting with 1 on January</td>
+</tr>
+<tr>
+	<td align="center">Year</td>
+	<td align="center">Year</td>
+	<td align="center">Integer, 4 digits</td>
+</tr>
+<tr>
+	<td align="center">T.Max</td>
+	<td align="center">Daily max. Air temp in&nbsp;°C</td>
+	<td align="center">Decimal, #.##</td>
+</tr>
+<tr>
+	<td align="center">T.Min</td>
+	<td align="center">Daily min. Air temp in °C</td>
+	<td align="center">Decimal, #.##</td>
+</tr>
+<tr>
+	<td align="center">Rain</td>
+	<td align="center">Daily rain fall in mm</td>
+	<td align="center">Decimal, #.##</td>
+</tr>
+<tr>
+	<td align="center">Radn</td>
+	<td align="center">Global solar irradiance in MJ/m<sup>2</sup></td>
+	<td align="center">Decimal, #.##</td>
+</tr>
+<tr>
+	<td align="center">VP</td>
+	<td align="center">Water vapour pressure in hPa</td>
+	<td align="center">Decimal, #.##</td>
+</tr>
+<tr>
+	<td align="center">Pres</td>
+	<td align="center">air pressure in hPa</td>
+	<td align="center">Decimal, #.##</td>
+</tr>
+<tr>
+	<td align="center">Ca</td>
+	<td align="center">ambient air CO<sub>2</sub> concentration in &micro;mol</td>
+	<td align="center">Decimal, #.##</td>
+</tr>
+</table>
+<p>
+The first line contains the variable names and is omitted when reading
+the file. All fields are 8 characters long and need to be filled from
+behind, e.g.:</p>
+<pre>
+    Dcum     Day   Month    Year   T.Max   T.Min    Rain    Radn      VP    Pres      Ca
+       1       1       1    1971   32.87   24.75    0.00   16.44   33.17  999.32  350.00
+</pre>
+<h3>What is needed?</h3>
+<ul>
+	<li>Dcum: used for calculating diurnal radiation</li>
+	<li>Year: used for setting loops</li>
+	<li>T.Max, T.Min: used for calculating diurnal variations in air temperature and VPD</li>
+	<li>Rain: needed for water balance</li>
+	<li>Radn: needed for PAR</li>
+	<li>VP: needed to calculate VPD (needed for calculating hourly VD)</li>
+	<li>Pres: needed for calculating hourly VD</li>
+	<li>Ca: needed to calculate some vegetation variables</li>
+</ul>
+<hr>
+</body>
+</html>

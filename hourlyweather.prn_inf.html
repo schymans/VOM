@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
+<title>hourlyweather.prn_inf</title>
+</head>
+<body>
+<p style="float:right; border-width:1px; border-style:solid">
+<object data="navi-bar.html" type="text/html" ></object>
+</p>
+<h1>VOM - Model Description</h1>
+<h2>VOM - info</h2>
+<h3>hourlyweather.prn</h3>
+<hr style="clear:right;">
+<hr>
+<h2>Description of hourlyweather.prn</h2>
+<p>The file "hourlyweather.prn" is an input file for VOM, containing
+hourly weather data in ascii format.</p>
+<h3>Fields</h3>
+<table border="1">
+<tr>
+	<td align="center">hour</td>
+	<td align="center">hour</td>
+	<td align="center">Integer, starting with 1, ends with 24</td>
+</tr>
+<tr>
+	<td align="center">dayyear</td>
+	<td align="center">Day of the year</td>
+	<td align="center">Integer, starting with 1 on 1 January</td>
+</tr>
+<tr>
+	<td align="center">fday</td>
+	<td align="center">Day of the month</td>
+	<td align="center">Integer</td>
+</tr>
+<tr>
+	<td align="center">fmonth</td>
+	<td align="center">month</td>
+	<td align="center">Integer,starting with 1 on January</td>
+</tr>
+<tr>
+	<td align="center">fyear</td>
+	<td align="center">year</td>
+	<td align="center">Integer</td>
+</tr>
+<tr>
+	<td align="center">tair_h</td>
+	<td align="center">Air temp (in °C)</td>
+	<td align="center">positive: #.###e±##, negative: -#.###e±##</td>
+</tr>
+<tr>
+	<td align="center">vd_h</td>
+	<td align="center">Water vapour deficit (dimensionless, i.e. vd=VPD/P)</td>
+	<td align="center">#.###e±##</td>
+</tr>
+<tr>
+	<td align="center">par_h</td>
+	<td align="center">Photosynthetically active Photon Flux Density (in mol m<sup>2</sup> s<sup>-1</sup>)</td>
+	<td align="center">#.###e±##</td>
+</tr>
+<tr>
+	<td align="center">rain_h</td>
+	<td align="center">Precipitation (in m s<sup>-1</sup>)</td>
+	<td align="center">#.###e±##</td>
+</tr>
+<tr>
+	<td align="center">ca_h</td>
+	<td align="center">ambient air CO<sub>2</sub> concentration (in &micro;mol)</td>
+	<td align="center">#.###e±##</td>
+</tr>
+</table>
+<p>The first line contains the variable names and is
+omitted when reading the file. The first five fields are 8 characters
+long, the remaining five have 10 characters. The fields need to be
+filled from behind, e.g.:</p>
+<pre>
+    hour dayyear    fday  fmonth   fyear     tair_h       vd_h      par_h     rain_h       ca_h
+       1       1       1       1    1971  0.266E+02  0.162E-02  0.000E+00  0.000E+00  0.350E-03
+</pre>
+<hr>
+</body>
+</html>

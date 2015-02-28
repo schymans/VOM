@@ -1,0 +1,138 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html><head>
+<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
+<title>resultshourly.txt_inf</title></head>
+
+<body>
+<p style="border-style: solid; border-width: 1px; float: right;">
+<object data="navi-bar.html" type="text/html"></object>
+</p>
+<h1>VOM - Model Description</h1>
+<h2>VOM - info</h2>
+<h3>results_hourly.txt</h3>
+<hr style="clear: right;">
+<hr>
+<h2>Description of resultshourly.txt</h2>
+<p>The file "results_hourly.txt" is an output file from VOM, containing
+hourly weather, flux and state variable data in ascii format, e.g.:</p>
+<pre>
+ fyear fmonth   fday   nday  nhour           rain           tair            par             vd          esoil             pc        jmax25t        jmax25g            mqt             rl        lambdat        lambdag             rr           asst           assg           etmt           etmg           su_1             zw             ws         spgfcf           infx
+  2000      1      1  10586      1    0.31600E-07    0.25800E+02    0.00000E+00    0.55200E-03    0.00000E+00    0.30000E+00    0.50000E-04    0.50000E-04    0.30970E+04   -0.12784E-06    0.28511E+04    0.46179E+04    0.30600E-07    0.00000E+00    0.00000E+00    0.00000E+00    0.00000E+00    0.48785E+00    0.10326E+02    0.50621E+01    0.23958E-04    0.00000E+00
+</pre>
+
+<p>PLEASE TAKE NOTICE OF THE UNITS (some are given per second, others cumulative per hour).</p>
+<h3>Fields</h3>
+<table border="1">
+<tbody><tr>
+	<td align="center">fyear</td>
+	<td align="center">Year</td>
+</tr>
+<tr>
+	<td align="center">fmonth</td>
+	<td align="center">Month</td>
+</tr>
+<tr>
+	<td align="center">fday</td>
+	<td align="center">day of the month</td>
+</tr>
+<tr>
+	<td align="center">nday</td>
+	<td align="center">Cumulative day of the model run</td>
+</tr>
+<tr>
+	<td align="center">nhour</td>
+	<td align="center">Hour</td>
+</tr>
+<tr>
+	<td align="center">rain</td>
+	<td align="center">Rainfall rate (m/s)</td>
+</tr>
+<tr>
+	<td align="center">tair</td>
+	<td align="center">Air temperature (in <sup>o</sup>C)</td>
+</tr>
+<tr>
+	<td align="center">par</td>
+	<td align="center">Photosynthetically active Photon Flux Density (in mol m<sup>-2</sup> s<sup>-1</sup>)</td>
+</tr>
+<tr>
+	<td align="center">vd</td>
+	<td align="center">Atmospheric vapour deficit (in mol/mol)</td>
+</tr>
+<tr>
+	<td align="center">esoil</td>
+	<td align="center">Hourly soil evaporation (in m h<sup>-2</sup>)</td>
+</tr>
+<tr>
+	<td align="center">pc</td>
+	<td align="center">Projected cover by trees and grasses combined</td>
+</tr>
+<tr>
+	<td align="center">jmax25t</td>
+	<td align="center">Electron transport capacity by trees (in mol m<sup>-2</sup> s<sup>-1</sup>)</td>
+</tr>
+<tr>
+	<td align="center">jmax25g</td>
+	<td align="center">Electron transport capacity by grasses (in mol m<sup>-2</sup> s<sup>-1</sup>)</td>
+</tr>
+<tr>
+	<td align="center">mqt</td>
+	<td align="center">Tissue water content in trees (in kg m<sup>-2</sup>)</td>
+</tr>
+<tr>
+	<td align="center">rl</td>
+	<td align="center">Leaf respiration rate by trees and grasses combined (in mol m<sup>-2</sup> s<sup>-1</sup>)</td>
+</tr>
+<tr>
+	<td align="center">lambdat</td>
+	<td align="center">dE/dA in trees, in mol/mol</td>
+</tr>
+<tr>
+	<td align="center">lambdag</td>
+	<td align="center">dE/dA in grasses, in mol/mol</td>
+</tr>
+<tr>
+	<td align="center">rr</td>
+	<td align="center">Root respiration rate by trees and grasses combined (in mol m<sup>-2</sup> s<sup>-1</sup>)</td>
+</tr>
+<tr>
+	<td align="center">asst</td>
+	<td align="center">Hourly CO<sub>2</sub> uptake rate by trees (in mol m<sup>-2</sup> h<sup>-1</sup>)</td>
+</tr>
+<tr>
+	<td align="center">assg</td>
+	<td align="center">Hourly CO<sub>2</sub> uptake rate by grasses (in mol m<sup>-2</sup> h<sup>-1</sup>)</td>
+</tr>
+<tr>
+	<td align="center">etmt</td>
+	<td align="center">Hourly transpiration rate by trees (in m h<sup>-1</sup>)</td>
+</tr>
+<tr>
+	<td align="center">etmg</td>
+	<td align="center">Hourly transpiration rate by grasses (in m h<sup>-1</sup>)</td>
+</tr>
+<tr>
+	<td align="center">su_1</td>
+	<td align="center">Soil saturation degree in the top soil layer (dimensionless)</td>
+</tr>
+<tr>
+	<td align="center">zw</td>
+	<td align="center">Thickness of the saturated zone (in m)</td>
+</tr>
+<tr>
+	<td align="center">ws</td>
+	<td align="center">Total soil water storage (in m)</td>
+</tr>
+<tr>
+	<td align="center">spgfcf</td>
+	<td align="center">Hourly seepage face flow (= subsurface
+	  runoff, in m h<sup>-1</sup>)</td>
+</tr>
+<tr>
+	<td align="center">infx</td>
+	<td align="center">Hourly infiltration excess runoff (in m h<sup>-1</sup>)</td>
+</tr>
+</tbody></table>
+<p>The first line contains the variable names.</p>
+<hr>
+</body></html>

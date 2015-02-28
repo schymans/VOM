@@ -1,0 +1,148 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html><head>
+<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
+<title>resultsdaily.txt_inf</title></head>
+
+<body>
+<p style="border-style: solid; border-width: 1px; float: right;">
+<object data="navi-bar.html" type="text/html"></object>
+</p>
+<h1>VOM - Model Description</h1>
+<h2>VOM - info</h2>
+<h3>results_daily.txt</h3>
+<hr style="clear: right;">
+<hr>
+<h2>Description of results_daily.txt</h2>
+<p>The file "results_daily.txt" is an output file from VOM, containing
+daily weather, flux and state variable data in ascii format, e.g.:</p>
+<pre>
+  fyear fmonth   fday   nday  nhour           rain        tairmax        tairmin            par             vd          esoil        jmax25t        jmax25g             pc             rl        lambdat        lambdag            rrt            rrg           asst           assg         su_avg             zw             ws         spgfcf           infx           etmt           etmg           su_1           topt
+   1971      1      1      1     24    0.00000E+00    0.33100E+02    0.25100E+02    0.33476E+02    0.70268E-02    0.19519E-03    0.30000E-03    0.30000E-03    0.32000E+00   -0.78384E-01    0.75958E+03    0.91864E+02    0.19829E-01    0.66096E-02    0.00000E+00    0.00000E+00    0.18065E+00    0.10000E+02    0.45953E+01    0.68539E-12    0.00000E+00    0.00000E+00    0.00000E+00    0.38555E-01    0.30500E+03
+</pre>
+
+<h3>Fields</h3>
+<table border="1">
+<tbody><tr>
+	<td align="center">fyear</td>
+	<td align="center">year</td>
+</tr>
+<tr>
+	<td align="center">fmonth</td>
+	<td align="center">month</td>
+</tr>
+<tr>
+	<td align="center">fday</td>
+	<td align="center">day of the month</td>
+</tr>
+<tr>
+	<td align="center">nday</td>
+	<td align="center">day of the model</td>
+</tr>
+<tr>
+	<td align="center">nhour</td>
+	<td align="center">last hour of day (=25)</td>
+</tr>
+<tr>
+	<td align="center">rain</td>
+	<td align="center">daily rainfall (mm/d, as per dailyweather.prn)</td>
+</tr>
+<tr>
+	<td align="center">tairmax</td>
+	<td align="center">Daily maximum air temperature, in <sup>o</sup>C</td>
+</tr>
+<tr>
+	<td align="center">tairmin</td>
+	<td align="center">Daily minimum air temperature, in <sup>o</sup>C</td>
+</tr>
+<tr>
+	<td align="center">par</td>
+	<td align="center">Photosynthetically active Photon Flux Density (in mol m<sup>-2</sup> d<sup>-1</sup>)</td>
+</tr>
+<tr>
+	<td align="center">vd</td>
+	<td align="center">Daily average atmospheric vapour deficit (in mol mol<sup>-1</sup>)</td>
+</tr>
+<tr>
+	<td align="center">esoil</td>
+	<td align="center">Daily soil evaporation rate (m d<sup>-1</sup>)</td>
+</tr>
+<tr>
+	<td align="center">jmax25t</td>
+	<td align="center">Electron transport capacity at 25<sup>o</sup>C by trees (in mol m<sup>-2</sup> s<sup>-1</sup>)</td>
+</tr>
+<tr>
+	<td align="center">jmax25g</td>
+	<td align="center">Electron transport capacity at 25<sup>o</sup>C by grasses (in mol m<sup>-2</sup> s<sup>-1</sup>)</td>
+</tr>
+<tr>
+	<td align="center">pc</td>
+	<td align="center">Area fraction covered by grasses and trees combined</td>
+</tr>
+<tr>
+	<td align="center">rl</td>
+	<td align="center">Daily leaf respiration rate by trees and grasses combined (in mol m<sup>-2</sup> d<sup>-1</sup>)</td>
+</tr>
+<tr>
+	<td align="center">lambdat</td>
+	<td align="center">dE/dA in trees, in mol/mol</td>
+</tr>
+<tr>
+	<td align="center">lambdag</td>
+	<td align="center">dE/dA in grasses, in mol/mol</td>
+</tr>
+<tr>
+	<td align="center">rrt</td>
+	<td align="center">Daily root respiration rate by trees (in mol m<sup>-2</sup> d<sup>-1</sup>)</td>
+</tr>
+<tr>
+	<td align="center">rrg</td>
+	<td align="center">Daily root respiration rate by grasses (in mol m<sup>-2</sup> d<sup>-1</sup>)</td>
+</tr>
+<tr>
+	<td align="center">asst</td>
+	<td align="center">CO<sub>2</sub> uptake rate by trees (in mol m<sup>-2</sup> d<sup>-1</sup>)</td>
+</tr>
+<tr>
+	<td align="center">assg</td>
+	<td align="center">CO<sub>2</sub> uptake rate by grasses (in mol m<sup>-2</sup> d<sup>-1</sup>)</td>
+</tr>
+<tr>
+	<td align="center">su_avg</td>
+	<td align="center">Average soil saturation degree in the unsaturated zone at midnight (dimensionless)</td>
+</tr>
+<tr>
+	<td align="center">zw</td>
+	<td align="center">Thickness of the saturated zone (in m)</td>
+</tr>
+<tr>
+	<td align="center">ws</td>
+	<td align="center">Total soil water storage (in m)</td>
+</tr>
+<tr>
+	<td align="center">spgfcf</td>
+	<td align="center">Daily seepage face flow (=subsurface runoff, in m d<sup>-1</sup>)</td>
+</tr>
+<tr>
+	<td align="center">infx</td>
+	<td align="center">Dail infiltration excess runoff (in m d<sup>-1</sup>)</td>
+</tr>
+<tr>
+	<td align="center">etmt</td>
+	<td align="center">Daily transpiration rate by trees (in m d<sup>-1</sup>)</td>
+</tr>
+<tr>
+	<td align="center">etmg</td>
+	<td align="center">Daily transpiration rate by grasses (in m d<sup>-1</sup>)</td>
+</tr>
+<tr>
+	<td align="center">su_1</td>
+	<td align="center">Soil saturation degree in the top soil layer at midnight (dimensionless)</td>
+</tr>
+<tr>
+	<td align="center">topt</td>
+	<td align="center">Optimal temperature for photosynthesis (in <sup>o</sup>C)</td>
+</tr>
+</tbody></table>
+<p>The first line contains the variable names.</p>
+<hr>
+</body></html>
