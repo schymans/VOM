@@ -23,3 +23,6 @@ The initial author of the code and documentation is Stan Schymanski, and initial
             The model documentation is available in html-code, including some text and pdf files
         /vom-input
             input files needed by the model and example forcing data
+ 
+A copy of the model documentation can also be found at:
+http://schymans.github.io/VOM/
