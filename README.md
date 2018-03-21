@@ -7,6 +7,19 @@ http://www.bgc-jena.mpg.de/bgc-theory/index.php/Pubs/2009-WRR-SS
 
 http://theses.library.uwa.edu.au/adt-WU2007.0095/
 
+## Related papers:
+Schymanski, S. J., Roderick, M. L., Sivapalan, M., Hutley, L. B. and Beringer, J.: A test of the optimality approach to modelling canopy properties and CO2 uptake by natural vegetation, Plant, Cell & Environment, 30(12), 1586–1598, [doi:10.1111/j.1365-3040.2007.01728.x](https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1365-3040.2007.01728.x), 2007.
+
+Schymanski, S. J., Roderick, M. L., Sivapalan, M., Hutley, L. B. and Beringer, J.: A canopy-scale test of the optimal water use hypothesis, Plant Cell & Environment, 31, 97–111, [doi:10.1111/j.1365-3040.2007.01740.x](https://onlinelibrary.wiley.com/doi/full/10.1111/j.1365-3040.2007.01740.x), 2008a.
+
+Schymanski, S. J., Sivapalan, M., Roderick, M. L., Beringer, J. and Hutley, L. B.: An optimality-based model of the coupled soil moisture and root dynamics, Hydrology and Earth System Sciences, 12(3), 913–932, [doi:10.5194/hess-12-913-2008](https://www.hydrol-earth-syst-sci.net/12/913/2008/), 2008b.
+
+Schymanski, S. J., Sivapalan, M., Roderick, M. L., Hutley, L. B. and Beringer, J.: An Optimality-Based Model of the Dynamic Feedbacks between Natural Vegetaton and the Water Balance, Water Resources Research, 45, W01412, [doi:10.1029/2008WR006841](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2008WR006841), 2009.
+
+Schymanski, S. J., Roderick, M. L. and Sivapalan, M.: Using an optimality model to understand medium and long-term responses of vegetation water use to elevated atmospheric CO2 concentrations, AoB PLANTS, 7, plv060, [doi:10.1093/aobpla/plv060](https://academic.oup.com/aobpla/article/doi/10.1093/aobpla/plv060/201663), 2015.
+
+## Code description
+
 The initial author of the code and documentation is Stan Schymanski, and initial contributors are Andreas Ostrowski and Steffen Richter.
 
  The main development line (trunk) of the VOM is stored in the following structure:
