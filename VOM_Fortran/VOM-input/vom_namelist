@@ -43,7 +43,7 @@ i_avg=7.5d0,            ! van Genuchten soil parameter alpha (1/m)
 i_delz=0.5d0,           ! thickness of soil sublayers (m)
 &end
 &shufflepar
-vom_command=4,          ! COMMAND LINE TO RUN ASSIMILATION MODEL (0 for -optimise, 1 for -continue, 2 for compute, 3 for compute ncp only with pars.txt, 4 for optimise without random_seed)
+vom_command=1,          ! COMMAND LINE TO RUN ASSIMILATION MODEL (1 for -optimise with sce, 2 for -run without optization with pars.txt, 3 for run for ncp only with pars.txt, 4 for optimise without random_seed)
 i_ncomp_=2,             ! MAXIMUM NUMBER OF COMPLEXES (p)
 i_ncompmin=2,           ! MINIMUM NUMBER OF COMPLEXES (pmin)
 i_resolution=1.0,       ! RESOLUTION OF OPTIMISATION (% OF MAX VARIATION WHEN OPTIMISATION STOPS)
