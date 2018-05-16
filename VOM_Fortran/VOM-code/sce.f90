@@ -67,7 +67,7 @@
 
       if (run_initialseed == 1) then
         call initialseed
-        return
+        !return
       endif
 
 !
