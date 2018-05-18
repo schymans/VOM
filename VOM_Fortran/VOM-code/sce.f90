@@ -76,6 +76,9 @@
 
       do while (nrun .lt. 20000 .and. nloop .lt. 500)
 
+          write(*,*) "nrun:", nrun
+          write(*,*) "nloop:", nloop
+
           nloop = nloop + 1
 
 !         * Saving the best OF of the worst complex in worstbest for
@@ -124,7 +127,7 @@
             if (nsincebest .le. i_patience) then
               call writepars()
               call run_cce()
-              return
+              !return
             else
               write(kfile_progress,*) " "
               writeformat = '("No improvement in OF for",i5," loops")'
@@ -576,9 +579,9 @@
 
         nloop = -1                      ! FIRST LOOP IS LOOP ZERO
         call writeloop()
-        close(kfile_sceout)
-        close(kfile_bestpars)
-        if (kfile_progress .ne. 6) close(kfile_progress)
+        !close(kfile_sceout)
+        !close(kfile_bestpars)
+        !if (kfile_progress .ne. 6) close(kfile_progress)
 
       return
       end subroutine initialseed
@@ -807,9 +810,9 @@
 
 !       * WRITE shufflevar AND ofvec OF LAST LOOP TO FILE
         call writeloop()
-        close(kfile_sceout)
-        close(kfile_bestpars)
-        if (kfile_progress .ne. 6) close(kfile_progress)
+        !close(kfile_sceout)
+        !close(kfile_bestpars)
+        !if (kfile_progress .ne. 6) close(kfile_progress)
 
       return
       end subroutine run_cce
