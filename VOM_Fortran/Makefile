@@ -31,7 +31,7 @@ FLFLAGS =
 #source objects
 SRC = VOM-code/modules.f90 VOM-code/coreprog.f90 VOM-code/sce.f90 VOM-code/transpmodel.f90 VOM-code/watbal.f90 
 
-
+TESTS = VOM_test/test_tmp/model.x
 
 #mod files
 MSRC = *.mod 
@@ -52,3 +52,28 @@ $(PROGRAM): $(SRC)
 
 clean:
 	rm -f *.o *.mod *.MOD *.exe $(OBJ_PATH)/*.o $(OBJ_PATH)/*.mod $(OBJ_PATH)*.MOD $(OBJ_PATH)*.exe $(PROGRAM)   
+
+check:
+	@echo "Running checks";	mkdir VOM_test/test_tmp ; \
+	cd VOM_test/test_tmp/ ; cp ../ref_test/dailyweather.prn dailyweather.prn ; \
+	cp ../ref_test/vom_namelist vom_namelist;\
+	cp ../ref_test/pars.txt pars.txt;\
+	cp ../../model.x model.x; ./model.x >/dev/null || exit 1;\
+	if diff results_daily.txt ../ref_test/results_daily.txt > /dev/null 2>&1;\
+	then \
+		echo "TEST PASSED";\
+	else \
+		echo "TEST FAILED";\
+	fi ;\
+	cd ../../ ;\
+	rm -r VOM_test/test_tmp/;\
+ 
+
+
+
+
+
+
+
+
+
