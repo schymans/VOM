@@ -1,0 +1,11 @@
+language: c
+sudo: enabled
+
+install:
+	-sudo apt-get install gfortran
+
+script:
+	-make
+
+after succes:
+
