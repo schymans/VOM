@@ -29,7 +29,7 @@ FCFLAGS =
 FLFLAGS =
 
 #source objects
-SRC = VOM-code/modules.f90 VOM-code/coreprog.f90 VOM-code/sce.f90 VOM-code/transpmodel.f90 VOM-code/watbal.f90 
+SRC = VOM-code/modules.f90 VOM-code/coreprog.f90 VOM-code/sample.f90 VOM-code/sce.f90 VOM-code/transpmodel.f90 VOM-code/watbal.f90 
 
 TESTS = VOM_test/test_tmp/model.x
 
@@ -54,7 +54,7 @@ clean:
 	rm -f *.o *.mod *.MOD *.exe $(OBJ_PATH)/*.o $(OBJ_PATH)/*.mod $(OBJ_PATH)*.MOD $(OBJ_PATH)*.exe $(PROGRAM)   
 
 check:
-	@echo "Running checks";	mkdir VOM_test/test_tmp ; \
+	@echo "Running checks...";	mkdir VOM_test/test_tmp ; \
 	cd VOM_test/test_tmp/ ; cp ../ref_test/dailyweather.prn dailyweather.prn ; \
 	cp ../ref_test/vom_namelist vom_namelist;\
 	cp ../ref_test/pars.txt pars.txt;\

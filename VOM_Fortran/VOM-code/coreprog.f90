@@ -96,6 +96,14 @@
       endif
 
 
+      if (vom_command .eq. 5 ) then
+              write(*,*) "Random sampling of parameters ... "
+         call random_samples()
+
+      endif
+
+
+
       deallocate(vom_invar)
 
       write(*,*) "Program terminated"
