@@ -1,6 +1,9 @@
 language: c
-sudo: enabled
+
+sudo: required
+
 before_install:
+  - sudo apt-get install build-essential
   - sudo apt-get install gfortran
 
 script:
