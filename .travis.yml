@@ -1,11 +1,20 @@
-language: c
-sudo: enabled
+language: C
 
-install:
-	-sudo apt-get install gfortran
+sudo: required
+
+before_install:
+	- sudo apt-get install build-essential
+	- sudo apt-get install gfortran
+
+install: true
 
 script:
-	-make
+	- make check
 
-after succes:
+after_success: 
+	- echo "succes"> test.log
+
+after_script:
+	- echo "succes2"> test.log
+
 
