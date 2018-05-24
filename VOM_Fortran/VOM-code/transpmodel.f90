@@ -117,8 +117,10 @@
       ruptkt_d(:) = ruptkt_d(:) + ruptkt_h(:)
       ruptkg_d(:) = ruptkg_d(:) + ruptkg_h(:)
 
-      if (optmode .eq. 0) then
+      !if (optmode .eq. 0) then
 
+       !formatted output for single model run
+       if (option1 .eq. 2) then
         call vom_add_daily()
         call vom_write_hourly()
 
@@ -128,11 +130,26 @@
         if (finish .eq. 1) return
 
       endif
+
+       !formatted output for multiple runs
+       if (option1 .eq. 5) then
+        call vom_add_daily()
+        call vom_write_hourly() !replace with a new subroutine
+
+!       * check water balance
+
+        call vom_check_water()
+        if (finish .eq. 1) return
+
+      endif
+
+
+
         enddo
 
 !       * END OF DAY
 
-        call transpmodel_daily_step(tp_netass)
+        call transpmodel_daily_step(tp_netass, option1)
 
       enddo
 
@@ -148,14 +165,24 @@
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 !+++ Post-daily step
 
-      subroutine transpmodel_daily_step (tp_netass)
+      subroutine transpmodel_daily_step (tp_netass, option1)
       use vom_vegwat_mod
       implicit none
 
       REAL*8,  INTENT(inout) :: tp_netass
+      INTEGER, INTENT(in)    :: option1
 
-      if (optmode .eq. 0) then
+      !if (optmode .eq. 0) then
+       !formatted output for single model run
+       if (option1 .eq. 2) then
         call vom_write_dayyear()
+        call vom_add_yearly()
+      endif
+
+       !formatted output for multiple runs
+      !if (optmode .eq. 5) then
+      if (option1 .eq. 5) then
+        call vom_write_dayyear() !replace with new routine
         call vom_add_yearly()
       endif
 

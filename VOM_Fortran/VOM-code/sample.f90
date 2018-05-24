@@ -33,6 +33,7 @@
 subroutine random_samples ()
 
 use vom_sce_mod
+use vom_vegwat_mod
 
       implicit none
 
@@ -42,6 +43,7 @@ use vom_sce_mod
       real*8,dimension(6)              :: paramset !random parameterset
       integer                          :: i_loop   !current loop
       real*8                           :: obj      !objective ncp
+      CHARACTER(3)  :: str
 
       !read settings for optimization
       call read_shufflepar()
@@ -56,8 +58,10 @@ use vom_sce_mod
       !open file for output
       open(kfile_random_output, FILE=sfile_random_output)
 
-      !loop for n random samples
+      !loop for n random samples, needs parallelization
       do i_loop=1, i_iter
+
+write(*,*) "i_loop", i_loop
 
          !generate random number between 0  and 1
          call random_number(r)
@@ -67,7 +71,10 @@ use vom_sce_mod
 
          !run the model with the random set
 
-         call transpmodel(paramset, vom_npar, obj, 1)
+         call transpmodel(paramset, vom_npar, obj, 2)
+
+
+
 
          write(kfile_random_output, *) obj
 
