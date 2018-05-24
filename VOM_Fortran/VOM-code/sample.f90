@@ -43,16 +43,18 @@ use vom_sce_mod
       integer                          :: i_loop   !current loop
       real*8                           :: obj      !objective ncp
 
+      !read settings for optimization
+      call read_shufflepar()
+
       !read max and min ranges of parameters
       call read_shufflevar ()
 
       !initialize random seed 
       call random_seed()
-
-      n=10 !temporarily, change to namelist setting
       call transpmodel_init_once(vom_command)
+
       !loop for n random samples
-      do i_loop=1, n
+      do i_loop=1, i_iter
 
          !generate random number between 0  and 1
          call random_number(r)

@@ -461,7 +461,7 @@
       INTEGER :: i_patience   = 10      ! Number of runs without improvement until optimisation is aborted
       INTEGER :: i_nsimp      = 3       ! Number of simplex runs per complex
       REAL*8  :: i_focus      = 1.0     ! Spread of the random seed around the initial values (if <1, then limited)
-
+      INTEGER :: i_iter       = 10      ! Maximum iterations in case of random runs
       INTEGER :: vom_npar     = 8       ! Number of model parameters carried through
 
 !     ************************************
