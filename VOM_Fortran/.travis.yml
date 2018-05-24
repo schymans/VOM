@@ -7,4 +7,4 @@ before_install:
   - sudo apt-get install gfortran
 
 script:
-  - make check
+  - gfortran VOM-code/modules.f90 VOM-code/coreprog.f90 VOM-code/sample.f90 VOM-code/sce.f90 VOM-code/transpmodel.f90 VOM-code/watbal.f90 
