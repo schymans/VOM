@@ -8,7 +8,7 @@ before_install:
 install: true
 
 script:
- - cd VOM_Fortran; make check
+ - cd VOM_Fortran; make; make check
 
 
 
