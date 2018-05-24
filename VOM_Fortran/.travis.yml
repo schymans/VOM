@@ -14,5 +14,7 @@ script:
 after_success: 
    - echo "succes"> test.log
 
+after_script:
+   - echo "succes2"> test.log
 
 
