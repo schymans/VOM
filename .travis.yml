@@ -8,7 +8,7 @@ before_install:
 install: true
 
 script:
- - gfortran -o model.x VOM-code/modules.f90 VOM-code/coreprog.f90 VOM-code/sample.f90 VOM-code/sce.f90 VOM-code/transpmodel.f90 VOM-code/watbal.f90 
+ - make check
 
 
 
