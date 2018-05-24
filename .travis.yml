@@ -3,18 +3,13 @@ language: C
 sudo: required
 
 before_install:
-	- sudo apt-get install build-essential
 	- sudo apt-get install gfortran
 
 install: true
 
 script:
-	- make check
+	- gfortran -o model.x VOM-code/modules.f90 VOM-code/coreprog.f90 VOM-code/sample.f90 VOM-code/sce.f90 VOM-code/transpmodel.f90 VOM-code/watbal.f90 
 
-after_success: 
-	- echo "succes"> test.log
 
-after_script:
-	- echo "succes2"> test.log
 
 
