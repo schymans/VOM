@@ -53,6 +53,9 @@ use vom_sce_mod
       call random_seed()
       call transpmodel_init_once(vom_command)
 
+      !open file for output
+      open(kfile_random_output, FILE=sfile_random_output)
+
       !loop for n random samples
       do i_loop=1, i_iter
 
@@ -66,11 +69,11 @@ use vom_sce_mod
 
          call transpmodel(paramset, vom_npar, obj, 1)
 
-         write(*,*) obj
+         write(kfile_random_output, *) obj
 
       end do
 
-
+      close( kfile_random_output )
 
 
 end subroutine
