@@ -57,6 +57,8 @@ use vom_vegwat_mod
 
       !open file for output
       open(kfile_random_output, FILE=sfile_random_output)
+      open(kfile_etmt, FILE=sfile_etmt)
+
 
       !loop for n random samples, needs parallelization
       do i_loop=1, i_iter
@@ -71,7 +73,7 @@ write(*,*) "i_loop", i_loop
 
          !run the model with the random set
 
-         call transpmodel(paramset, vom_npar, obj, 2)
+         call transpmodel(paramset, vom_npar, obj, vom_command)
 
 
 
@@ -81,6 +83,6 @@ write(*,*) "i_loop", i_loop
       end do
 
       close( kfile_random_output )
-
+      close(kfile_etmt)
 
 end subroutine

@@ -20,7 +20,8 @@
       INTEGER :: kfile_soilprofile   = 208
       INTEGER :: kfile_model_output  = 209
 
-      INTEGER :: kfile_random_output  = 209
+      INTEGER :: kfile_random_output  = 210
+      INTEGER :: kfile_etmt           = 211
 
       INTEGER :: kfile_sceout        = 701
       INTEGER :: kfile_progress      = 702
@@ -47,6 +48,7 @@
       CHARACTER(len=*),parameter :: sfile_model_output  = 'model_output.txt'
 
       CHARACTER(len=*),parameter :: sfile_random_output  = 'random_output.txt'
+      CHARACTER(len=*),parameter :: sfile_etmt           = 'etmt.txt'
 
       CHARACTER(len=*),parameter :: sfile_sceout        = 'sce_out.txt'
       CHARACTER(len=*),parameter :: sfile_progress      = 'sce_progress.txt'

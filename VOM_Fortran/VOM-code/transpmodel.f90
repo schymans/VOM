@@ -40,6 +40,7 @@
       REAL*8,  INTENT(inout) :: tp_netass
       INTEGER, INTENT(in)    :: option1
       REAL*8, DIMENSION(dim_invar), INTENT(in) :: invar
+      REAL*8, ALLOCATABLE, DIMENSION(:,:) :: output_mat
 
       tp_netass = 0.d0
 
@@ -134,7 +135,7 @@
        !formatted output for multiple runs
        if (option1 .eq. 5) then
         call vom_add_daily()
-        call vom_write_hourly() !replace with a new subroutine
+        !call vom_write_hourly() !replace with a new subroutine
 
 !       * check water balance
 
@@ -149,13 +150,19 @@
 
 !       * END OF DAY
 
-        call transpmodel_daily_step(tp_netass, option1)
 
+       if (option1 .eq. 5) then
+           if(nday .eq. 1) allocate( output_mat (21, c_testday ) )
+        call transpmodel_daily_step(tp_netass, option1, output_mat)
+       else
+        if(nday .eq. 1) allocate( output_mat (21, c_testday ) )
+        call transpmodel_daily_step(tp_netass, option1, output_mat)
+       end if
       enddo
 
 !     * END OF DAILY LOOPS
 
-      call transpmodel_last_step(tp_netass)
+      call transpmodel_last_step(tp_netass, option1)
 
       return
       end subroutine transpmodel
@@ -165,12 +172,13 @@
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 !+++ Post-daily step
 
-      subroutine transpmodel_daily_step (tp_netass, option1)
+      subroutine transpmodel_daily_step (tp_netass, option1, output_mat)
       use vom_vegwat_mod
       implicit none
 
       REAL*8,  INTENT(inout) :: tp_netass
       INTEGER, INTENT(in)    :: option1
+      REAL*8, DIMENSION(21, c_maxday ), INTENT(inout) :: output_mat
 
       !if (optmode .eq. 0) then
        !formatted output for single model run
@@ -182,7 +190,7 @@
        !formatted output for multiple runs
       !if (optmode .eq. 5) then
       if (option1 .eq. 5) then
-        call vom_write_dayyear() !replace with new routine
+        call vom_save_dayyear(output_mat) !replace with new routine
         call vom_add_yearly()
       endif
 
@@ -212,13 +220,14 @@
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 !+++ Post-yearly step
 
-      subroutine transpmodel_last_step (tp_netass)
+      subroutine transpmodel_last_step (tp_netass, option)
       use vom_vegwat_mod
       implicit none
 
       REAL*8, INTENT(in) :: tp_netass
+      integer, INTENT(in) :: option
 
-      if (optmode .eq. 0) then
+      if (option .eq. 2) then
         print *,'Cumulative error in water balance (initial Ws+Input-Output-final Ws, in m): ',error
         print *,'Number of times dtsu was limiting: ',dtsu_count
         print *,'Number of times dtmax was limiting: ',dtmax_count
@@ -240,7 +249,7 @@
         write(*,*) "Soil results are saved in delyudaily.txt, rsurfdaily.txt, ruptkhourly.txt, suvechourly.txt"
       endif
 
-      if (optmode .eq. 2) then
+      if (option .eq. 3) then
         open(kfile_model_output, FILE=sfile_model_output, STATUS='replace')
         write(kfile_model_output,'(E13.6)') tp_netass
         close(kfile_model_output)
@@ -300,6 +309,8 @@
       REAL*8, DIMENSION(vom_npar), INTENT(in) :: vom_invar
 
       if (vom_command .eq. 2) then
+        optmode = 0
+      elseif (vom_command .eq. 5) then
         optmode = 0
       elseif (vom_command .eq. 3) then
         optmode = 2
@@ -476,6 +487,7 @@
       subroutine vom_open_output ()
       use vom_vegwat_mod
       implicit none
+
 
       open(kfile_resultshourly, FILE=sfile_resultshourly, STATUS='replace')
       write(kfile_resultshourly,'(A6,A7,A7,A7,A7,22A15)') 'fyear',     &
@@ -1527,6 +1539,90 @@
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+     subroutine vom_save_dayyear (output)
+      use vom_vegwat_mod
+      implicit none
+
+      CHARACTER(60) :: dailyformat
+      CHARACTER(3)  :: str
+      REAL*8, dimension(:), allocatable        :: tmp
+      REAL*8, DIMENSION(21, c_maxday ), intent(inout)        :: output
+
+!     * internal write to convert from number to string
+      write(str,'(I3)') wlayer_
+!     * includes a column for each sublayer
+      dailyformat = '(I6,I6,I4,I7,'//str//'E14.6)'
+
+    if(nday .eq. 1) then
+
+    !allocate(output(21, c_maxday))
+
+       output(1, nday) = etmt_d
+
+    else
+
+       output(1, nday) = etmt_d
+
+    end if 
+
+    !write to file
+    if(nday .eq. c_maxday) then
+
+
+
+       write(kfile_etmt,*) output(1,:)
+
+
+
+    end if 
+
+
+!      write(kfile_resultsdaily,'(I6,I7,I7,I7,I7,25E15.5)')             &
+!     &  fyear(nday), fmonth(nday), fday(nday), nday, nhour-1,          &
+!     &  rain_d(nday), tairmax_d(nday), tairmin_d(nday), par_d(nday),   &
+!     &  vd_d / 24.d0, esoil_d, jmax25t_d(2), jmax25g_d(2),             &
+!     &  o_pct + pcg_d(2), rlt_d + rlg_d, lambdat_d, lambdag_d,         &
+!     &  rrt_d * 3600.d0 * 24.d0, rrg_d * 3600.d0 * 24.d0, asst_d(2),   &
+!     &  assg_d(2,2), SUM(su__(1:wlayer_)) / wlayer_, zw_, wsnew,       &
+!     &  spgfcf_d, infx_d, etmt_d, etmg_d, su__(1), topt_
+
+!        write(kfile_rsurfdaily,dailyformat) fyear(nday), fmonth(nday), &
+!     &    fday(nday), nday, rsurft_(1:wlayer_)
+
+!      if (fyear(nday) .ne. nyear) then
+!       * for calculation of vd_y a -1 is added to nday for using dayyear of correct year
+!        write(kfile_resultsyearly,'(i6,18e16.6)') nyear, rain_y,       &
+!     &    par_y, srad_y, vd_y / (dayyear(nday-1)), esoil_y, etm_y,     &
+!     &    etmg_y, assg_y, rlg_y, rrg_y, cpccg_y, tcg_y,                &
+!     &    etmt_y, asst_y, rlt_y, rrt_y, cpcct_y, tct_y
+!      endif
+
+!     * WRITING THE ACCUMULATED DATA FROM THE LAST YEAR TO FILE:
+
+!      if (nday .eq. c_maxday) then
+!       * call subroutine there to get yearly data for the output
+!        call vom_add_yearly()
+!        write(kfile_resultsyearly,'(i6,18e16.6)') nyear, rain_y,       &
+!     &    par_y, srad_y, vd_y / (dayyear(nday)), esoil_y, etm_y,       &
+!     &    etmg_y, assg_y, rlg_y, rrg_y, cpccg_y, tcg_y,                &
+!     &    etmt_y, asst_y, rlt_y, rrt_y, cpcct_y, tct_y
+!      endif
+
+      return
+      end subroutine vom_save_dayyear
+
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+
+
+
+
+
 
       subroutine vom_add_yearly ()
       use vom_vegwat_mod
