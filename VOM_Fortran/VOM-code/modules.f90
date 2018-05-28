@@ -21,7 +21,34 @@
       INTEGER :: kfile_model_output  = 209
 
       INTEGER :: kfile_random_output  = 210
-      INTEGER :: kfile_etmt           = 211
+
+
+
+      INTEGER :: kfile_vd_d           = 311 
+      INTEGER :: kfile_esoil          = 312 
+      INTEGER :: kfile_jmax25t        = 313
+      INTEGER :: kfile_jmax25g        = 314
+      INTEGER :: kfile_vegcov         = 315
+      INTEGER :: kfile_resp           = 316
+      INTEGER :: kfile_lambdat        = 317
+      INTEGER :: kfile_lambdag        = 318
+      INTEGER :: kfile_rrt            = 319
+      INTEGER :: kfile_rrg            = 320
+      INTEGER :: kfile_asst           = 321
+      INTEGER :: kfile_assg           = 322
+      INTEGER :: kfile_su_av          = 323
+      INTEGER :: kfile_zw             = 324
+      INTEGER :: kfile_wsnew          = 325
+      INTEGER :: kfile_spgfcf         = 326
+      INTEGER :: kfile_infx           = 327
+      INTEGER :: kfile_etmt           = 328
+      INTEGER :: kfile_etmg           = 329
+      INTEGER :: kfile_su1            = 330
+      INTEGER :: kfile_topt           = 331
+
+
+
+
 
       INTEGER :: kfile_sceout        = 701
       INTEGER :: kfile_progress      = 702
@@ -48,7 +75,29 @@
       CHARACTER(len=*),parameter :: sfile_model_output  = 'model_output.txt'
 
       CHARACTER(len=*),parameter :: sfile_random_output  = 'random_output.txt'
+
+      CHARACTER(len=*),parameter :: sfile_vd_d           = 'vpd.txt'
+      CHARACTER(len=*),parameter :: sfile_esoil          = 'esoil.txt'
+      CHARACTER(len=*),parameter :: sfile_jmax25t        = 'jmax25t.txt'
+      CHARACTER(len=*),parameter :: sfile_jmax25g        = 'jmax25g.txt'
+      CHARACTER(len=*),parameter :: sfile_vegcov         = 'veg_cover.txt'
+      CHARACTER(len=*),parameter :: sfile_resp           = 'leaf_resp.txt'
+      CHARACTER(len=*),parameter :: sfile_lambdat        = 'lambdat.txt'
+      CHARACTER(len=*),parameter :: sfile_lambdag        = 'lambdag.txt'
+      CHARACTER(len=*),parameter :: sfile_rrt            = 'root_resp_t.txt'
+      CHARACTER(len=*),parameter :: sfile_rrg            = 'root_resp_g.txt'
+      CHARACTER(len=*),parameter :: sfile_asst           = 'asst.txt'
+      CHARACTER(len=*),parameter :: sfile_assg           = 'assg.txt'
+      CHARACTER(len=*),parameter :: sfile_su_av          = 'su_av.txt'
+      CHARACTER(len=*),parameter :: sfile_zw             = 'wat_table.txt'
+      CHARACTER(len=*),parameter :: sfile_wsnew          = 'soil_wat_storage.txt'
+      CHARACTER(len=*),parameter :: sfile_spgfcf         = 'seepage.txt'
+      CHARACTER(len=*),parameter :: sfile_infx           = 'infilt.txt'
       CHARACTER(len=*),parameter :: sfile_etmt           = 'etmt.txt'
+      CHARACTER(len=*),parameter :: sfile_etmg           = 'etmg.txt'
+      CHARACTER(len=*),parameter :: sfile_su1            = 'su1.txt'
+      CHARACTER(len=*),parameter :: sfile_topt           = 'temp_opt.txt'
+
 
       CHARACTER(len=*),parameter :: sfile_sceout        = 'sce_out.txt'
       CHARACTER(len=*),parameter :: sfile_progress      = 'sce_progress.txt'

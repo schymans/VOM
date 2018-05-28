@@ -57,8 +57,28 @@ use vom_vegwat_mod
 
       !open file for output
       open(kfile_random_output, FILE=sfile_random_output)
+      
+      open(kfile_vd_d , FILE=sfile_vd_d)
+      open(kfile_esoil, FILE=sfile_esoil)
+      open(kfile_jmax25t, FILE=sfile_jmax25t)
+      open(kfile_jmax25g, FILE=sfile_jmax25g)
+      open(kfile_vegcov, FILE=sfile_vegcov)
+      open(kfile_resp, FILE=sfile_resp)
+      open(kfile_lambdat, FILE=sfile_lambdat)
+      open(kfile_lambdag, FILE=sfile_lambdag)
+      open(kfile_rrt, FILE=sfile_rrt)
+      open(kfile_rrg, FILE=sfile_rrg)
+      open(kfile_asst, FILE=sfile_asst)
+      open(kfile_assg, FILE=sfile_assg)
+      open(kfile_su_av, FILE=sfile_su_av)
+      open(kfile_zw, FILE=sfile_zw)
+      open(kfile_wsnew, FILE=sfile_wsnew)
+      open(kfile_spgfcf, FILE=sfile_spgfcf)
+      open(kfile_infx, FILE=sfile_infx)
       open(kfile_etmt, FILE=sfile_etmt)
-
+      open(kfile_etmg, FILE=sfile_etmg)
+      open(kfile_su1, FILE=sfile_su1)
+      open(kfile_topt, FILE=sfile_topt)
 
       !loop for n random samples, needs parallelization
       do i_loop=1, i_iter
@@ -83,6 +103,35 @@ write(*,*) "i_loop", i_loop
       end do
 
       close( kfile_random_output )
+
+      close(kfile_vd_d)
+      close(kfile_esoil)
+      close(kfile_jmax25t)
+      close(kfile_jmax25g)
+      close(kfile_vegcov)
+      close(kfile_resp)
+      close(kfile_lambdat)
+      close(kfile_lambdag)
+      close(kfile_rrt)
+      close(kfile_rrg)
+      close(kfile_asst)
+      close(kfile_assg)
+      close(kfile_su_av)
+      close(kfile_zw)
+      close(kfile_wsnew)
+      close(kfile_spgfcf)
+      close(kfile_infx)
       close(kfile_etmt)
+      close(kfile_etmg)
+      close(kfile_su1)
+      close(kfile_topt)
+
+
+
+
+
+
+
+
 
 end subroutine

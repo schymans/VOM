@@ -151,13 +151,14 @@
 !       * END OF DAY
 
 
-       if (option1 .eq. 5) then
-           if(nday .eq. 1) allocate( output_mat (21, c_testday ) )
-        call transpmodel_daily_step(tp_netass, option1, output_mat)
-       else
-        if(nday .eq. 1) allocate( output_mat (21, c_testday ) )
-        call transpmodel_daily_step(tp_netass, option1, output_mat)
-       end if
+           if(nday .eq. 1) then
+              !allocate matrix for 21 variables with lengt of timeseries
+              allocate( output_mat (21, c_testday ) )
+           end if
+
+           !last daily step
+           call transpmodel_daily_step(tp_netass, option1, output_mat)
+
       enddo
 
 !     * END OF DAILY LOOPS
@@ -1554,26 +1555,101 @@
 !     * includes a column for each sublayer
       dailyformat = '(I6,I6,I4,I7,'//str//'E14.6)'
 
-    if(nday .eq. 1) then
 
-    !allocate(output(21, c_maxday))
 
+       !transpiration
        output(1, nday) = etmt_d
 
-    else
+       !daily atmospheric vapour deficit
+       output(1, nday) = vd_d / 24.d0
 
-       output(1, nday) = etmt_d
+       !daily soil evaporation rate
+       output(2, nday) = esoil_d
 
-    end if 
+       ! Tree photosynthetic electron transport capacity at 25oC
+       output(3, nday) = jmax25t_d(2)
+
+       ! Grass photosynthetic electron transport capacity at 25oC
+       output(4, nday) = jmax25g_d(2)
+
+       ! Projected cover perennial vegetation plus actual cover seasonal vegetation 
+       output(5, nday) = o_pct + pcg_d(2)
+
+       ! Daily tree plus grass leaf respiration
+       output(6, nday) = rlt_d + rlg_d
+
+       ! Target dE/dA for calculating gstomt (tree)
+       output(7, nday) = lambdat_d
+
+       ! Target dE/dA for calculating gstomt (grass)
+       output(8, nday) = lambdag_d
+
+       ! Tree root respiration rate
+       output(9, nday) = rrt_d * 3600.d0 * 24.d0
+
+       ! Grass root respiration rate
+       output(10, nday) = rrg_d * 3600.d0 * 24.d0
+
+       ! Daily tree assimilation
+       output(11, nday) = asst_d(2)
+
+       ! Daily grass assimilation
+       output(12, nday) = assg_d(2,2)
+
+       ! Average soil moisture
+       output(13, nday) = SUM(su__(1:wlayer_)) / wlayer_
+
+       ! Elevation of water table
+       output(14, nday) = zw_
+
+       ! Total soil water storage
+       output(15, nday) = wsnew
+
+       ! Daily seepage face flow
+       output(16, nday) = spgfcf_d
+
+       ! Daily infiltration excess runoff
+       output(17, nday) = infx_d
+
+       ! Daily transpiration rate (tree)
+       output(18, nday) = etmt_d
+
+       ! Daily transpiration rate (grass)
+       output(19, nday) = etmg_d
+
+       ! Soil saturation degree in first layer
+       output(20, nday) = su__(1)
+
+       ! Optimal temperature in temperature response curve
+       output(21, nday) = topt_
+ 
 
     !write to file
     if(nday .eq. c_maxday) then
 
 
 
-       write(kfile_etmt,*) output(1,:)
-
-
+       write(kfile_vd_d,*) output(1,:)
+       write(kfile_esoil,*) output(2,:)
+       write(kfile_jmax25t,*) output(3,:)
+       write(kfile_jmax25g,*) output(4,:)
+       write(kfile_vegcov,*) output(5,:)
+       write(kfile_resp,*) output(6,:)
+       write(kfile_lambdat,*) output(7,:)
+       write(kfile_lambdag,*) output(8,:)
+       write(kfile_rrt,*) output(9,:)
+       write(kfile_rrg,*) output(10,:)
+       write(kfile_asst,*) output(11,:)
+       write(kfile_assg,*) output(12,:)
+       write(kfile_su_av,*) output(13,:)
+       write(kfile_zw,*) output(14,:)
+       write(kfile_wsnew,*) output(15,:)
+       write(kfile_spgfcf,*) output(16,:)
+       write(kfile_infx,*) output(17,:)
+       write(kfile_etmt,*) output(18,:)
+       write(kfile_etmg,*) output(19,:)
+       write(kfile_su1,*) output(20,:)
+       write(kfile_topt,*) output(21,:)
 
     end if 
 
