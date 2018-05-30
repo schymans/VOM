@@ -1491,6 +1491,7 @@
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+
       subroutine vom_write_dayyear ()
       use vom_vegwat_mod
       implicit none
@@ -1540,8 +1541,13 @@
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!*----- saving fluxes to a single matrix -------------------------------
 
      subroutine vom_save_dayyear (output)
+     !subroutine to create one single matrix with all daily output variables
+     !The saved matrix will be needed to write txt-files containing results from 
+     !all runs. 
+
       use vom_vegwat_mod
       implicit none
 
@@ -1554,8 +1560,6 @@
       write(str,'(I3)') wlayer_
 !     * includes a column for each sublayer
       dailyformat = '(I6,I6,I4,I7,'//str//'E14.6)'
-
-
 
        !transpiration
        output(1, nday) = etmt_d
@@ -1653,52 +1657,12 @@
 
     end if 
 
-
-!      write(kfile_resultsdaily,'(I6,I7,I7,I7,I7,25E15.5)')             &
-!     &  fyear(nday), fmonth(nday), fday(nday), nday, nhour-1,          &
-!     &  rain_d(nday), tairmax_d(nday), tairmin_d(nday), par_d(nday),   &
-!     &  vd_d / 24.d0, esoil_d, jmax25t_d(2), jmax25g_d(2),             &
-!     &  o_pct + pcg_d(2), rlt_d + rlg_d, lambdat_d, lambdag_d,         &
-!     &  rrt_d * 3600.d0 * 24.d0, rrg_d * 3600.d0 * 24.d0, asst_d(2),   &
-!     &  assg_d(2,2), SUM(su__(1:wlayer_)) / wlayer_, zw_, wsnew,       &
-!     &  spgfcf_d, infx_d, etmt_d, etmg_d, su__(1), topt_
-
-!        write(kfile_rsurfdaily,dailyformat) fyear(nday), fmonth(nday), &
-!     &    fday(nday), nday, rsurft_(1:wlayer_)
-
-!      if (fyear(nday) .ne. nyear) then
-!       * for calculation of vd_y a -1 is added to nday for using dayyear of correct year
-!        write(kfile_resultsyearly,'(i6,18e16.6)') nyear, rain_y,       &
-!     &    par_y, srad_y, vd_y / (dayyear(nday-1)), esoil_y, etm_y,     &
-!     &    etmg_y, assg_y, rlg_y, rrg_y, cpccg_y, tcg_y,                &
-!     &    etmt_y, asst_y, rlt_y, rrt_y, cpcct_y, tct_y
-!      endif
-
-!     * WRITING THE ACCUMULATED DATA FROM THE LAST YEAR TO FILE:
-
-!      if (nday .eq. c_maxday) then
-!       * call subroutine there to get yearly data for the output
-!        call vom_add_yearly()
-!        write(kfile_resultsyearly,'(i6,18e16.6)') nyear, rain_y,       &
-!     &    par_y, srad_y, vd_y / (dayyear(nday)), esoil_y, etm_y,       &
-!     &    etmg_y, assg_y, rlg_y, rrg_y, cpccg_y, tcg_y,                &
-!     &    etmt_y, asst_y, rlt_y, rrt_y, cpcct_y, tct_y
-!      endif
-
       return
       end subroutine vom_save_dayyear
 
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-
-
-
-
-
-
-
 
       subroutine vom_add_yearly ()
       use vom_vegwat_mod
