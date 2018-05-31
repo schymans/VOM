@@ -22,8 +22,6 @@
 
       INTEGER :: kfile_random_output  = 210
 
-
-
       INTEGER :: kfile_vd_d           = 311 
       INTEGER :: kfile_esoil          = 312 
       INTEGER :: kfile_jmax25t        = 313
@@ -45,7 +43,7 @@
       INTEGER :: kfile_etmg           = 329
       INTEGER :: kfile_su1            = 330
       INTEGER :: kfile_topt           = 331
-
+      INTEGER :: kfile_random_params  = 332
 
 
 
@@ -74,7 +72,8 @@
       CHARACTER(len=*),parameter :: sfile_soilprofile   = 'soilprofile.par'
       CHARACTER(len=*),parameter :: sfile_model_output  = 'model_output.txt'
 
-      CHARACTER(len=*),parameter :: sfile_random_output  = 'random_output.txt'
+      CHARACTER(len=*),parameter :: sfile_random_output  = 'random_ncp.txt'
+      CHARACTER(len=*),parameter :: sfile_random_params  = 'random_params.txt'
 
       CHARACTER(len=*),parameter :: sfile_vd_d           = 'vpd.txt'
       CHARACTER(len=*),parameter :: sfile_esoil          = 'esoil.txt'

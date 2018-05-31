@@ -57,7 +57,9 @@ use vom_vegwat_mod
 
       !open file for output
       open(kfile_random_output, FILE=sfile_random_output)
-      
+      open(kfile_random_params, FILE=sfile_random_params)
+
+
       open(kfile_vd_d , FILE=sfile_vd_d)
       open(kfile_esoil, FILE=sfile_esoil)
       open(kfile_jmax25t, FILE=sfile_jmax25t)
@@ -99,10 +101,12 @@ write(*,*) "i_loop", i_loop
 
 
          write(kfile_random_output, *) obj
+         write(kfile_random_params, *) paramset
 
       end do
 
       close( kfile_random_output )
+      close( kfile_random_params )
 
       close(kfile_vd_d)
       close(kfile_esoil)
