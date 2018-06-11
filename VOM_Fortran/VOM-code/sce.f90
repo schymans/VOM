@@ -385,7 +385,8 @@
 
       run_initialseed = 0
 
-        open(kfile_lastloop, FILE=sfile_lastloop, STATUS='old', IOSTAT=iostat)
+        open(kfile_lastloop, FILE=trim(adjustl(i_outputpath)) // &
+             trim(adjustl(sfile_lastloop)), STATUS='old', IOSTAT=iostat)
         if (iostat .eq. 0) then
 
 !         * read parameter values to continue from last run
@@ -407,10 +408,13 @@
 
 !         * open files for storing objective function and parameter values
 
-            open(kfile_sceout, FILE=sfile_sceout, STATUS='old', POSITION='append')
-            open(kfile_bestpars, FILE=sfile_bestpars, STATUS='old', POSITION='append')
+            open(kfile_sceout, FILE=trim(adjustl(i_outputpath)) // &
+             trim(adjustl(sfile_sceout)), STATUS='old', POSITION='append')
+            open(kfile_bestpars, FILE=trim(adjustl(i_outputpath)) // &
+             trim(adjustl(sfile_bestpars)), STATUS='old', POSITION='append')
           if (kfile_progress .ne. 6) then
-            open(kfile_progress, FILE=sfile_progress, STATUS='old', POSITION='append')
+            open(kfile_progress, FILE=trim(adjustl(i_outputpath)) // &
+             trim(adjustl(sfile_progress)), STATUS='old', POSITION='append')
           endif
           write(kfile_progress,*) " "
           write(msg,'("  NEW Run time:   ",A)') logdate
@@ -419,10 +423,13 @@
 
 !         * open empty files for storing objective function and parameter values
 
-            open(kfile_sceout, FILE=sfile_sceout, STATUS='replace')
-            open(kfile_bestpars, FILE=sfile_bestpars, STATUS='replace')
+            open(kfile_sceout, FILE=trim(adjustl(i_outputpath)) // &
+             trim(adjustl(sfile_sceout)), STATUS='replace')
+            open(kfile_bestpars, FILE=trim(adjustl(i_outputpath)) // &
+             trim(adjustl(sfile_bestpars)), STATUS='replace')
           if (kfile_progress .ne. 6) then
-            open(kfile_progress, FILE=sfile_progress, STATUS='replace')
+            open(kfile_progress, FILE=trim(adjustl(i_outputpath)) // &
+             trim(adjustl(sfile_progress)), STATUS='replace')
           endif
 
 !         * write output header
@@ -1106,7 +1113,8 @@
       INTEGER             :: ii
       REAL*8, ALLOCATABLE :: tmp_8(:)
 
-        open(kfile_lastloop, FILE=sfile_lastloop)
+        open(kfile_lastloop, FILE=trim(adjustl(i_outputpath)) // &
+             trim(adjustl(sfile_lastloop)))
           write(kfile_lastloop,'(i3)')  ncomp2
           write(kfile_lastloop,'(i4)')  nloop
           write(kfile_lastloop,'(i10)') nrun
@@ -1171,12 +1179,14 @@
       REAL         :: stat
       CHARACTER*80 :: sfile
 
-        open(kfile_lastbest, FILE=sfile_lastbest)
+        open(kfile_lastbest, FILE=trim(adjustl(i_outputpath)) // &
+             trim(adjustl(sfile_lastbest)))
           write(kfile_lastbest,outformat) var(:), obj
         close(kfile_lastbest)
 
         if (final == 1) then
-          open(kfile_beststat, FILE=sfile_beststat)
+          open(kfile_beststat, FILE=trim(adjustl(i_outputpath)) // &
+             trim(adjustl(sfile_beststat)))
             write(kfile_beststat,*) 1
           close(kfile_beststat)
         endif

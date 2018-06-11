@@ -251,7 +251,8 @@
       endif
 
       if (option .eq. 3) then
-        open(kfile_model_output, FILE=sfile_model_output, STATUS='replace')
+        open(kfile_model_output, FILE=trim(adjustl(i_outputpath))// &
+             trim(adjustl(sfile_model_output)), STATUS='replace')
         write(kfile_model_output,'(E13.6)') tp_netass
         close(kfile_model_output)
 
@@ -371,6 +372,7 @@
      &                    i_rrootm, i_rsurfmin, i_rsurf_, i_rootrad,   &
      &                    i_prootmg, i_growthmax, i_firstyear,         &
      &                    i_lastyear, i_write_h,                       &
+     &                    i_inputpath, i_outputpath,                   &
      &                    o_lambdagf, o_wsgexp, o_lambdatf, o_wstexp,  &
      &                    o_pct, o_rtdepth, o_mdstore, o_rgdepth
 
@@ -378,7 +380,7 @@
      &                     i_thetar, i_thetas, i_nvg, i_avg, i_delz
 
 !     * Input of variable parameters from the parameter file
-
+write(*,*) i_inputpath
       open(kfile_namelist, FILE=sfile_namelist, STATUS='old',          &
      &                     FORM='formatted', IOSTAT=iostat)
       if (iostat .eq. 0) then
@@ -399,7 +401,8 @@
 
       s_maxlayer = 0
 
-      open(kfile_soilprofile, FILE=sfile_soilprofile,                  &
+      open(kfile_soilprofile, FILE=trim(adjustl(i_inputpath))// &
+           trim(adjustl(sfile_soilprofile)),                  &
      &                        STATUS='old', IOSTAT=iostat)
       if (iostat .eq. 0) then
         read(kfile_soilprofile,*) s_maxlayer
@@ -490,38 +493,45 @@
       implicit none
 
 
-      open(kfile_resultshourly, FILE=sfile_resultshourly, STATUS='replace')
+      open(kfile_resultshourly, FILE=trim(adjustl(i_outputpath))//      &
+           trim(adjustl(sfile_resultshourly)), STATUS='replace')
       write(kfile_resultshourly,'(A6,A7,A7,A7,A7,22A15)') 'fyear',     &
      &  'fmonth', 'fday', 'nday', 'nhour', 'rain', 'tair', 'par', 'vd',&
      &  'esoil', 'pc', 'jmax25t', 'jmax25g', 'mqt', 'rl', 'lambdat',   &
      &  'lambdag', 'rr', 'asst', 'assg', 'etmt', 'etmg', 'su_1',       &
      &  'zw', 'ws', 'spgfcf', 'infx'
 
-      open(kfile_resultsdaily, FILE=sfile_resultsdaily, STATUS='replace')
+      open(kfile_resultsdaily, FILE=trim(adjustl(i_outputpath))// &
+           trim(adjustl(sfile_resultsdaily)), STATUS='replace')
       write(kfile_resultsdaily,'(A6,A7,A7,A7,A7,25A15)') 'fyear',      &
      &  'fmonth', 'fday', 'nday', 'nhour', 'rain', 'tairmax', 'tairmin', &
      &  'par', 'vd', 'esoil', 'jmax25t', 'jmax25g', 'pc', 'rl',        &
      &  'lambdat', 'lambdag', 'rrt', 'rrg', 'asst', 'assg', 'su_avg',  &
      &  'zw', 'ws', 'spgfcf', 'infx', 'etmt', 'etmg', 'su_1', 'topt'
 
-      open(kfile_resultsyearly, FILE=sfile_resultsyearly, STATUS='replace')
+      open(kfile_resultsyearly, FILE=trim(adjustl(i_outputpath))// &
+           trim(adjustl(sfile_resultsyearly)), STATUS='replace')
       write(kfile_resultsyearly,'(A6,18A16)') "nyear", "rain", "par",  &
      &  "srad", "vd", "esoil", "etmt", "etmg", "assg", "rlg", "rrg",   &
      &  "cpccg", "tcg", "etmt", "asst", "rlt", "rrt", "cpcct", "tct"
 
-        open(kfile_rsurfdaily, FILE=sfile_rsurfdaily, STATUS='replace')
+        open(kfile_rsurfdaily, FILE=trim(adjustl(i_outputpath))// &
+             trim(adjustl(sfile_rsurfdaily)), STATUS='replace')
         write(kfile_rsurfdaily,'(2A6,A4,A7,A)') 'fyear', 'fmonth',     &
      &    'fday', 'nday', 'rsurft_sublayer'
 
-        open(kfile_delzhourly, FILE=sfile_delzhourly, STATUS='replace')
+        open(kfile_delzhourly, FILE=trim(adjustl(i_outputpath))// &
+             trim(adjustl(sfile_delzhourly)), STATUS='replace')
         write(kfile_delzhourly,'(2A6,A4,A7,A5,A)') 'fyear', 'fmonth',  &
      &    'fday', 'nday', 'nhour', 'delz_sublayer'
 
-        open(kfile_ruptkthourly, FILE=sfile_ruptkthourly, STATUS='replace')
+        open(kfile_ruptkthourly, FILE=trim(adjustl(i_outputpath))// &
+             trim(adjustl(sfile_ruptkthourly)), STATUS='replace')
         write(kfile_ruptkthourly,'(2A6,A4,A7,A5,A)') 'fyear', 'fmonth',&
      &    'fday', 'nday', 'nhour', 'ruptkt_sublayer'
 
-        open(kfile_suhourly, FILE=sfile_suhourly, STATUS='replace')
+        open(kfile_suhourly, FILE=trim(adjustl(i_outputpath))// &
+             trim(adjustl(sfile_suhourly)), STATUS='replace')
         write(kfile_suhourly,'(2A6,A4,A7,A5,A)') 'fyear', 'fmonth',    &
      &    'fday', 'nday', 'nhour', 'su_sublayer'
 
@@ -543,7 +553,8 @@
 !       and soil properties in each soil layer, with the layer number in
 !       the first column.
 
-      open(kfile_soilprofile, FILE=sfile_soilprofile,                  &
+      open(kfile_soilprofile, FILE=trim(adjustl(i_inputpath))// &
+           trim(adjustl(sfile_soilprofile)),                  &
      &                        STATUS='old', IOSTAT=iostat)
       if (iostat .eq. 0) then
         do j = 1, s_maxlayer
@@ -581,14 +592,24 @@
       INTEGER :: ii, i, h, oldh, stat
       INTEGER :: dummyint1, dummyint2, dummyint3, dummyint4
       LOGICAL :: exist
+      LOGICAL :: exist_daily
       CHARACTER(len=99) :: str
 
-      inquire(FILE=sfile_hourlyweather, EXIST=exist)
+      inquire(FILE=trim(adjustl(i_inputpath))// &
+              trim(adjustl(sfile_hourlyweather)), EXIST=exist)
 
 !     * Creating hourly climate data from daily data
 
+      inquire(FILE=trim(adjustl(i_inputpath))// &
+              trim(adjustl(sfile_dailyweather)), EXIST=exist_daily)
+      if (.not. exist_daily) then
+       stop trim(adjustl(i_inputpath))//trim(adjustl(sfile_dailyweather))// " does not exist"
+      end if
+
+
       if (.not. exist) then
-        open(kfile_dailyweather, FILE=sfile_dailyweather,              &
+        open(kfile_dailyweather, FILE=trim(adjustl(i_inputpath))// &
+             trim(adjustl(sfile_dailyweather)),              &
      &                           STATUS='old', IOSTAT=stat)
         read(kfile_dailyweather,'(A)') str
         if (LEN(TRIM(str)) .ne. 88) then
@@ -612,7 +633,8 @@
 !     * Reading hourly climate data if available
 
       if (exist) then
-        open(kfile_hourlyweather, FILE=sfile_hourlyweather,            &
+        open(kfile_hourlyweather, FILE=trim(adjustl(i_inputpath))// &
+             trim(adjustl(sfile_hourlyweather)),            &
      &                            STATUS='old', IOSTAT=stat)
         read(kfile_hourlyweather,*)
         ii = 1
@@ -659,7 +681,8 @@
         in2 = c_maxday
 
       if (i_write_h == 1) then
-        open(kfile_hourlyweather, FILE=sfile_hourlyweather, STATUS='new')
+        open(kfile_hourlyweather, FILE=trim(adjustl(i_inputpath))// &
+             trim(adjustl(sfile_hourlyweather)), STATUS='new')
         write(kfile_hourlyweather,'(5a8,5a11)') 'hour', 'dayyear', 'fday', &
      &    'fmonth', 'fyear', 'tair_h', 'vd_h', 'par_h', 'rain_h', 'ca_h'
       endif

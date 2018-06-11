@@ -106,6 +106,9 @@
       CHARACTER(len=*),parameter :: sfile_beststat      = 'sce_status.txt'
       CHARACTER(len=*),parameter :: sfile_pars          = 'pars.txt'
 
+      CHARACTER*100  :: i_outputpath     ! Constant root balance pressure of 1.5 MPa in grasses
+      CHARACTER*100  :: i_inputpath      ! Constant root balance pressure of 1.5 MPa in grasses
+
       end module vom_file_mod
 
 !     ******************************************************************
@@ -329,6 +332,9 @@
       INTEGER :: i_lastyear = 2000      ! Last year for the generation of hourly output in computation mode
 
       INTEGER :: i_write_h = 0          ! Flag to write out hourly input values after conversation from daily values
+
+
+
 
 !     * Derived parameters
 

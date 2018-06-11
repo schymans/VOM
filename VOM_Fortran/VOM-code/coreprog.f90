@@ -61,16 +61,19 @@
 
          write(*,*) "Start single calculation with parameters..."
 
-         open(kfile_pars, FILE=sfile_pars, STATUS='old', IOSTAT=iostat)
+         call transpmodel_init_once(vom_command)
+
+         open(kfile_pars, FILE=trim(adjustl(i_inputpath)) // trim(adjustl(sfile_pars)),&
+              STATUS='old', IOSTAT=iostat)
               if (iostat .ne. 0) then
-                write(0,*) "ERROR opening ", sfile_pars
+                write(0,*) "ERROR opening ", trim(adjustl(i_inputpath)) // trim(adjustl(sfile_pars))
                 stop
               endif
               rewind(kfile_pars)
               read(kfile_pars,*) vom_invar(:)
             close(kfile_pars)
 
-        call transpmodel_init_once(vom_command)
+
         call transpmodel(vom_invar, SIZE(vom_invar), vom_objfun, vom_command)
 
       endif
@@ -80,7 +83,8 @@
 
          write(*,*) "Start calculation of ncp with parameters..."
 
-         open(kfile_pars, FILE=sfile_pars, STATUS='old', IOSTAT=iostat)
+         open(kfile_pars, FILE=trim(adjustl(i_inputpath)) // &
+              trim(adjustl(sfile_pars)), STATUS='old', IOSTAT=iostat)
               if (iostat .ne. 0) then
                 write(0,*) "ERROR opening ", sfile_pars
                 stop
