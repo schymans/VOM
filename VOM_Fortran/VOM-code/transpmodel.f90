@@ -380,7 +380,7 @@
      &                     i_thetar, i_thetas, i_nvg, i_avg, i_delz
 
 !     * Input of variable parameters from the parameter file
-write(*,*) i_inputpath
+
       open(kfile_namelist, FILE=sfile_namelist, STATUS='old',          &
      &                     FORM='formatted', IOSTAT=iostat)
       if (iostat .eq. 0) then
@@ -587,6 +587,7 @@ write(*,*) i_inputpath
 
       subroutine vom_get_hourly_clim ()
       use vom_vegwat_mod
+      use vom_file_mod
       implicit none
 
       INTEGER :: ii, i, h, oldh, stat
