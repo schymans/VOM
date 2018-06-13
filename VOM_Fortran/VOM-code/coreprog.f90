@@ -83,6 +83,8 @@
 
          write(*,*) "Start calculation of ncp with parameters..."
 
+        call transpmodel_init_once(vom_command)
+
          open(kfile_pars, FILE=trim(adjustl(i_inputpath)) // &
               trim(adjustl(sfile_pars)), STATUS='old', IOSTAT=iostat)
               if (iostat .ne. 0) then
@@ -93,7 +95,6 @@
               read(kfile_pars,*) vom_invar(:)
             close(kfile_pars)
 
-        call transpmodel_init_once(vom_command)
         call transpmodel(vom_invar, SIZE(vom_invar), vom_objfun, vom_command)
 
         write(*,*) "The best carbon profit was: ",vom_objfun

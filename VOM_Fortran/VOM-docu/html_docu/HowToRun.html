@@ -145,32 +145,56 @@
     <h2>Overview</h2>
     <p>This is a short overview of how to run the model on different systems.
       Please consider the VOM - info, where the needed files and settings are
-      described. This describtion assumes that all these files are present. You
-      have to compile the files and run the model repeatedly until the file
-      "sce_status.txt" appears in the directory. You have three alternatives to
-      do this.</p>
+      described. This description assumes that all these files are present. You
+      have to compile the files and run the model in a preferred mode.</p>
     <hr>
-    <h3>Run the model manually</h3>
-    <p>First, the contents of VOM-code and VOM-input have to be copied into a
-      directory of your choice. Then you the model has to be compiled and
-      started within this directory. As described in VOM - info, for finding the
-      optimum parameter set, the model has to be restarted until the file
-      "sce_status.txt" is written. To compile the model on a unix machine with
-      the pgf90 compiler, type (replace the pgf90 command with the appropriate
-      command for your compiler, e.g. ifort for the Intel Fortran Compiler or
-      gfortran for GNU Fortran):</p>
-    <pre>pgf90 -o model.x *.f90 </pre>
-    <p>This will create an executable file called "model.x". Now start the model
+    <h3>Compiling and testing the model</h3>
+    <p> To compile the model on a unix machine with
+      the gfortran compiler, type :</p>
+    <pre>make </pre>
+    <p>This will create an executable file called "model.x". Now test the model
       by typing:</p>
-    <pre>./model.x</pre>
-    <p>The model was also tested on a Windows machine with the pgf90 compiler.
-      Type:</p>
-    <pre>pgf90 -o model.exe *.f90 </pre>
-    <p>This will create an executable called "model.exe". Start the model by
-      typing or double-click on:</p>
-    <pre>model.exe</pre>
-    <p>The model runs and starts to create and fill some files:</p>
-    <p> </p>
+    <pre>make check</pre>
+    <p>When the test is passed, the model is ready to use. The VOM_namelist contains all settings,
+and the model should always be run with the directory of this namelist as working directory. Input and output directories can be defined in the namelist with absolute or relative paths from the working directory. 
+      </p>
+
+    <h3>Running the model</h3>
+    <p>The model can be run in 4 different modes, defined by VOM_command in the VOM_namelist: <p>
+   <table border="1" width="100%">
+      <tbody>
+        <tr>
+          <td style="width: 195px;">
+            <h4>Mode</h4>
+          </td>
+          <td style="width: 1501px;">
+            <h4>Description</h4>
+          </td>
+        </tr>
+        <tr>
+          <td>1</td>
+          <td>Optimize the model with the Shuffled Complex Evolution algorithm. </td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>Run without optimization, based on the parameters in pars.txt.</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>Run without optimization, based on the parameters in pars.txt. Returns only NCP values as output.</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>Randomly run the model.</td>
+        </tr>
+        </tbody>
+    </table>
+
+
+
+    <h3>Output of the model</h3>
+    <p> Depending on the chosen mode in the VOM_namelist, different files are produced as output. For
+optimizing with SCE, the following files are produced: <p>
     <table border="1" width="100%">
       <tbody>
         <tr>
@@ -233,76 +257,174 @@
     results obtained with the optimised parameter set to the disc. This does not
     take long. Also see below.<br>
     <hr>
-    <h3>Run the model automatically on a single computer</h3>
-    <p>There are 4 shell-scripts (for unix-based systems) available to compile
-      and re-run the model automatically until the "sce_status.txt" is written:</p>
-    <ul>
-      <li>computer_start.script</li>
-      <li>computer_job.script</li>
-      <li>computer_vomrun.script</li>
-      <li>testrun.script</li>
-    </ul>
-    If you execute testrun.script in its current directory
-    (VOM_Fortran/VOM-scripts/single-computer/), a subdirectory called 'testrun'
-    will be created in VOM_Fortran, the necessary code files and example input
-    data will be copied into that directory and the model will be run in
-    optimisation mode until successful.
-    <p>In the "computer_vomrun.script" the use of the gfortran compiler is
-      specified. If you want to use another compiler you have to replace the
-      gfortran command with the appropriate command for your compiler.</p>
-    <p>To run the model for your custom input data, just replace the files in
-      VOM_Fortran/VOM-input with your custom files in the same format, and then
-      execute testrun.script</p>
+
+
+    <p> For running the model without optimization: <p>
+    <table border="1" width="100%">
+      <tbody>
+        <tr>
+          <td style="width: 195px;">
+            <h4>File name</h4>
+          </td>
+          <td style="width: 1501px;">
+            <h4>Description</h4>
+          </td>
+        </tr>
+        <tr>
+          <td>delz_hourly.txt</td>
+          <td><a href="delyuhourly.txt_inf.html">Description</a> </td>
+        </tr>
+        <tr>
+          <td>results_daily.txt</td>
+          <td><a href="resultsdaily.txt_inf.html">Description</a></td>
+        </tr>
+        <tr>
+          <td>results_hourly.txt</td>
+          <td><a href="resultshourly.txt_inf.html">Description</a></td>
+        </tr>
+        <tr>
+          <td>results_yearly.txt</td>
+          <td><a href="yearly.txt_inf.html">Description</a></td>
+        </tr>
+        <tr>
+          <td>rsurf_daily.txt</td>
+          <td><a href="rsurfdaily.txt_inf.html">Description</a></td>
+        </tr>
+        <tr>
+          <td>ruptkt.txt</td>
+          <td><a href="ruptk.txt_inf.html">Description</a></td>
+        </tr>
+        <tr>
+          <td>su_hourly.txt</td>
+          <td><a href="suvechourly.txt_inf.html">Description</a></td>
+        </tr>
+      </tbody>
+    </table>
+
     <hr>
-    <h3>Run the model automatically on a cluster</h3>
-    <p>There are 3 shell-scripts available to compile and run the model
-      automatically on a cluster until the file "sce_status.txt" is written:</p>
-    <ul>
-      <li>cluster_start.script</li>
-      <li>cluster_bsubjob.script</li>
-      <li>cluster_vomrun.script</li>
-    </ul>
-    These scripts are adjusted to run the model on the cluster of the Max Planck
-    Institute for Biogeochemistry.<br>
-    The program files have to be located in a directory that can be accessed by
-    the cluster. Only "cluster_start.script" has to be started after adjusting
-    the directory path in that script to the directory path that contains the
-    code and data. It is best to place the script files in the same folder where
-    the other program files are. Also, you have to specify the host name in the
-    "cluster_bsubjob.script" and the path to the temporary folder on the cluster
-    in "cluster_vomrun.script". The scripts will make the model run repeatedly
-    until "sce_status.txt" is written to the "results" subdirectory of the given
-    directory. Now you have to run the model once again to create some results
-    (also see below) files by typing:
-    <pre>./model.x</pre>
-    <p>In the "vom_cluster_run.script" the use of the pgf90 compiler is
-      specified. If you want to use another compiler you have to replace the
-      pgf90 command with the appropriate command for your compiler.</p>
+
+    <p> When the VOM_command is set to 3, only one file is produced: <p>
+    <table border="1" width="100%">
+      <tbody>
+        <tr>
+          <td>model_out.txt</td>
+          <td>Contains the NCP value for this single run.</td>
+        </tr>
+      </tbody>
+    </table>
+
     <hr>
-    <h3>Compute results and switches</h3>
-    <p>You can run the model with a prescribed parameter set by supplying the
-      parameter set in one of the below files and setting the appropriate switch
-      in vom_namelist, as described below. </p>
-    <h4>sce_bestpars.txt</h4>
-    <p>This file is created by the model if optimal values are found. At the
-      same time, a file called sce_status.txt', containing the ascii letter '1'
-      (i.e. the number 1) should have been created. If these files exist,
-      running the model will result in generation of results based on the
-      parameters contained in sce_bestpars.txt. If sce_status.txt is missing,
-      you can simply create it using a text editor.</p>
-    <h4>sce_lastbest.txt</h4>
-    <p>This file is created during the optimisation after each loop and contains
-      the currently best parameter set before the optimisation routine has
-      converged. It has the same structure as sce_lastbest.txt. You can
-      calculate the result files using sce_lastbest.txt by setting '<span style="font-weight: bold;">vom_command=2</span>'
-      in vom_namelist and starting the model once again.</p>
-    <h4>pars.txt</h4>
-    <p>You have to create this file yourself e.g. by copying values from
-      sce_bestpars.txt. It has the same structure as sce_lastbest.txt but
-      without the last value.&nbsp; It can be used to calculate just the best
-      ncp and write this to a result file (model_output.txt). To do this, set '<span
-        style="font-weight: bold;">vom_command=3</span>' in vom_namelist and
-      start the model once again.</p>
-    <hr>
+
+    <p> In case the model is run with random parameterizations several files are produced for different model variables. In these files, each line represents a model run, each column a timestep. <p>
+    <table border="1" width="100%">
+      <tbody>
+        <tr>
+          <td style="width: 195px;">
+            <h4>File name</h4>
+          </td>
+          <td style="width: 1501px;">
+            <h4>Description</h4>
+          </td>
+        </tr>
+        <tr>
+          <td>assg.txt</td>
+          <td>Daily grass assimilation (mol/m2/d) </td>
+        </tr>
+        <tr>
+          <td>asst.txt</td>
+          <td>Daily tree assimilation (mol/m2/d)</td>
+        </tr>
+        <tr>
+          <td>esoil.txt</td>
+          <td>Soil evaporation (m/d)</td>
+        </tr>
+        <tr>
+          <td>etmg.txt</td>
+          <td>Grass transpiration (m/d) </td>
+        </tr>
+        <tr>
+          <td>etmt.txt</td>
+          <td>Tree transpiration (m/d) </td>
+        </tr>
+         <tr>
+          <td>infilt.txt</td>
+          <td>Infiltration (m/d)</td>
+        </tr>
+        <tr>
+          <td>jmax25g.txt</td>
+          <td>Grass photosynthetic electron transport capacity at 25oC (mol/m2/d)</td>
+        </tr>
+        <tr>
+          <td>jmax25t.txt</td>
+          <td>Tree photosynthetic electron transport capacity at 25oC (mol/m2/d)</td>
+        </tr>
+        <tr>
+          <td>lambdag.txt</td>
+          <td>Target dE/dA for calculating gstomg (mol/mol)</td>
+        </tr>
+        <tr>
+          <td>lambdat.txt</td>
+          <td>Target dE/dA for calculating gstomt (mol/mol)</td>
+        </tr>
+        <tr>
+          <td>leaf_resp.txt</td>
+          <td>Leaf respiration (mol/m2/d)</td>
+        </tr>
+        <tr>
+          <td>random_ncp.txt</td>
+          <td>NCP values</td>
+        </tr>
+        <tr>
+          <td>random_params.txt</td>
+          <td>All used random parametersets</td>
+        </tr>
+        <tr>
+          <td>root_resp_g.txt</td>
+          <td>Root respiration grass (mol/m2/d)</td>
+        </tr>
+        <tr>
+          <td>root_resp_t.txt</td>
+          <td>Root respiration tree (mol/m2/d)</td>
+        </tr>
+        <tr>
+          <td>seepage.txt</td>
+          <td><a href="suvechourly.txt_inf.html">Description</a></td>
+        </tr>
+        <tr>
+          <td>soil_wat_storage.txt</td>
+          <td>Soil water storage (m)</td>
+        </tr>
+        <tr>
+          <td>su1.txt</td>
+          <td>Soil moisture top layer (-)</td>
+        </tr>
+        <tr>
+          <td>su_av.txt</td>
+          <td>Average soil moistuer all layers (-)</td>
+        </tr>
+        <tr>
+          <td>temp_opt.txt</td>
+          <td>Optimal temperature in temperature response curve (oC)</td>
+        </tr>
+        <tr>
+          <td>veg_cover.txt</td>
+          <td>Vegetation cover (-)</td>
+        </tr>
+        <tr>
+          <td>vpd.txt</td>
+          <td>Vapour pressure deficit</td>
+        </tr>
+        <tr>
+          <td>wat_table.txt</td>
+          <td>Elevation of water table (-)</td>
+        </tr>
+
+
+      </tbody>
+    </table>
+
+
+    <br>
+
   </body>
 </html>
