@@ -315,8 +315,8 @@
       close(kfile_namelist)
 
       if (vom_npar > nparmax) then
-        write(0,*) "ERROR: Number of parameters in shufflevar larger as nparmax"
-        write(0,*) "HINT: change the parameter nparmax in the module definitions"
+        write(*,*) "ERROR: Number of parameters in shufflevar larger as nparmax"
+        write(*,*) "HINT: change the parameter nparmax in the module definitions"
         stop
       endif
 
