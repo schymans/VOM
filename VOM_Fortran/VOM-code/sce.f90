@@ -67,7 +67,7 @@
 
       if (run_initialseed == 1) then
         call initialseed
-        return
+        !return
       endif
 
 !
@@ -75,6 +75,9 @@
 ! BEGIN SCE LOOP
 
       do while (nrun .lt. 20000 .and. nloop .lt. 500)
+
+          write(*,*) "nrun:", nrun
+          write(*,*) "nloop:", nloop
 
           nloop = nloop + 1
 
@@ -124,7 +127,7 @@
             if (nsincebest .le. i_patience) then
               call writepars()
               call run_cce()
-              return
+              !return
             else
               write(kfile_progress,*) " "
               writeformat = '("No improvement in OF for",i5," loops")'
@@ -300,7 +303,7 @@
 
       namelist /shufflepar/ vom_command, i_ncomp_, i_ncompmin,         &
      &                      i_resolution, i_patience, i_nsimp,         &
-     &                      i_focus, vom_npar
+     &                      i_focus, i_iter, vom_npar
 
 !     * Input of variable parameters from the parameter file
 
@@ -312,8 +315,8 @@
       close(kfile_namelist)
 
       if (vom_npar > nparmax) then
-        write(0,*) "ERROR: Number of parameters in shufflevar larger as nparmax"
-        write(0,*) "HINT: change the parameter nparmax in the module definitions"
+        write(*,*) "ERROR: Number of parameters in shufflevar larger as nparmax"
+        write(*,*) "HINT: change the parameter nparmax in the module definitions"
         stop
       endif
 
@@ -382,7 +385,8 @@
 
       run_initialseed = 0
 
-        open(kfile_lastloop, FILE=sfile_lastloop, STATUS='old', IOSTAT=iostat)
+        open(kfile_lastloop, FILE=trim(adjustl(i_outputpath)) // &
+             trim(adjustl(sfile_lastloop)), STATUS='old', IOSTAT=iostat)
         if (iostat .eq. 0) then
 
 !         * read parameter values to continue from last run
@@ -404,10 +408,13 @@
 
 !         * open files for storing objective function and parameter values
 
-            open(kfile_sceout, FILE=sfile_sceout, STATUS='old', POSITION='append')
-            open(kfile_bestpars, FILE=sfile_bestpars, STATUS='old', POSITION='append')
+            open(kfile_sceout, FILE=trim(adjustl(i_outputpath)) // &
+             trim(adjustl(sfile_sceout)), STATUS='old', POSITION='append')
+            open(kfile_bestpars, FILE=trim(adjustl(i_outputpath)) // &
+             trim(adjustl(sfile_bestpars)), STATUS='old', POSITION='append')
           if (kfile_progress .ne. 6) then
-            open(kfile_progress, FILE=sfile_progress, STATUS='old', POSITION='append')
+            open(kfile_progress, FILE=trim(adjustl(i_outputpath)) // &
+             trim(adjustl(sfile_progress)), STATUS='old', POSITION='append')
           endif
           write(kfile_progress,*) " "
           write(msg,'("  NEW Run time:   ",A)') logdate
@@ -416,10 +423,13 @@
 
 !         * open empty files for storing objective function and parameter values
 
-            open(kfile_sceout, FILE=sfile_sceout, STATUS='replace')
-            open(kfile_bestpars, FILE=sfile_bestpars, STATUS='replace')
+            open(kfile_sceout, FILE=trim(adjustl(i_outputpath)) // &
+             trim(adjustl(sfile_sceout)), STATUS='replace')
+            open(kfile_bestpars, FILE=trim(adjustl(i_outputpath)) // &
+             trim(adjustl(sfile_bestpars)), STATUS='replace')
           if (kfile_progress .ne. 6) then
-            open(kfile_progress, FILE=sfile_progress, STATUS='replace')
+            open(kfile_progress, FILE=trim(adjustl(i_outputpath)) // &
+             trim(adjustl(sfile_progress)), STATUS='replace')
           endif
 
 !         * write output header
@@ -576,9 +586,9 @@
 
         nloop = -1                      ! FIRST LOOP IS LOOP ZERO
         call writeloop()
-        close(kfile_sceout)
-        close(kfile_bestpars)
-        if (kfile_progress .ne. 6) close(kfile_progress)
+        !close(kfile_sceout)
+        !close(kfile_bestpars)
+        !if (kfile_progress .ne. 6) close(kfile_progress)
 
       return
       end subroutine initialseed
@@ -807,9 +817,9 @@
 
 !       * WRITE shufflevar AND ofvec OF LAST LOOP TO FILE
         call writeloop()
-        close(kfile_sceout)
-        close(kfile_bestpars)
-        if (kfile_progress .ne. 6) close(kfile_progress)
+        !close(kfile_sceout)
+        !close(kfile_bestpars)
+        !if (kfile_progress .ne. 6) close(kfile_progress)
 
       return
       end subroutine run_cce
@@ -1103,7 +1113,8 @@
       INTEGER             :: ii
       REAL*8, ALLOCATABLE :: tmp_8(:)
 
-        open(kfile_lastloop, FILE=sfile_lastloop)
+        open(kfile_lastloop, FILE=trim(adjustl(i_outputpath)) // &
+             trim(adjustl(sfile_lastloop)))
           write(kfile_lastloop,'(i3)')  ncomp2
           write(kfile_lastloop,'(i4)')  nloop
           write(kfile_lastloop,'(i10)') nrun
@@ -1168,12 +1179,14 @@
       REAL         :: stat
       CHARACTER*80 :: sfile
 
-        open(kfile_lastbest, FILE=sfile_lastbest)
+        open(kfile_lastbest, FILE=trim(adjustl(i_outputpath)) // &
+             trim(adjustl(sfile_lastbest)))
           write(kfile_lastbest,outformat) var(:), obj
         close(kfile_lastbest)
 
         if (final == 1) then
-          open(kfile_beststat, FILE=sfile_beststat)
+          open(kfile_beststat, FILE=trim(adjustl(i_outputpath)) // &
+             trim(adjustl(sfile_beststat)))
             write(kfile_beststat,*) 1
           close(kfile_beststat)
         endif

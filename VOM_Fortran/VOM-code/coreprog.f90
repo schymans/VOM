@@ -47,62 +47,67 @@
 
       allocate(vom_invar(vom_npar))
 
-!     * read restart status
 
-        inquire(FILE=sfile_beststat, EXIST=exist)
-        if (exist) then
-          open(kfile_beststat, FILE=sfile_beststat, STATUS='old')
-            read(kfile_beststat,*) beststat
-          close(kfile_beststat)
-        endif
-      if (beststat == 1 .and. vom_command .ne. 3) then
-        vom_command = 2
+      !optimize with sce
+      if (vom_command .eq. 1 ) then
+
+         call transpmodel_init_once(vom_command)
+         call sce_main()
+
       endif
 
-      call transpmodel_init_once(vom_command)
+      !run normally
+      if (vom_command .eq. 2 ) then
 
-      if (vom_command .eq. 2 .or. vom_command .eq. 3) then
+         write(*,*) "Start single calculation with parameters..."
 
-!       * single model run with given (optimised) parameters
+         call transpmodel_init_once(vom_command)
 
-        if (vom_command .eq. 3) then
-          write(*,*) "Start calculation of ncp with parameters..."
-        else
-          write(*,*) "Calculation of results with optimised parameters..."
-        endif
-
-        if (vom_command .eq. 3) then
-          open(kfile_pars, FILE=sfile_pars, STATUS='old', IOSTAT=iostat)
-          if (iostat .ne. 0) then
-            write(0,*) "ERROR reading ", sfile_pars
-            stop
-          endif
-          read(kfile_pars,*) vom_invar(:)
-          close(kfile_pars)
-          vom_objfun = 0.d0
-        else
-!         * reads input parameters from previous optimisation
-
-            open(kfile_lastbest, FILE=sfile_lastbest,                     &
-     &                           STATUS='old', IOSTAT=iostat)
+         open(kfile_pars, FILE=trim(adjustl(i_inputpath)) // trim(adjustl(sfile_pars)),&
+              STATUS='old', IOSTAT=iostat)
               if (iostat .ne. 0) then
-                write(0,*) "ERROR opening ", sfile_lastbest
+                write(0,*) "ERROR opening ", trim(adjustl(i_inputpath)) // trim(adjustl(sfile_pars))
                 stop
               endif
-              rewind(kfile_lastbest)
-              read(kfile_lastbest,*) vom_invar(:), vom_objfun
-            close(kfile_lastbest)
+              rewind(kfile_pars)
+              read(kfile_pars,*) vom_invar(:)
+            close(kfile_pars)
 
-          write(*,*) "The best carbon profit was: ",vom_objfun
-        endif
 
         call transpmodel(vom_invar, SIZE(vom_invar), vom_objfun, vom_command)
 
-      else
+      endif
 
-        call sce_main()
+      !run normally, no output except for ncp
+      if (vom_command .eq. 3 ) then
+
+         write(*,*) "Start calculation of ncp with parameters..."
+
+        call transpmodel_init_once(vom_command)
+
+         open(kfile_pars, FILE=trim(adjustl(i_inputpath)) // &
+              trim(adjustl(sfile_pars)), STATUS='old', IOSTAT=iostat)
+              if (iostat .ne. 0) then
+                write(0,*) "ERROR opening ", sfile_pars
+                stop
+              endif
+              rewind(kfile_pars)
+              read(kfile_pars,*) vom_invar(:)
+            close(kfile_pars)
+
+        call transpmodel(vom_invar, SIZE(vom_invar), vom_objfun, vom_command)
+
+        write(*,*) "The best carbon profit was: ",vom_objfun
+      endif
+
+
+      if (vom_command .eq. 5 ) then
+              write(*,*) "Random sampling of parameters ... "
+         call random_samples()
 
       endif
+
+
 
       deallocate(vom_invar)
 
