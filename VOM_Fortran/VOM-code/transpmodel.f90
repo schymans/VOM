@@ -40,6 +40,7 @@
       REAL*8,  INTENT(inout) :: tp_netass
       INTEGER, INTENT(in)    :: option1
       REAL*8, DIMENSION(dim_invar), INTENT(in) :: invar
+      REAL*8, ALLOCATABLE, DIMENSION(:,:) :: output_mat
 
       tp_netass = 0.d0
 
@@ -117,8 +118,10 @@
       ruptkt_d(:) = ruptkt_d(:) + ruptkt_h(:)
       ruptkg_d(:) = ruptkg_d(:) + ruptkg_h(:)
 
-      if (optmode .eq. 0) then
+      !if (optmode .eq. 0) then
 
+       !formatted output for single model run
+       if (option1 .eq. 2) then
         call vom_add_daily()
         call vom_write_hourly()
 
@@ -128,17 +131,39 @@
         if (finish .eq. 1) return
 
       endif
+
+       !formatted output for multiple runs
+       if (option1 .eq. 5) then
+        call vom_add_daily()
+        !call vom_write_hourly() !replace with a new subroutine
+
+!       * check water balance
+
+        call vom_check_water()
+        if (finish .eq. 1) return
+
+      endif
+
+
+
         enddo
 
 !       * END OF DAY
 
-        call transpmodel_daily_step(tp_netass)
+
+           if(nday .eq. 1) then
+              !allocate matrix for 21 variables with lengt of timeseries
+              allocate( output_mat (21, c_testday ) )
+           end if
+
+           !last daily step
+           call transpmodel_daily_step(tp_netass, option1, output_mat)
 
       enddo
 
 !     * END OF DAILY LOOPS
 
-      call transpmodel_last_step(tp_netass)
+      call transpmodel_last_step(tp_netass, option1)
 
       return
       end subroutine transpmodel
@@ -148,14 +173,25 @@
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 !+++ Post-daily step
 
-      subroutine transpmodel_daily_step (tp_netass)
+      subroutine transpmodel_daily_step (tp_netass, option1, output_mat)
       use vom_vegwat_mod
       implicit none
 
       REAL*8,  INTENT(inout) :: tp_netass
+      INTEGER, INTENT(in)    :: option1
+      REAL*8, DIMENSION(21, c_maxday ), INTENT(inout) :: output_mat
 
-      if (optmode .eq. 0) then
+      !if (optmode .eq. 0) then
+       !formatted output for single model run
+       if (option1 .eq. 2) then
         call vom_write_dayyear()
+        call vom_add_yearly()
+      endif
+
+       !formatted output for multiple runs
+      !if (optmode .eq. 5) then
+      if (option1 .eq. 5) then
+        call vom_save_dayyear(output_mat) !replace with new routine
         call vom_add_yearly()
       endif
 
@@ -185,13 +221,14 @@
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 !+++ Post-yearly step
 
-      subroutine transpmodel_last_step (tp_netass)
+      subroutine transpmodel_last_step (tp_netass, option)
       use vom_vegwat_mod
       implicit none
 
       REAL*8, INTENT(in) :: tp_netass
+      integer, INTENT(in) :: option
 
-      if (optmode .eq. 0) then
+      if (option .eq. 2) then
         print *,'Cumulative error in water balance (initial Ws+Input-Output-final Ws, in m): ',error
         print *,'Number of times dtsu was limiting: ',dtsu_count
         print *,'Number of times dtmax was limiting: ',dtmax_count
@@ -213,8 +250,9 @@
         write(*,*) "Soil results are saved in delyudaily.txt, rsurfdaily.txt, ruptkhourly.txt, suvechourly.txt"
       endif
 
-      if (optmode .eq. 2) then
-        open(kfile_model_output, FILE=sfile_model_output, STATUS='replace')
+      if (option .eq. 3) then
+        open(kfile_model_output, FILE=trim(adjustl(i_outputpath))// &
+             trim(adjustl(sfile_model_output)), STATUS='replace')
         write(kfile_model_output,'(E13.6)') tp_netass
         close(kfile_model_output)
 
@@ -274,6 +312,8 @@
 
       if (vom_command .eq. 2) then
         optmode = 0
+      elseif (vom_command .eq. 5) then
+        optmode = 0
       elseif (vom_command .eq. 3) then
         optmode = 2
       else
@@ -332,6 +372,7 @@
      &                    i_rrootm, i_rsurfmin, i_rsurf_, i_rootrad,   &
      &                    i_prootmg, i_growthmax, i_firstyear,         &
      &                    i_lastyear, i_write_h,                       &
+     &                    i_inputpath, i_outputpath,                   &
      &                    o_lambdagf, o_wsgexp, o_lambdatf, o_wstexp,  &
      &                    o_pct, o_rtdepth, o_mdstore, o_rgdepth
 
@@ -339,7 +380,7 @@
      &                     i_thetar, i_thetas, i_nvg, i_avg, i_delz
 
 !     * Input of variable parameters from the parameter file
-
+write(*,*) i_inputpath
       open(kfile_namelist, FILE=sfile_namelist, STATUS='old',          &
      &                     FORM='formatted', IOSTAT=iostat)
       if (iostat .eq. 0) then
@@ -360,7 +401,8 @@
 
       s_maxlayer = 0
 
-      open(kfile_soilprofile, FILE=sfile_soilprofile,                  &
+      open(kfile_soilprofile, FILE=trim(adjustl(i_inputpath))// &
+           trim(adjustl(sfile_soilprofile)),                  &
      &                        STATUS='old', IOSTAT=iostat)
       if (iostat .eq. 0) then
         read(kfile_soilprofile,*) s_maxlayer
@@ -450,38 +492,46 @@
       use vom_vegwat_mod
       implicit none
 
-      open(kfile_resultshourly, FILE=sfile_resultshourly, STATUS='replace')
+
+      open(kfile_resultshourly, FILE=trim(adjustl(i_outputpath))//      &
+           trim(adjustl(sfile_resultshourly)), STATUS='replace')
       write(kfile_resultshourly,'(A6,A7,A7,A7,A7,22A15)') 'fyear',     &
      &  'fmonth', 'fday', 'nday', 'nhour', 'rain', 'tair', 'par', 'vd',&
      &  'esoil', 'pc', 'jmax25t', 'jmax25g', 'mqt', 'rl', 'lambdat',   &
      &  'lambdag', 'rr', 'asst', 'assg', 'etmt', 'etmg', 'su_1',       &
      &  'zw', 'ws', 'spgfcf', 'infx'
 
-      open(kfile_resultsdaily, FILE=sfile_resultsdaily, STATUS='replace')
+      open(kfile_resultsdaily, FILE=trim(adjustl(i_outputpath))// &
+           trim(adjustl(sfile_resultsdaily)), STATUS='replace')
       write(kfile_resultsdaily,'(A6,A7,A7,A7,A7,25A15)') 'fyear',      &
      &  'fmonth', 'fday', 'nday', 'nhour', 'rain', 'tairmax', 'tairmin', &
      &  'par', 'vd', 'esoil', 'jmax25t', 'jmax25g', 'pc', 'rl',        &
      &  'lambdat', 'lambdag', 'rrt', 'rrg', 'asst', 'assg', 'su_avg',  &
      &  'zw', 'ws', 'spgfcf', 'infx', 'etmt', 'etmg', 'su_1', 'topt'
 
-      open(kfile_resultsyearly, FILE=sfile_resultsyearly, STATUS='replace')
+      open(kfile_resultsyearly, FILE=trim(adjustl(i_outputpath))// &
+           trim(adjustl(sfile_resultsyearly)), STATUS='replace')
       write(kfile_resultsyearly,'(A6,18A16)') "nyear", "rain", "par",  &
      &  "srad", "vd", "esoil", "etmt", "etmg", "assg", "rlg", "rrg",   &
      &  "cpccg", "tcg", "etmt", "asst", "rlt", "rrt", "cpcct", "tct"
 
-        open(kfile_rsurfdaily, FILE=sfile_rsurfdaily, STATUS='replace')
+        open(kfile_rsurfdaily, FILE=trim(adjustl(i_outputpath))// &
+             trim(adjustl(sfile_rsurfdaily)), STATUS='replace')
         write(kfile_rsurfdaily,'(2A6,A4,A7,A)') 'fyear', 'fmonth',     &
      &    'fday', 'nday', 'rsurft_sublayer'
 
-        open(kfile_delzhourly, FILE=sfile_delzhourly, STATUS='replace')
+        open(kfile_delzhourly, FILE=trim(adjustl(i_outputpath))// &
+             trim(adjustl(sfile_delzhourly)), STATUS='replace')
         write(kfile_delzhourly,'(2A6,A4,A7,A5,A)') 'fyear', 'fmonth',  &
      &    'fday', 'nday', 'nhour', 'delz_sublayer'
 
-        open(kfile_ruptkthourly, FILE=sfile_ruptkthourly, STATUS='replace')
+        open(kfile_ruptkthourly, FILE=trim(adjustl(i_outputpath))// &
+             trim(adjustl(sfile_ruptkthourly)), STATUS='replace')
         write(kfile_ruptkthourly,'(2A6,A4,A7,A5,A)') 'fyear', 'fmonth',&
      &    'fday', 'nday', 'nhour', 'ruptkt_sublayer'
 
-        open(kfile_suhourly, FILE=sfile_suhourly, STATUS='replace')
+        open(kfile_suhourly, FILE=trim(adjustl(i_outputpath))// &
+             trim(adjustl(sfile_suhourly)), STATUS='replace')
         write(kfile_suhourly,'(2A6,A4,A7,A5,A)') 'fyear', 'fmonth',    &
      &    'fday', 'nday', 'nhour', 'su_sublayer'
 
@@ -503,7 +553,8 @@
 !       and soil properties in each soil layer, with the layer number in
 !       the first column.
 
-      open(kfile_soilprofile, FILE=sfile_soilprofile,                  &
+      open(kfile_soilprofile, FILE=trim(adjustl(i_inputpath))// &
+           trim(adjustl(sfile_soilprofile)),                  &
      &                        STATUS='old', IOSTAT=iostat)
       if (iostat .eq. 0) then
         do j = 1, s_maxlayer
@@ -541,14 +592,24 @@
       INTEGER :: ii, i, h, oldh, stat
       INTEGER :: dummyint1, dummyint2, dummyint3, dummyint4
       LOGICAL :: exist
+      LOGICAL :: exist_daily
       CHARACTER(len=99) :: str
 
-      inquire(FILE=sfile_hourlyweather, EXIST=exist)
+      inquire(FILE=trim(adjustl(i_inputpath))// &
+              trim(adjustl(sfile_hourlyweather)), EXIST=exist)
 
 !     * Creating hourly climate data from daily data
 
+      inquire(FILE=trim(adjustl(i_inputpath))// &
+              trim(adjustl(sfile_dailyweather)), EXIST=exist_daily)
+      if (.not. exist_daily) then
+       stop trim(adjustl(i_inputpath))//trim(adjustl(sfile_dailyweather))// " does not exist"
+      end if
+
+
       if (.not. exist) then
-        open(kfile_dailyweather, FILE=sfile_dailyweather,              &
+        open(kfile_dailyweather, FILE=trim(adjustl(i_inputpath))// &
+             trim(adjustl(sfile_dailyweather)),              &
      &                           STATUS='old', IOSTAT=stat)
         read(kfile_dailyweather,'(A)') str
         if (LEN(TRIM(str)) .ne. 88) then
@@ -572,7 +633,8 @@
 !     * Reading hourly climate data if available
 
       if (exist) then
-        open(kfile_hourlyweather, FILE=sfile_hourlyweather,            &
+        open(kfile_hourlyweather, FILE=trim(adjustl(i_inputpath))// &
+             trim(adjustl(sfile_hourlyweather)),            &
      &                            STATUS='old', IOSTAT=stat)
         read(kfile_hourlyweather,*)
         ii = 1
@@ -619,7 +681,8 @@
         in2 = c_maxday
 
       if (i_write_h == 1) then
-        open(kfile_hourlyweather, FILE=sfile_hourlyweather, STATUS='new')
+        open(kfile_hourlyweather, FILE=trim(adjustl(i_inputpath))// &
+             trim(adjustl(sfile_hourlyweather)), STATUS='new')
         write(kfile_hourlyweather,'(5a8,5a11)') 'hour', 'dayyear', 'fday', &
      &    'fmonth', 'fyear', 'tair_h', 'vd_h', 'par_h', 'rain_h', 'ca_h'
       endif
@@ -1451,6 +1514,7 @@
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+
       subroutine vom_write_dayyear ()
       use vom_vegwat_mod
       implicit none
@@ -1496,6 +1560,128 @@
 
       return
       end subroutine vom_write_dayyear
+
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!*----- saving fluxes to a single matrix -------------------------------
+
+     subroutine vom_save_dayyear (output)
+     !subroutine to create one single matrix with all daily output variables
+     !The saved matrix will be needed to write txt-files containing results from 
+     !all runs. 
+
+      use vom_vegwat_mod
+      implicit none
+
+      CHARACTER(60) :: dailyformat
+      CHARACTER(3)  :: str
+      REAL*8, dimension(:), allocatable        :: tmp
+      REAL*8, DIMENSION(21, c_maxday ), intent(inout)        :: output
+
+!     * internal write to convert from number to string
+      write(str,'(I3)') wlayer_
+!     * includes a column for each sublayer
+      dailyformat = '(I6,I6,I4,I7,'//str//'E14.6)'
+
+       !transpiration
+       output(1, nday) = etmt_d
+
+       !daily atmospheric vapour deficit
+       output(1, nday) = vd_d / 24.d0
+
+       !daily soil evaporation rate
+       output(2, nday) = esoil_d
+
+       ! Tree photosynthetic electron transport capacity at 25oC
+       output(3, nday) = jmax25t_d(2)
+
+       ! Grass photosynthetic electron transport capacity at 25oC
+       output(4, nday) = jmax25g_d(2)
+
+       ! Projected cover perennial vegetation plus actual cover seasonal vegetation 
+       output(5, nday) = o_pct + pcg_d(2)
+
+       ! Daily tree plus grass leaf respiration
+       output(6, nday) = rlt_d + rlg_d
+
+       ! Target dE/dA for calculating gstomt (tree)
+       output(7, nday) = lambdat_d
+
+       ! Target dE/dA for calculating gstomt (grass)
+       output(8, nday) = lambdag_d
+
+       ! Tree root respiration rate
+       output(9, nday) = rrt_d * 3600.d0 * 24.d0
+
+       ! Grass root respiration rate
+       output(10, nday) = rrg_d * 3600.d0 * 24.d0
+
+       ! Daily tree assimilation
+       output(11, nday) = asst_d(2)
+
+       ! Daily grass assimilation
+       output(12, nday) = assg_d(2,2)
+
+       ! Average soil moisture
+       output(13, nday) = SUM(su__(1:wlayer_)) / wlayer_
+
+       ! Elevation of water table
+       output(14, nday) = zw_
+
+       ! Total soil water storage
+       output(15, nday) = wsnew
+
+       ! Daily seepage face flow
+       output(16, nday) = spgfcf_d
+
+       ! Daily infiltration excess runoff
+       output(17, nday) = infx_d
+
+       ! Daily transpiration rate (tree)
+       output(18, nday) = etmt_d
+
+       ! Daily transpiration rate (grass)
+       output(19, nday) = etmg_d
+
+       ! Soil saturation degree in first layer
+       output(20, nday) = su__(1)
+
+       ! Optimal temperature in temperature response curve
+       output(21, nday) = topt_
+ 
+
+    !write to file
+    if(nday .eq. c_maxday) then
+
+
+
+       write(kfile_vd_d,*) output(1,:)
+       write(kfile_esoil,*) output(2,:)
+       write(kfile_jmax25t,*) output(3,:)
+       write(kfile_jmax25g,*) output(4,:)
+       write(kfile_vegcov,*) output(5,:)
+       write(kfile_resp,*) output(6,:)
+       write(kfile_lambdat,*) output(7,:)
+       write(kfile_lambdag,*) output(8,:)
+       write(kfile_rrt,*) output(9,:)
+       write(kfile_rrg,*) output(10,:)
+       write(kfile_asst,*) output(11,:)
+       write(kfile_assg,*) output(12,:)
+       write(kfile_su_av,*) output(13,:)
+       write(kfile_zw,*) output(14,:)
+       write(kfile_wsnew,*) output(15,:)
+       write(kfile_spgfcf,*) output(16,:)
+       write(kfile_infx,*) output(17,:)
+       write(kfile_etmt,*) output(18,:)
+       write(kfile_etmg,*) output(19,:)
+       write(kfile_su1,*) output(20,:)
+       write(kfile_topt,*) output(21,:)
+
+    end if 
+
+      return
+      end subroutine vom_save_dayyear
 
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

@@ -1,0 +1,15 @@
+language: C
+
+sudo: required
+
+before_install:
+ - sudo apt-get install gfortran
+
+install: true
+
+script:
+ - cd VOM_Fortran; make; make check
+
+
+
+
