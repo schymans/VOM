@@ -603,7 +603,8 @@
       inquire(FILE=trim(adjustl(i_inputpath))// &
               trim(adjustl(sfile_dailyweather)), EXIST=exist_daily)
       if (.not. exist_daily) then
-       !stop trim(adjustl(i_inputpath))//trim(adjustl(sfile_dailyweather))// " does not exist"
+       stop trim(adjustl(i_inputpath))// &
+              trim(adjustl(sfile_dailyweather))// " does not exist"
       end if
 
 
