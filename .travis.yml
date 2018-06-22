@@ -4,7 +4,7 @@ sudo: required
 
 before_install:
  - sudo apt-get install gfortran
- - pip install numpy pandas csv
+ - pip install numpy
 install: true
 
 script:
