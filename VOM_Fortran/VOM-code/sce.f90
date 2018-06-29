@@ -67,7 +67,7 @@
 
       if (run_initialseed == 1) then
         call initialseed
-        !return
+        return
       endif
 
 !
@@ -75,9 +75,6 @@
 ! BEGIN SCE LOOP
 
       do while (nrun .lt. 20000 .and. nloop .lt. 500)
-
-          write(*,*) "nrun:", nrun
-          write(*,*) "nloop:", nloop
 
           nloop = nloop + 1
 
@@ -127,7 +124,7 @@
             if (nsincebest .le. i_patience) then
               call writepars()
               call run_cce()
-              !return
+              return
             else
               write(kfile_progress,*) " "
               writeformat = '("No improvement in OF for",i5," loops")'
@@ -149,7 +146,7 @@
           call ck_success()
 
           if (success .eq. 1) then
-            close(kfile_sceout)
+            !close(kfile_sceout)
             close(kfile_bestpars)
             if (kfile_progress .ne. 6) close(kfile_progress)
             exit
@@ -173,7 +170,7 @@
           call sortcomp(shufflevar(:,:), tmp2(:), ofvec(:), SIZE(ofvec(:)))
           call writepars()              ! PROGRAM STOP
           call write_lastbest(shufflevar(:,1), vom_npar, bestobj, 1)
-            close(kfile_sceout)
+            !close(kfile_sceout)
             close(kfile_bestpars)
           if (kfile_progress .ne. 6) close(kfile_progress)
         endif
@@ -203,23 +200,27 @@
       if (vom_command .ne. 4) then
         CALL RANDOM_SEED()
       endif
+      call fdate(logdate)
+!only run the next part the first time for allocation
+if( .not. allocated(optid) ) then
+      call read_shufflevar()
 
-!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-! WRITE SCREEN HEADER
+
+   !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+   ! WRITE SCREEN HEADER
 
       write(*,*) 'SHUFFLED COMPLEX EVOLUTION OPTIMISER'
-      call fdate(logdate)
+
       write(*,*) " "
       write(msg,'("  Run time:   ",A)') logdate
       write(*,*) TRIM(msg)
 
-!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-! READ PARAMETER FILE shufflevar
+   !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+   ! READ PARAMETER FILE shufflevar
 
-      call read_shufflevar()
 
-!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-! CALCULATE NUMBER OF OPTIMISABLE PARAMETERS
+   !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+   ! CALCULATE NUMBER OF OPTIMISABLE PARAMETERS
 
       nopt = SUM(paropt(:))
       mopt = 2 * nopt + 1               ! SCE VARIABLE m
@@ -230,8 +231,10 @@
       qopt = nopt + 1                   ! CCE VARIABLE q
       ncomp2 = i_ncomp_
 
-!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-! ALLOCATE GLOBAL FIELDS
+   !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+   ! ALLOCATE GLOBAL FIELDS
+
+
 
       allocate(optid(nopt))
       allocate(shufflevar(vom_npar,sopt))
@@ -250,6 +253,8 @@
       allocate(posarray(2**nopt,nopt))
       allocate(initpop(nopt,5))
       allocate(sumvar(nopt))
+
+end if
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ! INITIALISE OUTPUT FORMAT STRING
@@ -315,8 +320,8 @@
       close(kfile_namelist)
 
       if (vom_npar > nparmax) then
-        write(*,*) "ERROR: Number of parameters in shufflevar larger as nparmax"
-        write(*,*) "HINT: change the parameter nparmax in the module definitions"
+        write(0,*) "ERROR: Number of parameters in shufflevar larger as nparmax"
+        write(0,*) "HINT: change the parameter nparmax in the module definitions"
         stop
       endif
 
@@ -343,22 +348,22 @@
       namelist /shuffle2par/ parname0, parval0, parmin0, parmax0, paropt0
 
 !     * LOAD INITIAL PARAMETER VALUES AND PARAMETER RANGES
-
-      open(kfile_namelist, FILE=sfile_namelist, STATUS='old',          &
+      if( .not. allocated(parname) ) then
+         open(kfile_namelist, FILE=sfile_namelist, STATUS='old',     &
      &                     FORM='formatted', IOSTAT=iostat)
-      if (iostat .eq. 0) then
-        read(kfile_namelist, shuffle2par)
-      endif
-      close(kfile_namelist)
+         if (iostat .eq. 0) then
+           read(kfile_namelist, shuffle2par)
+         endif
+         close(kfile_namelist)
 
 !     * allocate and set the parameter fields
 
-      allocate(parname(vom_npar))
-      allocate(parval(vom_npar))
-      allocate(parmin(vom_npar))
-      allocate(parmax(vom_npar))
-      allocate(paropt(vom_npar))
-
+         allocate(parname(vom_npar))
+         allocate(parval(vom_npar))
+         allocate(parmin(vom_npar))
+         allocate(parmax(vom_npar))
+         allocate(paropt(vom_npar))
+      end if
       parname(:) = parname0(1:vom_npar)
       parval(:)  = parval0(1:vom_npar)
       parmin(:)  = parmin0(1:vom_npar)
@@ -489,7 +494,7 @@
             bestincomp = bestobj
             call write_lastbest(shufflevar(:,1), vom_npar, bestobj, 0)
             write(msg,'("Systematic seed of",i4," parameters for ",i2," complexes. Initial OF= ",e13.6)') nopt, i_ncomp_, ofvec(1)
-            write(6,*) TRIM(msg)
+            write(*,*) TRIM(msg)
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ! GENERATE A SYSTEMATIC ARRAY OF INITIAL PARAMETER VALUES FOLLOWING
@@ -587,8 +592,8 @@
         nloop = -1                      ! FIRST LOOP IS LOOP ZERO
         call writeloop()
         !close(kfile_sceout)
-        !close(kfile_bestpars)
-        !if (kfile_progress .ne. 6) close(kfile_progress)
+        close(kfile_bestpars)
+        if (kfile_progress .ne. 6) close(kfile_progress)
 
       return
       end subroutine initialseed
@@ -612,7 +617,7 @@
           call sortcomp(shufflevar(:,:), tmp2(:), ofvec(:), SIZE(ofvec(:)))
           call writepars()
           write(kfile_progress,*) 'Optimisation completed successfully.'
-          close(kfile_sceout)
+          !close(kfile_sceout)
           close(kfile_bestpars)
           if (kfile_progress .ne. 6) close(kfile_progress)
         else
@@ -818,8 +823,8 @@
 !       * WRITE shufflevar AND ofvec OF LAST LOOP TO FILE
         call writeloop()
         !close(kfile_sceout)
-        !close(kfile_bestpars)
-        !if (kfile_progress .ne. 6) close(kfile_progress)
+        close(kfile_bestpars)
+        if (kfile_progress .ne. 6) close(kfile_progress)
 
       return
       end subroutine run_cce
