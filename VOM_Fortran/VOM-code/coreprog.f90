@@ -85,7 +85,8 @@
          do while (run_sce)
             write(*,*) "Start looping"
             call sce_main()
-            open(kfile_beststat, FILE=sfile_beststat, STATUS='old', IOSTAT=iostat)
+            open(kfile_beststat, FILE=trim(adjustl(i_outputpath)) // &
+             trim(adjustl(sfile_beststat)), STATUS='old', IOSTAT=iostat)
             if (iostat .eq. 0) then
                run_sce = .FALSE.
             end if
