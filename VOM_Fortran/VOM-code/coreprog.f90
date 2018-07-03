@@ -101,7 +101,7 @@
 
          call transpmodel_init_once(vom_command)
 
-         open(kfile_pars, FILE=trim(adjustl(i_outputpath)) // &
+         open(kfile_pars, FILE=trim(adjustl(i_inputpath)) // &
              trim(adjustl(sfile_pars)),&
               STATUS='old', IOSTAT=iostat)
               if (iostat .ne. 0) then
@@ -122,7 +122,7 @@
 
          write(*,*) "Start calculation of ncp with parameters..."
 
-         open(kfile_pars, FILE=trim(adjustl(i_outputpath)) // &
+         open(kfile_pars, FILE=trim(adjustl(i_inputpath)) // &
              trim(adjustl(sfile_pars)), STATUS='old', IOSTAT=iostat)
               if (iostat .ne. 0) then
                 write(0,*) "ERROR opening ", sfile_pars
