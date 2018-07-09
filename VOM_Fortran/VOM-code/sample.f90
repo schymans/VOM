@@ -89,7 +89,55 @@ use vom_vegwat_mod
       open(kfile_random_output, FILE=trim(adjustl(i_outputpath)) // trim(adjustl(sfile_random_output)))
       open(kfile_random_params, FILE=trim(adjustl(i_outputpath)) // trim(adjustl(sfile_random_params)))
 
-      if( vd_d_out .eqv. .TRUE.) then
+
+     call open_output_randomruns()
+
+
+      !loop for n random samples, needs parallelization
+      do i_loop=1, i_iter
+
+         write(*,*) "i_loop", i_loop
+
+         !generate random number between 0  and 1
+         call random_number(r)
+
+         !make a random parameterset
+         paramset=r*(parmax-parmin)+parmin
+
+         !run the model with the random set
+
+         call transpmodel(paramset, vom_npar, obj, vom_command)
+
+
+
+
+         write(kfile_random_output, *) obj
+         write(kfile_random_params, *) paramset
+
+      end do
+
+      close( kfile_random_output )
+      close( kfile_random_params )
+
+     call close_output_randomruns()
+
+
+end subroutine
+
+
+
+
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+subroutine open_output_randomruns ()
+   use vom_sce_mod
+   use vom_vegwat_mod
+
+      implicit none
+
+       if( vd_d_out .eqv. .TRUE.) then
          open(kfile_vd_d , FILE=trim(adjustl(i_outputpath)) // trim(adjustl(sfile_vd_d)))
       end if
 
@@ -155,31 +203,18 @@ use vom_vegwat_mod
          open(kfile_topt, FILE=trim(adjustl(i_outputpath)) // trim(adjustl(sfile_topt)))
       end if
 
-      !loop for n random samples, needs parallelization
-      do i_loop=1, i_iter
+      return
+      end subroutine open_output_randomruns
 
-         write(*,*) "i_loop", i_loop
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-         !generate random number between 0  and 1
-         call random_number(r)
+subroutine close_output_randomruns ()
+   use vom_sce_mod
+   use vom_vegwat_mod
 
-         !make a random parameterset
-         paramset=r*(parmax-parmin)+parmin
-
-         !run the model with the random set
-
-         call transpmodel(paramset, vom_npar, obj, vom_command)
-
-
-
-
-         write(kfile_random_output, *) obj
-         write(kfile_random_params, *) paramset
-
-      end do
-
-      close( kfile_random_output )
-      close( kfile_random_params )
+      implicit none
 
       if( vd_d_out .eqv. .TRUE.) then
          close(kfile_vd_d)
@@ -245,5 +280,6 @@ use vom_vegwat_mod
          close(kfile_topt)
       end if
 
-end subroutine
+      return
+end subroutine close_output_randomruns
 
