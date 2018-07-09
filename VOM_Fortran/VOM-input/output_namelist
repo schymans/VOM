@@ -1,0 +1,25 @@
+!output files for random runs
+!warning:selecting all leads to a large dataset
+&outputfiles
+vd_d_out = .FALSE.
+esoil_out = .TRUE.
+jmax25t_out = .FALSE.
+jmax25g_out = .FALSE.
+vegcov_out = .FALSE.
+resp_out = .FALSE.
+lambdat_out = .FALSE.
+lambdag_out = .FALSE.
+rrt_out = .FALSE.
+rrg_out = .FALSE.
+asst_out = .TRUE.
+assg_out = .TRUE.
+su_av_out = .FALSE.
+zw_out = .FALSE.
+wsnew_out = .FALSE.
+spgfcf_out = .FALSE.
+infx_out = .FALSE.
+etmt_out = .TRUE.
+etmg_out = .TRUE.
+su1_out = .FALSE.
+topt_out = .FALSE.
+&end
