@@ -1572,6 +1572,7 @@
      !all runs. 
 
       use vom_vegwat_mod
+      use vom_sce_mod
       implicit none
 
       CHARACTER(60) :: dailyformat
@@ -1655,28 +1656,69 @@
     if(nday .eq. c_maxday) then
 
 
-
+      if( vd_d_out .eqv. .TRUE.) then
        write(kfile_vd_d,*) output(1,:)
+      end if
+      if( esoil_out .eqv. .TRUE.) then
        write(kfile_esoil,*) output(2,:)
+      end if
+      if( jmax25t_out .eqv. .TRUE.) then
        write(kfile_jmax25t,*) output(3,:)
+      end if
+      if( jmax25g_out .eqv. .TRUE.) then
        write(kfile_jmax25g,*) output(4,:)
+      end if
+      if( vegcov_out .eqv. .TRUE.) then
        write(kfile_vegcov,*) output(5,:)
+      end if
+      if( resp_out .eqv. .TRUE.) then
        write(kfile_resp,*) output(6,:)
+      end if
+      if( lambdat_out .eqv. .TRUE.) then
        write(kfile_lambdat,*) output(7,:)
+      end if
+      if( lambdag_out .eqv. .TRUE.) then
        write(kfile_lambdag,*) output(8,:)
+      end if
+      if( rrt_out .eqv. .TRUE.) then
        write(kfile_rrt,*) output(9,:)
+      end if
+      if( rrg_out .eqv. .TRUE.) then
        write(kfile_rrg,*) output(10,:)
+      end if
+      if( asst_out .eqv. .TRUE.) then
        write(kfile_asst,*) output(11,:)
+      end if
+      if( assg_out .eqv. .TRUE.) then
        write(kfile_assg,*) output(12,:)
+      end if
+      if( su_av_out .eqv. .TRUE.) then
        write(kfile_su_av,*) output(13,:)
+      end if
+      if( zw_out .eqv. .TRUE.) then
        write(kfile_zw,*) output(14,:)
+      end if
+      if( wsnew_out .eqv. .TRUE.) then
        write(kfile_wsnew,*) output(15,:)
+      end if
+      if( spgfcf_out .eqv. .TRUE.) then
        write(kfile_spgfcf,*) output(16,:)
+      end if
+      if( infx_out .eqv. .TRUE.) then
        write(kfile_infx,*) output(17,:)
+      end if
+      if( etmt_out .eqv. .TRUE.) then
        write(kfile_etmt,*) output(18,:)
+      end if
+      if( etmg_out .eqv. .TRUE.) then
        write(kfile_etmg,*) output(19,:)
+      end if
+      if( su1_out .eqv. .TRUE.) then
        write(kfile_su1,*) output(20,:)
+      end if
+      if( topt_out .eqv. .TRUE.) then
        write(kfile_topt,*) output(21,:)
+      end if
 
     end if 
 

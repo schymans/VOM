@@ -9,7 +9,9 @@
       INTEGER :: kfile_dailyweather  = 101
       INTEGER :: kfile_hourlyweather = 102
 
-      INTEGER :: kfile_namelist      = 201
+      INTEGER :: kfile_namelist      = 401
+      INTEGER :: kfile_outputlist    = 402
+
       INTEGER :: kfile_resultshourly = 201
       INTEGER :: kfile_resultsdaily  = 202
       INTEGER :: kfile_resultsyearly = 203
@@ -62,6 +64,7 @@
       CHARACTER(len=*),parameter :: sfile_hourlyweather = 'hourlyweather.prn'
 
       CHARACTER(len=*),parameter :: sfile_namelist      = 'vom_namelist'
+      CHARACTER(len=*),parameter :: sfile_outputlist    = 'output_namelist'
       CHARACTER(len=*),parameter :: sfile_resultshourly = 'results_hourly.txt'
       CHARACTER(len=*),parameter :: sfile_resultsdaily  = 'results_daily.txt'
       CHARACTER(len=*),parameter :: sfile_resultsyearly = 'results_yearly.txt'
@@ -533,5 +536,29 @@
       REAL*8,       ALLOCATABLE :: parmin(:)  ! Minimum parameter values defining search domain
       REAL*8,       ALLOCATABLE :: parmax(:)  ! Maximum parameter values defining search domain
       INTEGER,      ALLOCATABLE :: paropt(:)
+
+
+      LOGICAL                   :: vd_d_out   !flag for ouput file vd_d
+      LOGICAL                   :: esoil_out  !flag for ouput file esoil
+      LOGICAL                   :: jmax25t_out!flag for ouput file jmax25t
+      LOGICAL                   :: jmax25g_out!flag for ouput file jmax25g
+      LOGICAL                   :: vegcov_out !flag for ouput file vegcov
+      LOGICAL                   :: resp_out   !flag for ouput file resp_out
+      LOGICAL                   :: lambdat_out!flag for ouput file lambdat
+      LOGICAL                   :: lambdag_out!flag for ouput file lambdag
+      LOGICAL                   :: rrt_out    !flag for ouput file rrt
+      LOGICAL                   :: rrg_out    !flag for ouput file rrg
+      LOGICAL                   :: asst_out   !flag for ouput file asst
+      LOGICAL                   :: assg_out   !flag for ouput file assg
+      LOGICAL                   :: su_av_out  !flag for ouput file su_av
+      LOGICAL                   :: zw_out     !flag for ouput file zw
+      LOGICAL                   :: wsnew_out  !flag for ouput file wsnew
+      LOGICAL                   :: spgfcf_out !flag for ouput file spgfcf
+      LOGICAL                   :: infx_out   !flag for ouput file infx
+      LOGICAL                   :: etmt_out   !flag for ouput file etmt
+      LOGICAL                   :: etmg_out   !flag for ouput file etmg
+      LOGICAL                   :: su1_out    !flag for ouput file su1
+      LOGICAL                   :: topt_out   !flag for ouput file topt
+
 
       end module vom_sce_mod
