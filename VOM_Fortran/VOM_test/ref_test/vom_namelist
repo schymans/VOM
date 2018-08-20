@@ -17,6 +17,7 @@ i_rsurf_=0.3d0,         ! initial root surface area per m^3
 i_rootrad=0.3d-3,       ! fine root radius in m
 i_prootmg=150.0d0,      ! constant root balance pressure of 1.5 MPa in grasses
 i_growthmax=0.1d0,      ! parameter determining maximum daily growth increment of root surface area
+i_incrcovg=0.02d0,      ! parameter determining maximum increment percentage of grass cover
 i_firstyear=2000,       ! firstyear for the generation of hourly output in computation mode
 i_lastyear=2000,        ! lastyear for the generation of hourly output in computation mode
 i_write_h=0,            ! flag to greate a file with hourly values from daily values
