@@ -256,17 +256,17 @@
       REAL*8  :: dtsu
       INTEGER :: jj
 
-!$    INTEGER :: ii
-!$    LOGICAL :: isnand, isinfd
-!$
-!$!*  for debugging in pgf90:
-!$    do ii = 1, wlayer_
-!$      if (isnand(dsu(ii))) then
-!$        print *, "Its a NaN"
-!$      elseif (isinfd(dsu(ii))) then
-!$        print *, "Its a Inf"
-!$      endif
-!$    enddo
+!!$    INTEGER :: ii
+!!$    LOGICAL :: isnand, isinfd
+!!$
+!!$!*  for debugging in pgf90:
+!!$    do ii = 1, wlayer_
+!!$      if (isnand(dsu(ii))) then
+!!$        print *, "Its a NaN"
+!!$      elseif (isinfd(dsu(ii))) then
+!!$        print *, "Its a Inf"
+!!$      endif
+!!$    enddo
 
       dtsu = 999999.d0
       do jj = 1, wlayer_
@@ -355,17 +355,17 @@
       character(len=135) :: msg
       REAL*8  :: wcnew
 
-!$    INTEGER :: ii
-!$    LOGICAL :: isnand, isinfd
-!$
-!$!*  For debugging in pgf90:
-!$    do ii = 1, nlayers
-!$      if (isnand(sunew(ii))) then
-!$        print *, "Its a NaN"
-!$      elseif (isinfd(sunew(ii))) then
-!$        print *, "Its a Inf"
-!$      endif
-!$    enddo
+!!$    INTEGER :: ii
+!!$    LOGICAL :: isnand, isinfd
+!!$
+!!$!*  For debugging in pgf90:
+!!$    do ii = 1, nlayers
+!!$      if (isnand(sunew(ii))) then
+!!$        print *, "Its a NaN"
+!!$      elseif (isinfd(sunew(ii))) then
+!!$        print *, "Its a Inf"
+!!$      endif
+!!$    enddo
 
 !     * CHECK WATER BALANCE
 
@@ -374,15 +374,18 @@
 
       wcnew = SUM(cH2Ol_s(:))
 
-!$    print*,"errorstep=",(wc+dt*io-wcnew)
+!!$    print*,"errorstep=",(wc+dt*io-wcnew)
 
       if (ABS(wc_ + dt_ * io__ - wcnew) .gt. 1.d-6) then
-        write(msg,*) "error=", (wc_ + dt_ * io__ - wcnew), " ys=", zwnew
-        write(*,*) TRIM(msg)
-        write(msg,*) "sum(iovec) = ", SUM(iovec(:)), "; io = ", io__
-        write(*,*) TRIM(msg)
-        write(msg,*) "day = ", nday, "; hour = ", nhour
-        write(*,*) TRIM(msg)
+       ! write(msg,*) "error=", (wc_ + dt_ * io__ - wcnew), " ys=", zwnew
+       ! write(*,*) TRIM(msg)
+       ! write(msg,*) "sum(iovec) = ", SUM(iovec(:)), "; io = ", io__
+       ! write(*,*) TRIM(msg)
+       ! write(msg,*) "day = ", nday, "; hour = ", nhour
+       ! write(*,*) TRIM(msg)
+
+
+
       endif
 
       return
