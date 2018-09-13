@@ -34,6 +34,7 @@
 
       subroutine transpmodel(invar, dim_invar, tp_netass, option1)
       use vom_vegwat_mod
+  !$ USE omp_lib
       implicit none
 
       INTEGER, INTENT(in)    :: dim_invar
@@ -304,11 +305,46 @@
 
       subroutine transpmodel_init (vom_invar, vom_npar, vom_command)
       use vom_vegwat_mod
+  !$ USE omp_lib
       implicit none
 
       INTEGER, INTENT(in)    :: vom_npar
       INTEGER, INTENT(in)    :: vom_command
       REAL*8, DIMENSION(vom_npar), INTENT(in) :: vom_invar
+
+      if( .not. allocated(pcap_) ) then
+
+          allocate(pcap_(s_maxlayer))
+          allocate(su__(s_maxlayer))
+          allocate(ruptkt__(s_maxlayer))
+          allocate(sunew(s_maxlayer))
+          allocate(kunsat_(s_maxlayer))
+
+          allocate(rsurft_(s_maxlayer))
+          allocate(rsurftnew(s_maxlayer))
+          allocate(qbl(s_maxlayer))
+          allocate(dsu(s_maxlayer))
+          allocate(prootm(s_maxlayer))
+
+          allocate(pcapnew(s_maxlayer))
+          allocate(ruptkt_d(s_maxlayer))
+          allocate(ruptkt_h(s_maxlayer))
+          allocate(ruptkg_h(s_maxlayer))
+          allocate(ruptkg_d(s_maxlayer))
+          allocate(refft(s_maxlayer))
+          allocate(reffg(s_maxlayer))
+          allocate(ruptkg__(s_maxlayer))
+          allocate(rsurfg_(s_maxlayer))
+          allocate(rsurfgnew(s_maxlayer))
+          allocate(rsoil(s_maxlayer))
+          allocate(kunsatnew(s_maxlayer))
+          allocate(sueq(s_maxlayer))
+          allocate(cH2Ol_s(s_maxlayer))
+          allocate(iovec(s_maxlayer))
+
+          allocate( output_mat (21, c_testday ) )
+
+      end if
 
       if (vom_command .eq. 2) then
         optmode = 0
@@ -446,45 +482,60 @@
 
       allocate(par_d(c_maxday))
 
-      allocate( output_mat (21, c_testday ) )
-
-      allocate(pcap_(s_maxlayer))
-      allocate(su__(s_maxlayer))
-      allocate(ruptkt__(s_maxlayer))
-      allocate(sunew(s_maxlayer))
-      allocate(kunsat_(s_maxlayer))
       allocate(s_delz(s_maxlayer))
-      allocate(rsurft_(s_maxlayer))
-      allocate(rsurftnew(s_maxlayer))
-      allocate(qbl(s_maxlayer))
-      allocate(dsu(s_maxlayer))
-      allocate(c_hhydrst(s_maxlayer))
-      allocate(prootm(s_maxlayer))
-      allocate(pcapnew(s_maxlayer))
-      allocate(ruptkt_d(s_maxlayer))
-      allocate(ruptkt_h(s_maxlayer))
-      allocate(ruptkg_h(s_maxlayer))
-      allocate(ruptkg_d(s_maxlayer))
-      allocate(refft(s_maxlayer))
-      allocate(reffg(s_maxlayer))
-      allocate(ruptkg__(s_maxlayer))
-      allocate(rsurfg_(s_maxlayer))
-      allocate(rsurfgnew(s_maxlayer))
-      allocate(rsoil(s_maxlayer))
-      allocate(kunsatnew(s_maxlayer))
-
       allocate(s_ksat(s_maxlayer))
-      allocate(s_thetas(s_maxlayer))
-      allocate(s_thetar(s_maxlayer))
-      allocate(sueq(s_maxlayer))
-      allocate(cH2Ol_s(s_maxlayer))
-      allocate(iovec(s_maxlayer))
       allocate(s_avg(s_maxlayer))
       allocate(s_nvg(s_maxlayer))
+      allocate(s_thetas(s_maxlayer))
+      allocate(s_thetar(s_maxlayer))
       allocate(c_mvg(s_maxlayer))
+      allocate(c_hhydrst(s_maxlayer))
 
       return
       end subroutine vom_alloc
+
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+      subroutine vom_dealloc ()
+      use vom_vegwat_mod
+      implicit none
+
+          deallocate(pcap_)
+          deallocate(su__)
+          deallocate(ruptkt__)
+          deallocate(sunew)
+          deallocate(kunsat_)
+
+          deallocate(rsurft_)
+          deallocate(rsurftnew)
+          deallocate(qbl)
+          deallocate(dsu)
+          deallocate(prootm)
+
+          deallocate(pcapnew)
+          deallocate(ruptkt_d)
+          deallocate(ruptkt_h)
+          deallocate(ruptkg_h)
+          deallocate(ruptkg_d)
+          deallocate(refft)
+          deallocate(reffg)
+          deallocate(ruptkg__)
+          deallocate(rsurfg_)
+          deallocate(rsurfgnew)
+          deallocate(rsoil)
+          deallocate(kunsatnew)
+          deallocate(sueq)
+          deallocate(cH2Ol_s)
+          deallocate(iovec)
+
+          deallocate(output_mat)
+
+      return
+      end subroutine vom_dealloc
+
+
 
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

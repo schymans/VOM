@@ -242,7 +242,7 @@ if( .not. allocated(optid) ) then
       allocate(wgt(mopt))
       allocate(cv_(nopt))
       allocate(ranarr(nopt))
-      allocate(ranarr_simplex(nopt))
+      !allocate(ranarr_simplex(nopt))
       allocate(dataarray(nopt*8+1,nopt+1))
       allocate(shufflevar2(vom_npar))
       !allocate(parentsid(qopt))
@@ -802,16 +802,17 @@ end if
 
       bestincomp = -9999.d0       ! SET LESS THAN bestobj
 
-
+      write(kfile_progress,*) "start parallel"
+      flush(kfile_progress)
       call OMP_SET_NUM_THREADS(n_thread)
+      call vom_dealloc()
       !loop over complexes
       !!$OMP shared( ofvec)
       !$OMP parallel default(shared) &
       !$OMP private( m_, first) &
       !$OMP COPYIN( time, error, finish, nyear, nday, nhour, th_, c_testday,   & 
-      !$OMP fyear, fmonth, fday, dayyear, tair_h, tairmin_d, tairmax_d, topt_, press_d, par_h, &
-      !$OMP par_d, par_y, srad_d, srad_y, ca_h, ca_d, vp_d, vd_h, vd_d, vd_y, &
-      !$OMP rain_h, rain_d, rain_y, c_hhydrst, gammastar, wsnew, wsold, o_pct, pcg_d, c_pcgmin, &
+      !$OMP topt_, par_y, srad_y,  vd_d, vd_y, &
+      !$OMP rain_y, gammastar, wsnew, wsold, o_pct, pcg_d, c_pcgmin, &
       !$OMP o_wstexp, o_wsgexp, o_lambdatf, o_lambdagf, lambdat_d, lambdag_d, gstomt, gstomg, &
       !$OMP rlt_h, rlt_d, rlt_y, rlg_h, rlg_d, rlg_y, transpt, transpg, q_tct_d, tct_y, tcg_d, &
       !$OMP tcg_y, jactt, jactg, jmaxt_h, jmaxg_h, jmax25t_d, jmax25g_d, &
@@ -819,15 +820,11 @@ end if
       !$OMP q_cpcct_d, cpcct_y, cpccg_d, cpccg_y, etmt__, etmt_h, etmt_d, etmt_y, etmg__, etmg_h, &
       !$OMP etmg_d, etmg_y, etm_y, mqt_, mqtnew, mqtold, dmqt, q_mqx, mqsst_, mqsstmin, q_md, &
       !$OMP o_mdstore, o_rtdepth, o_rgdepth, pos_slt, pos_slg, pos_ult, pos_ulg, changef, &
-      !$OMP rsurft_, rsurftnew, rsurfg_, rsurfgnew, rootlim, rsoil, refft, reffg, posmna, &
-      !$OMP rrt_d, rrt_y, rrg_d, rrg_y, prootm, sumruptkt_h, ruptkt__, ruptkt_h, ruptkt_d,  &
-      !$OMP ruptkg__, ruptkg_h, ruptkg_d, &
+      !$OMP rootlim, posmna, rrt_d, rrt_y, rrg_d, rrg_y, sumruptkt_h,  &
       !$OMP wlayer_, wlayernew, dt_, dtmax, dtsu_count, dtmax_count, esoil__, esoil_h, &
       !$OMP esoil_d, esoil_y, spgfcf__, spgfcf_h, spgfcf_d, inf__, infx__, infx_h, infx_d, &
-      !$OMP zw_, zwnew, wc_, cH2Ol_s, qbl, pcap_, pcapnew, iovec, io__, io_h, ioacum, &
-      !$OMP su__, sunew, sueq, dsu, kunsat_, kunsatnew, s_ksat, s_thetas, s_thetar, &
-      !$OMP s_nvg, s_avg, c_mvg, ranscal, bestobj, bestincomp, ranarr_simplex, evolution, &
-      !$OMP output_mat )
+      !$OMP zw_, zwnew, wc_,  io__, io_h, ioacum, &
+      !$OMP ranscal, bestobj, bestincomp, evolution)
       !$OMP do SCHEDULE(DYNAMIC)
       do m_ = 1, ncomp2
 
@@ -839,7 +836,7 @@ end if
           !if (m_ .eq. 1) then
           !  bestincomp = -9999.d0       ! SET LESS THAN bestobj
           !else
-!            bestincomp = ofvec(first)
+            bestincomp = ofvec(first)
          ! endif
 
 
@@ -958,6 +955,9 @@ end if
       REAL*8        :: minj, rangej
       REAL*8, DIMENSION(vom_npar) :: centroid  ! Centroid of parameter sets for simplex procedure
       REAL*8, DIMENSION(vom_npar) :: newpoint  ! New parameter set resulting from simplex procedure
+      REAL*8, ALLOCATABLE :: ranarr_simplex(:)  ! Array of random numbers
+
+      allocate(ranarr_simplex(nopt))
 
       do l_ = 1, i_nsimp
 
@@ -1060,6 +1060,8 @@ end if
           endif
 
       enddo
+
+      deallocate(ranarr_simplex)
 
       return
       end subroutine simplex

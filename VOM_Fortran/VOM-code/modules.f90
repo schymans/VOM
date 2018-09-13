@@ -351,9 +351,8 @@
       INTEGER :: c_maxday               ! Number of days to process
 
       !$OMP threadprivate( time, error, finish, nyear, nday, nhour, th_, c_testday,   & 
-      !$OMP fyear, fmonth, fday, dayyear, tair_h, tairmin_d, tairmax_d, topt_, press_d, par_h, &
-      !$OMP par_d, par_y, srad_d, srad_y, ca_h, ca_d, vp_d, vd_h, vd_d, vd_y, &
-      !$OMP rain_h, rain_d, rain_y, c_hhydrst, gammastar, wsnew, wsold, o_pct, pcg_d, c_pcgmin, &
+      !$OMP topt_, par_y, srad_y,   &
+      !$OMP vd_d, vd_y, rain_y, gammastar, wsnew, wsold, o_pct, pcg_d, c_pcgmin, &
       !$OMP o_wstexp, o_wsgexp, o_lambdatf, o_lambdagf, lambdat_d, lambdag_d, gstomt, gstomg, &
       !$OMP rlt_h, rlt_d, rlt_y, rlg_h, rlg_d, rlg_y, transpt, transpg, q_tct_d, tct_y, tcg_d, &
       !$OMP tcg_y, jactt, jactg, jmaxt_h, jmaxg_h, jmax25t_d, jmax25g_d, &
@@ -361,10 +360,10 @@
       !$OMP q_cpcct_d, cpcct_y, cpccg_d, cpccg_y, etmt__, etmt_h, etmt_d, etmt_y, etmg__, etmg_h, &
       !$OMP etmg_d, etmg_y, etm_y, mqt_, mqtnew, mqtold, dmqt, q_mqx, mqsst_, mqsstmin, q_md, &
       !$OMP o_mdstore, o_rtdepth, o_rgdepth, pos_slt, pos_slg, pos_ult, pos_ulg, changef, &
-      !$OMP rsurft_, rsurftnew, rsurfg_, rsurfgnew, rootlim, rsoil, refft, reffg, posmna, &
-      !$OMP rrt_d, rrt_y, rrg_d, rrg_y, prootm, sumruptkt_h, ruptkt__, ruptkt_h, ruptkt_d,  &
-      !$OMP ruptkg__, ruptkg_h, ruptkg_d, output_mat)
-
+      !$OMP rootlim, posmna, &
+      !$OMP ruptkt__, rsurft_, rsurftnew, prootm, ruptkt_d, ruptkt_h, ruptkg_h, ruptkg_d, &
+      !$OMP refft, reffg, ruptkg__, rsurfg_, rsurfgnew, rsoil,      &  
+      !$OMP rrt_d, rrt_y, rrg_d, rrg_y, sumruptkt_h, output_mat)
 
 
       end module vegmod
@@ -451,11 +450,8 @@
 
       !$OMP threadprivate(wlayer_, wlayernew, dt_, dtmax, dtsu_count, dtmax_count, esoil__, esoil_h, &
       !$OMP esoil_d, esoil_y, spgfcf__, spgfcf_h, spgfcf_d, inf__, infx__, infx_h, infx_d, &
-      !$OMP zw_, zwnew, wc_, cH2Ol_s, qbl, pcap_, pcapnew, iovec, io__, io_h, ioacum, &
-      !$OMP su__, sunew, sueq, dsu, kunsat_, kunsatnew, s_ksat, s_thetas, s_thetar, &
-      !$OMP s_nvg, s_avg, c_mvg)
-
-
+      !$OMP pcap_, su__, sunew, kunsat_, qbl, dsu, pcapnew, kunsatnew, sueq, cH2Ol_s, iovec,   &
+      !$OMP zw_, zwnew, wc_, io__, io_h, ioacum)
 
       end module watmod
 
@@ -476,6 +472,7 @@
 
       REAL*8  :: i_delz    = 0.5d0      ! Thickness of each soil layer (m)
       REAL*8, ALLOCATABLE :: s_delz(:)  ! Thickness of each soil layer
+
 
       end module vom_vegwat_mod
 
@@ -513,7 +510,7 @@
       REAL*8, ALLOCATABLE :: wgt(:)     ! Probability weights for each optimisable parameter
       REAL*8, ALLOCATABLE :: cv_(:)     ! Coefficient of variation for each optimisable parameter in last loop
       REAL*8, ALLOCATABLE :: ranarr(:)  ! Array of random numbers
-      REAL*8, ALLOCATABLE :: ranarr_simplex(:)  ! Array of random numbers
+      !REAL*8, ALLOCATABLE :: ranarr_simplex(:)  ! Array of random numbers
 
       REAL*8, ALLOCATABLE :: shufflevar(:,:)  ! Population of parameter sets
       REAL*8, ALLOCATABLE :: ofvec(:)   ! Population of objective function values related to shufflevar
@@ -592,7 +589,7 @@
       LOGICAL                   :: su1_out    !flag for ouput file su1
       LOGICAL                   :: topt_out   !flag for ouput file topt
         
-      !$OMP threadprivate(ranscal, bestobj, bestincomp, ranarr_simplex, evolution)
+      !$OMP threadprivate(ranscal, bestobj, bestincomp, evolution)
 
 
       end module vom_sce_mod
