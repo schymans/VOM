@@ -842,6 +842,8 @@ end if
 
         call cce(ofvec(first:m_*mopt), shufflevar(:,first:m_*mopt))
 
+
+        call vom_dealloc()
           !writeformat(3:7) = '  End'
           !write(msg,writeformat) nloop + 1, m_, ofvec(first)
           !write(kfile_progress,*) TRIM(msg)
