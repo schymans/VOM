@@ -502,35 +502,39 @@
       use vom_vegwat_mod
       implicit none
 
-          deallocate(pcap_)
-          deallocate(su__)
-          deallocate(ruptkt__)
-          deallocate(sunew)
-          deallocate(kunsat_)
+         if(allocated(pcap_)) then
 
-          deallocate(rsurft_)
-          deallocate(rsurftnew)
-          deallocate(qbl)
-          deallocate(dsu)
-          deallocate(prootm)
+              deallocate(pcap_)
+              deallocate(su__)
+              deallocate(ruptkt__)
+              deallocate(sunew)
+              deallocate(kunsat_)
 
-          deallocate(pcapnew)
-          deallocate(ruptkt_d)
-          deallocate(ruptkt_h)
-          deallocate(ruptkg_h)
-          deallocate(ruptkg_d)
-          deallocate(refft)
-          deallocate(reffg)
-          deallocate(ruptkg__)
-          deallocate(rsurfg_)
-          deallocate(rsurfgnew)
-          deallocate(rsoil)
-          deallocate(kunsatnew)
-          deallocate(sueq)
-          deallocate(cH2Ol_s)
-          deallocate(iovec)
+              deallocate(rsurft_)
+              deallocate(rsurftnew)
+              deallocate(qbl)
+              deallocate(dsu)
+              deallocate(prootm)
 
-          deallocate(output_mat)
+              deallocate(pcapnew)
+              deallocate(ruptkt_d)
+              deallocate(ruptkt_h)
+              deallocate(ruptkg_h)
+              deallocate(ruptkg_d)
+              deallocate(refft)
+              deallocate(reffg)
+              deallocate(ruptkg__)
+              deallocate(rsurfg_)
+              deallocate(rsurfgnew)
+              deallocate(rsoil)
+              deallocate(kunsatnew)
+              deallocate(sueq)
+              deallocate(cH2Ol_s)
+              deallocate(iovec)
+
+              deallocate(output_mat)
+
+         end if
 
       return
       end subroutine vom_dealloc
