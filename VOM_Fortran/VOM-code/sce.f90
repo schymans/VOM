@@ -802,14 +802,14 @@ end if
 
       bestincomp = -9999.d0       ! SET LESS THAN bestobj
 
-      write(kfile_progress,*) "start parallel"
+      write(kfile_progress,*) "Looping over complexes"
       flush(kfile_progress)
       call OMP_SET_NUM_THREADS(n_thread)
       call vom_dealloc()
       !loop over complexes
       !!$OMP shared( ofvec)
       !$OMP parallel default(shared) &
-      !$OMP private( m_, first) &
+      !$OMP private( m_, first, msg, writeformat) &
       !$OMP COPYIN( time, error, finish, nyear, nday, nhour, th_, c_testday,   & 
       !$OMP topt_, par_y, srad_y,  vd_d, vd_y, &
       !$OMP rain_y, gammastar, wsnew, wsold, o_pct, pcg_d, c_pcgmin, &
@@ -829,24 +829,28 @@ end if
       do m_ = 1, ncomp2
 
           first = 1 + (m_ - 1) * mopt
-          !writeformat = '("Start of loop",i4,", complex",i2,'
-          !writeformat(36:55) = '": best OF =",e12.6)'
-          !write(msg,writeformat) nloop + 1, m_, ofvec(first)
-          !write(kfile_progress,*) TRIM(msg)
-          !if (m_ .eq. 1) then
-          !  bestincomp = -9999.d0       ! SET LESS THAN bestobj
-          !else
+          writeformat = '("Start of loop",i4,", complex",i2,'
+          writeformat(36:55) = '": best OF =",e12.6)'
+          write(msg,writeformat) nloop + 1, m_, ofvec(first)
+          write(kfile_progress,*) TRIM(msg)
+          flush(kfile_progress)
+
+          if (m_ .eq. 1) then
+            bestincomp = -9999.d0       ! SET LESS THAN bestobj
+          else
             bestincomp = ofvec(first)
-         ! endif
+          endif
 
-
+        !start CCE  
         call cce(ofvec(first:m_*mopt), shufflevar(:,first:m_*mopt))
 
-
+        !Deallocate some variables to avoid problems in parallel
         call vom_dealloc()
-          !writeformat(3:7) = '  End'
-          !write(msg,writeformat) nloop + 1, m_, ofvec(first)
-          !write(kfile_progress,*) TRIM(msg)
+
+          writeformat(3:7) = '  End'
+          write(msg,writeformat) nloop + 1, m_, ofvec(first)
+          write(kfile_progress,*) TRIM(msg)
+          flush(kfile_progress)
 
       enddo
       !$OMP end do
