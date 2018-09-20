@@ -330,6 +330,8 @@
       REAL*8  :: i_rootrad = 0.3d-3     ! Average fine root radius
       REAL*8  :: i_prootmg = 150.0d0    ! Constant root balance pressure of 1.5 MPa in grasses
       REAL*8  :: i_growthmax = 0.1d0    ! Parameter determining maximum daily growth increment of root surface area
+      REAL*8  :: i_incrcovg = 0.02d0    ! parameter determining maximum increment percentage of grass cover
+      REAL*8  :: i_incrjmax = 0.01d0    ! parameter determining maximum increment percentage of jmax25
 
       INTEGER :: i_firstyear = 2000     ! First year for the generation of hourly output in computation mode
       INTEGER :: i_lastyear = 2000      ! Last year for the generation of hourly output in computation mode

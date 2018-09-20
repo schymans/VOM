@@ -370,8 +370,9 @@
      &                    i_testyear, i_ha, i_hd, i_toptf,             &
      &                    i_toptstart, i_rlratio, i_mdtf, i_mqxtf,     &
      &                    i_rrootm, i_rsurfmin, i_rsurf_, i_rootrad,   &
-     &                    i_prootmg, i_growthmax, i_firstyear,         &
-     &                    i_lastyear, i_write_h,                       &
+     &                    i_prootmg, i_growthmax, i_incrcovg,          &
+     &                    i_incrjmax,                                  &
+     &                    i_firstyear,i_lastyear, i_write_h,           &
      &                    i_inputpath, i_outputpath,                   &
      &                    o_lambdagf, o_wsgexp, o_lambdatf, o_wstexp,  &
      &                    o_pct, o_rtdepth, o_mdstore, o_rgdepth
@@ -830,7 +831,7 @@
       jmax25g_d(2) = 0.0003d0
       c_pcgmin     = 0.02d0             ! minimum grass pc; initial point for growth
       pcg_d(2)     = MIN(1.d0 - o_pct, c_pcgmin)
-      pcg_d(:)     = pcg_d(2) + (/-0.02d0,0.0d0,0.02d0/)  ! vector with values varying by 1%
+      pcg_d(:)     = pcg_d(2) + (/-i_incrcovg,0.0d0,i_incrcovg/)  ! vector with values varying by 1%
       pcg_d(3)     = MIN(MAX(c_pcgmin, pcg_d(3)), 1.d0 - o_pct)
       rootlim(:,:) = 0.d0
 
@@ -884,13 +885,13 @@
       lambdat_d    = o_lambdatf * (SUM(pcapnew(1:pos_slt)) / pos_slt) ** o_wstexp  ! (3.45)
       lambdag_d    = o_lambdagf * pcapnew(1) ** o_wsgexp  ! (3.44)
 !     * vector with values varying by 1%
-      jmax25t_d(:) = jmax25t_d(2) * (/0.99d0,1.0d0,1.01d0/)
+      jmax25t_d(:) = jmax25t_d(2) * (/1.0d0-i_incrjmax,1.0d0,1.0d0+i_incrjmax/)
 !     * making sure that the values don't become too low, otherwise
 !       they could never pick up again
       jmax25t_d(:) = MAX(jmax25t_d(:), 50.0d-6)
-      jmax25g_d(:) = jmax25g_d(2) * (/0.99d0,1.0d0,1.01d0/)
+      jmax25g_d(:) = jmax25g_d(2) * (/1.0d0-i_incrjmax,1.0d0,1.0d0+i_incrjmax/)
       jmax25g_d(:) = MAX(jmax25g_d(:), 50.0d-6)
-      pcg_d(:)     = pcg_d(2) + (/-0.02d0,0.0d0,0.02d0/)  ! vector with values varying by 1%
+      pcg_d(:)     = pcg_d(2) + (/-i_incrcovg,0.0d0,i_incrcovg/)  ! perc. change grass cover
       pcg_d(:)     = MAX(pcg_d(:), 0.d0)
       pcg_d(3)     = MIN(MAX(c_pcgmin, pcg_d(3)), 1.d0 - o_pct)
 !     * (3.38) foliage turnover costs, assuming LAI/pc of 2.5
