@@ -23,6 +23,7 @@ NFDIR := lib/
 SRC_PATH    := $(abspath $(SRC_PATH:~%=${HOME}%))
 OBJ_PATH   := $(abspath $(OBJ_PATH:~%=${HOME}%))
 
+export OMP_NUM_THREADS=2
 
 # compiler flags and options
 FCFLAGS = 
@@ -40,7 +41,7 @@ MSRC = *.mod
 all: $(PROGRAM) 
 		
 $(PROGRAM): $(SRC) 
-	$(FC) -o $@ $^ ; rm $(MSRC)    #;mv $(MSRC) $(OBJ_PATH)
+	$(FC) -fopenmp -o $@ $^ ; rm $(MSRC)    #;mv $(MSRC) $(OBJ_PATH)
 #	$(FC) -o $@ $^ -I${NFDIR}/include -L${NFDIR}/lib  -static ;mv $(MSRC) $(OBJ_PATH)
 %.o: %.f
 	$(FC) -o $@ $<

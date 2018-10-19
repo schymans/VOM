@@ -127,6 +127,8 @@
       REAL*8  :: error                  ! Cumulative error in water balance
       INTEGER :: finish                 ! flag to finish all loops
 
+      REAL*8, ALLOCATABLE :: output_mat(:,:)
+
       REAL*8, PARAMETER :: p_a     = 1.6d0        ! Ratio of diffusivities of water vapour to CO2 in air
       REAL*8, PARAMETER :: p_pi    = 3.14159d0    ! Pi-constant
       REAL*8, PARAMETER :: p_mpbar = 10.2d0       ! Conversion factor from MPa to bar
@@ -348,6 +350,22 @@
       INTEGER :: c_maxhour              ! Number of hours to process
       INTEGER :: c_maxday               ! Number of days to process
 
+      !$OMP threadprivate( time, error, finish, nyear, nday, nhour, th_, c_testday,   & 
+      !$OMP topt_, par_y, srad_y,   &
+      !$OMP vd_d, vd_y, rain_y, gammastar, wsnew, wsold, o_pct, pcg_d, c_pcgmin, &
+      !$OMP o_wstexp, o_wsgexp, o_lambdatf, o_lambdagf, lambdat_d, lambdag_d, gstomt, gstomg, &
+      !$OMP rlt_h, rlt_d, rlt_y, rlg_h, rlg_d, rlg_y, transpt, transpg, q_tct_d, tct_y, tcg_d, &
+      !$OMP tcg_y, jactt, jactg, jmaxt_h, jmaxg_h, jmax25t_d, jmax25g_d, &
+      !$OMP asst_h, asst_d, asst_y, assg_h, assg_d, assg_y, &
+      !$OMP q_cpcct_d, cpcct_y, cpccg_d, cpccg_y, etmt__, etmt_h, etmt_d, etmt_y, etmg__, etmg_h, &
+      !$OMP etmg_d, etmg_y, etm_y, mqt_, mqtnew, mqtold, dmqt, q_mqx, mqsst_, mqsstmin, q_md, &
+      !$OMP o_mdstore, o_rtdepth, o_rgdepth, pos_slt, pos_slg, pos_ult, pos_ulg, changef, &
+      !$OMP rootlim, posmna, &
+      !$OMP ruptkt__, rsurft_, rsurftnew, prootm, ruptkt_d, ruptkt_h, ruptkg_h, ruptkg_d, &
+      !$OMP refft, reffg, ruptkg__, rsurfg_, rsurfgnew, rsoil,      &  
+      !$OMP rrt_d, rrt_y, rrg_d, rrg_y, sumruptkt_h, output_mat)
+
+
       end module vegmod
 
 !     ******************************************************************
@@ -430,6 +448,11 @@
       REAL*8  :: i_avg     = 7.5d0      ! Van Genuchten soil parameter a
       REAL*8  :: i_mvg                  ! Van Genuchten soil parameter m
 
+      !$OMP threadprivate(wlayer_, wlayernew, dt_, dtmax, dtsu_count, dtmax_count, esoil__, esoil_h, &
+      !$OMP esoil_d, esoil_y, spgfcf__, spgfcf_h, spgfcf_d, inf__, infx__, infx_h, infx_d, &
+      !$OMP pcap_, su__, sunew, kunsat_, qbl, dsu, pcapnew, kunsatnew, sueq, cH2Ol_s, iovec,   &
+      !$OMP zw_, zwnew, wc_, io__, io_h, ioacum)
+
       end module watmod
 
 !     ******************************************************************
@@ -450,6 +473,7 @@
       REAL*8  :: i_delz    = 0.5d0      ! Thickness of each soil layer (m)
       REAL*8, ALLOCATABLE :: s_delz(:)  ! Thickness of each soil layer
 
+
       end module vom_vegwat_mod
 
 !     ******************************************************************
@@ -462,6 +486,8 @@
       module vom_sce_mod
       use vom_file_mod
       implicit none
+
+      INTEGER :: n_thread = 1           ! Number of threads to be used
 
       INTEGER :: success = 0            ! Indicator wheter optimisation ended successfully
 
@@ -484,6 +510,7 @@
       REAL*8, ALLOCATABLE :: wgt(:)     ! Probability weights for each optimisable parameter
       REAL*8, ALLOCATABLE :: cv_(:)     ! Coefficient of variation for each optimisable parameter in last loop
       REAL*8, ALLOCATABLE :: ranarr(:)  ! Array of random numbers
+      !REAL*8, ALLOCATABLE :: ranarr_simplex(:)  ! Array of random numbers
 
       REAL*8, ALLOCATABLE :: shufflevar(:,:)  ! Population of parameter sets
       REAL*8, ALLOCATABLE :: ofvec(:)   ! Population of objective function values related to shufflevar
@@ -503,14 +530,14 @@
       REAL*8, ALLOCATABLE :: shufflevar2(:)  ! Parameter sets used for sensitivity analysis
 
 !     * allocated variables for cce()
-      INTEGER, ALLOCATABLE :: parentsid(:)  ! Pointer to optimisable parameters
-      REAL*8,  ALLOCATABLE :: objfunsub(:)  ! Subset of objective function values for members of population
-      REAL*8,  ALLOCATABLE :: invarsub(:,:) ! Subset of parameter sets for members of population
-      LOGICAL, ALLOCATABLE :: selected(:)
+      !INTEGER, ALLOCATABLE :: parentsid(:)  ! Pointer to optimisable parameters
+      !REAL*8,  ALLOCATABLE :: objfunsub(:)  ! Subset of objective function values for members of population
+      !REAL*8,  ALLOCATABLE :: invarsub(:,:) ! Subset of parameter sets for members of population
+      !LOGICAL, ALLOCATABLE :: selected(:)
 
 !     * allocated variables for simplex()
-      REAL*8, ALLOCATABLE :: centroid(:)  ! Centroid of parameter sets for simplex procedure
-      REAL*8, ALLOCATABLE :: newpoint(:)  ! New parameter set resulting from simplex procedure
+!      REAL*8, ALLOCATABLE :: centroid(:)  ! Centroid of parameter sets for simplex procedure
+ !     REAL*8, ALLOCATABLE :: newpoint(:)  ! New parameter set resulting from simplex procedure
 
       INTEGER, parameter  :: nparmax = 9
 
@@ -561,6 +588,8 @@
       LOGICAL                   :: etmg_out   !flag for ouput file etmg
       LOGICAL                   :: su1_out    !flag for ouput file su1
       LOGICAL                   :: topt_out   !flag for ouput file topt
+        
+      !$OMP threadprivate(ranscal, bestobj, bestincomp, evolution)
 
 
       end module vom_sce_mod

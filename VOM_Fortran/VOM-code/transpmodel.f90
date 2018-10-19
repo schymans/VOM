@@ -34,13 +34,14 @@
 
       subroutine transpmodel(invar, dim_invar, tp_netass, option1)
       use vom_vegwat_mod
+  !$ USE omp_lib
       implicit none
 
       INTEGER, INTENT(in)    :: dim_invar
       REAL*8,  INTENT(inout) :: tp_netass
       INTEGER, INTENT(in)    :: option1
       REAL*8, DIMENSION(dim_invar), INTENT(in) :: invar
-      REAL*8, ALLOCATABLE, DIMENSION(:,:) :: output_mat
+      !REAL*8, ALLOCATABLE, DIMENSION(:,:) :: output_mat
 
       tp_netass = 0.d0
 
@@ -151,13 +152,13 @@
 !       * END OF DAY
 
 
-           if(nday .eq. 1) then
+           !if(nday .eq. 1) then
               !allocate matrix for 21 variables with lengt of timeseries
-              allocate( output_mat (21, c_testday ) )
-           end if
+           !   allocate( output_mat (21, c_testday ) )
+           !end if
 
            !last daily step
-           call transpmodel_daily_step(tp_netass, option1, output_mat)
+           call transpmodel_daily_step(tp_netass, option1)
 
       enddo
 
@@ -173,13 +174,13 @@
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 !+++ Post-daily step
 
-      subroutine transpmodel_daily_step (tp_netass, option1, output_mat)
+      subroutine transpmodel_daily_step (tp_netass, option1)
       use vom_vegwat_mod
       implicit none
 
       REAL*8,  INTENT(inout) :: tp_netass
       INTEGER, INTENT(in)    :: option1
-      REAL*8, DIMENSION(21, c_maxday ), INTENT(inout) :: output_mat
+      !REAL*8, DIMENSION(21, c_maxday ), INTENT(inout) :: output_mat
 
       !if (optmode .eq. 0) then
        !formatted output for single model run
@@ -191,7 +192,7 @@
        !formatted output for multiple runs
       !if (optmode .eq. 5) then
       if (option1 .eq. 5) then
-        call vom_save_dayyear(output_mat) !replace with new routine
+        call vom_save_dayyear() !replace with new routine
         call vom_add_yearly()
       endif
 
@@ -304,11 +305,46 @@
 
       subroutine transpmodel_init (vom_invar, vom_npar, vom_command)
       use vom_vegwat_mod
+  !$ USE omp_lib
       implicit none
 
       INTEGER, INTENT(in)    :: vom_npar
       INTEGER, INTENT(in)    :: vom_command
       REAL*8, DIMENSION(vom_npar), INTENT(in) :: vom_invar
+
+      if( .not. allocated(pcap_) ) then
+
+          allocate(pcap_(s_maxlayer))
+          allocate(su__(s_maxlayer))
+          allocate(ruptkt__(s_maxlayer))
+          allocate(sunew(s_maxlayer))
+          allocate(kunsat_(s_maxlayer))
+
+          allocate(rsurft_(s_maxlayer))
+          allocate(rsurftnew(s_maxlayer))
+          allocate(qbl(s_maxlayer))
+          allocate(dsu(s_maxlayer))
+          allocate(prootm(s_maxlayer))
+
+          allocate(pcapnew(s_maxlayer))
+          allocate(ruptkt_d(s_maxlayer))
+          allocate(ruptkt_h(s_maxlayer))
+          allocate(ruptkg_h(s_maxlayer))
+          allocate(ruptkg_d(s_maxlayer))
+          allocate(refft(s_maxlayer))
+          allocate(reffg(s_maxlayer))
+          allocate(ruptkg__(s_maxlayer))
+          allocate(rsurfg_(s_maxlayer))
+          allocate(rsurfgnew(s_maxlayer))
+          allocate(rsoil(s_maxlayer))
+          allocate(kunsatnew(s_maxlayer))
+          allocate(sueq(s_maxlayer))
+          allocate(cH2Ol_s(s_maxlayer))
+          allocate(iovec(s_maxlayer))
+
+          allocate( output_mat (21, c_testday ) )
+
+      end if
 
       if (vom_command .eq. 2) then
         optmode = 0
@@ -446,43 +482,64 @@
 
       allocate(par_d(c_maxday))
 
-      allocate(pcap_(s_maxlayer))
-      allocate(su__(s_maxlayer))
-      allocate(ruptkt__(s_maxlayer))
-      allocate(sunew(s_maxlayer))
-      allocate(kunsat_(s_maxlayer))
       allocate(s_delz(s_maxlayer))
-      allocate(rsurft_(s_maxlayer))
-      allocate(rsurftnew(s_maxlayer))
-      allocate(qbl(s_maxlayer))
-      allocate(dsu(s_maxlayer))
-      allocate(c_hhydrst(s_maxlayer))
-      allocate(prootm(s_maxlayer))
-      allocate(pcapnew(s_maxlayer))
-      allocate(ruptkt_d(s_maxlayer))
-      allocate(ruptkt_h(s_maxlayer))
-      allocate(ruptkg_h(s_maxlayer))
-      allocate(ruptkg_d(s_maxlayer))
-      allocate(refft(s_maxlayer))
-      allocate(reffg(s_maxlayer))
-      allocate(ruptkg__(s_maxlayer))
-      allocate(rsurfg_(s_maxlayer))
-      allocate(rsurfgnew(s_maxlayer))
-      allocate(rsoil(s_maxlayer))
-      allocate(kunsatnew(s_maxlayer))
-
       allocate(s_ksat(s_maxlayer))
-      allocate(s_thetas(s_maxlayer))
-      allocate(s_thetar(s_maxlayer))
-      allocate(sueq(s_maxlayer))
-      allocate(cH2Ol_s(s_maxlayer))
-      allocate(iovec(s_maxlayer))
       allocate(s_avg(s_maxlayer))
       allocate(s_nvg(s_maxlayer))
+      allocate(s_thetas(s_maxlayer))
+      allocate(s_thetar(s_maxlayer))
       allocate(c_mvg(s_maxlayer))
+      allocate(c_hhydrst(s_maxlayer))
 
       return
       end subroutine vom_alloc
+
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+      subroutine vom_dealloc ()
+      use vom_vegwat_mod
+      implicit none
+
+         if(allocated(pcap_)) then
+
+              deallocate(pcap_)
+              deallocate(su__)
+              deallocate(ruptkt__)
+              deallocate(sunew)
+              deallocate(kunsat_)
+
+              deallocate(rsurft_)
+              deallocate(rsurftnew)
+              deallocate(qbl)
+              deallocate(dsu)
+              deallocate(prootm)
+
+              deallocate(pcapnew)
+              deallocate(ruptkt_d)
+              deallocate(ruptkt_h)
+              deallocate(ruptkg_h)
+              deallocate(ruptkg_d)
+              deallocate(refft)
+              deallocate(reffg)
+              deallocate(ruptkg__)
+              deallocate(rsurfg_)
+              deallocate(rsurfgnew)
+              deallocate(rsoil)
+              deallocate(kunsatnew)
+              deallocate(sueq)
+              deallocate(cH2Ol_s)
+              deallocate(iovec)
+
+              deallocate(output_mat)
+
+         end if
+
+      return
+      end subroutine vom_dealloc
+
+
 
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -604,7 +661,7 @@
       inquire(FILE=trim(adjustl(i_inputpath))// &
               trim(adjustl(sfile_dailyweather)), EXIST=exist_daily)
       if (.not. exist_daily) then
-       stop trim(adjustl(sfile_dailyweather))// " does not exist"
+       stop "dailyweather.prn does not exist"
       end if
 
 
@@ -1567,7 +1624,7 @@
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 !*----- saving fluxes to a single matrix -------------------------------
 
-     subroutine vom_save_dayyear (output)
+     subroutine vom_save_dayyear ()
      !subroutine to create one single matrix with all daily output variables
      !The saved matrix will be needed to write txt-files containing results from 
      !all runs. 
@@ -1579,7 +1636,7 @@
       CHARACTER(60) :: dailyformat
       CHARACTER(3)  :: str
       REAL*8, dimension(:), allocatable        :: tmp
-      REAL*8, DIMENSION(21, c_maxday ), intent(inout)        :: output
+      !REAL*8, DIMENSION(21, c_maxday ), intent(inout)        :: output
 
 !     * internal write to convert from number to string
       write(str,'(I3)') wlayer_
@@ -1587,70 +1644,70 @@
       dailyformat = '(I6,I6,I4,I7,'//str//'E14.6)'
 
        !transpiration
-       output(1, nday) = etmt_d
+       output_mat(1, nday) = etmt_d
 
        !daily atmospheric vapour deficit
-       output(1, nday) = vd_d / 24.d0
+       output_mat(1, nday) = vd_d / 24.d0
 
        !daily soil evaporation rate
-       output(2, nday) = esoil_d
+       output_mat(2, nday) = esoil_d
 
        ! Tree photosynthetic electron transport capacity at 25oC
-       output(3, nday) = jmax25t_d(2)
+       output_mat(3, nday) = jmax25t_d(2)
 
        ! Grass photosynthetic electron transport capacity at 25oC
-       output(4, nday) = jmax25g_d(2)
+       output_mat(4, nday) = jmax25g_d(2)
 
        ! Projected cover perennial vegetation plus actual cover seasonal vegetation 
-       output(5, nday) = o_pct + pcg_d(2)
+       output_mat(5, nday) = o_pct + pcg_d(2)
 
        ! Daily tree plus grass leaf respiration
-       output(6, nday) = rlt_d + rlg_d
+       output_mat(6, nday) = rlt_d + rlg_d
 
        ! Target dE/dA for calculating gstomt (tree)
-       output(7, nday) = lambdat_d
+       output_mat(7, nday) = lambdat_d
 
        ! Target dE/dA for calculating gstomt (grass)
-       output(8, nday) = lambdag_d
+       output_mat(8, nday) = lambdag_d
 
        ! Tree root respiration rate
-       output(9, nday) = rrt_d * 3600.d0 * 24.d0
+       output_mat(9, nday) = rrt_d * 3600.d0 * 24.d0
 
        ! Grass root respiration rate
-       output(10, nday) = rrg_d * 3600.d0 * 24.d0
+       output_mat(10, nday) = rrg_d * 3600.d0 * 24.d0
 
        ! Daily tree assimilation
-       output(11, nday) = asst_d(2)
+       output_mat(11, nday) = asst_d(2)
 
        ! Daily grass assimilation
-       output(12, nday) = assg_d(2,2)
+       output_mat(12, nday) = assg_d(2,2)
 
        ! Average soil moisture
-       output(13, nday) = SUM(su__(1:wlayer_)) / wlayer_
+       output_mat(13, nday) = SUM(su__(1:wlayer_)) / wlayer_
 
        ! Elevation of water table
-       output(14, nday) = zw_
+       output_mat(14, nday) = zw_
 
        ! Total soil water storage
-       output(15, nday) = wsnew
+       output_mat(15, nday) = wsnew
 
        ! Daily seepage face flow
-       output(16, nday) = spgfcf_d
+       output_mat(16, nday) = spgfcf_d
 
        ! Daily infiltration excess runoff
-       output(17, nday) = infx_d
+       output_mat(17, nday) = infx_d
 
        ! Daily transpiration rate (tree)
-       output(18, nday) = etmt_d
+       output_mat(18, nday) = etmt_d
 
        ! Daily transpiration rate (grass)
-       output(19, nday) = etmg_d
+       output_mat(19, nday) = etmg_d
 
        ! Soil saturation degree in first layer
-       output(20, nday) = su__(1)
+       output_mat(20, nday) = su__(1)
 
        ! Optimal temperature in temperature response curve
-       output(21, nday) = topt_
+       output_mat(21, nday) = topt_
  
 
     !write to file
@@ -1658,67 +1715,67 @@
 
 
       if( vd_d_out .eqv. .TRUE.) then
-       write(kfile_vd_d,*) output(1,:)
+       write(kfile_vd_d,*) output_mat(1,:)
       end if
       if( esoil_out .eqv. .TRUE.) then
-       write(kfile_esoil,*) output(2,:)
+       write(kfile_esoil,*) output_mat(2,:)
       end if
       if( jmax25t_out .eqv. .TRUE.) then
-       write(kfile_jmax25t,*) output(3,:)
+       write(kfile_jmax25t,*) output_mat(3,:)
       end if
       if( jmax25g_out .eqv. .TRUE.) then
-       write(kfile_jmax25g,*) output(4,:)
+       write(kfile_jmax25g,*) output_mat(4,:)
       end if
       if( vegcov_out .eqv. .TRUE.) then
-       write(kfile_vegcov,*) output(5,:)
+       write(kfile_vegcov,*) output_mat(5,:)
       end if
       if( resp_out .eqv. .TRUE.) then
-       write(kfile_resp,*) output(6,:)
+       write(kfile_resp,*) output_mat(6,:)
       end if
       if( lambdat_out .eqv. .TRUE.) then
-       write(kfile_lambdat,*) output(7,:)
+       write(kfile_lambdat,*) output_mat(7,:)
       end if
       if( lambdag_out .eqv. .TRUE.) then
-       write(kfile_lambdag,*) output(8,:)
+       write(kfile_lambdag,*) output_mat(8,:)
       end if
       if( rrt_out .eqv. .TRUE.) then
-       write(kfile_rrt,*) output(9,:)
+       write(kfile_rrt,*) output_mat(9,:)
       end if
       if( rrg_out .eqv. .TRUE.) then
-       write(kfile_rrg,*) output(10,:)
+       write(kfile_rrg,*) output_mat(10,:)
       end if
       if( asst_out .eqv. .TRUE.) then
-       write(kfile_asst,*) output(11,:)
+       write(kfile_asst,*) output_mat(11,:)
       end if
       if( assg_out .eqv. .TRUE.) then
-       write(kfile_assg,*) output(12,:)
+       write(kfile_assg,*) output_mat(12,:)
       end if
       if( su_av_out .eqv. .TRUE.) then
-       write(kfile_su_av,*) output(13,:)
+       write(kfile_su_av,*) output_mat(13,:)
       end if
       if( zw_out .eqv. .TRUE.) then
-       write(kfile_zw,*) output(14,:)
+       write(kfile_zw,*) output_mat(14,:)
       end if
       if( wsnew_out .eqv. .TRUE.) then
-       write(kfile_wsnew,*) output(15,:)
+       write(kfile_wsnew,*) output_mat(15,:)
       end if
       if( spgfcf_out .eqv. .TRUE.) then
-       write(kfile_spgfcf,*) output(16,:)
+       write(kfile_spgfcf,*) output_mat(16,:)
       end if
       if( infx_out .eqv. .TRUE.) then
-       write(kfile_infx,*) output(17,:)
+       write(kfile_infx,*) output_mat(17,:)
       end if
       if( etmt_out .eqv. .TRUE.) then
-       write(kfile_etmt,*) output(18,:)
+       write(kfile_etmt,*) output_mat(18,:)
       end if
       if( etmg_out .eqv. .TRUE.) then
-       write(kfile_etmg,*) output(19,:)
+       write(kfile_etmg,*) output_mat(19,:)
       end if
       if( su1_out .eqv. .TRUE.) then
-       write(kfile_su1,*) output(20,:)
+       write(kfile_su1,*) output_mat(20,:)
       end if
       if( topt_out .eqv. .TRUE.) then
-       write(kfile_topt,*) output(21,:)
+       write(kfile_topt,*) output_mat(21,:)
       end if
 
     end if 

@@ -242,14 +242,15 @@ if( .not. allocated(optid) ) then
       allocate(wgt(mopt))
       allocate(cv_(nopt))
       allocate(ranarr(nopt))
+      !allocate(ranarr_simplex(nopt))
       allocate(dataarray(nopt*8+1,nopt+1))
       allocate(shufflevar2(vom_npar))
-      allocate(parentsid(qopt))
-      allocate(objfunsub(qopt))
-      allocate(invarsub(vom_npar,qopt))
-      allocate(selected(mopt))
-      allocate(centroid(vom_npar))
-      allocate(newpoint(vom_npar))
+      !allocate(parentsid(qopt))
+      !allocate(objfunsub(qopt))
+      !allocate(invarsub(vom_npar,qopt))
+     ! allocate(selected(mopt))
+     ! allocate(centroid(vom_npar))
+     ! allocate(newpoint(vom_npar))
       allocate(posarray(2**nopt,nopt))
       allocate(initpop(nopt,5))
       allocate(sumvar(nopt))
@@ -308,7 +309,7 @@ end if
 
       namelist /shufflepar/ vom_command, i_ncomp_, i_ncompmin,         &
      &                      i_resolution, i_patience, i_nsimp,         &
-     &                      i_focus, i_iter, vom_npar
+     &                      i_focus, i_iter, vom_npar, n_thread
 
 !     * Input of variable parameters from the parameter file
 
@@ -772,6 +773,8 @@ end if
 
       subroutine run_cce ()
       use vom_sce_mod
+      use vom_vegwat_mod
+  !$ USE omp_lib
       implicit none
 
       INTEGER              :: m_, first
@@ -797,6 +800,32 @@ end if
           endif
         endif
 
+      bestincomp = -9999.d0       ! SET LESS THAN bestobj
+
+      write(kfile_progress,*) "Looping over complexes"
+      flush(kfile_progress)
+      call OMP_SET_NUM_THREADS(n_thread)
+      call vom_dealloc()
+      !loop over complexes
+      !!$OMP shared( ofvec)
+      !$OMP parallel default(shared) &
+      !$OMP private( m_, first, msg, writeformat) &
+      !$OMP COPYIN( time, error, finish, nyear, nday, nhour, th_, c_testday,   & 
+      !$OMP topt_, par_y, srad_y,  vd_d, vd_y, &
+      !$OMP rain_y, gammastar, wsnew, wsold, o_pct, pcg_d, c_pcgmin, &
+      !$OMP o_wstexp, o_wsgexp, o_lambdatf, o_lambdagf, lambdat_d, lambdag_d, gstomt, gstomg, &
+      !$OMP rlt_h, rlt_d, rlt_y, rlg_h, rlg_d, rlg_y, transpt, transpg, q_tct_d, tct_y, tcg_d, &
+      !$OMP tcg_y, jactt, jactg, jmaxt_h, jmaxg_h, jmax25t_d, jmax25g_d, &
+      !$OMP asst_h, asst_d, asst_y, assg_h, assg_d, assg_y, &
+      !$OMP q_cpcct_d, cpcct_y, cpccg_d, cpccg_y, etmt__, etmt_h, etmt_d, etmt_y, etmg__, etmg_h, &
+      !$OMP etmg_d, etmg_y, etm_y, mqt_, mqtnew, mqtold, dmqt, q_mqx, mqsst_, mqsstmin, q_md, &
+      !$OMP o_mdstore, o_rtdepth, o_rgdepth, pos_slt, pos_slg, pos_ult, pos_ulg, changef, &
+      !$OMP rootlim, posmna, rrt_d, rrt_y, rrg_d, rrg_y, sumruptkt_h,  &
+      !$OMP wlayer_, wlayernew, dt_, dtmax, dtsu_count, dtmax_count, esoil__, esoil_h, &
+      !$OMP esoil_d, esoil_y, spgfcf__, spgfcf_h, spgfcf_d, inf__, infx__, infx_h, infx_d, &
+      !$OMP zw_, zwnew, wc_,  io__, io_h, ioacum, &
+      !$OMP ranscal, bestobj, bestincomp, evolution)
+      !$OMP do SCHEDULE(DYNAMIC)
       do m_ = 1, ncomp2
 
           first = 1 + (m_ - 1) * mopt
@@ -804,19 +833,28 @@ end if
           writeformat(36:55) = '": best OF =",e12.6)'
           write(msg,writeformat) nloop + 1, m_, ofvec(first)
           write(kfile_progress,*) TRIM(msg)
+          flush(kfile_progress)
+
           if (m_ .eq. 1) then
             bestincomp = -9999.d0       ! SET LESS THAN bestobj
           else
             bestincomp = ofvec(first)
           endif
 
+        !start CCE  
         call cce(ofvec(first:m_*mopt), shufflevar(:,first:m_*mopt))
+
+        !Deallocate some variables to avoid problems in parallel
+        call vom_dealloc()
 
           writeformat(3:7) = '  End'
           write(msg,writeformat) nloop + 1, m_, ofvec(first)
           write(kfile_progress,*) TRIM(msg)
+          flush(kfile_progress)
 
       enddo
+      !$OMP end do
+      !$OMP end parallel
 
         worstbest = ofvec(first)
 
@@ -835,6 +873,7 @@ end if
 
       subroutine cce (objfun, invar)
       use vom_sce_mod
+
       implicit none
 
 !     * Declarations
@@ -845,6 +884,11 @@ end if
       INTEGER       :: l_
       INTEGER       :: ii, nsel, rannum
       INTEGER       :: tmp2(2)
+      REAL*8  :: ranscal2                ! Scalar random number
+      LOGICAL, DIMENSION(mopt) :: selected
+      INTEGER, DIMENSION(qopt) :: parentsid  ! Pointer to optimisable parameters
+      REAL*8, DIMENSION(qopt) :: objfunsub  ! Pointer to optimisable parameters
+      REAL*8, DIMENSION(vom_npar,qopt) :: invarsub  ! Pointer to optimisable parameters
 
 !     * SELECT PARENTS
 
@@ -852,10 +896,11 @@ end if
 
           selected(:) = .false.
           nsel = 0
+
           do while (nsel .ne. qopt)
-            call random_number(ranscal)      ! SCALAR RANDOM NUMBER
+            call random_number(ranscal2)      ! SCALAR RANDOM NUMBER
             rannum = CEILING((2.d0 * mopt + 1.d0 - sqrt(4.d0 * mopt    &
-     &             * (mopt + 1.d0) * (1.d0 - ranscal) + 1.d0)) * 0.5d0)
+     &             * (mopt + 1.d0) * (1.d0 - ranscal2) + 1.d0)) * 0.5d0)
 
 !           * NOTE: A SIMPLER ALTERNATIVE TO THE ABOVE LINE IS (19.03.2004):
 
@@ -866,6 +911,7 @@ end if
               endif
             endif
           enddo
+
           nsel = 0
           ii = 0
           do while (nsel .ne. qopt)
@@ -900,6 +946,7 @@ end if
 
       subroutine simplex (invar, objfun)
       use vom_sce_mod
+
       implicit none
 
 !     * Declarations
@@ -912,6 +959,11 @@ end if
       INTEGER       :: max_j_
       REAL*8        :: newobjfun
       REAL*8        :: minj, rangej
+      REAL*8, DIMENSION(vom_npar) :: centroid  ! Centroid of parameter sets for simplex procedure
+      REAL*8, DIMENSION(vom_npar) :: newpoint  ! New parameter set resulting from simplex procedure
+      REAL*8, ALLOCATABLE :: ranarr_simplex(:)  ! Array of random numbers
+
+      allocate(ranarr_simplex(nopt))
 
       do l_ = 1, i_nsimp
 
@@ -963,11 +1015,11 @@ end if
               else
 !               * ANOTHER MUTATION STEP
                 do ii = 1, nopt
-                  call random_number(ranarr(:))  ! RANDOM ARRAY OF SIZE 1:nopt
+                  call random_number(ranarr_simplex(:))  ! RANDOM ARRAY OF SIZE 1:nopt
                   jj = optid(ii)
                   minj = MINVAL(invar(jj,:))
                   rangej = MAXVAL(invar(jj,:)) - minj
-                  newpoint(jj) = minj + rangej * ranarr(ii)  ! UNIFORMLY DISTRIBUTED SAMPLE
+                  newpoint(jj) = minj + rangej * ranarr_simplex(ii)  ! UNIFORMLY DISTRIBUTED SAMPLE
                 enddo
                 evolution = 'mutation'
               endif
@@ -1015,6 +1067,8 @@ end if
 
       enddo
 
+      deallocate(ranarr_simplex)
+
       return
       end subroutine simplex
 
@@ -1024,6 +1078,7 @@ end if
 
       subroutine runmodel (invar, objfun)
       use vom_sce_mod
+
       implicit none
 
 !     * Declarations
@@ -1227,9 +1282,9 @@ end if
       enddo
 
 ! For debugging:
-!$ do ii = 1, dim_objfun
-!$  print *, objfun(ii)
-!$ enddo
+!!$ do ii = 1, dim_objfun
+!!$  print *, objfun(ii)
+!!$ enddo
 
       return
       end subroutine qsort
@@ -1238,18 +1293,18 @@ end if
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-!$INTEGER function compar(b,c)
-!$
-!$  implicit none
-!$
-!$  REAL*8, INTENT(in) :: b,c
-!$
-!$  if(b.gt.c) then                     ! SORTS b,c IN DECREASING ORDER
-!$     compar = -1
-!$  elseif(b.lt.c) then
-!$     compar = 1
-!$  else
-!$     compar = 0
-!$  endif
-!$  return
-!$end function compar
+!!$INTEGER function compar(b,c)
+!!$
+!!$  implicit none
+!!$
+!!$  REAL*8, INTENT(in) :: b,c
+!!$
+!!$  if(b.gt.c) then                     ! SORTS b,c IN DECREASING ORDER
+!!$     compar = -1
+!!$  elseif(b.lt.c) then
+!!$     compar = 1
+!!$  else
+!!$     compar = 0
+!!$  endif
+!!$  return
+!!$end function compar
