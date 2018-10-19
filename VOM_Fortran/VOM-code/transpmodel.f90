@@ -185,7 +185,7 @@
       !if (optmode .eq. 0) then
        !formatted output for single model run
        if (option1 .eq. 2) then
-        call vom_write_dayyear()
+        call vom_write_dayyear( tp_netass )
         call vom_add_yearly()
       endif
 
@@ -561,11 +561,11 @@
 
       open(kfile_resultsdaily, FILE=trim(adjustl(i_outputpath))// &
            trim(adjustl(sfile_resultsdaily)), STATUS='replace')
-      write(kfile_resultsdaily,'(A6,A7,A7,A7,A7,25A15)') 'fyear',      &
+      write(kfile_resultsdaily,'(A6,A7,A7,A7,A7,26A15)') 'fyear',      &
      &  'fmonth', 'fday', 'nday', 'nhour', 'rain', 'tairmax', 'tairmin', &
      &  'par', 'vd', 'esoil', 'jmax25t', 'jmax25g', 'pc', 'rl',        &
      &  'lambdat', 'lambdag', 'rrt', 'rrg', 'asst', 'assg', 'su_avg',  &
-     &  'zw', 'ws', 'spgfcf', 'infx', 'etmt', 'etmg', 'su_1', 'topt'
+     &  'zw', 'ws', 'spgfcf', 'infx', 'etmt', 'etmg', 'su_1', 'topt', 'ncp'
 
       open(kfile_resultsyearly, FILE=trim(adjustl(i_outputpath))// &
            trim(adjustl(sfile_resultsyearly)), STATUS='replace')
@@ -1573,10 +1573,11 @@
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
-      subroutine vom_write_dayyear ()
+      subroutine vom_write_dayyear ( tp_netass )
       use vom_vegwat_mod
       implicit none
 
+      REAL*8,  INTENT(in) :: tp_netass
       CHARACTER(60) :: dailyformat
       CHARACTER(3)  :: str
 
@@ -1585,14 +1586,14 @@
 !     * includes a column for each sublayer
       dailyformat = '(I6,I6,I4,I7,'//str//'E14.6)'
 
-      write(kfile_resultsdaily,'(I6,I7,I7,I7,I7,25E15.5)')             &
+      write(kfile_resultsdaily,'(I6,I7,I7,I7,I7,26E15.5)')             &
      &  fyear(nday), fmonth(nday), fday(nday), nday, nhour-1,          &
      &  rain_d(nday), tairmax_d(nday), tairmin_d(nday), par_d(nday),   &
      &  vd_d / 24.d0, esoil_d, jmax25t_d(2), jmax25g_d(2),             &
      &  o_pct + pcg_d(2), rlt_d + rlg_d, lambdat_d, lambdag_d,         &
      &  rrt_d * 3600.d0 * 24.d0, rrg_d * 3600.d0 * 24.d0, asst_d(2),   &
      &  assg_d(2,2), SUM(su__(1:wlayer_)) / wlayer_, zw_, wsnew,       &
-     &  spgfcf_d, infx_d, etmt_d, etmg_d, su__(1), topt_
+     &  spgfcf_d, infx_d, etmt_d, etmg_d, su__(1), topt_, tp_netass
 
         write(kfile_rsurfdaily,dailyformat) fyear(nday), fmonth(nday), &
      &    fday(nday), nday, rsurft_(1:wlayer_)
