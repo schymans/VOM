@@ -683,13 +683,10 @@
      if( (fyear_pc(1) .ne. fyear(1)) .or. &
          (fday_pc(1) .ne. fday(1)) .or. &
          (fmonth_pc(1) .ne. fmonth(1)) ) then
-     write(*,*) fyear_pc(1), fyear(1)
-     write(*,*) fmonth_pc(1), fmonth(1)
-     write(*,*) perc_cov_veg(1), iostat
      stop 'startdate of perc_cov doesnot match with dailyweather'
      end if
 
-     if( (dayyear_pc(c_maxday) .ne. dayyear(c_maxday)) .or. &
+     if( (fyear_pc(c_maxday) .ne. fyear(c_maxday)) .or. &
          (fday_pc(c_maxday) .ne. fday(c_maxday)) .or. &
          (fmonth_pc(c_maxday) .ne. fmonth(c_maxday)) ) then
      stop 'enddate of perc_cov doesnot match with dailyweather'
@@ -950,7 +947,6 @@
       c_pcgmin     = 0.02d0             ! minimum grass pc; initial point for growth
       if(i_read_pc == 1) then
          pcg_d(:) = perc_cov_veg( 1 )
- 
          !adjust value if perennial + seasonal > 1
          if( (pcg_d(1) + o_pct) .gt. 1.0) then
             pcg_d(:) = 1.d0 - o_pct
