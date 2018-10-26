@@ -373,6 +373,15 @@
       if (vom_npar .ge. 6) o_rtdepth  = vom_invar(6)
       if (vom_npar .ge. 7) o_mdstore  = vom_invar(7)
       if (vom_npar .ge. 8) o_rgdepth  = vom_invar(8)
+      if (vom_npar .ge. 9)  i_cgs     = vom_invar(9)
+      if (vom_npar .ge. 10) i_zr      = vom_invar(10)
+      if (vom_npar .ge. 11) i_go      = vom_invar(11)
+      if (vom_npar .ge. 12) i_ksat    = vom_invar(12)
+      if (vom_npar .ge. 13) i_thetar  = vom_invar(13)
+      if (vom_npar .ge. 14) i_thetas  = vom_invar(14)
+      if (vom_npar .ge. 15) i_nvg     = vom_invar(15)
+      if (vom_npar .ge. 16) i_avg     = vom_invar(16)
+
 
 !***********************************************************************
 !*  Calculation of vegetation parameters
