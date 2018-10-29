@@ -298,7 +298,9 @@
 
 !     * get timeseries of vegetation cover
 
-      call vom_get_perc_cov()
+      if( i_read_pc == 1) then
+         call vom_get_perc_cov()
+      end if
 
 
       return
