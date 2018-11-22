@@ -638,6 +638,7 @@
         c_mvg(:) = 1.d0 - (1.d0 / s_nvg(:))  ! van Genuchten soil parameter m
       else
         s_delz(:)   = i_delz
+        s_delz(s_maxlayer) = i_cz - (s_maxlayer - 1) * i_delz
         s_ksat(:)   = i_ksat
         s_nvg(:)    = i_nvg
         s_avg(:)    = i_avg
