@@ -296,9 +296,6 @@
 
       call vom_get_hourly_clim()
 
-!     * get timeseries of vegetation cover
-
-
       return
       end subroutine transpmodel_init_once
 
@@ -420,7 +417,7 @@
      &                    i_rrootm, i_rsurfmin, i_rsurf_, i_rootrad,   &
      &                    i_prootmg, i_growthmax, i_incrcovg,          &
      &                    i_incrjmax,                                  &
-     &                    i_firstyear,i_lastyear, i_write_h,&
+     &                    i_firstyear,i_lastyear, i_write_h,           &
      &                    i_inputpath, i_outputpath,                   &
      &                    o_lambdagf, o_wsgexp, o_lambdatf, o_wstexp,  &
      &                    o_pct, o_rtdepth, o_mdstore, o_rgdepth
