@@ -342,8 +342,7 @@
 
       INTEGER :: i_write_h = 0          ! Flag to write out hourly input values after conversation from daily values
       INTEGER :: i_read_pc = 0          ! Flag to write out hourly input values after conversation from daily values
-
-
+      INTEGER :: i_no_veg = 0           ! Flag to switch vegetation off (1=no vegetation)
 
 !     * Derived parameters
 
