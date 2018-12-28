@@ -394,6 +394,21 @@
       if (vom_npar .ge. 15) i_nvg     = vom_invar(15)
       if (vom_npar .ge. 16) i_avg     = vom_invar(16)
 
+      !set vegetation parameters to 0 if no vegetation
+      if (i_no_veg .eq. 1) then
+         o_lambdagf = 0.0
+         o_wsgexp   = 0.0
+         o_lambdatf = 0.0 
+         o_wstexp   = 0.0
+         o_pct      = 0.0
+         o_rtdepth  = 0.0
+         o_mdstore  = 0.0
+         o_rgdepth  = 0.0
+         i_rsurfmin = 0.0
+         i_rsurf_   = 0.0
+         i_rootrad  = 0.0
+         i_incrcovg = 0.0
+       end if
 
 !***********************************************************************
 !*  Calculation of vegetation parameters
@@ -440,7 +455,7 @@
      &                    i_incrjmax, i_incrlait, i_incrlaig,          &
      &                    i_extcoeffg, i_extcoefft,                    &
      &                    i_firstyear,i_lastyear, i_write_h, i_read_pc,&
-     &                    i_lai_function,                              &
+     &                    i_lai_function,  i_no_veg,                   &
      &                    i_inputpath, i_outputpath,                   &
      &                    o_lambdagf, o_wsgexp, o_lambdatf, o_wstexp,  &
      &                    o_cai, o_rtdepth, o_mdstore, o_rgdepth
@@ -1008,7 +1023,7 @@
       lai_lt(:) = 2.5d0 * (/1.0d0-i_incrlait,1.0d0,1.0d0+i_incrlait/)
       lai_lg(:) = 2.5d0 * (/1.0d0-i_incrlaig,1.0d0,1.0d0+i_incrlaig/)
 
-
+ 
 !     * Determining the position of the bottom of the tree root zone
 
       pos_slt = 0
@@ -1041,8 +1056,15 @@
       endif
       jmax25t_d(2) = 0.0003d0
       jmax25g_d(2) = 0.0003d0
-      c_pcgmin     = 0.02d0             ! minimum grass pc; initial point for growth
 
+      !set minimum grass coverage, 0 if no vegetation
+      if(i_no_veg .eq. 0) then
+         c_pcgmin     = 0.02d0 ! minimum grass pc; initial point for growth
+      else
+         c_pcgmin     = 0.00d0 !no grasses
+      end if
+
+      !check if seasonal coverage is read
       if(i_read_pc == 1) then
          pcg_d(:) = perc_cov_veg( 1 )
          !adjust value if perennial + seasonal > 1
@@ -1383,6 +1405,7 @@
 
           gstomt = 0.25d0 * part9 / part1**2.d0
           gstomt = MAX(0.d0, gstomt)    ! (Out[314])
+          !check if gstomt remains 0
 
         else
           gstomt = 0.d0
@@ -1422,6 +1445,8 @@
         gstomg(:,:,:) = 0.d0
         etmg__(:,:,:) = 0.d0
       endif
+
+
 
       return
       end subroutine vom_gstom

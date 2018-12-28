@@ -350,6 +350,8 @@
       INTEGER :: i_write_h              ! Flag to write out hourly input values after conversation from daily values
       INTEGER :: i_read_pc              ! Flag to write out hourly input values after conversation from daily values
       INTEGER :: i_lai_function         ! Switch to use 1) linear or 2) exponential LAI estimate, as function of cover
+      INTEGER :: i_no_veg               ! Flag to switch vegetation off (1=no vegetation)
+
 
 !     * Derived parameters
 
