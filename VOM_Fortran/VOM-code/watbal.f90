@@ -58,7 +58,12 @@
 
 !     * changes in water storage (waterbalance)
 
-      io__     = inf__ - esoil__ - spgfcf__ - SUM(ruptkt__(:)) - SUM(ruptkg__(:))  ! (3.19)
+      if( i_no_veg .eq. 0) then
+         io__     = inf__ - esoil__ - spgfcf__ - SUM(ruptkt__(:)) - SUM(ruptkg__(:))  ! (3.19)
+      else
+         io__     = inf__ - esoil__ - spgfcf__  ! (no vegetation, WB still needs to close)
+      end if
+
       iovec(:) = 0.d0
       iovec(1) = qbl(1) + inf__ - esoil__ - ruptkt__(1) - ruptkg__(1)
       if (wlayer_ .eq. 1) then
