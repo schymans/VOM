@@ -496,7 +496,7 @@ end if
             bestobj = ofvec(1)
             bestincomp = bestobj
             call write_lastbest(shufflevar(:,1), vom_npar, bestobj, 0)
-            write(msg,'("Systematic seed of",i4," parameters for ",i4," complexes. Initial OF= ",e13.6)') nopt, i_ncomp_, ofvec(1)
+            write(msg,'("Systematic seed of",i4," parameters for ",i2," complexes. Initial OF= ",e13.6)') nopt, i_ncomp_, ofvec(1)
             write(*,*) TRIM(msg)
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -816,9 +816,7 @@ end if
       !$OMP COPYIN( time, error, finish, nyear, nday, nhour, th_, c_testday,   & 
       !$OMP topt_, par_y, srad_y,  vd_d, vd_y, &
       !$OMP rain_y, gammastar, wsnew, wsold, o_pct, pcg_d, c_pcgmin, &
-      !$OMP o_wstexp, o_wsgexp, o_lambdatf, o_lambdagf, &
-      !$OMP i_cz, i_cgs, i_zr, i_go, i_ksat, i_thetar, i_thetas, i_nvg, i_avg, &
-      !$OMP lambdat_d, lambdag_d, gstomt, gstomg, &
+      !$OMP o_wstexp, o_wsgexp, o_lambdatf, o_lambdagf, lambdat_d, lambdag_d, gstomt, gstomg, &
       !$OMP rlt_h, rlt_d, rlt_y, rlg_h, rlg_d, rlg_y, transpt, transpg, q_tct_d, tct_y, tcg_d, &
       !$OMP tcg_y, jactt, jactg, jmaxt_h, jmaxg_h, jmax25t_d, jmax25g_d, &
       !$OMP asst_h, asst_d, asst_y, assg_h, assg_d, assg_y, &
