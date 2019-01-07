@@ -123,7 +123,9 @@
           if (maxcv .ge. i_resolution) then
             if (nsincebest .le. i_patience) then
               call writepars()
+
               call run_cce()
+
               return
             else
               write(kfile_progress,*) " "
@@ -801,11 +803,12 @@ end if
         endif
 
       bestincomp = -9999.d0       ! SET LESS THAN bestobj
-
       write(kfile_progress,*) "Looping over complexes"
+
       flush(kfile_progress)
       call OMP_SET_NUM_THREADS(n_thread)
       call vom_dealloc()
+
       !loop over complexes
       !!$OMP shared( ofvec)
       !$OMP parallel default(shared) &
