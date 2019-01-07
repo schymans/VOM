@@ -47,9 +47,6 @@
       INTEGER :: kfile_topt           = 331
       INTEGER :: kfile_random_params  = 332
 
-
-
-
       INTEGER :: kfile_sceout        = 701
       INTEGER :: kfile_progress      = 702
       INTEGER :: kfile_lastloop      = 703
@@ -339,8 +336,6 @@
       INTEGER :: i_lastyear = 2000      ! Last year for the generation of hourly output in computation mode
 
       INTEGER :: i_write_h = 0          ! Flag to write out hourly input values after conversation from daily values
-
-
 
 
 !     * Derived parameters
