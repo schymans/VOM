@@ -296,6 +296,10 @@
 
       call vom_get_hourly_clim()
 
+!     * get timeseries of vegetation cover
+
+      call vom_get_perc_cov()
+
       return
       end subroutine transpmodel_init_once
 
@@ -409,7 +413,7 @@
      &                    i_rrootm, i_rsurfmin, i_rsurf_, i_rootrad,   &
      &                    i_prootmg, i_growthmax, i_incrcovg,          &
      &                    i_incrjmax,                                  &
-     &                    i_firstyear,i_lastyear, i_write_h,           &
+     &                    i_firstyear,i_lastyear, i_write_h, i_read_pc,&
      &                    i_inputpath, i_outputpath,                   &
      &                    o_lambdagf, o_wsgexp, o_lambdatf, o_wstexp,  &
      &                    o_pct, o_rtdepth, o_mdstore, o_rgdepth
@@ -942,9 +946,18 @@
       jmax25t_d(2) = 0.0003d0
       jmax25g_d(2) = 0.0003d0
       c_pcgmin     = 0.02d0             ! minimum grass pc; initial point for growth
-      pcg_d(2)     = MIN(1.d0 - o_pct, c_pcgmin)
-      pcg_d(:)     = pcg_d(2) + (/-i_incrcovg,0.0d0,i_incrcovg/)  ! vector with values varying by 1%
-      pcg_d(3)     = MIN(MAX(c_pcgmin, pcg_d(3)), 1.d0 - o_pct)
+      if(i_read_pc == 1) then
+         pcg_d(:) = perc_cov_veg( 1 )
+         !adjust value if perennial + seasonal > 1
+         if( (pcg_d(1) + o_pct) .gt. 1.0) then
+            pcg_d(:) = 1.d0 - o_pct
+         end if
+
+      else       
+         pcg_d(2)     = MIN(1.d0 - o_pct, c_pcgmin)
+         pcg_d(:)     = pcg_d(2) + (/-i_incrcovg,0.0d0,i_incrcovg/)  ! vector with values varying by 1%
+         pcg_d(3)     = MIN(MAX(c_pcgmin, pcg_d(3)), 1.d0 - o_pct)
+      end if
 
       rootlim(:,:) = 0.d0
 
@@ -1005,9 +1018,19 @@
       jmax25g_d(:) = jmax25g_d(2) * (/1.0d0-i_incrjmax,1.0d0,1.0d0+i_incrjmax/)
       jmax25g_d(:) = MAX(jmax25g_d(:), 50.0d-6)
 
-      pcg_d(:)     = pcg_d(2) + (/-i_incrcovg,0.0d0,i_incrcovg/)  ! perc. change grass cover
-      pcg_d(:)     = MAX(pcg_d(:), 0.d0)
-      pcg_d(3)     = MIN(MAX(c_pcgmin, pcg_d(3)), 1.d0 - o_pct)
+      if( i_read_pc == 1) then   
+         pcg_d(:) = perc_cov_veg(nday)
+
+         !adjust value if perennial + seasonal > 1
+         if( (pcg_d(1) + o_pct) .gt. 1.0) then
+            pcg_d(:) = 1.d0 - o_pct
+         end if
+
+      else
+         pcg_d(:)     = pcg_d(2) + (/-i_incrcovg,0.0d0,i_incrcovg/)  ! perc. change grass cover
+         pcg_d(:)     = MAX(pcg_d(:), 0.d0)
+         pcg_d(3)     = MIN(MAX(c_pcgmin, pcg_d(3)), 1.d0 - o_pct)
+      end if
 
 
 !     * (3.38) foliage turnover costs, assuming LAI/pc of 2.5
