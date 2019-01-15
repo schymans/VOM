@@ -296,13 +296,6 @@
 
       call vom_get_hourly_clim()
 
-!     * get timeseries of vegetation cover
-
-      if( i_read_pc == 1) then
-         call vom_get_perc_cov()
-      end if
-
-
       return
       end subroutine transpmodel_init_once
 
@@ -375,14 +368,6 @@
       if (vom_npar .ge. 6) o_rtdepth  = vom_invar(6)
       if (vom_npar .ge. 7) o_mdstore  = vom_invar(7)
       if (vom_npar .ge. 8) o_rgdepth  = vom_invar(8)
-      if (vom_npar .ge. 9)  i_cgs     = vom_invar(9)
-      if (vom_npar .ge. 10) i_zr      = vom_invar(10)
-      if (vom_npar .ge. 11) i_go      = vom_invar(11)
-      if (vom_npar .ge. 12) i_ksat    = vom_invar(12)
-      if (vom_npar .ge. 13) i_thetar  = vom_invar(13)
-      if (vom_npar .ge. 14) i_thetas  = vom_invar(14)
-      if (vom_npar .ge. 15) i_nvg     = vom_invar(15)
-      if (vom_npar .ge. 16) i_avg     = vom_invar(16)
 
 
 !***********************************************************************
@@ -424,7 +409,7 @@
      &                    i_rrootm, i_rsurfmin, i_rsurf_, i_rootrad,   &
      &                    i_prootmg, i_growthmax, i_incrcovg,          &
      &                    i_incrjmax,                                  &
-     &                    i_firstyear,i_lastyear, i_write_h, i_read_pc,&
+     &                    i_firstyear,i_lastyear, i_write_h,           &
      &                    i_inputpath, i_outputpath,                   &
      &                    o_lambdagf, o_wsgexp, o_lambdatf, o_wstexp,  &
      &                    o_pct, o_rtdepth, o_mdstore, o_rgdepth
@@ -638,6 +623,7 @@
         c_mvg(:) = 1.d0 - (1.d0 / s_nvg(:))  ! van Genuchten soil parameter m
       else
         s_delz(:)   = i_delz
+        s_delz(s_maxlayer) = i_cz - (s_maxlayer - 1) * i_delz
         s_ksat(:)   = i_ksat
         s_nvg(:)    = i_nvg
         s_avg(:)    = i_avg
@@ -654,58 +640,6 @@
       return
       end subroutine vom_get_soilprofile
 
-!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-!*-----READING TIMESERIES OF VEGETATION COVER---------------------------
-
-      subroutine vom_get_perc_cov ()
-      use vom_vegwat_mod
-      implicit none
-
-      INTEGER :: iostat, i, j
-      INTEGER, ALLOCATABLE :: fyear_pc(:)    ! Year for each day
-      INTEGER, ALLOCATABLE :: fmonth_pc(:)   ! Month for each day
-      INTEGER, ALLOCATABLE :: fday_pc(:)     ! Day of month
-      INTEGER, ALLOCATABLE :: dayyear_pc(:)  ! Day of year
-
-
-
-     allocate(dayyear_pc( c_maxday    )   )
-     allocate(fday_pc( c_maxday    )   )
-     allocate(fmonth_pc( c_maxday    )   )
-     allocate(fyear_pc( c_maxday    )   )     
-     allocate(perc_cov_veg( c_maxday    )   )
-
-
-      open(kfile_perc_cov, FILE=trim(adjustl(i_inputpath))// &
-           trim(adjustl(sfile_perc_cov)),                  &
-     &                        STATUS='old', IOSTAT=iostat)
-      if (iostat .eq. 0) then
-         do i = 1, c_maxday
-          read(kfile_perc_cov,'(4i8,f8.2)') dayyear_pc(i), fday_pc(i), &
-     &      fmonth_pc(i), fyear_pc(i), perc_cov_veg(i)
-        enddo
-      end if 
-      close(kfile_perc_cov)
-
-      !check if timeseries match
-
-     if( (fyear_pc(1) .ne. fyear(1)) .or. &
-         (fday_pc(1) .ne. fday(1)) .or. &
-         (fmonth_pc(1) .ne. fmonth(1)) ) then
-     stop 'startdate of perc_cov doesnot match with dailyweather'
-     end if
-
-     if( (fyear_pc(c_maxday) .ne. fyear(c_maxday)) .or. &
-         (fday_pc(c_maxday) .ne. fday(c_maxday)) .or. &
-         (fmonth_pc(c_maxday) .ne. fmonth(c_maxday)) ) then
-     stop 'enddate of perc_cov doesnot match with dailyweather'
-     end if
-
-
-      return
-      end subroutine vom_get_perc_cov
 
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -956,18 +890,9 @@
       jmax25t_d(2) = 0.0003d0
       jmax25g_d(2) = 0.0003d0
       c_pcgmin     = 0.02d0             ! minimum grass pc; initial point for growth
-      if(i_read_pc == 1) then
-         pcg_d(:) = perc_cov_veg( 1 )
-         !adjust value if perennial + seasonal > 1
-         if( (pcg_d(1) + o_pct) .gt. 1.0) then
-            pcg_d(:) = 1.d0 - o_pct
-         end if
-
-      else       
-         pcg_d(2)     = MIN(1.d0 - o_pct, c_pcgmin)
-         pcg_d(:)     = pcg_d(2) + (/-i_incrcovg,0.0d0,i_incrcovg/)  ! vector with values varying by 1%
-         pcg_d(3)     = MIN(MAX(c_pcgmin, pcg_d(3)), 1.d0 - o_pct)
-      end if
+      pcg_d(2)     = MIN(1.d0 - o_pct, c_pcgmin)
+      pcg_d(:)     = pcg_d(2) + (/-i_incrcovg,0.0d0,i_incrcovg/)  ! vector with values varying by 1%
+      pcg_d(3)     = MIN(MAX(c_pcgmin, pcg_d(3)), 1.d0 - o_pct)
 
       rootlim(:,:) = 0.d0
 
@@ -1027,19 +952,10 @@
       jmax25t_d(:) = MAX(jmax25t_d(:), 50.0d-6)
       jmax25g_d(:) = jmax25g_d(2) * (/1.0d0-i_incrjmax,1.0d0,1.0d0+i_incrjmax/)
       jmax25g_d(:) = MAX(jmax25g_d(:), 50.0d-6)
-      if( i_read_pc == 1) then   
-         pcg_d(:) = perc_cov_veg(nday)
 
-         !adjust value if perennial + seasonal > 1
-         if( (pcg_d(1) + o_pct) .gt. 1.0) then
-            pcg_d(:) = 1.d0 - o_pct
-         end if
-
-      else
-         pcg_d(:)     = pcg_d(2) + (/-i_incrcovg,0.0d0,i_incrcovg/)  ! perc. change grass cover
-         pcg_d(:)     = MAX(pcg_d(:), 0.d0)
-         pcg_d(3)     = MIN(MAX(c_pcgmin, pcg_d(3)), 1.d0 - o_pct)
-      end if
+      pcg_d(:)     = pcg_d(2) + (/-i_incrcovg,0.0d0,i_incrcovg/)  ! perc. change grass cover
+      pcg_d(:)     = MAX(pcg_d(:), 0.d0)
+      pcg_d(3)     = MIN(MAX(c_pcgmin, pcg_d(3)), 1.d0 - o_pct)
 
 
 !     * (3.38) foliage turnover costs, assuming LAI/pc of 2.5

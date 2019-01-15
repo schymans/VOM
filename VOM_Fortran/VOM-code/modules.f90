@@ -46,9 +46,6 @@
       INTEGER :: kfile_su1            = 330
       INTEGER :: kfile_topt           = 331
       INTEGER :: kfile_random_params  = 332
-      INTEGER :: kfile_perc_cov       = 333
-
-
 
       INTEGER :: kfile_sceout        = 701
       INTEGER :: kfile_progress      = 702
@@ -99,7 +96,6 @@
       CHARACTER(len=*),parameter :: sfile_etmg           = 'etmg.txt'
       CHARACTER(len=*),parameter :: sfile_su1            = 'su1.txt'
       CHARACTER(len=*),parameter :: sfile_topt           = 'temp_opt.txt'
-      CHARACTER(len=*),parameter :: sfile_perc_cov       = 'perc_cov.txt'
 
       CHARACTER(len=*),parameter :: sfile_sceout        = 'sce_out.txt'
       CHARACTER(len=*),parameter :: sfile_progress      = 'sce_progress.txt'
@@ -298,7 +294,6 @@
       REAL*8, ALLOCATABLE :: ruptkg__(:)  ! Root water uptake rate seasonal veg (m/s)
       REAL*8, ALLOCATABLE :: ruptkg_h(:)  ! Hourly root water uptake by grasses in each layer
       REAL*8, ALLOCATABLE :: ruptkg_d(:)  ! Daily root water uptake by grasses in each layer
-      REAL*8, ALLOCATABLE :: perc_cov_veg(:)  ! Daily coverage of vegetation
 
 
 !     ****************************
@@ -341,8 +336,6 @@
       INTEGER :: i_lastyear = 2000      ! Last year for the generation of hourly output in computation mode
 
       INTEGER :: i_write_h = 0          ! Flag to write out hourly input values after conversation from daily values
-      INTEGER :: i_read_pc = 0          ! Flag to write out hourly input values after conversation from daily values
-
 
 
 !     * Derived parameters
@@ -451,7 +444,6 @@
       REAL*8  :: i_mvg                  ! Van Genuchten soil parameter m
 
       !$OMP threadprivate(wlayer_, wlayernew, dt_, dtmax, dtsu_count, dtmax_count, esoil__, esoil_h, &
-      !$OMP i_cgs, i_zr, i_go, i_ksat, i_thetar, i_thetas, i_nvg, i_avg, &
       !$OMP esoil_d, esoil_y, spgfcf__, spgfcf_h, spgfcf_d, inf__, infx__, infx_h, infx_d, &
       !$OMP pcap_, su__, sunew, kunsat_, qbl, dsu, pcapnew, kunsatnew, sueq, cH2Ol_s, iovec,   &
       !$OMP zw_, zwnew, wc_, io__, io_h, ioacum)
@@ -475,8 +467,6 @@
 
       REAL*8  :: i_delz    = 0.5d0      ! Thickness of each soil layer (m)
       REAL*8, ALLOCATABLE :: s_delz(:)  ! Thickness of each soil layer
-
-      !$OMP threadprivate( i_cz )
 
 
       end module vom_vegwat_mod
@@ -544,7 +534,7 @@
 !      REAL*8, ALLOCATABLE :: centroid(:)  ! Centroid of parameter sets for simplex procedure
  !     REAL*8, ALLOCATABLE :: newpoint(:)  ! New parameter set resulting from simplex procedure
 
-      INTEGER, parameter  :: nparmax = 17
+      INTEGER, parameter  :: nparmax = 9
 
 !     ************************************
 !     * namelist parameters for shufflepar
