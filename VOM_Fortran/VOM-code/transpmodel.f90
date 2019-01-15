@@ -364,6 +364,7 @@
 !*     Optimised parameters reading from vom_invar
 !*----------------------------------------------------------------------
 
+
       if (vom_npar .ge. 1) o_lambdagf = vom_invar(1)
       if (vom_npar .ge. 2) o_wsgexp   = vom_invar(2)
       if (vom_npar .ge. 3) o_lambdatf = vom_invar(3)
@@ -372,6 +373,14 @@
       if (vom_npar .ge. 6) o_rtdepth  = vom_invar(6)
       if (vom_npar .ge. 7) o_mdstore  = vom_invar(7)
       if (vom_npar .ge. 8) o_rgdepth  = vom_invar(8)
+      if (vom_npar .ge. 9)  i_cgs     = vom_invar(9)
+      if (vom_npar .ge. 10) i_zr      = vom_invar(10)
+      if (vom_npar .ge. 11) i_go      = vom_invar(11)
+      if (vom_npar .ge. 12) i_ksat    = vom_invar(12)
+      if (vom_npar .ge. 13) i_thetar  = vom_invar(13)
+      if (vom_npar .ge. 14) i_thetas  = vom_invar(14)
+      if (vom_npar .ge. 15) i_nvg     = vom_invar(15)
+      if (vom_npar .ge. 16) i_avg     = vom_invar(16)
 
 
 !***********************************************************************
@@ -627,7 +636,6 @@
         c_mvg(:) = 1.d0 - (1.d0 / s_nvg(:))  ! van Genuchten soil parameter m
       else
         s_delz(:)   = i_delz
-        s_delz(s_maxlayer) = i_cz - (s_maxlayer - 1) * i_delz
         s_ksat(:)   = i_ksat
         s_nvg(:)    = i_nvg
         s_avg(:)    = i_avg
@@ -696,6 +704,7 @@
 
       return
       end subroutine vom_get_perc_cov
+
 
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -946,6 +955,7 @@
       jmax25t_d(2) = 0.0003d0
       jmax25g_d(2) = 0.0003d0
       c_pcgmin     = 0.02d0             ! minimum grass pc; initial point for growth
+
       if(i_read_pc == 1) then
          pcg_d(:) = perc_cov_veg( 1 )
          !adjust value if perennial + seasonal > 1
@@ -1018,6 +1028,7 @@
       jmax25g_d(:) = jmax25g_d(2) * (/1.0d0-i_incrjmax,1.0d0,1.0d0+i_incrjmax/)
       jmax25g_d(:) = MAX(jmax25g_d(:), 50.0d-6)
 
+
       if( i_read_pc == 1) then   
          pcg_d(:) = perc_cov_veg(nday)
 
@@ -1031,6 +1042,7 @@
          pcg_d(:)     = MAX(pcg_d(:), 0.d0)
          pcg_d(3)     = MIN(MAX(c_pcgmin, pcg_d(3)), 1.d0 - o_pct)
       end if
+
 
 
 !     * (3.38) foliage turnover costs, assuming LAI/pc of 2.5
