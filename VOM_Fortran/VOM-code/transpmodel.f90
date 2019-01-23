@@ -648,7 +648,7 @@
       close(kfile_soilprofile)
 
       do i = 1, s_maxlayer
-        c_hhydrst(i) = (i - 0.5d0) * i_delz  ! (Out[238]) hydrostatic head for (3.34)
+        c_hhydrst(i) = (i - 0.5d0) * s_delz(i)  ! (Out[238]) hydrostatic head for (3.34)
       enddo
 
       return
@@ -1285,10 +1285,10 @@
       implicit none
 
       if (wlayernew .lt. pos_slt) then
-        rsurft_(wlayernew+1:pos_slt) = i_rsurfmin * i_delz
+        rsurft_(wlayernew+1:pos_slt) = i_rsurfmin * s_delz(wlayernew+1:pos_slt)
       endif
       if (wlayernew .lt. pos_slg) then
-        rsurfg_(wlayernew+1:pos_slg) = i_rsurfmin * i_delz
+        rsurfg_(wlayernew+1:pos_slg) = i_rsurfmin * s_delz(wlayernew+1:pos_slt)
       endif
 
       mqt_       = mqtnew
