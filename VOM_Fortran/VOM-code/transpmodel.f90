@@ -461,6 +461,27 @@
       endif
       close(kfile_soilprofile)
 
+!     * Check if i_cz is a multiple of i_delz
+!       Raise a warning and correct if this is not the case
+      if ( MOD(i_cz, i_delz) .gt. 0.0) then
+
+        write(*,*) "WARNING: i_cz not a multiple of i_delz"
+        write(*,*) "Setting i_cz", i_cz, "to", i_cz + MOD(i_cz, i_delz)  
+        i_cz = i_cz + MOD(i_cz, i_delz) 
+
+      end if
+
+!     * Check if i_cz - i_zr is a multiple of i_delz
+!       Raise a warning and correct if this is not the case
+      if ( MOD(i_cz - i_zr, i_delz) .gt. 0.0) then
+
+        write(*,*) "WARNING: i_cz-i_zr not a multiple of i_delz"
+        write(*,*) "Correcting i_zr", i_zr, "to", i_zr + MOD(i_cz - i_zr, i_delz)  
+        i_zr = i_zr + MOD(i_cz - i_zr, i_delz) 
+
+      end if
+
+
 !     * number of soil layers s_maxlayer assuming same thickness everywhere
       if (s_maxlayer .eq. 0) s_maxlayer = ceiling(i_cz / i_delz)
 
@@ -637,7 +658,6 @@
         c_mvg(:) = 1.d0 - (1.d0 / s_nvg(:))  ! van Genuchten soil parameter m
       else
         s_delz(:)   = i_delz
-        s_delz(s_maxlayer) = i_cz - (s_maxlayer - 1) * i_delz
         s_ksat(:)   = i_ksat
         s_nvg(:)    = i_nvg
         s_avg(:)    = i_avg
