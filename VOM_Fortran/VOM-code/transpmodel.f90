@@ -461,29 +461,27 @@
       endif
       close(kfile_soilprofile)
 
-!     * Check if i_cz is a multiple of i_delz
-!       Raise a warning and correct if this is not the case
-      if ( MOD(i_cz, i_delz) .gt. 0.0) then
-
-        write(*,*) "WARNING: i_cz not a multiple of i_delz"
-        write(*,*) "Setting i_cz", i_cz, "to", i_cz + MOD(i_cz, i_delz)  
-        i_cz = i_cz + MOD(i_cz, i_delz) 
-
-      end if
-
-!     * Check if i_cz - i_zr is a multiple of i_delz
-!       Raise a warning and correct if this is not the case
-      if ( MOD(i_cz - i_zr, i_delz) .gt. 0.0) then
-
-        write(*,*) "WARNING: i_cz-i_zr not a multiple of i_delz"
-        write(*,*) "Correcting i_zr", i_zr, "to", i_zr + MOD(i_cz - i_zr, i_delz)  
-        i_zr = i_zr + MOD(i_cz - i_zr, i_delz) 
-
-      end if
-
-
 !     * number of soil layers s_maxlayer assuming same thickness everywhere
-      if (s_maxlayer .eq. 0) s_maxlayer = ceiling(i_cz / i_delz)
+      if (s_maxlayer .eq. 0) then
+
+!        Check if i_cz is a multiple of i_delz
+!        Raise a warning and correct if this is not the case
+         if ( MOD(i_cz, i_delz) .gt. 0.0) then
+           write(*,*) "WARNING: i_cz not a multiple of i_delz"
+           write(*,*) "Setting i_cz", i_cz, "to", i_cz + (i_delz-MOD(i_cz, i_delz) )
+           i_cz = i_cz + (i_delz-MOD(i_cz, i_delz) ) 
+         end if
+
+!        Check if i_cz - i_zr is a multiple of i_delz
+!        Raise a warning and correct if this is not the case
+         if ( MOD(i_cz - i_zr, i_delz) .gt. 0.0) then
+           write(*,*) "WARNING: i_cz-i_zr not a multiple of i_delz"
+           write(*,*) "Correcting i_zr", i_zr, "to", i_zr - (i_delz - MOD(i_cz - i_zr, i_delz) )
+           i_zr = i_zr - (i_delz - MOD(i_cz - i_zr, i_delz) )
+         end if
+
+         s_maxlayer = ceiling(i_cz / i_delz)
+      end if
 
       return
       end subroutine vom_read_input
@@ -641,7 +639,7 @@
       use vom_vegwat_mod
       implicit none
 
-      INTEGER :: iostat, i, j
+      INTEGER :: iostat, i, j, indlayer
 
 !     * The file soilprofile.par can contain information about thickness
 !       and soil properties in each soil layer, with the layer number in
@@ -655,6 +653,34 @@
           read(kfile_soilprofile,*) s_maxlayer, s_delz(j), s_ksat(j),  &
      &      s_nvg(j), s_avg(j), s_thetas(j), s_thetar(j)
         enddo
+
+!        Check if i_cz aligns with s_delz
+!        Raise a warning and correct if this is not the case
+         if ( SUM(s_delz) - i_cz .gt. 0.0 ) then
+           write(*,*) "WARNING: i_cz does not align with soil layers"
+           write(*,*) "Setting i_cz", i_cz, "to", SUM(s_delz)
+           i_cz = SUM(s_delz)
+         end if
+
+!        Check if i_zr aligns with s_delz
+!        Raise a warning and correct if this is not the case
+
+!       Find the layer of i_zr
+        do j = 1, s_maxlayer
+           if( sum(s_delz(1:j)) .lt. (i_cz - i_zr) ) then
+               indlayer = 0
+           else
+               indlayer = j
+           end if
+        enddo
+
+!       correting i_zr
+        if( sum(s_delz(1:indlayer)) .ne. (i_cz - i_zr) ) then
+           write(*,*) "WARNING: i_zr does not align with soil layers"
+           write(*,*) "Setting i_zr", i_zr, "to", i_cz - sum(s_delz(1:indlayer)) 
+           i_zr = i_cz - sum(s_delz(1:indlayer)) 
+        end if
+
         c_mvg(:) = 1.d0 - (1.d0 / s_nvg(:))  ! van Genuchten soil parameter m
       else
         s_delz(:)   = i_delz
