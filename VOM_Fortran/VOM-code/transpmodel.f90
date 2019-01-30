@@ -657,9 +657,9 @@
 !        Check if i_cz aligns with s_delz
 !        Raise a warning and correct if this is not the case
          if ( SUM(s_delz) - i_cz .gt. 0.0 ) then
-           write(*,*) "WARNING: i_cz does not align with soil layers"
-           write(*,*) "Setting i_cz", i_cz, "to", SUM(s_delz)
-           i_cz = SUM(s_delz)
+           write(*,*) "ERROR: i_cz does not align with soil layers"
+           write(*,*) " Please correct in soilprofile.par and restart"
+           stop
          end if
 
 !        Check if i_zr aligns with s_delz
@@ -676,9 +676,9 @@
 
 !       correting i_zr
         if( sum(s_delz(1:indlayer)) .ne. (i_cz - i_zr) ) then
-           write(*,*) "WARNING: i_zr does not align with soil layers"
-           write(*,*) "Setting i_zr", i_zr, "to", i_cz - sum(s_delz(1:indlayer)) 
-           i_zr = i_cz - sum(s_delz(1:indlayer)) 
+           write(*,*) "ERROR: i_zr does not align with soil layers"
+           write(*,*) " Please correct in soilprofile.par and restart"
+         stop
         end if
 
         c_mvg(:) = 1.d0 - (1.d0 / s_nvg(:))  ! van Genuchten soil parameter m
