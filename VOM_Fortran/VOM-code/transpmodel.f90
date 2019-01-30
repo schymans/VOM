@@ -467,17 +467,17 @@
 !        Check if i_cz is a multiple of i_delz
 !        Raise a warning and correct if this is not the case
          if ( MOD(i_cz, i_delz) .gt. 0.0) then
-           write(*,*) "WARNING: i_cz not a multiple of i_delz"
-           write(*,*) "Setting i_cz", i_cz, "to", i_cz + (i_delz-MOD(i_cz, i_delz) )
-           i_cz = i_cz + (i_delz-MOD(i_cz, i_delz) ) 
+           write(*,*) "ERROR: i_cz must be a multiple of i_delz"
+           write(*,*) " Please correct in vom_namelist and restart"
+           stop
          end if
 
 !        Check if i_cz - i_zr is a multiple of i_delz
 !        Raise a warning and correct if this is not the case
          if ( MOD(i_cz - i_zr, i_delz) .gt. 0.0) then
-           write(*,*) "WARNING: i_cz-i_zr not a multiple of i_delz"
-           write(*,*) "Correcting i_zr", i_zr, "to", i_zr - (i_delz - MOD(i_cz - i_zr, i_delz) )
-           i_zr = i_zr - (i_delz - MOD(i_cz - i_zr, i_delz) )
+           write(*,*) "ERROR: i_cz-i_zr must be a multiple of i_delz"
+           write(*,*) " Please correct in vom_namelist and restart"
+         stop
          end if
 
          s_maxlayer = ceiling(i_cz / i_delz)
