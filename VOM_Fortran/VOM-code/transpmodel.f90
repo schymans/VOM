@@ -462,7 +462,26 @@
       close(kfile_soilprofile)
 
 !     * number of soil layers s_maxlayer assuming same thickness everywhere
-      if (s_maxlayer .eq. 0) s_maxlayer = ceiling(i_cz / i_delz)
+      if (s_maxlayer .eq. 0) then
+
+!        Check if i_cz is a multiple of i_delz
+!        Raise a warning and correct if this is not the case
+         if ( MOD(i_cz, i_delz) .gt. 0.0) then
+           write(*,*) "ERROR: i_cz must be a multiple of i_delz"
+           write(*,*) " Please correct in vom_namelist and restart"
+           stop
+         end if
+
+!        Check if i_cz - i_zr is a multiple of i_delz
+!        Raise a warning and correct if this is not the case
+         if ( MOD(i_cz - i_zr, i_delz) .gt. 0.0) then
+           write(*,*) "ERROR: i_cz-i_zr must be a multiple of i_delz"
+           write(*,*) " Please correct in vom_namelist and restart"
+         stop
+         end if
+
+         s_maxlayer = ceiling(i_cz / i_delz)
+      end if
 
       return
       end subroutine vom_read_input
@@ -620,7 +639,7 @@
       use vom_vegwat_mod
       implicit none
 
-      INTEGER :: iostat, i, j
+      INTEGER :: iostat, i, j, indlayer
 
 !     * The file soilprofile.par can contain information about thickness
 !       and soil properties in each soil layer, with the layer number in
@@ -634,10 +653,37 @@
           read(kfile_soilprofile,*) s_maxlayer, s_delz(j), s_ksat(j),  &
      &      s_nvg(j), s_avg(j), s_thetas(j), s_thetar(j)
         enddo
+
+!        Check if i_cz aligns with s_delz
+!        Raise a warning and correct if this is not the case
+         if ( SUM(s_delz) - i_cz .gt. 0.0 ) then
+           write(*,*) "ERROR: i_cz does not align with soil layers"
+           write(*,*) " Please correct in soilprofile.par and restart"
+           stop
+         end if
+
+!        Check if i_zr aligns with s_delz
+!        Raise a warning and correct if this is not the case
+
+!       Find the layer of i_zr
+        do j = 1, s_maxlayer
+           if( sum(s_delz(1:j)) .lt. (i_cz - i_zr) ) then
+               indlayer = 0
+           else
+               indlayer = j
+           end if
+        enddo
+
+!       correting i_zr
+        if( sum(s_delz(1:indlayer)) .ne. (i_cz - i_zr) ) then
+           write(*,*) "ERROR: i_zr does not align with soil layers"
+           write(*,*) " Please correct in soilprofile.par and restart"
+         stop
+        end if
+
         c_mvg(:) = 1.d0 - (1.d0 / s_nvg(:))  ! van Genuchten soil parameter m
       else
         s_delz(:)   = i_delz
-        s_delz(s_maxlayer) = i_cz - (s_maxlayer - 1) * i_delz
         s_ksat(:)   = i_ksat
         s_nvg(:)    = i_nvg
         s_avg(:)    = i_avg
@@ -648,7 +694,7 @@
       close(kfile_soilprofile)
 
       do i = 1, s_maxlayer
-        c_hhydrst(i) = (i - 0.5d0) * i_delz  ! (Out[238]) hydrostatic head for (3.34)
+        c_hhydrst(i) = (i - 0.5d0) * s_delz(i)  ! (Out[238]) hydrostatic head for (3.34)
       enddo
 
       return
@@ -1285,10 +1331,10 @@
       implicit none
 
       if (wlayernew .lt. pos_slt) then
-        rsurft_(wlayernew+1:pos_slt) = i_rsurfmin * i_delz
+        rsurft_(wlayernew+1:pos_slt) = i_rsurfmin * s_delz(wlayernew+1:pos_slt)
       endif
       if (wlayernew .lt. pos_slg) then
-        rsurfg_(wlayernew+1:pos_slg) = i_rsurfmin * i_delz
+        rsurfg_(wlayernew+1:pos_slg) = i_rsurfmin * s_delz(wlayernew+1:pos_slt)
       endif
 
       mqt_       = mqtnew

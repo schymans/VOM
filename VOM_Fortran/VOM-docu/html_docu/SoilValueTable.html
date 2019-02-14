@@ -13,6 +13,10 @@
 <h3>Soil Value Table</h3>
 <hr style="clear:right;">
 <hr>
+<h2>Soil layers</h2>
+Soil layer thickness is globally defined with the parameter i_delz, or in the file soilprofile.par for each soil layer separatly. The sum of the soil layers need to be equal to the topographical parameter i_cz (maximum elevation). The VOM will raise a warning and correct i_cz if this is not the case. The river bed level i_zr needs to align with the soil layers. Also here, the VOM will give a warning and correct i_zr if needed. 
+
+
 <h2>Average parameter values for soil properties after van
 Genuchten</h2>
 <p>Soil water retention and hydraulic conductivity parameters for 12 major
