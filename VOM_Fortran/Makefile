@@ -74,7 +74,7 @@ check:
 		echo "TEST FAILED"; python check_outcomes.py; \
 	fi ; echo "test"; \
     cd ../../ ; \
-	rm -r VOM_test/test_tmp/; \
+	#rm -r VOM_test/test_tmp/; \
  
 
 
