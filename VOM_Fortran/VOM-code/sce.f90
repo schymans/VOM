@@ -573,12 +573,6 @@ end if
             call runmodel(shufflevar(:,ii), ofvec(ii))
 
               if (ofvec(ii) .le. 0) worstcount = worstcount + 1
-!             * program stops after 100 runs without positive objective function
-              if (nrun .gt. 100 .and. nrun .eq. worstcount) then
-                success = 2
-                call writepars()
-                exit
-              endif
 
           enddo
 

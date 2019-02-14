@@ -41,7 +41,7 @@ MSRC = *.mod
 all: $(PROGRAM) 
 		
 $(PROGRAM): $(SRC) 
-	$(FC) -fopenmp -o $@ $^ ; rm $(MSRC)    #;mv $(MSRC) $(OBJ_PATH)
+	$(FC) -fopenmp -o $@ $^ -static-libgfortran; rm $(MSRC)    #;mv $(MSRC) $(OBJ_PATH)
 #	$(FC) -o $@ $^ -I${NFDIR}/include -L${NFDIR}/lib  -static ;mv $(MSRC) $(OBJ_PATH)
 %.o: %.f
 	$(FC) -o $@ $<
@@ -74,7 +74,7 @@ check:
 		echo "TEST FAILED"; python check_outcomes.py; \
 	fi ; echo "test"; \
     cd ../../ ; \
-	rm -r VOM_test/test_tmp/; \
+	#rm -r VOM_test/test_tmp/; \
  
 
 
