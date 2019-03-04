@@ -466,7 +466,8 @@
 
 !        Check if i_cz is a multiple of i_delz
 !        Raise a warning and correct if this is not the case
-         if ( MOD(i_cz, i_delz) .gt. 1.0d-6) then
+!         if ( MOD(i_cz, i_delz) .gt. 1.0d-6) then
+         if ( ( (i_cz / i_delz) - ceiling(i_cz / i_delz) )  .gt. 1.0d-6) then
            write(*,*) "ERROR: i_cz must be a multiple of i_delz"
            write(*,*) " Please correct in vom_namelist and restart"
            stop
@@ -474,7 +475,8 @@
 
 !        Check if i_cz - i_zr is a multiple of i_delz
 !        Raise a warning and correct if this is not the case
-         if ( MOD(i_cz - i_zr, i_delz) .gt. 1.0d-6) then
+!         if ( MOD(i_cz - i_zr, i_delz) .gt. 1.0d-6) then
+         if ( (  (i_cz - i_zr) /i_delz) - ceiling( (i_cz - i_zr) /i_delz) .gt. 1.0d-6) then
            write(*,*) "ERROR: i_cz-i_zr must be a multiple of i_delz"
            write(*,*) " Please correct in vom_namelist and restart"
          stop
@@ -656,7 +658,8 @@
 
 !        Check if i_cz aligns with s_delz
 !        Raise a warning and correct if this is not the case
-         if ( SUM(s_delz) - i_cz .gt. 1.0d-6 ) then
+!         if ( SUM(s_delz) - i_cz .gt. 1.0d-6 ) then
+         if ( ( (i_cz / i_delz) - ceiling(i_cz / i_delz) )  .gt. 1.0d-6) then
            write(*,*) "ERROR: i_cz does not align with soil layers"
            write(*,*) " Please correct in soilprofile.par and restart"
            stop
