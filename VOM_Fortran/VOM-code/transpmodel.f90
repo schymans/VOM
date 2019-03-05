@@ -1099,18 +1099,11 @@
 !     * (3.40), (Out[190])  root respiration [mol/s]
       rrt_d        = 2.55d-7 * SUM(rsurft_(1:pos_slt))
 
-      if (pos_slt .gt. wlayernew) then
-!       * (3.42, 2.45e-10 from (Out[165])) costs of water distribution and storage
-        q_cpcct_d = i_cpccf * o_pct * o_rtdepth + o_mdstore * 2.45d-10
-      else
-        q_cpcct_d = i_cpccf * o_pct * SUM(s_delz(1:pos_slt)) + o_mdstore * 2.45d-10
-      endif
 
-      if (wlayernew .lt. pos_slg) then
-        cpccg_d(:) = i_cpccf * pcg_d(:) * o_rgdepth  ! (3.42) water transport costs
-      else
-        cpccg_d(:) = i_cpccf * pcg_d(:) * SUM(s_delz(1:pos_slg))
-      endif
+!     * (3.42, 2.45e-10 from (Out[165])) costs of water distribution and storage
+      q_cpcct_d = i_cpccf * o_pct * o_rtdepth + o_mdstore * 2.45d-10
+      cpccg_d(:) = i_cpccf * pcg_d(:) * o_rgdepth  ! (3.42) water transport costs
+
 
 !     * (3.40), (Out[190]) root respiration grasses [mol/s]
       rrg_d = 2.55d-7 * SUM(rsurfg_(1:pos_slg))
