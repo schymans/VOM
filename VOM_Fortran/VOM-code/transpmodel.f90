@@ -466,8 +466,8 @@
 
 !        Check if i_cz is a multiple of i_delz
 !        Raise a warning and correct if this is not the case
-         if ( abs( int(i_cz / i_delz) - (i_cz / i_delz) )  .gt. 1.0d-6) then
-           write(*,*) int(i_cz / i_delz) , (i_cz / i_delz)
+         if ( abs( nint(i_cz / i_delz) - (i_cz / i_delz) )  .gt. 1.0d-6) then
+           write(*,*) nint(i_cz / i_delz) , (i_cz / i_delz)
            write(*,*) "ERROR: i_cz must be a multiple of i_delz"
            write(*,*) " Please correct in vom_namelist and restart"
            stop
@@ -475,13 +475,13 @@
 
 !        Check if i_cz - i_zr is a multiple of i_delz
 !        Raise a warning and correct if this is not the case
-         if ( abs(int( (i_cz - i_zr) /i_delz) - ( (i_cz - i_zr) /i_delz) ) .gt. 1.0d-6) then
+         if ( abs(nint( (i_cz - i_zr) /i_delz) - ( (i_cz - i_zr) /i_delz) ) .gt. 1.0d-6) then
            write(*,*) "ERROR: i_cz-i_zr must be a multiple of i_delz"
            write(*,*) " Please correct in vom_namelist and restart"
          stop
          end if
 
-         s_maxlayer = int(i_cz / i_delz)
+         s_maxlayer = nint(i_cz / i_delz)
       end if
 
       return
@@ -657,7 +657,7 @@
 
 !        Check if i_cz aligns with s_delz
 !        Raise a warning and correct if this is not the case
-         if ( abs( int(i_cz / i_delz) - (i_cz / i_delz) )  .gt. 1.0d-6) then
+         if ( abs( nint(i_cz / i_delz) - (i_cz / i_delz) )  .gt. 1.0d-6) then
            write(*,*) "ERROR: i_cz does not align with soil layers"
            write(*,*) " Please correct in soilprofile.par and restart"
            stop
