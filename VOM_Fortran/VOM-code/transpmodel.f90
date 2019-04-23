@@ -612,7 +612,7 @@
      &  'par', 'vd', 'esoil', 'jmax25t', 'jmax25g', 'pc', 'rl',        &
      &  'lambdat', 'lambdag', 'rrt', 'rrg', 'asst', 'assg', 'su_avg',  &
      &  'zw', 'ws', 'spgfcf', 'infx', 'etmt', 'etmg', 'su_1', 'topt',  &
-     &  'ncp_g', "ncp_t"
+     &  'ncp_g', 'ncp_t'
 
       open(kfile_resultsyearly, FILE=trim(adjustl(i_outputpath))// &
            trim(adjustl(sfile_resultsyearly)), STATUS='replace')
