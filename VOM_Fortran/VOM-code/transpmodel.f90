@@ -41,9 +41,12 @@
       REAL*8,  INTENT(inout) :: tp_netass
       INTEGER, INTENT(in)    :: option1
       REAL*8, DIMENSION(dim_invar), INTENT(in) :: invar
+      REAL*8                 :: tp_netasst_d
+      REAL*8                 :: tp_netassg_d
       !REAL*8, ALLOCATABLE, DIMENSION(:,:) :: output_mat
 
-      tp_netass = 0.d0
+      tp_netass  = 0.d0
+
 
       call transpmodel_init(invar, dim_invar, option1)
 
@@ -51,6 +54,8 @@
 
       do while (nday  .lt. c_testday)
         nday = nday + 1
+        tp_netassg_d = 0.d0
+        tp_netasst_d = 0.d0
 
         call vom_daily_init()
 
@@ -113,6 +118,10 @@
       tp_netass = tp_netass + asst_h(2) - 3600.d0 * (q_cpcct_d + rrt_d &
      &          + q_tct_d) + assg_h(2,2) - 3600.d0 * (cpccg_d(2)       &
      &          + rrg_d + tcg_d(2))
+      tp_netassg_d = tp_netassg_d + assg_h(2,2) - 3600.d0 * (cpccg_d(2)       &
+     &          + rrg_d + tcg_d(2))
+      tp_netasst_d = tp_netasst_d + asst_h(2) - 3600.d0 * (q_cpcct_d + rrt_d &
+     &          + q_tct_d) 
 
       asst_d(:)   = asst_d(:)   + asst_h(:)
       assg_d(:,:) = assg_d(:,:) + assg_h(:,:)
@@ -158,7 +167,7 @@
            !end if
 
            !last daily step
-           call transpmodel_daily_step(tp_netass, option1)
+           call transpmodel_daily_step(tp_netass,tp_netassg_d, tp_netasst_d, option1)
 
       enddo
 
@@ -174,18 +183,20 @@
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 !+++ Post-daily step
 
-      subroutine transpmodel_daily_step (tp_netass, option1)
+      subroutine transpmodel_daily_step (tp_netass,tp_netassg, tp_netasst, option1)
       use vom_vegwat_mod
       implicit none
 
       REAL*8,  INTENT(inout) :: tp_netass
+      REAL*8,  INTENT(inout) :: tp_netassg
+      REAL*8,  INTENT(inout) :: tp_netasst
       INTEGER, INTENT(in)    :: option1
       !REAL*8, DIMENSION(21, c_maxday ), INTENT(inout) :: output_mat
 
       !if (optmode .eq. 0) then
        !formatted output for single model run
        if (option1 .eq. 2) then
-        call vom_write_dayyear( tp_netass )
+        call vom_write_dayyear( tp_netassg, tp_netasst )
         call vom_add_yearly()
       endif
 
@@ -596,11 +607,12 @@
 
       open(kfile_resultsdaily, FILE=trim(adjustl(i_outputpath))// &
            trim(adjustl(sfile_resultsdaily)), STATUS='replace')
-      write(kfile_resultsdaily,'(A6,A7,A7,A7,A7,26A15)') 'fyear',      &
+      write(kfile_resultsdaily,'(A6,A7,A7,A7,A7,27A15)') 'fyear',      &
      &  'fmonth', 'fday', 'nday', 'nhour', 'rain', 'tairmax', 'tairmin', &
      &  'par', 'vd', 'esoil', 'jmax25t', 'jmax25g', 'pc', 'rl',        &
      &  'lambdat', 'lambdag', 'rrt', 'rrg', 'asst', 'assg', 'su_avg',  &
-     &  'zw', 'ws', 'spgfcf', 'infx', 'etmt', 'etmg', 'su_1', 'topt', 'ncp'
+     &  'zw', 'ws', 'spgfcf', 'infx', 'etmt', 'etmg', 'su_1', 'topt',  &
+     &  'ncp_g', "ncp_t"
 
       open(kfile_resultsyearly, FILE=trim(adjustl(i_outputpath))// &
            trim(adjustl(sfile_resultsyearly)), STATUS='replace')
@@ -1709,11 +1721,12 @@
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
-      subroutine vom_write_dayyear ( tp_netass )
+      subroutine vom_write_dayyear ( tp_netassg, tp_netasst )
       use vom_vegwat_mod
       implicit none
 
-      REAL*8,  INTENT(in) :: tp_netass
+      REAL*8,  INTENT(in) :: tp_netassg
+      REAL*8,  INTENT(in) :: tp_netasst
       CHARACTER(60) :: dailyformat
       CHARACTER(3)  :: str
 
@@ -1722,14 +1735,15 @@
 !     * includes a column for each sublayer
       dailyformat = '(I6,I6,I4,I7,'//str//'E14.6)'
 
-      write(kfile_resultsdaily,'(I6,I7,I7,I7,I7,26E15.5)')             &
+      write(kfile_resultsdaily,'(I6,I7,I7,I7,I7,27E15.5)')             &
      &  fyear(nday), fmonth(nday), fday(nday), nday, nhour-1,          &
      &  rain_d(nday), tairmax_d(nday), tairmin_d(nday), par_d(nday),   &
      &  vd_d / 24.d0, esoil_d, jmax25t_d(2), jmax25g_d(2),             &
      &  o_pct + pcg_d(2), rlt_d + rlg_d, lambdat_d, lambdag_d,         &
      &  rrt_d * 3600.d0 * 24.d0, rrg_d * 3600.d0 * 24.d0, asst_d(2),   &
      &  assg_d(2,2), SUM(su__(1:wlayer_)) / wlayer_, zw_, wsnew,       &
-     &  spgfcf_d, infx_d, etmt_d, etmg_d, su__(1), topt_, tp_netass
+     &  spgfcf_d, infx_d, etmt_d, etmg_d, su__(1), topt_,              &
+     &  tp_netassg, tp_netasst
 
         write(kfile_rsurfdaily,dailyformat) fyear(nday), fmonth(nday), &
      &    fday(nday), nday, rsurft_(1:wlayer_)
