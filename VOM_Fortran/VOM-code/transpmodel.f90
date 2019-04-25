@@ -424,6 +424,7 @@
      &                    i_prootmg, i_growthmax, i_incrcovg,          &
      &                    i_incrjmax,                                  &
      &                    i_firstyear,i_lastyear, i_write_h, i_read_pc,&
+     &                    i_lai_function,                              &
      &                    i_inputpath, i_outputpath,                   &
      &                    o_lambdagf, o_wsgexp, o_lambdatf, o_wstexp,  &
      &                    o_pct, o_rtdepth, o_mdstore, o_rgdepth
@@ -1022,8 +1023,15 @@
 
 !     * Direct costs
 
-!     * (3.38)  foliage tunrover costs, assuming crown LAI of 2.5
-      q_tct_d = i_tcf * o_pct * 2.5d0
+      select case(i_lai_function)
+      case(1)
+!        * (3.38)  foliage turnover costs, assuming crown LAI of 2.5
+         q_tct_d = i_tcf * o_pct * 2.5d0
+
+      case(2)
+!        * foliage turnover costs, LAI as a function of cover (Choudhurry,1987; Monsi and Saeki,1953)
+         q_tct_d = i_tcf * o_pct * 2.0d0 * log(1 / (1-o_pct) )
+      end select
 
 !     * Setting yearly, daily and hourly parameters
 
@@ -1093,9 +1101,16 @@
       end if
 
 
+      select case(i_lai_function)
+      case(1)
+!        * (3.38) foliage turnover costs, assuming LAI/pc of 2.5
+         tcg_d(:)     = i_tcf * pcg_d(:) * 2.5d0
 
-!     * (3.38) foliage turnover costs, assuming LAI/pc of 2.5
-      tcg_d(:)     = i_tcf * pcg_d(:) * 2.5d0
+      case(2)
+!        * foliage turnover costs, LAI as a function of cover (Choudhurry,1987; Monsi and Saeki,1953)
+         tcg_d(:) = i_tcf * pcg_d(:) * 2.0d0 * log(1 / (1-pcg_d(:)) )
+      end select
+
 !     * (3.40), (Out[190])  root respiration [mol/s]
       rrt_d        = 2.55d-7 * SUM(rsurft_(1:pos_slt))
 
