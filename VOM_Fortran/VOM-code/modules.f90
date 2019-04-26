@@ -342,7 +342,7 @@
 
       INTEGER :: i_write_h = 0          ! Flag to write out hourly input values after conversation from daily values
       INTEGER :: i_read_pc = 0          ! Flag to write out hourly input values after conversation from daily values
-
+      INTEGER :: i_lai_function         ! Switch to use 1) linear or 2) exponential LAI estimate, as function of cover
 
 !     * Derived parameters
 
