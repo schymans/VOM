@@ -1,0 +1,347 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html><head>
+<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
+<title>vom_namelist</title></head>
+
+<body>
+<p style="border-style: solid; border-width: 1px; float: right;">
+<object data="navi-bar.html" type="text/html"></object>
+</p>
+<h1>VOM - Model Description</h1>
+<h2>VOM - info</h2>
+<h3>vom_namelist</h3>
+<hr style="clear: right;">
+<hr>
+<h2>Description of vom_namelist</h2>
+<p>The file "vom_namelist" is an input file for VOM, containing
+all settings for the model runs:</p>
+
+<h3>Fields</h3>
+<table border="1">
+<tbody><tr>
+	<td align="center">i_alpha</td>
+	<td align="center">initial slope of j(par) curve </td>
+	<td align="center"> - </td>
+</tr>
+<tr>
+	<td align="center">i_cpccf</td>
+	<td align="center">water transport cost factor (cpcc=pc*rootdepth*cpccf) </td>
+	<td align="center"> mol/m/m2/s </td>
+</tr>
+<tr>
+	<td align="center">i_tcf</td>
+	<td align="center">turnover cost factor for foliage (tc=tcf*LAI)  </td>
+	<td align="center"> mol/m2/s </td>
+</tr>
+<tr>
+	<td align="center">i_maxyear</td>
+	<td align="center">number of years to process</td>
+	<td align="center"> - </td>
+</tr>
+<tr>
+	<td align="center">i_testyear</td>
+	<td align="center">number of years after which to perform initial test of netass</td>
+	<td align="center"> - </td>
+</tr>
+<tr>
+	<td align="center">i_ha</td>
+	<td align="center">parameters to calculate jmax(temp)</td>
+	<td align="center"> J/mol </td>
+</tr>
+<tr>
+	<td align="center">i_hd</td>
+	<td align="center">parameters to calculate jmax(temp)</td>
+	<td align="center"> J/mol </td>
+</tr>
+<tr>
+	<td align="center">i_toptf</td>
+	<td align="center">parameter to calculate adaptation of topt (range 0-1, 0.0 means no adaption, 1.0 means topt=tair)</td>
+	<td align="center"> - </td>
+</tr>
+<tr>
+	<td align="center">i_toptstart</td>
+	<td align="center">start parameter for topt to calculate jmax</td>
+	<td align="center"> K </td>
+</tr>
+<tr>
+	<td align="center">i_rlratio</td>
+	<td align="center">leaf respiration parameter (rl=rlratio*assmax)</td>
+	<td align="center"> - </td>
+</tr>
+<tr>
+	<td align="center">i_mdtf</td>
+	<td align="center">total dry mass of living tissues of trees per unit pc </td>
+	<td align="center"> g/m^2 </td>
+</tr>
+<tr>
+	<td align="center">i_mqxtf</td>
+	<td align="center">total water storage capacity in living tissues of trees per unit md</td>
+	<td align="center"> kg/m^2 </td>
+</tr>
+<tr>
+	<td align="center">i_rrootm</td>
+	<td align="center">root water uptake resistivity</td>
+	<td align="center"> s </td>
+</tr>
+<tr>
+	<td align="center">i_rsurfmin</td>
+	<td align="center">minimum root area per m^3 to be maintained</td>
+	<td align="center"> m^2/m^3 </td>
+</tr>
+<tr>
+	<td align="center">i_rsurf_</td>
+	<td align="center">initial root surface area per m^3</td>
+	<td align="center"> m^2/m^3 </td>
+</tr>
+<tr>
+	<td align="center">i_rootrad</td>
+	<td align="center">fine root radius</td>
+	<td align="center"> m </td>
+</tr>
+<tr>
+	<td align="center">i_prootmg</td>
+	<td align="center">constant root balance pressure in grasses</td>
+	<td align="center"> m </td>
+</tr>
+<tr>
+	<td align="center">i_growthmax</td>
+	<td align="center">parameter determining maximum daily growth increment of root surface area (percent)</td>
+	<td align="center"> m^2/m^3/d </td>
+</tr>
+<tr>
+	<td align="center">i_incrcovg</td>
+	<td align="center"> parameter determining maximum increment percentage of grass cover (percent) </td>
+	<td align="center"> - </td>
+</tr>
+<tr>
+	<td align="center">i_incrjmax</td>
+	<td align="center">parameter determining maximum increment percentage of jmax25 (percent)</td>
+	<td align="center"> - </td>
+</tr>
+<tr>
+	<td align="center">i_firstyear</td>
+	<td align="center">firstyear for the generation of hourly output in computation mode</td>
+	<td align="center"> -  </td>
+</tr>
+<tr>
+	<td align="center">i_lastyear</td>
+	<td align="center">lastyear for the generation of hourly output in computation mode</td>
+	<td align="center"> - </td>
+</tr>
+<tr>
+	<td align="center">i_write_h</td>
+	<td align="center">flag to create a file with hourly values from daily values</td>
+	<td align="center"> - </td>
+</tr>
+<tr>
+	<td align="center">i_read_pc</td>
+	<td align="center">flag to read vegetation coverage values from file</td>
+	<td align="center"> - </td>
+</tr>
+<tr>
+	<td align="center">i_lai_function</td>
+	<td align="center">switch for 1) linear or 2) exponential function of LAI for foliage cost</td>
+	<td align="center"> - </td>
+</tr>
+<tr>
+	<td align="center">i_inputpath</td>
+	<td align="center">path to folder with inputfiles </td>
+	<td align="center"> - </td>
+</tr>
+<tr>
+	<td align="center">i_outputpath</td>
+	<td align="center">path to folder with outputfiles</td>
+	<td align="center"> - </td>
+</tr>
+<tr>
+	<td align="center">o_lambdagf</td>
+	<td align="center">factor for calculating lambdag_d</td>
+	<td align="center"> mol/mol/m </td>
+</tr>
+<tr>
+	<td align="center">o_wsgexp</td>
+	<td align="center">exponent for calculating lambdag</td>
+	<td align="center"> - </td>
+</tr>
+<tr>
+	<td align="center">o_lambdatf</td>
+	<td align="center">factor for calculating lambdat_d</td>
+	<td align="center"> mol/mol/m </td>
+</tr>
+<tr>
+	<td align="center">o_wstexp</td>
+	<td align="center">exponent for calculating lambdat_d</td>
+	<td align="center"> - </td>
+</tr>
+<tr>
+	<td align="center">o_pct</td>
+	<td align="center">projected cover perennial vegetation (0-1)</td>
+	<td align="center"> - </td>
+</tr>
+<tr>
+	<td align="center">o_rtdepth</td>
+	<td align="center">tree rooting depth</td>
+	<td align="center"> m </td>
+</tr>
+<tr>
+	<td align="center">o_mdstore</td>
+	<td align="center">wood water storage parameter of trees (can be in shufflepar)</td>
+	<td align="center"> g/m^2 </td>
+</tr>
+<tr>
+	<td align="center">o_rgdepth</td>
+	<td align="center">root depth grasses (can be in shufflepar)</td>
+	<td align="center"> m </td>
+</tr>
+
+<tr>
+	<td align="center"><b>input2par</b></td>
+</tr>
+
+<tr>
+	<td align="center">i_lat</td>
+	<td align="center">geogr. latitude in degrees</td>
+	<td align="center"> degrees </td>
+</tr>
+<tr>
+	<td align="center">i_cz</td>
+	<td align="center">average soil elevation</td>
+	<td align="center"> m </td>
+</tr>
+<tr>
+	<td align="center">i_cgs</td>
+	<td align="center">Capital Gamma S (length scale for seepage outflow REG)</td>
+	<td align="center"> m </td>
+</tr>
+<tr>
+	<td align="center">i_zr</td>
+	<td align="center">average channel bed elevation</td>
+	<td align="center"> m </td>
+</tr>
+<tr>
+	<td align="center">i_go</td>
+	<td align="center">slope close to channel</td>
+	<td align="center"> rad </td>
+</tr>
+<tr>
+	<td align="center">i_ksat</td>
+	<td align="center">Saturated hydraulic conductivity in</td>
+	<td align="center"> m/s </td>
+</tr>
+<tr>
+	<td align="center">i_thetar</td>
+	<td align="center">residual soil moisture</td>
+	<td align="center"> - </td>
+</tr>
+<tr>
+	<td align="center">i_thetas</td>
+	<td align="center">saturated soil moisture</td>
+	<td align="center"> - </td>
+</tr>
+<tr>
+	<td align="center">i_nvg</td>
+	<td align="center">van Genuchten soil parameter n</td>
+	<td align="center"> - </td>
+</tr>
+<tr>
+	<td align="center">i_avg</td>
+	<td align="center">van Genuchten soil parameter alpha</td>
+	<td align="center"> 1/m </td>
+</tr>
+<tr>
+	<td align="center">i_delz</td>
+	<td align="center">thickness of soil sublayers</td>
+	<td align="center"> m </td>
+</tr>
+
+<tr>
+	<td align="center"><b>shufflepar</b></td>
+</tr>
+<tr>
+	<td align="center">vom_command</td>
+	<td align="center">1 for -optimise with sce, 2 for -run without optization with pars.txt, 3 for run for ncp only with pars.txt, 4 for optimise without random_seed</td>
+	<td align="center">  </td>
+</tr>
+<tr>
+	<td align="center">i_ncomp_</td>
+	<td align="center">maximum number of complexes</td>
+	<td align="center"> - </td>
+</tr>
+<tr>
+	<td align="center">i_ncompmin</td>
+	<td align="center">minimum number of complexes</td>
+	<td align="center"> m </td>
+</tr>
+<tr>
+	<td align="center">i_resolution</td>
+	<td align="center">resolution of optimization (% of max variation when optimisation stops)</td>
+	<td align="center"> m </td>
+</tr>
+<tr>
+	<td align="center">i_patience</td>
+	<td align="center">number of loops without increase in NCP before optimisation stops</td>
+	<td align="center">  - </td>
+</tr>
+<tr>
+	<td align="center">i_nsimp</td>
+	<td align="center">number of optimisations per complex and run</td>
+	<td align="center"> m </td>
+</tr>
+<tr>
+	<td align="center">i_focus</td>
+	<td align="center"> if less then 1.0, the spread of the random seed around the initial values is limited</td>
+	<td align="center">  </td>
+</tr>
+<tr>
+	<td align="center">i_iter</td>
+	<td align="center">Maximum iterations in case of random runs</td>
+	<td align="center"> - </td>
+</tr>
+<tr>
+	<td align="center">vom_npar</td>
+	<td align="center">number of parameters in shuffle2par used for optimization in SCE</td>
+	<td align="center"> - </td>
+</tr>
+<tr>
+	<td align="center">n_thread</td>
+	<td align="center">number of threads to be used in parallel</td>
+	<td align="center"> - </td>
+</tr>
+
+
+<tr>
+	<td align="center"><b>shuffle2par</b></td>
+</tr>
+
+<tr>
+	<td align="center">parname0</td>
+	<td align="center">parameter names</td>
+	<td align="center"> - </td>
+</tr>
+<tr>
+	<td align="center">parval0</td>
+	<td align="center">default parameter values</td>
+	<td align="center"> - </td>
+</tr>
+<tr>
+	<td align="center">parmin0</td>
+	<td align="center">minimum parameter values</td>
+	<td align="center"> - </td>
+</tr>
+<tr>
+	<td align="center">parmax0</td>
+	<td align="center">maximum parameter values</td>
+	<td align="center"> - </td>
+</tr>
+<tr>
+	<td align="center">paropt0</td>
+	<td align="center">parameters to optimize</td>
+	<td align="center"> - </td>
+</tr>
+
+
+
+</tbody></table>
+
+<hr>
+</body></html>
