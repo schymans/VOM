@@ -394,7 +394,7 @@
       REAL*8  :: spgfcf_d               ! Daily seepage face flow
 
       REAL*8  :: inf__                  ! Infiltration rate
-      REAL*8  :: infx__                 ! Infiltration excess runoff rate
+      REAL*8  :: infx__                 ! Infiltration excess runoff ratevom_sce_mod
       REAL*8  :: infx_h                 ! Hourly infiltration excess runoff
       REAL*8  :: infx_d                 ! Daily infiltration excess runoff
 
@@ -559,6 +559,8 @@
       REAL*8  :: i_focus      = 1.0     ! Spread of the random seed around the initial values (if <1, then limited)
       INTEGER :: i_iter       = 10      ! Maximum iterations in case of random runs
       INTEGER :: vom_npar     = 8       ! Number of model parameters carried through
+      LOGICAL :: sce_restart  = .FALSE. ! Restarting SCE or starting from scratch
+      REAL*8  :: runtime_limit = 1440.0 ! Maximum runtime for sce; 1day (= 1440 minutes)
 
 !     ************************************
 !     * namelist parameters for shufflevar
