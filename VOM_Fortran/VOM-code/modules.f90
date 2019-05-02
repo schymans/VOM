@@ -394,7 +394,7 @@
       REAL*8  :: spgfcf_d               ! Daily seepage face flow
 
       REAL*8  :: inf__                  ! Infiltration rate
-      REAL*8  :: infx__                 ! Infiltration excess runoff ratevom_sce_mod
+      REAL*8  :: infx__                 ! Infiltration excess runoff rate
       REAL*8  :: infx_h                 ! Hourly infiltration excess runoff
       REAL*8  :: infx_d                 ! Daily infiltration excess runoff
 
