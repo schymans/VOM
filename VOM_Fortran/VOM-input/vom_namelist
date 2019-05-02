@@ -56,6 +56,8 @@ i_nsimp=3,              ! NUMBER OF OPTIMISATIONS PER COMPLEX AND RUN
 i_focus=1.0,            ! IF <1.0, THE SPREAD OF THE RANDOM SEED AROUND THE INITIAL VALUES IS LIMITED
 i_iter=10,              ! Maximum iterations in case of random runs
 vom_npar=6,             ! number of parameters in shuffle2par used for optimization in SCE
+sce_restart=.TRUE.,     ! restart SCE from previous run
+runtime_limit=5,        ! time in minutes before sce stops
 &end
 &shuffle2par
 parname0='lambdagf'   'wsgexp'      'lambdatf'   'wstexp'      'pct'        'rtdepth',

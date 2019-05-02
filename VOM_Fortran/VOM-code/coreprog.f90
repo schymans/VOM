@@ -39,8 +39,12 @@
       INTEGER             :: iostat
       LOGICAL             :: exist
       LOGICAL             :: run_sce
+      REAL                :: starttime
+      REAL                :: currtime
+      REAL                :: runtime
 
       beststat = 0
+      call cpu_time(starttime)
 
 !     * Parameter definitions
 
@@ -54,31 +58,59 @@
 
          call transpmodel_init_once(vom_command)
 
-         !remove old outputfiles for safety 
-         open( kfile_sceout, FILE=trim(adjustl(i_outputpath)) // &
+         if(sce_restart .eqv. .FALSE.) then 
+            !remove old outputfiles for safety 
+            open( kfile_sceout, FILE=trim(adjustl(i_outputpath)) // &
              trim(adjustl(sfile_sceout)), IOSTAT=iostat)
             if (iostat .eq. 0) close(kfile_sceout, status='delete')
-         open( kfile_progress, FILE=trim(adjustl(i_outputpath)) // &
+            open( kfile_progress, FILE=trim(adjustl(i_outputpath)) // &
              trim(adjustl(sfile_progress)), STATUS='old', IOSTAT=iostat)
             if (iostat .eq. 0) close(kfile_progress, status='delete')
-         open( kfile_lastloop, FILE=trim(adjustl(i_outputpath)) // &
+            open( kfile_lastloop, FILE=trim(adjustl(i_outputpath)) // &
              trim(adjustl(sfile_lastloop)), STATUS='old', IOSTAT=iostat)
             if (iostat .eq. 0) close(kfile_lastloop, status='delete')
-         open( kfile_lastbest, FILE=trim(adjustl(i_outputpath)) // &
+            open( kfile_lastbest, FILE=trim(adjustl(i_outputpath)) // &
              trim(adjustl(sfile_lastbest)), STATUS='old', IOSTAT=iostat)
             if (iostat .eq. 0) close(kfile_lastbest, status='delete')
-         open( kfile_bestpars, FILE=trim(adjustl(i_outputpath)) // &
+            open( kfile_bestpars, FILE=trim(adjustl(i_outputpath)) // &
              trim(adjustl(sfile_bestpars)), STATUS='old', IOSTAT=iostat)
             if (iostat .eq. 0) close(kfile_bestpars, status='delete')
-         open( kfile_beststat, FILE=trim(adjustl(i_outputpath)) // &
+            open( kfile_beststat, FILE=trim(adjustl(i_outputpath)) // &
              trim(adjustl(sfile_beststat)), STATUS='old', IOSTAT=iostat)
             if (iostat .eq. 0) close(kfile_beststat, status='delete')
 
+            !run with initial seed
+            write(*,*) "Initializing..."
+            call sce_main()
 
+         else
+            write(*,*) "Restarting SCE from previous run..."
 
-         !run with initial seed
-         write(*,*) "Initializing..."
-         call sce_main()
+            !check if there are files to restart from
+            open( kfile_lastloop, FILE=trim(adjustl(i_outputpath)) // &
+             trim(adjustl(sfile_lastloop)), STATUS='old', IOSTAT=iostat)
+
+            if (iostat .ne. 0) then
+               write(*,*) "ERROR: cannot restart, previous SCE-run did not finish a loop"
+               write(*,*) sfile_lastloop, " not found"
+               write(*,*) "Starting from scratch"
+
+               !run with initial seed
+               write(*,*) "Initializing..."
+               call sce_main()
+
+            end if
+
+            !check if SCE already converged
+            open( kfile_beststat, FILE=trim(adjustl(i_outputpath)) // &
+             trim(adjustl(sfile_beststat)), STATUS='old', IOSTAT=iostat)
+            if (iostat .eq. 0) then
+               write(*,*) "ERROR: cannot restart from this state:"
+               write(*,*) "SCE already converged"
+               stop
+            end if
+
+         end if 
 
          !run again untill sce_status.txt is written
          run_sce = .TRUE.
@@ -87,9 +119,19 @@
             call sce_main()
             open(kfile_beststat, FILE=trim(adjustl(i_outputpath)) // &
              trim(adjustl(sfile_beststat)), STATUS='old', IOSTAT=iostat)
+            
+            !stop if there is convergence  
             if (iostat .eq. 0) then
                run_sce = .FALSE.
             end if
+            
+            call cpu_time(currtime) 
+            runtime = (currtime - starttime)  / (60.0) !minutes
+            !also stop when time is exceeded
+            if (runtime .gt. runtime_limit) then
+               run_sce = .FALSE.
+            end if
+
          end do
 
       endif

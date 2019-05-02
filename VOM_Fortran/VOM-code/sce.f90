@@ -311,7 +311,8 @@ end if
 
       namelist /shufflepar/ vom_command, i_ncomp_, i_ncompmin,         &
      &                      i_resolution, i_patience, i_nsimp,         &
-     &                      i_focus, i_iter, vom_npar, n_thread
+     &                      i_focus, i_iter, vom_npar, sce_restart,    &
+     &                      runtime_limit, n_thread
 
 !     * Input of variable parameters from the parameter file
 
