@@ -87,10 +87,12 @@
             write(*,*) "Restarting SCE from previous run..."
 
             !check if there are files to restart from
-            open( kfile_lastbest, FILE=trim(adjustl(i_outputpath)) // &
-             trim(adjustl(sfile_lastbest)), STATUS='old', IOSTAT=iostat)
-            if (iostat .eq. 1) then
-               write(*,*) "ERROR: cannot restart, no previous SCE-files found"
+            open( kfile_lastloop, FILE=trim(adjustl(i_outputpath)) // &
+             trim(adjustl(sfile_lastloop)), STATUS='old', IOSTAT=iostat)
+
+            if (iostat .ne. 0) then
+               write(*,*) "ERROR: cannot restart, previous SCE-run did not finish a loop"
+               write(*,*) sfile_lastloop, " not found"
                write(*,*) "Starting from scratch"
 
                !run with initial seed
