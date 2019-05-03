@@ -1130,7 +1130,7 @@
 
 
 !     * (3.42, 2.45e-10 from (Out[165])) costs of water distribution and storage
-      q_cpcct_d = i_cpccf * o_pct * o_rtdepth + o_mdstore * 2.45d-10
+      q_cpcct_d = i_cpccf * o_cai * o_rtdepth + o_mdstore * 2.45d-10
       cpccg_d(:) = i_cpccf * pcg_d(:) * o_rgdepth  ! (3.42) water transport costs
 
 
@@ -1187,10 +1187,12 @@
      &           + i_hd) * jmax25t_d(:)) / ((-1.d0 + p_E ** ((i_hd     &
      &           * (273.d0 + tair_h(th_) - topt_)) / (tair_h(th_)      &
      &           + 273.d0 * p_R_ * topt_))) * i_ha + i_hd)
-!     * (3.24), (Out[312])
-      rlt_h(:) = ((ca_h(th_) - gammastar) * o_pct * jmaxt_h(:)         &
+
+!     * (3.24), (Out[312]), leaf respiration trees
+      rlt_h(:) = ((ca_h(th_) - gammastar) * o_cai * lai_lt * jmaxt_h(:)         &
      &         * i_rlratio) / (4.d0 * (ca_h(th_) + 2.d0 * gammastar)   &
      &         * (1.d0 + i_rlratio))
+
 !     * (Out[310], derived from (3.26)) Temperature dependence of Jmax
       jmaxg_h(:) = (p_E ** ((i_ha * (-25.d0 + tair_h(th_)) * (-273.d0  &
      &           + topt_ + 273.d0 * p_R_ * topt_)) / ((25.d0 + 273.d0  &
@@ -1200,13 +1202,15 @@
      &           + i_hd) * jmax25g_d(:)) / ((-1.d0 + p_E ** ((i_hd     &
      &           * (273.d0 + tair_h(th_) - topt_)) / (tair_h(th_)      &
      &           + 273.d0 * p_R_ * topt_))) * i_ha + i_hd)
-      rlg_h(1,:) = ((ca_h(th_) - gammastar) * pcg_d(1) * jmaxg_h(:)    &
+
+!    * respiration grasses
+      rlg_h(1,:) = ((ca_h(th_) - gammastar) * pcg_d(1) * lai_lg * jmaxg_h(:)    &
      &           * i_rlratio) / (4.d0 * (ca_h(th_) + 2.d0 * gammastar) &
      &           * (1.d0 + i_rlratio))  ! (3.24), (Out[312])
-      rlg_h(2,:) = ((ca_h(th_) - gammastar) * pcg_d(2) * jmaxg_h(:)    &
+      rlg_h(2,:) = ((ca_h(th_) - gammastar) * pcg_d(2) * lai_lg * jmaxg_h(:)    &
      &           * i_rlratio) / (4.d0 * (ca_h(th_) + 2.d0 * gammastar) &
      &           * (1.d0 + i_rlratio))  ! (3.24), (Out[312])
-      rlg_h(3,:) = ((ca_h(th_) - gammastar) * pcg_d(3) * jmaxg_h(:)    &
+      rlg_h(3,:) = ((ca_h(th_) - gammastar) * pcg_d(3) * lai_lg * jmaxg_h(:)    &
      &           * i_rlratio) / (4.d0 * (ca_h(th_) + 2.d0 * gammastar) &
      &           * (1.d0 + i_rlratio))  ! (3.24), (Out[312])
 
