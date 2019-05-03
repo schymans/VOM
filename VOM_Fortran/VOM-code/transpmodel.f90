@@ -381,7 +381,7 @@
       if (vom_npar .ge. 2) o_wsgexp   = vom_invar(2)
       if (vom_npar .ge. 3) o_lambdatf = vom_invar(3)
       if (vom_npar .ge. 4) o_wstexp   = vom_invar(4)
-      if (vom_npar .ge. 5) o_pct      = vom_invar(5)
+      if (vom_npar .ge. 5) o_cai      = vom_invar(5)
       if (vom_npar .ge. 6) o_rtdepth  = vom_invar(6)
       if (vom_npar .ge. 7) o_mdstore  = vom_invar(7)
       if (vom_npar .ge. 8) o_rgdepth  = vom_invar(8)
@@ -438,7 +438,7 @@
      &                    i_lai_function,                              &
      &                    i_inputpath, i_outputpath,                   &
      &                    o_lambdagf, o_wsgexp, o_lambdatf, o_wstexp,  &
-     &                    o_pct, o_rtdepth, o_mdstore, o_rgdepth
+     &                    o_cai, o_rtdepth, o_mdstore, o_rgdepth
 
       namelist /input2par/ i_lat, i_cz, i_cgs, i_zr, i_go, i_ksat,     &
      &                     i_thetar, i_thetas, i_nvg, i_avg, i_delz
@@ -978,7 +978,7 @@
 
 !     * Set vegetation parameters
 
-      q_md   = o_pct * i_mdtf + o_mdstore
+      q_md   = o_cai * i_mdtf + o_mdstore
       q_mqx  = q_md * i_mqxtf
       mqtnew = 0.95d0 * q_mqx                  ! initial wood water storage
       mqtold = mqtnew
@@ -1021,14 +1021,14 @@
       if(i_read_pc == 1) then
          pcg_d(:) = perc_cov_veg( 1 )
          !adjust value if perennial + seasonal > 1
-         if( (pcg_d(1) + o_pct) .gt. 1.0) then
-            pcg_d(:) = 1.d0 - o_pct
+         if( (pcg_d(1) + o_cai) .gt. 1.0) then
+            pcg_d(:) = 1.d0 - o_cai
          end if
 
       else       
-         pcg_d(2)     = MIN(1.d0 - o_pct, c_pcgmin)
+         pcg_d(2)     = MIN(1.d0 - o_cai, c_pcgmin)
          pcg_d(:)     = pcg_d(2) + (/-i_incrcovg,0.0d0,i_incrcovg/)  ! vector with values varying by 1%
-         pcg_d(3)     = MIN(MAX(c_pcgmin, pcg_d(3)), 1.d0 - o_pct)
+         pcg_d(3)     = MIN(MAX(c_pcgmin, pcg_d(3)), 1.d0 - o_cai)
       end if
 
       rootlim(:,:) = 0.d0
@@ -1042,7 +1042,6 @@
 
       case(2)
 !        * foliage turnover costs, LAI as a function of cover (Choudhurry,1987; Monsi and Saeki,1953)
-         !q_tct_d = i_tcf * o_pct * 2.0d0 * log(1 / (1-o_pct) )
          q_tct_d = i_tcf * o_cai * lai_lt
       end select
 
@@ -1103,14 +1102,14 @@
          pcg_d(:) = perc_cov_veg(nday)
 
          !adjust value if perennial + seasonal > 1
-         if( (pcg_d(1) + o_pct) .gt. 1.0) then
-            pcg_d(:) = 1.d0 - o_pct
+         if( (pcg_d(1) + o_cai) .gt. 1.0) then
+            pcg_d(:) = 1.d0 - o_cai
          end if
 
       else
          pcg_d(:)     = pcg_d(2) + (/-i_incrcovg,0.0d0,i_incrcovg/)  ! perc. change grass cover
          pcg_d(:)     = MAX(pcg_d(:), 0.d0)
-         pcg_d(3)     = MIN(MAX(c_pcgmin, pcg_d(3)), 1.d0 - o_pct)
+         pcg_d(3)     = MIN(MAX(c_pcgmin, pcg_d(3)), 1.d0 - o_cai)
       end if
 
 
@@ -1121,7 +1120,6 @@
 
       case(2)
 !        * foliage turnover costs, LAI as a function of cover (Choudhurry,1987; Monsi and Saeki,1953)
-         !tcg_d(:) = i_tcf * pcg_d(:) * 2.0d0 * log(1 / (1-pcg_d(:)) )
          tcg_d(:) = i_tcf * pcg_d(:) * lai_lg
       end select
 
@@ -1677,7 +1675,7 @@
         write(kfile_resultshourly,'(I6,I7,I7,I7,I7,22E15.5)')          &
      &    fyear(nday), fmonth(nday), fday(nday), nday, nhour,          &
      &    rain_h(th_), tair_h(th_), par_h(th_), vd_h(th_), esoil_h,    &
-     &    o_pct + pcg_d(2), jmax25t_d(2), jmax25g_d(2), mqt_,          &
+     &    o_cai + pcg_d(2), jmax25t_d(2), jmax25g_d(2), mqt_,          &
      &    rlt_h(2) + rlg_h(2,2), lambdat_d, lambdag_d, rrt_d + rrg_d,  &
      &    asst_h(2), assg_h(2,2), etmt_h, etmg_h, su__(1), zw_, wsnew, &
      &    spgfcf_h, infx_h
@@ -1755,7 +1753,7 @@
      &  fyear(nday), fmonth(nday), fday(nday), nday, nhour-1,          &
      &  rain_d(nday), tairmax_d(nday), tairmin_d(nday), par_d(nday),   &
      &  vd_d / 24.d0, esoil_d, jmax25t_d(2), jmax25g_d(2),             &
-     &  o_pct + pcg_d(2), rlt_d + rlg_d, lambdat_d, lambdag_d,         &
+     &  o_cai + pcg_d(2), rlt_d + rlg_d, lambdat_d, lambdag_d,         &
      &  rrt_d * 3600.d0 * 24.d0, rrg_d * 3600.d0 * 24.d0, asst_d(2),   &
      &  assg_d(2,2), SUM(su__(1:wlayer_)) / wlayer_, zw_, wsnew,       &
      &  spgfcf_d, infx_d, etmt_d, etmg_d, su__(1), topt_,              &
@@ -1826,7 +1824,7 @@
        output_mat(4, nday) = jmax25g_d(2)
 
        ! Projected cover perennial vegetation plus actual cover seasonal vegetation 
-       output_mat(5, nday) = o_pct + pcg_d(2)
+       output_mat(5, nday) = o_cai + pcg_d(2)
 
        ! Daily tree plus grass leaf respiration
        output_mat(6, nday) = rlt_d + rlg_d
@@ -2025,7 +2023,7 @@
       netcg_d(2,:) = assg_d(2,:) - 3600.d0 * 24.d0 * (cpccg_d(2) + rrg_d + tcg_d(2))
       netcg_d(3,:) = assg_d(3,:) - 3600.d0 * 24.d0 * (cpccg_d(3) + rrg_d + tcg_d(3))
       posmna(:)    = MAXLOC(netcg_d(:,:))
-      pcg_d(2)     = MIN(1.d0 - o_pct, pcg_d(posmna(1)))
+      pcg_d(2)     = MIN(1.d0 - o_cai, pcg_d(posmna(1)))
       jmax25g_d(2) = jmax25g_d(posmna(2))
       assg_d(:,:)  = 0.d0
 
