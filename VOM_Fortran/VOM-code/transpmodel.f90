@@ -1038,11 +1038,12 @@
       select case(i_lai_function)
       case(1)
 !        * (3.38)  foliage turnover costs, assuming crown LAI of 2.5
-         q_tct_d = i_tcf * o_pct * 2.5d0
+         q_tct_d = i_tcf * o_cai * 2.5d0
 
       case(2)
 !        * foliage turnover costs, LAI as a function of cover (Choudhurry,1987; Monsi and Saeki,1953)
-         q_tct_d = i_tcf * o_pct * 2.0d0 * log(1 / (1-o_pct) )
+         !q_tct_d = i_tcf * o_pct * 2.0d0 * log(1 / (1-o_pct) )
+         q_tct_d = i_tcf * o_cai * lai_lt
       end select
 
 !     * Setting yearly, daily and hourly parameters
@@ -1120,7 +1121,8 @@
 
       case(2)
 !        * foliage turnover costs, LAI as a function of cover (Choudhurry,1987; Monsi and Saeki,1953)
-         tcg_d(:) = i_tcf * pcg_d(:) * 2.0d0 * log(1 / (1-pcg_d(:)) )
+         !tcg_d(:) = i_tcf * pcg_d(:) * 2.0d0 * log(1 / (1-pcg_d(:)) )
+         tcg_d(:) = i_tcf * pcg_d(:) * lai_lg
       end select
 
 !     * (3.40), (Out[190])  root respiration [mol/s]
