@@ -1097,6 +1097,9 @@
       jmax25g_d(:) = jmax25g_d(2) * (/1.0d0-i_incrjmax,1.0d0,1.0d0+i_incrjmax/)
       jmax25g_d(:) = MAX(jmax25g_d(:), 50.0d-6)
 
+!     * adjust lai-values
+      lai_lt(:) = lai_lt(2) * (/1.0d0-i_incrlait,1.0d0,1.0d0+i_incrlait/)
+      lai_lg(:) = lai_lg(2) * (/1.0d0-i_incrlaig,1.0d0,1.0d0+i_incrlaig/)
 
       if( i_read_pc == 1) then   
          pcg_d(:) = perc_cov_veg(nday)
@@ -1113,14 +1116,16 @@
       end if
 
 
+!     * Foliage turnover costs
       select case(i_lai_function)
       case(1)
 !        * (3.38) foliage turnover costs, assuming LAI/pc of 2.5
-         tcg_d(:)     = i_tcf * pcg_d(:) * 2.5d0
-
+         tcg_d(:)     = i_tcf * pcg_d(:) * 2.5d0 !grasses
+         q_tct_d      = i_tcf * o_cai * 2.5d0    !trees
       case(2)
-!        * foliage turnover costs, LAI as a function of cover (Choudhurry,1987; Monsi and Saeki,1953)
-         tcg_d(:) = i_tcf * pcg_d(:) * lai_lg
+!        * foliage turnover costs, varying lai
+         tcg_d(:)   = i_tcf * pcg_d(:) * lai_lg(:) !grasses --> should be 9 combinations now
+         q_tct_d(:) = i_tcf * o_cai * lai_lt(:)     !trees
       end select
 
 !     * (3.40), (Out[190])  root respiration [mol/s]
