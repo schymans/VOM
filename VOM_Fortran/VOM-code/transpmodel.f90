@@ -1257,14 +1257,24 @@
       if (par_h(th_) .gt. 0.d0) then
 !       * adaptation of topt to air temperature during sunlight
         topt_ = topt_ + i_toptf * (tair_h(th_) + 273.d0 - topt_)
+
+!       * fraction of absorbed radiation per crown area (Beer-lambert)
+        Ma_lt = 1.0d0 - p_E ** (-lai_lt/2.0d0)
+
+!       * calculate electron transport capacity trees
         jactt(:)   = (1.d0 - p_E ** (-(i_alpha * par_h(th_))           &
-     &             / jmaxt_h(:))) * jmaxt_h(:) * o_pct  ! (3.23), (Out[311])
+     &             / jmaxt_h(:))) * jmaxt_h(:) * o_cai * Ma_lt  ! (3.23), (Out[311])
+
+!       * fraction of absorbed radiation per crown area grasses (Beer-lambert)
+        Ma_lg = 1.0d0 - p_E ** (-lai_lg/2.0d0)
+
+!       * calculate electron transport capacity grasses
         jactg(1,:) = (1.d0 - p_E ** (-(i_alpha * par_h(th_))           &
-     &             / jmaxg_h(:))) * jmaxg_h(:) * pcg_d(1)  ! (3.23), (Out[311])
+     &             / jmaxg_h(:))) * jmaxg_h(:) * pcg_d(1) * Ma_lg  ! (3.23), (Out[311])
         jactg(2,:) = (1.d0 - p_E ** (-(i_alpha * par_h(th_))           &
-     &             / jmaxg_h(:))) * jmaxg_h(:) * pcg_d(2)  ! (3.23), (Out[311])
+     &             / jmaxg_h(:))) * jmaxg_h(:) * pcg_d(2) * Ma_lg  ! (3.23), (Out[311])
         jactg(3,:) = (1.d0 - p_E ** (-(i_alpha * par_h(th_))           &
-     &             / jmaxg_h(:))) * jmaxg_h(:) * pcg_d(3)  ! (3.23), (Out[311])
+     &             / jmaxg_h(:))) * jmaxg_h(:) * pcg_d(3) * Ma_lg  ! (3.23), (Out[311])
 
         cond1      = (2.d0 * p_a * vd_h(th_)) / (ca_h(th_) + 2.d0 * gammastar)
         cond2      = (4.d0 * ca_h(th_) * rlt_h(2) + 8.d0 * gammastar   &
@@ -1273,21 +1283,6 @@
      &             * rlg_h(:,:)) / (ca_h(th_) - gammastar)
 
         if (vd_h(th_) .gt. 0.d0 .and. lambdat_d .gt. cond1 .and. jactt(2) .gt. cond2) then
-
-!         gstomt = MAX(0.d0, (0.25d0 * (p_a * (ca_h(th_) * (jactt(2)   &
-!    &           - 4.d0 * rlt_h(2)) - 4.d0 * gammastar * (jactt(2)     &
-!    &           + 2.d0 * rlt_h(2))) * vd_h(th_) * (ca_h(th_)          &
-!    &           * lambdat_d + 2.d0 * gammastar * lambdat_d - p_a      &
-!    &           * vd_h(th_)) + 1.7320508075688772d0 * SQRT(p_a        &
-!    &           * gammastar * jactt(2) * (ca_h(th_) * (jactt(2)       &
-!    &           - 4.d0 * rlt_h(2)) - gammastar * (jactt(2) + 8.d0     &
-!    &           * rlt_h(2))) * vd_h(th_) * (ca_h(th_) * lambdat_d     &
-!    &           + 2.d0 * gammastar * lambdat_d - 2.d0 * p_a           &
-!    &           * vd_h(th_)) ** 2.d0 * (ca_h(th_) * lambdat_d + 2.d0  &
-!    &           * gammastar * lambdat_d - p_a * vd_h(th_)))))         &
-!    &           / (p_a * (ca_h(th_) + 2.d0 * gammastar) ** 2.d0       &
-!    &           * vd_h(th_) * (ca_h(th_) * lambdat_d + 2.d0           &
-!    &           * gammastar * lambdat_d - p_a * vd_h(th_))))
 
           part1 = ca_h(th_) + 2.d0 * gammastar
           part2 = part1 * lambdat_d - p_a * vd_h(th_)
