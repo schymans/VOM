@@ -115,15 +115,15 @@
       enddo
 
 !     * rl does not need to be included here as ass=-rl if j=0 (at night)
-      tp_netass = tp_netass + asst_h(2) - 3600.d0 * (q_cpcct_d + rrt_d &
+      tp_netass = tp_netass + asst_h(2,2) - 3600.d0 * (q_cpcct_d + rrt_d &
      &          + q_tct_d(2) ) + assg_h(2,2,2) - 3600.d0 * (cpccg_d(2)       &
      &          + rrg_d + tcg_d(2,2))
       tp_netassg_d = tp_netassg_d + assg_h(2,2,2) - 3600.d0 * (cpccg_d(2)       &
      &          + rrg_d + tcg_d(2,2))
-      tp_netasst_d = tp_netasst_d + asst_h(2) - 3600.d0 * (q_cpcct_d + rrt_d &
+      tp_netasst_d = tp_netasst_d + asst_h(2,2) - 3600.d0 * (q_cpcct_d + rrt_d &
      &          + q_tct_d(2) ) 
 
-      asst_d(:)   = asst_d(:)   + asst_h(:)
+      asst_d(:,:)   = asst_d(:,:)   + asst_h(:,:)
       assg_d(:,:,:) = assg_d(:,:,:) + assg_h(:,:,:)
       ruptkt_d(:) = ruptkt_d(:) + ruptkt_h(:)
       ruptkg_d(:) = ruptkg_d(:) + ruptkg_h(:)
@@ -1031,7 +1031,7 @@
          pcg_d(3)     = MIN(MAX(c_pcgmin, pcg_d(3)), 1.d0 - o_cai)
       end if
 
-      rootlim(:,:) = 0.d0
+      rootlim(:,:,:) = 0.d0
 
 !     * Direct costs
 
@@ -1056,7 +1056,7 @@
       esoil_y     = 0.d0
       ruptkt_d(:) = 0.d0
       ruptkg_d(:) = 0.d0
-      asst_d(:)   = 0.d0
+      asst_d(:,:)   = 0.d0
       assg_d(:,:,:) = 0.d0
       ioacum      = 0.d0
 !     * for grasses
@@ -1245,7 +1245,7 @@
       endif
 
       time        = 0.d0
-      asst_h(:)   = 0.d0
+      asst_h(:,:)   = 0.d0
       assg_h(:,:,:) = 0.d0
       ruptkt_h(:) = 0.d0
       ruptkg_h(:) = 0.d0
@@ -1266,28 +1266,36 @@
       REAL*8 :: cond3(3,3,3)
       REAL*8 :: part1, part2, part3, part4, part5
       REAL*8 :: part6, part7, part8, part9
+      INTEGER:: ii
+      REAL*8 :: Ma_lg(3)
+      REAL*8 :: Ma_lt(3)
+
 
       if (par_h(th_) .gt. 0.d0) then
 !       * adaptation of topt to air temperature during sunlight
         topt_ = topt_ + i_toptf * (tair_h(th_) + 273.d0 - topt_)
 
 !       * fraction of absorbed radiation per crown area (Beer-lambert)
-        Ma_lt = 1.0d0 - p_E ** (-lai_lt/2.0d0)
+        Ma_lt(:) = 1.0d0 - p_E ** (-lai_lt(:)/2.0d0)
 
 !       * calculate electron transport capacity trees
-        jactt(:)   = (1.d0 - p_E ** (-(i_alpha * par_h(th_))           &
-     &             / jmaxt_h(:))) * jmaxt_h(:) * o_cai * Ma_lt  ! (3.23), (Out[311])
+        do ii = 1,3
+           jactt(:,ii)   = (1.d0 - p_E ** (-(i_alpha * par_h(th_))           &    
+        &             / jmaxt_h(:))) * jmaxt_h(:) * o_cai * Ma_lt(ii)  ! (3.23), (Out[311])
+        end do
 
 !       * fraction of absorbed radiation per crown area grasses (Beer-lambert)
-        Ma_lg = 1.0d0 - p_E ** (-lai_lg/2.0d0)
+        Ma_lg(:) = 1.0d0 - p_E ** (-lai_lg(:)/2.0d0)
 
 !       * calculate electron transport capacity grasses
-        jactg(1,:) = (1.d0 - p_E ** (-(i_alpha * par_h(th_))           &
-     &             / jmaxg_h(:))) * jmaxg_h(:) * pcg_d(1) * Ma_lg  ! (3.23), (Out[311])
-        jactg(2,:) = (1.d0 - p_E ** (-(i_alpha * par_h(th_))           &
-     &             / jmaxg_h(:))) * jmaxg_h(:) * pcg_d(2) * Ma_lg  ! (3.23), (Out[311])
-        jactg(3,:) = (1.d0 - p_E ** (-(i_alpha * par_h(th_))           &
-     &             / jmaxg_h(:))) * jmaxg_h(:) * pcg_d(3) * Ma_lg  ! (3.23), (Out[311])
+        do ii = 1,3
+           jactg(1,:,ii) = (1.d0 - p_E ** (-(i_alpha * par_h(th_))           &
+     &             / jmaxg_h(:))) * jmaxg_h(:) * pcg_d(1) * Ma_lg(ii)  ! (3.23), (Out[311])
+           jactg(2,:,ii) = (1.d0 - p_E ** (-(i_alpha * par_h(th_))           &
+     &             / jmaxg_h(:))) * jmaxg_h(:) * pcg_d(2) * Ma_lg(ii)  ! (3.23), (Out[311])
+           jactg(3,:,ii) = (1.d0 - p_E ** (-(i_alpha * par_h(th_))           &
+     &             / jmaxg_h(:))) * jmaxg_h(:) * pcg_d(3) * Ma_lg(ii)  ! (3.23), (Out[311])
+        end do
 
         cond1      = (2.d0 * p_a * vd_h(th_)) / (ca_h(th_) + 2.d0 * gammastar)
         cond2      = (4.d0 * ca_h(th_) * rlt_h(2) + 8.d0 * gammastar   &
@@ -1295,14 +1303,14 @@
         cond3(:,:,:) = (4.d0 * ca_h(th_) * rlg_h(:,:,:) + 8.d0 * gammastar &
      &             * rlg_h(:,:,:)) / (ca_h(th_) - gammastar)
 
-        if (vd_h(th_) .gt. 0.d0 .and. lambdat_d .gt. cond1 .and. jactt(2) .gt. cond2) then
+        if (vd_h(th_) .gt. 0.d0 .and. lambdat_d .gt. cond1 .and. jactt(2,2) .gt. cond2) then
 
           part1 = ca_h(th_) + 2.d0 * gammastar
           part2 = part1 * lambdat_d - p_a * vd_h(th_)
           part3 = p_a * vd_h(th_) * part2
 
-          part4 = ca_h(th_) * (jactt(2) - 4.d0 * rlt_h(2))
-          part5 = gammastar * jactt(2)
+          part4 = ca_h(th_) * (jactt(2,2) - 4.d0 * rlt_h(2))
+          part5 = gammastar * jactt(2,2)
           part6 = gammastar * 8.d0 * rlt_h(2)
           part7 = part4 - part5 - part6
 
@@ -1318,17 +1326,16 @@
         transpt = p_a * vd_h(th_) * gstomt  ! (3.28) transpiration rate in mol/s
         etmt__ = (transpt * 18.d0) / (10.d0 ** 6.d0)  ! transpiration rate in m/s
 
-        where (vd_h(th_) .gt. 0.d0 .and. lambdag_d .gt. cond1 .and. jactg(:,:) .gt. cond3(:,:,:))
-
         do ii = 1,3
+        where (vd_h(th_) .gt. 0.d0 .and. lambdag_d .gt. cond1 .and. jactg(:,:,ii) .gt. cond3(:,:,ii))
           gstomg(:,:,ii) = MAX(0.d0,(0.25d0 * (p_a * (ca_h(th_)           &
-           &          * (jactg(:,:) - 4.d0 * rlg_h(:,:,ii)) - 4.d0        &
-           &          * gammastar * (jactg(:,:) + 2.d0 * rlg_h(:,:,ii)))  &
+           &          * (jactg(:,:,ii) - 4.d0 * rlg_h(:,:,ii)) - 4.d0        &
+           &          * gammastar * (jactg(:,:,ii) + 2.d0 * rlg_h(:,:,ii)))  &
            &          * vd_h(th_) * (ca_h(th_) * lambdag_d + 2.d0      &
            &          * gammastar * lambdag_d - p_a * vd_h(th_))       &
            &          + 1.7320508075688772d0 * SQRT(p_a * gammastar    &
-           &          * jactg(:,:) * (ca_h(th_) * (jactg(:,:) - 4.d0   &
-           &          * rlg_h(:,:,ii)) - gammastar * (jactg(:,:) + 8.d0   &
+           &          * jactg(:,:,ii) * (ca_h(th_) * (jactg(:,:,ii) - 4.d0   &
+           &          * rlg_h(:,:,ii)) - gammastar * (jactg(:,:,ii) + 8.d0   &
            &          * rlg_h(:,:,ii))) * vd_h(th_) * (ca_h(th_)          &
            &          * lambdag_d + 2.d0 * gammastar * lambdag_d       &
            &          - 2.d0 * p_a * vd_h(th_)) ** 2.d0 * (ca_h(th_)   &
@@ -1337,18 +1344,17 @@
            &          * gammastar) ** 2.d0 * vd_h(th_) * (ca_h(th_)    &
            &          * lambdag_d + 2.d0 * gammastar * lambdag_d       &
            &          - p_a * vd_h(th_))))  ! (Out[314])
-        end do
-
         elsewhere
-          gstomg(:,:,:) = 0.d0
+          gstomg(:,:,ii) = 0.d0
         endwhere
+        end do
         transpg(:,:,:) = p_a * vd_h(th_) * gstomg(:,:,:)  ! (3.28) transpiration rate in mol/s
         etmg__(:,:,:) = (transpg(:,:,:) * 18.d0) / (10.d0 ** 6.d0)  ! transpiration rate in m/s
       else
-        jactt(:)    = 0.d0
+        jactt(:,:)    = 0.d0
         gstomt      = 0.d0
         etmt__      = 0.d0
-        jactg(:,:)  = 0.d0
+        jactg(:,:,:)  = 0.d0
         gstomg(:,:,:) = 0.d0
         etmg__(:,:,:) = 0.d0
       endif
@@ -1456,7 +1462,7 @@
           ruptkg__(pos_ulg+1:s_maxlayer) = 0.d0
           if (SUM(ruptkg__(:)) .gt. 0.d0) then
             where (etmg__(:,:,:) .gt. SUM(ruptkg__(:)))
-              rootlim(:,:)  = 1.d0
+              rootlim(:,:,:)  = 1.d0
               etmg__(:,:,:)   = SUM(ruptkg__(:))
               transpg(:,:,:)  = etmg__(:,:,:) * 55555.555555555555d0  ! (Out[249]) mol/s=m/s*10^6 g/m/(18g/mol)
               gstomg(:,:,:)   = transpg(:,:,:) / (p_a * vd_h(th_))
@@ -1617,26 +1623,28 @@
       use vom_vegwat_mod
       implicit none
 
-      REAL*8 :: asst__(3)
-      REAL*8 :: assg__(3,3)
+      REAL*8 :: asst__(3,3)
+      REAL*8 :: assg__(3,3,3)
       INTEGER:: ii
 
-      asst__(:) = (4.d0 * ca_h(th_) * gstomt + 8.d0 * gammastar        &
-     &          * gstomt + jactt(:) - 4.d0 * rlt_h(:) - SQRT((-4.d0    &
-     &          * ca_h(th_) * gstomt + 8.d0 * gammastar * gstomt       &
-     &          + jactt(:) - 4.d0 * rlt_h(:)) ** 2.d0 + 16.d0          &
-     &          * gammastar * gstomt * (8.d0 * ca_h(th_) * gstomt      &
-     &          + jactt(:) + 8.d0 * rlt_h(:)))) / 8.d0  ! (3.22) ; (Out[319])
-      asst_h(:) = asst_h(:) + asst__(:) * dt_
+    do ii = 1,3 !loop for LAI values
+      asst__(:,ii) = (4.d0 * ca_h(th_) * gstomt + 8.d0 * gammastar        &
+        &          * gstomt + jactt(:,ii) - 4.d0 * rlt_h(:) - SQRT((-4.d0    &
+        &          * ca_h(th_) * gstomt + 8.d0 * gammastar * gstomt       &
+        &          + jactt(:,ii) - 4.d0 * rlt_h(:)) ** 2.d0 + 16.d0          &
+        &          * gammastar * gstomt * (8.d0 * ca_h(th_) * gstomt      &
+        &          + jactt(:,ii) + 8.d0 * rlt_h(:)))) / 8.d0  ! (3.22) ; (Out[319])
+    end do
+        asst_h(:,:) = asst_h(:,:) + asst__(:,:) * dt_
 
     do ii = 1,3 !loop for LAI values
         assg__(:,:,ii) = (4.d0 * ca_h(th_) * gstomg(:,:,ii) + 8.d0 * gammastar &
-        &         * gstomg(:,:,ii) + jactg(:,:) - 4.d0 * rlg_h(:,:,ii)       &
+        &         * gstomg(:,:,ii) + jactg(:,:,ii) - 4.d0 * rlg_h(:,:,ii)       &
         &         - SQRT((-4.d0 * ca_h(th_) * gstomg(:,:,ii) + 8.d0       &
-        &         * gammastar * gstomg(:,:,ii) + jactg(:,:) - 4.d0        &
+        &         * gammastar * gstomg(:,:,ii) + jactg(:,:,ii) - 4.d0        &
         &         * rlg_h(:,:,ii)) ** 2.d0 + 16.d0 * gammastar            &
         &         * gstomg(:,:,ii) * (8.d0 * ca_h(th_) * gstomg(:,:,ii)      &
-        &         + jactg(:,:) + 8.d0 * rlg_h(:,:,ii)))) / 8.d0  ! (3.22); (Out[319])
+        &         + jactg(:,:,ii) + 8.d0 * rlg_h(:,:,ii)))) / 8.d0  ! (3.22); (Out[319])
     end do
       assg_h(:,:,:) = assg_h(:,:,:) + assg__(:,:,:) * dt_
       ruptkt_h(:) = ruptkt_h(:) + ruptkt__(:) * dt_
@@ -1696,7 +1704,7 @@
      &    rain_h(th_), tair_h(th_), par_h(th_), vd_h(th_), esoil_h,    &
      &    o_cai + pcg_d(2), jmax25t_d(2), jmax25g_d(2), mqt_,          &
      &    rlt_h(2) + rlg_h(2,2,2), lambdat_d, lambdag_d, rrt_d + rrg_d,  &
-     &    asst_h(2), assg_h(2,2,2), etmt_h, etmg_h, su__(1), zw_, wsnew, &
+     &    asst_h(2,2), assg_h(2,2,2), etmt_h, etmg_h, su__(1), zw_, wsnew, &
      &    spgfcf_h, infx_h
 
           write(kfile_delzhourly,hourlyformat) fyear(nday),            &
@@ -1773,8 +1781,8 @@
      &  rain_d(nday), tairmax_d(nday), tairmin_d(nday), par_d(nday),   &
      &  vd_d / 24.d0, esoil_d, jmax25t_d(2), jmax25g_d(2),             &
      &  o_cai + pcg_d(2), rlt_d + rlg_d, lambdat_d, lambdag_d,         &
-     &  rrt_d * 3600.d0 * 24.d0, rrg_d * 3600.d0 * 24.d0, asst_d(2),   &
-     &  assg_d(2,2,2), SUM(su__(1:wlayer_)) / wlayer_, zw_, wsnew,       &
+     &  rrt_d * 3600.d0 * 24.d0, rrg_d * 3600.d0 * 24.d0, asst_d(2,2), &
+     &  assg_d(2,2,2), SUM(su__(1:wlayer_)) / wlayer_, zw_, wsnew,     &
      &  spgfcf_d, infx_d, etmt_d, etmg_d, su__(1), topt_,              &
      &  tp_netassg, tp_netasst
 
@@ -1861,7 +1869,7 @@
        output_mat(10, nday) = rrg_d * 3600.d0 * 24.d0
 
        ! Daily tree assimilation
-       output_mat(11, nday) = asst_d(2)
+       output_mat(11, nday) = asst_d(2,2)
 
        ! Daily grass assimilation
        output_mat(12, nday) = assg_d(2,2,2)
@@ -1991,7 +1999,7 @@
         tcg_y    = tcg_y   + tcg_d(2,2)   * 3600.d0 * 24.d0
 !       * for trees
         etmt_y   = etmt_y  + etmt_d * 1000.d0  ! in [mm]
-        asst_y   = asst_y  + asst_d(2)
+        asst_y   = asst_y  + asst_d(2,2)
         rlt_y    = rlt_y   + rlt_d
         rrt_y    = rrt_y   + rrt_d     * 3600.d0 * 24.d0
         cpcct_y  = cpcct_y + q_cpcct_d * 3600.d0 * 24.d0
@@ -2013,7 +2021,7 @@
         tcg_y    = tcg_d(2,2)   * 3600.d0 * 24.d0
 !       * for trees
         etmt_y = etmt_d * 1000.d0
-        asst_y   = asst_d(2)
+        asst_y   = asst_d(2,2)
         rlt_y    = rlt_d
         rrt_y    = rrt_d     * 3600.d0 * 24.d0
         cpcct_y  = q_cpcct_d * 3600.d0 * 24.d0
@@ -2041,22 +2049,22 @@
       REAL*8  :: netct_d(3,3)           ! Daily grass net carbon profit
       REAL*8  :: pcg_d_tmp              ! Temporary grass cover
       INTEGER :: posma(1)               ! Pointer to variable values that achieved maximum assimilation
-
+      INTEGER :: posbest(2)              ! Pointer to variable values that achieved maximum net assimilation
       !trees
 
       !loop over foliage costs due to different LAI
       !3 values of ncp due to different jmax25t values and LAI
-      netct_d(1,:) = asst_d(1) - 3600.d0 * 24.d0 * (q_cpcct_d + rrt_d + q_tct_d(:))
-      netct_d(2,:) = asst_d(2) - 3600.d0 * 24.d0 * (q_cpcct_d + rrt_d + q_tct_d(:))
-      netct_d(3,:) = asst_d(3) - 3600.d0 * 24.d0 * (q_cpcct_d + rrt_d + q_tct_d(:))
-      posmna(:)    = MAXLOC(netct_d(:,:))
+      netct_d(1,:) = asst_d(1,:) - 3600.d0 * 24.d0 * (q_cpcct_d + rrt_d + q_tct_d(:))
+      netct_d(2,:) = asst_d(2,:) - 3600.d0 * 24.d0 * (q_cpcct_d + rrt_d + q_tct_d(:))
+      netct_d(3,:) = asst_d(3,:) - 3600.d0 * 24.d0 * (q_cpcct_d + rrt_d + q_tct_d(:))
+      posbest(:)    = MAXLOC(netct_d(:,:))
 
 
-      lai_lt(2) = lai_lt(posmna(2))                    !lai trees 
-      jmax25t_d(2) = jmax25t_d(posmna(1))              !jmax25 trees in 
+      lai_lt(2) = lai_lt(posbest(2))                    !lai trees 
+      jmax25t_d(2) = jmax25t_d(posbest(1))              !jmax25 trees in 
   
       !set daily value back to zero
-      asst_d(:)    = 0.d0
+      asst_d(:,:)    = 0.d0
 
 
       !grasses
@@ -2065,27 +2073,28 @@
       max_netcg    = 0.d0
 
       !loop over foliage costs due to different LAI
-      do ii in 1,3
+      do ii = 1,3
 
          !3 values of ncp due to different cover (rows in assg_d) and jmax25g (columns in assg_d)
          netcg_d(1,:) = assg_d(1,:,ii) - 3600.d0 * 24.d0 * (cpccg_d(1) + rrg_d + tcg_d(ii, 1))
          netcg_d(2,:) = assg_d(2,:,ii) - 3600.d0 * 24.d0 * (cpccg_d(2) + rrg_d + tcg_d(ii, 2))
          netcg_d(3,:) = assg_d(3,:,ii) - 3600.d0 * 24.d0 * (cpccg_d(3) + rrg_d + tcg_d(ii, 3))
-         posmna(:)    = MAXLOC(netcg_d(:,:))
-         max_netcg_tmp= netcg_d( posmna(:) )
+         posbest(:)    = MAXLOC(netcg_d(:,:))
+         max_netcg_tmp= netcg_d( posbest(1), posbest(2) )
 
          !check if carbon profit is higher for different LAI
          if( max_netcg_tmp .gt. max_netcg) then
             
-            pcg_d_tmp = MIN(1.d0 - o_cai, pcg_d(posmna(1))) !cover grasses to temporary variable
+            pcg_d_tmp = MIN(1.d0 - o_cai, pcg_d(posbest(1))) !cover grasses to temporary variable
             lai_g_tmp = lai_lg(ii)                          !lai grasses in temporary variable
-            jmax25g_tmp = jmax25g_d(posmna(2))              !jmax25 grasses in temporary variable
+            jmax25g_tmp = jmax25g_d(posbest(2))              !jmax25 grasses in temporary variable
             max_netcg = max_netcg_tmp                       !new NCP is higher as previous
+            posmna = (/ posbest , ii /)
          end if
       end do
 
       !save all temporary variables to the global vectors
-      pcg_d(2)     = MIN(1.d0 - o_cai, pcg_d_tmp ))
+      pcg_d(2)     = MIN(1.d0 - o_cai, pcg_d_tmp )
       jmax25g_d(2) = jmax25g_tmp
       lai_lg(2)    = lai_g_tmp
 
@@ -2137,7 +2146,7 @@
 !     *-----SEASONAL VEGETATION---------------
 
 !     * rootlim is either 0 or 1. Change it to be either -1 or + 1:
-      rootlim(posmna(1),posmna(2)) = 2.d0 * rootlim(posmna(1),posmna(2)) - 1.d0
+      rootlim(posmna(1),posmna(2), posmna(3)) = 2.d0 * rootlim(posmna(1),posmna(2),posmna(3)) - 1.d0
 
       reffg(:) = 0.d0
       maxval_tmp = MAXVAL(ruptkg_d(1:pos_slg) / rsurfg_(1:pos_slg))
@@ -2147,7 +2156,7 @@
 
 !     * if roots are going to be reduced, reverse effectivity vector
 
-      if (rootlim(posmna(1),posmna(2)) .lt. 0.d0) then
+      if (rootlim(posmna(1),posmna(2),posmna(3)) .lt. 0.d0) then
         reffg(:) = 1.d0 - reffg(:)
       endif
 
@@ -2157,11 +2166,11 @@
      &                     * s_delz(1:pos_slg) - rsurft_(1:pos_slg),   &
      &                     MAX(i_rsurfmin * s_delz(1:pos_slg),         &
      &                     rsurfg_(1:pos_slg) + rsurfg_(1:pos_slg)     &
-     &                     * i_growthmax * rootlim(posmna(1),posmna(2))&
+     &                     * i_growthmax * rootlim(posmna(1),posmna(2),posmna(3))&
      &                     * reffg(1:pos_slg)))
       rsurfgnew(pos_slg+1:s_maxlayer) = 0.d0
 
-      rootlim(:,:) = 0.d0
+      rootlim(:,:,:) = 0.d0
       ruptkt_d(:)  = 0.d0
       changef      = 0.d0
 

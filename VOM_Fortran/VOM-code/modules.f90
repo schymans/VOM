@@ -203,7 +203,7 @@
       REAL*8  :: rlt_h(3)               ! Tree leaf respiration for different values of Jmax (rlt_h(2) is actual value)
       REAL*8  :: rlt_d                  ! Daily tree leaf respiration
       REAL*8  :: rlt_y                  ! Annual tree leaf respiration
-      REAL*8  :: rlg_h(3,3)             ! Grass leaf respiration
+      REAL*8  :: rlg_h(3,3,3)           ! Grass leaf respiration
       REAL*8  :: rlg_d                  ! Daily grass leaf respiration
       REAL*8  :: rlg_y                  ! Annual grass leaf respiration
 
@@ -215,8 +215,8 @@
       REAL*8  :: tcg_d(3, 3)            ! Grass foliage turnover costs
       REAL*8  :: tcg_y                  ! Annual grass foliage turnover costs
 
-      REAL*8  :: jactt(3)               ! Electron transport rates for different values of Jmax (jactt(2) is actual value)
-      REAL*8  :: jactg(3,3)             ! Grass electron transport rate
+      REAL*8  :: jactt(3,3)               ! Electron transport rates for different values of Jmax (jactt(2) is actual value)
+      REAL*8  :: jactg(3,3,3)             ! Grass electron transport rate
 
       REAL*8  :: jmaxt_h(3)             ! Tree photosynthetic electron transport capacity
       REAL*8  :: jmaxg_h(3)             ! Grass electron transport capacity
@@ -224,12 +224,15 @@
       REAL*8  :: jmax25t_d(3)           ! Tree photosynthetic electron transport capacity at 25oC
       REAL*8  :: jmax25g_d(3)           ! Grass photosynthetic electron transport capacity at 25oC
 
+      REAL*8  :: lai_lt(3)              ! Local leaf area index trees
+      REAL*8  :: lai_lg(3)              ! Local leaf area index grasses
+
 !     * plant water
 
-      REAL*8  :: asst_h(3)              ! Tree hourly assimilation rate for different values of Jmax (asst_h(2) is actual value)
-      REAL*8  :: asst_d(3)              ! Daily tree assimilation
+      REAL*8  :: asst_h(3,3)            ! Tree hourly assimilation rate for different values of Jmax (asst_h(2) is actual value)
+      REAL*8  :: asst_d(3,3)            ! Daily tree assimilation
       REAL*8  :: asst_y                 ! Annual tree assimilation
-      REAL*8  :: assg_h(3,3)            ! Hourly grass assimilation
+      REAL*8  :: assg_h(3,3,3)          ! Hourly grass assimilation
       REAL*8  :: assg_d(3,3,3)          ! Daily grass assimilation
       REAL*8  :: assg_y                 ! Annual grass assimilation
 
@@ -242,7 +245,7 @@
       REAL*8  :: etmt_h                 ! Hourly transpiration
       REAL*8  :: etmt_d                 ! Daily transpiration rate
       REAL*8  :: etmt_y                 ! Annual tree transpiration
-      REAL*8  :: etmg__(3,3)            ! Grass transpiration rate (m/s)
+      REAL*8  :: etmg__(3,3,3)          ! Grass transpiration rate (m/s)
       REAL*8  :: etmg_h                 ! Hourly grass transpiration
       REAL*8  :: etmg_d                 ! Daily grass transpiration
       REAL*8  :: etmg_y                 ! Annual grass transpiration
@@ -276,13 +279,13 @@
       REAL*8, ALLOCATABLE :: rsurfg_(:)    ! Root surface area of grasses in each layer
       REAL*8, ALLOCATABLE :: rsurfgnew(:)  ! Adjusted root surface area of grasses in each layer for next day
 
-      REAL*8              :: rootlim(3,3)  ! Indicator whether root surface are was limiting root water uptake
+      REAL*8              :: rootlim(3,3,3)  ! Indicator whether root surface are was limiting root water uptake
 
       REAL*8, ALLOCATABLE :: rsoil(:)   ! Resistance to water flow towards roots in each soil layer
 
       REAL*8, ALLOCATABLE :: refft(:)   ! Relative root water uptake efficiency for trees in each layer
       REAL*8, ALLOCATABLE :: reffg(:)   ! Relative root water uptake efficiency for grasses in each layer
-      INTEGER             :: posmna(2)  ! Pointer to variable values that achieved maximum net assimilation
+      INTEGER             :: posmna(3)  ! Pointer to variable values that achieved maximum net assimilation
 
       REAL*8              :: rrt_d      ! Tree root respiration rate (mol/m2/s)
       REAL*8              :: rrt_y      ! Annual tree root respiration
@@ -336,6 +339,8 @@
       REAL*8  :: i_growthmax = 0.1d0    ! Parameter determining maximum daily growth increment of root surface area
       REAL*8  :: i_incrcovg = 0.02d0    ! parameter determining maximum increment percentage of grass cover
       REAL*8  :: i_incrjmax = 0.01d0    ! parameter determining maximum increment percentage of jmax25
+      REAL*8  :: i_incrlait = 0.01d0    ! parameter determining maximum increment percentage of lai trees
+      REAL*8  :: i_incrlaig = 0.01d0    ! parameter determining maximum increment percentage of lai grasses
 
       INTEGER :: i_firstyear = 2000     ! First year for the generation of hourly output in computation mode
       INTEGER :: i_lastyear = 2000      ! Last year for the generation of hourly output in computation mode
