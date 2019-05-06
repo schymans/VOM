@@ -433,7 +433,7 @@
      &                    i_toptstart, i_rlratio, i_mdtf, i_mqxtf,     &
      &                    i_rrootm, i_rsurfmin, i_rsurf_, i_rootrad,   &
      &                    i_prootmg, i_growthmax, i_incrcovg,          &
-     &                    i_incrjmax,                                  &
+     &                    i_incrjmax, i_incrlait, i_incrlaig,          &
      &                    i_firstyear,i_lastyear, i_write_h, i_read_pc,&
      &                    i_lai_function,                              &
      &                    i_inputpath, i_outputpath,                   &
