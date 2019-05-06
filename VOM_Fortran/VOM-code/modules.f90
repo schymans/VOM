@@ -210,9 +210,9 @@
       REAL*8  :: transpt                ! Tree transpiration rate
       REAL*8  :: transpg(3,3)           ! Grass transpiration rate (mol/m2/s)
 
-      REAL*8  :: q_tct_d                ! Tree foliage turnover costs
+      REAL*8  :: q_tct_d(3)             ! Tree foliage turnover costs
       REAL*8  :: tct_y                  ! Annual tree foliage turnover costs
-      REAL*8  :: tcg_d(3)               ! Grass foliage turnover costs
+      REAL*8  :: tcg_d(3, 3)            ! Grass foliage turnover costs
       REAL*8  :: tcg_y                  ! Annual grass foliage turnover costs
 
       REAL*8  :: jactt(3)               ! Electron transport rates for different values of Jmax (jactt(2) is actual value)

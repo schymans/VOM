@@ -116,12 +116,12 @@
 
 !     * rl does not need to be included here as ass=-rl if j=0 (at night)
       tp_netass = tp_netass + asst_h(2) - 3600.d0 * (q_cpcct_d + rrt_d &
-     &          + q_tct_d) + assg_h(2,2) - 3600.d0 * (cpccg_d(2)       &
-     &          + rrg_d + tcg_d(2))
+     &          + q_tct_d(2) ) + assg_h(2,2) - 3600.d0 * (cpccg_d(2)       &
+     &          + rrg_d + tcg_d(2,2))
       tp_netassg_d = tp_netassg_d + assg_h(2,2) - 3600.d0 * (cpccg_d(2)       &
-     &          + rrg_d + tcg_d(2))
+     &          + rrg_d + tcg_d(2,2))
       tp_netasst_d = tp_netasst_d + asst_h(2) - 3600.d0 * (q_cpcct_d + rrt_d &
-     &          + q_tct_d) 
+     &          + q_tct_d(2) ) 
 
       asst_d(:)   = asst_d(:)   + asst_h(:)
       assg_d(:,:) = assg_d(:,:) + assg_h(:,:)
@@ -1038,11 +1038,11 @@
       select case(i_lai_function)
       case(1)
 !        * (3.38)  foliage turnover costs, assuming crown LAI of 2.5
-         q_tct_d = i_tcf * o_cai * 2.5d0
+         q_tct_d(:) = i_tcf * o_cai * 2.5d0
 
       case(2)
 !        * foliage turnover costs, LAI as a function of cover (Choudhurry,1987; Monsi and Saeki,1953)
-         q_tct_d = i_tcf * o_cai * lai_lt
+         q_tct_d(:) = i_tcf * o_cai * lai_lt(:)
       end select
 
 !     * Setting yearly, daily and hourly parameters
@@ -1085,6 +1085,8 @@
       use vom_vegwat_mod
       implicit none
 
+      INTEGER :: ii
+
       rsurft_(:)   = rsurftnew(:)
       rsurfg_(:)   = rsurfgnew(:)
       lambdat_d    = o_lambdatf * (SUM(pcapnew(1:pos_slt)) / pos_slt) ** o_wstexp  ! (3.45)
@@ -1120,11 +1122,13 @@
       select case(i_lai_function)
       case(1)
 !        * (3.38) foliage turnover costs, assuming LAI/pc of 2.5
-         tcg_d(:)     = i_tcf * pcg_d(:) * 2.5d0 !grasses
-         q_tct_d      = i_tcf * o_cai * 2.5d0    !trees
+         tcg_d(:,1)     = i_tcf * pcg_d(:) * 2.5d0 !grasses
+         q_tct_d(:)     = i_tcf * o_cai * 2.5d0    !trees
       case(2)
 !        * foliage turnover costs, varying lai
-         tcg_d(:)   = i_tcf * pcg_d(:) * lai_lg(:) !grasses --> should be 9 combinations now
+         do ii = 1,3
+            tcg_d(ii, :)   = i_tcf * pcg_d(:) * lai_lg(ii) !grasses 
+         end do
          q_tct_d(:) = i_tcf * o_cai * lai_lt(:)     !trees
       end select
 
@@ -1974,14 +1978,14 @@
         rlg_y    = rlg_y   + rlg_d
         rrg_y    = rrg_y   + rrg_d      * 3600.d0 * 24.d0
         cpccg_y  = cpccg_y + cpccg_d(2) * 3600.d0 * 24.d0
-        tcg_y    = tcg_y   + tcg_d(2)   * 3600.d0 * 24.d0
+        tcg_y    = tcg_y   + tcg_d(2,2)   * 3600.d0 * 24.d0
 !       * for trees
         etmt_y   = etmt_y  + etmt_d * 1000.d0  ! in [mm]
         asst_y   = asst_y  + asst_d(2)
         rlt_y    = rlt_y   + rlt_d
         rrt_y    = rrt_y   + rrt_d     * 3600.d0 * 24.d0
         cpcct_y  = cpcct_y + q_cpcct_d * 3600.d0 * 24.d0
-        tct_y    = tct_y   + q_tct_d   * 3600.d0 * 24.d0
+        tct_y    = tct_y   + q_tct_d(2)   * 3600.d0 * 24.d0
       else
         nyear    = fyear(nday)
         rain_y   = rain_d(nday)
@@ -1996,14 +2000,14 @@
         rlg_y    = rlg_d
         rrg_y    = rrg_d      * 3600.d0 * 24.d0
         cpccg_y  = cpccg_d(2) * 3600.d0 * 24.d0
-        tcg_y    = tcg_d(2)   * 3600.d0 * 24.d0
+        tcg_y    = tcg_d(2,2)   * 3600.d0 * 24.d0
 !       * for trees
         etmt_y = etmt_d * 1000.d0
         asst_y   = asst_d(2)
         rlt_y    = rlt_d
         rrt_y    = rrt_d     * 3600.d0 * 24.d0
         cpcct_y  = q_cpcct_d * 3600.d0 * 24.d0
-        tct_y    = q_tct_d   * 3600.d0 * 24.d0
+        tct_y    = q_tct_d(2)   * 3600.d0 * 24.d0
       endif
 
       return
@@ -2012,24 +2016,70 @@
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-!*------ADJUSTMENT OF JMAX25 and PC-------------------------------------
+!*------ADJUSTMENT OF JMAX25, PC, LAI-------------------------------------
 
       subroutine vom_adapt_foliage ()
       use vom_vegwat_mod
       implicit none
 
+      INTEGER :: ii                     ! Counter
+      REAL*8  :: jmax25g_tmp            ! Temporary jmax25g for comparison
+      REAL*8  :: lai_g_tmp              ! Temporary leaf area index for comparison
+      REAL*8  :: max_netcg              ! Maximum daily grass net carbon profit grasses
+      REAL*8  :: max_netct              ! Maximum daily grass net carbon profit trees
+      REAL*8  :: max_netcg_tmp          ! Temporary max net carbon profit
       REAL*8  :: netcg_d(3,3)           ! Daily grass net carbon profit
+      REAL*8  :: pcg_d_tmp              ! Temporary grass cover
       INTEGER :: posma(1)               ! Pointer to variable values that achieved maximum assimilation
 
-      posma(:)     = MAXLOC(asst_d(:))
-      jmax25t_d(2) = jmax25t_d(posma(1))
+      !trees
+
+      !loop over foliage costs due to different LAI
+      !3 values of ncp due to different jmax25t values and LAI
+      netct_d(1,:) = asst_d(1) - 3600.d0 * 24.d0 * (q_cpcct_d + rrt_d + q_tct_d(:))
+      netct_d(2,:) = asst_d(2) - 3600.d0 * 24.d0 * (q_cpcct_d + rrt_d + q_tct_d(:))
+      netct_d(3,:) = asst_d(3) - 3600.d0 * 24.d0 * (q_cpcct_d + rrt_d + q_tct_d(:))
+      posmna(:)    = MAXLOC(netct_d(:,:))
+
+
+      lai_lt(2) = lai_lt(posmna(2))                    !lai trees 
+      jmax25t_d(2) = jmax25t_d(posmna(1))              !jmax25 trees in 
+  
+      !set daily value back to zero
       asst_d(:)    = 0.d0
-      netcg_d(1,:) = assg_d(1,:) - 3600.d0 * 24.d0 * (cpccg_d(1) + rrg_d + tcg_d(1))
-      netcg_d(2,:) = assg_d(2,:) - 3600.d0 * 24.d0 * (cpccg_d(2) + rrg_d + tcg_d(2))
-      netcg_d(3,:) = assg_d(3,:) - 3600.d0 * 24.d0 * (cpccg_d(3) + rrg_d + tcg_d(3))
-      posmna(:)    = MAXLOC(netcg_d(:,:))
-      pcg_d(2)     = MIN(1.d0 - o_cai, pcg_d(posmna(1)))
-      jmax25g_d(2) = jmax25g_d(posmna(2))
+
+
+      !grasses
+
+      !set initial max value at zero
+      max_netcg    = 0.d0
+
+      !loop over foliage costs due to different LAI
+      do ii in 1,3
+
+         !3 values of ncp due to different cover (rows in assg_d) and jmax25g (columns in assg_d)
+         netcg_d(1,:) = assg_d(1,:) - 3600.d0 * 24.d0 * (cpccg_d(1) + rrg_d + tcg_d(ii, 1))
+         netcg_d(2,:) = assg_d(2,:) - 3600.d0 * 24.d0 * (cpccg_d(2) + rrg_d + tcg_d(ii, 2))
+         netcg_d(3,:) = assg_d(3,:) - 3600.d0 * 24.d0 * (cpccg_d(3) + rrg_d + tcg_d(ii, 3))
+         posmna(:)    = MAXLOC(netcg_d(:,:))
+         max_netcg_tmp= netcg_d( posmna(:) )
+
+         !check if carbon profit is higher for different LAI
+         if( max_netcg_tmp .gt. max_netcg) then
+            
+            pcg_d_tmp = MIN(1.d0 - o_cai, pcg_d(posmna(1))) !cover grasses to temporary variable
+            lai_g_tmp = lai_lg(ii)                          !lai grasses in temporary variable
+            jmax25g_tmp = jmax25g_d(posmna(2))              !jmax25 grasses in temporary variable
+            max_netcg = max_netcg_tmp                       !new NCP is higher as previous
+         end if
+      end do
+
+      !save all temporary variables to the global vectors
+      pcg_d(2)     = MIN(1.d0 - o_cai, pcg_d_tmp ))
+      jmax25g_d(2) = jmax25g_tmp
+      lai_lg(2)    = lai_g_tmp
+
+      !set daily value back to zero
       assg_d(:,:)  = 0.d0
 
       return
