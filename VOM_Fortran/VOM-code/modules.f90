@@ -198,7 +198,7 @@
       REAL*8  :: lambdat_d              ! Target dE/dA for calculating gstomt
       REAL*8  :: lambdag_d              ! Target dE/dA for calculating gstomg
       REAL*8  :: gstomt                 ! Tree stomatal conductance
-      REAL*8  :: gstomg(3,3)            ! Grass stomatal conductance
+      REAL*8  :: gstomg(3,3,3)          ! Grass stomatal conductance
 
       REAL*8  :: rlt_h(3)               ! Tree leaf respiration for different values of Jmax (rlt_h(2) is actual value)
       REAL*8  :: rlt_d                  ! Daily tree leaf respiration
@@ -208,7 +208,7 @@
       REAL*8  :: rlg_y                  ! Annual grass leaf respiration
 
       REAL*8  :: transpt                ! Tree transpiration rate
-      REAL*8  :: transpg(3,3)           ! Grass transpiration rate (mol/m2/s)
+      REAL*8  :: transpg(3,3,3)         ! Grass transpiration rate (mol/m2/s)
 
       REAL*8  :: q_tct_d(3)             ! Tree foliage turnover costs
       REAL*8  :: tct_y                  ! Annual tree foliage turnover costs
@@ -230,7 +230,7 @@
       REAL*8  :: asst_d(3)              ! Daily tree assimilation
       REAL*8  :: asst_y                 ! Annual tree assimilation
       REAL*8  :: assg_h(3,3)            ! Hourly grass assimilation
-      REAL*8  :: assg_d(3,3)            ! Daily grass assimilation
+      REAL*8  :: assg_d(3,3,3)          ! Daily grass assimilation
       REAL*8  :: assg_y                 ! Annual grass assimilation
 
       REAL*8  :: q_cpcct_d              ! Tree water transport costs as a function of projected cover and rooting depth (mol/m2/s)
