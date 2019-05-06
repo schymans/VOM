@@ -1289,6 +1289,9 @@
 
 !       * fraction of absorbed radiation per crown area grasses (Beer-lambert)
         Ma_lg(:) = 1.0d0 - p_E ** (-lai_lg(:)/2.0d0)
+!write(*,*) Ma_lg
+!write(*,*) p_E
+!write(*,*) lai_lg
 
 !       * calculate electron transport capacity grasses
         do ii = 1,3
@@ -2073,7 +2076,7 @@
       !grasses
 
       !set initial max value at zero
-      max_netcg    = 0.d0
+      max_netcg    = -9999.d0
 
       !loop over foliage costs due to different LAI
       do ii = 1,3
@@ -2100,7 +2103,8 @@
       pcg_d(2)     = MIN(1.d0 - o_cai, pcg_d_tmp )
       jmax25g_d(2) = jmax25g_tmp
       lai_lg(2)    = lai_g_tmp
-
+!write(*,*) "adapt foliage"
+!write(*,*) lai_lg
       !set daily value back to zero
       assg_d(:,:,:)  = 0.d0
 
