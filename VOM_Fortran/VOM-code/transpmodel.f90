@@ -1199,9 +1199,11 @@
      &           + 273.d0 * p_R_ * topt_))) * i_ha + i_hd)
 
 !     * (3.24), (Out[312]), leaf respiration trees
-      rlt_h(:) = ((ca_h(th_) - gammastar) * o_cai * lai_lt * jmaxt_h(:)         &
+     do ii = 1,3 !loop for LAI-values
+      rlt_h(:,ii) = ((ca_h(th_) - gammastar) * o_cai * lai_lt(ii) * jmaxt_h(:)         &
      &         * i_rlratio) / (4.d0 * (ca_h(th_) + 2.d0 * gammastar)   &
      &         * (1.d0 + i_rlratio))
+     end do
 
 !     * (Out[310], derived from (3.26)) Temperature dependence of Jmax
       jmaxg_h(:) = (p_E ** ((i_ha * (-25.d0 + tair_h(th_)) * (-273.d0  &
@@ -1290,8 +1292,8 @@
 !       * fraction of absorbed radiation per crown area grasses (Beer-lambert)
         Ma_lg(:) = 1.0d0 - p_E ** (-lai_lg(:)/2.0d0)
 !write(*,*) Ma_lg
-!write(*,*) p_E
-write(*,*) lai_lg
+!write(*,*) Ma_lt
+write(*,*) lai_lt
 
 !       * calculate electron transport capacity grasses
         do ii = 1,3
@@ -1304,8 +1306,8 @@ write(*,*) lai_lg
         end do
 
         cond1      = (2.d0 * p_a * vd_h(th_)) / (ca_h(th_) + 2.d0 * gammastar)
-        cond2      = (4.d0 * ca_h(th_) * rlt_h(2) + 8.d0 * gammastar   &
-     &             * rlt_h(2)) / (ca_h(th_) - gammastar)
+        cond2      = (4.d0 * ca_h(th_) * rlt_h(2,2) + 8.d0 * gammastar   &
+     &             * rlt_h(2,2)) / (ca_h(th_) - gammastar)
         cond3(:,:,:) = (4.d0 * ca_h(th_) * rlg_h(:,:,:) + 8.d0 * gammastar &
      &             * rlg_h(:,:,:)) / (ca_h(th_) - gammastar)
 
@@ -1315,9 +1317,9 @@ write(*,*) lai_lg
           part2 = part1 * lambdat_d - p_a * vd_h(th_)
           part3 = p_a * vd_h(th_) * part2
 
-          part4 = ca_h(th_) * (jactt(2,2) - 4.d0 * rlt_h(2))
+          part4 = ca_h(th_) * (jactt(2,2) - 4.d0 * rlt_h(2,2))
           part5 = gammastar * jactt(2,2)
-          part6 = gammastar * 8.d0 * rlt_h(2)
+          part6 = gammastar * 8.d0 * rlt_h(2,2)
           part7 = part4 - part5 - part6
 
           part8 = SQRT(part5 * part7 * (part2 - p_a * vd_h(th_)) ** 2.d0 * part3)
@@ -1635,11 +1637,11 @@ write(*,*) lai_lg
 
     do ii = 1,3 !loop for LAI values
       asst__(:,ii) = (4.d0 * ca_h(th_) * gstomt + 8.d0 * gammastar        &
-        &          * gstomt + jactt(:,ii) - 4.d0 * rlt_h(:) - SQRT((-4.d0    &
+        &          * gstomt + jactt(:,ii) - 4.d0 * rlt_h(:,ii) - SQRT((-4.d0    &
         &          * ca_h(th_) * gstomt + 8.d0 * gammastar * gstomt       &
-        &          + jactt(:,ii) - 4.d0 * rlt_h(:)) ** 2.d0 + 16.d0          &
+        &          + jactt(:,ii) - 4.d0 * rlt_h(:,ii)) ** 2.d0 + 16.d0          &
         &          * gammastar * gstomt * (8.d0 * ca_h(th_) * gstomt      &
-        &          + jactt(:,ii) + 8.d0 * rlt_h(:)))) / 8.d0  ! (3.22) ; (Out[319])
+        &          + jactt(:,ii) + 8.d0 * rlt_h(:,ii)))) / 8.d0  ! (3.22) ; (Out[319])
     end do
         asst_h(:,:) = asst_h(:,:) + asst__(:,:) * dt_
 
@@ -1682,7 +1684,7 @@ write(*,*) lai_lg
       esoil_d  = esoil_d  + esoil_h
       spgfcf_d = spgfcf_d + spgfcf_h
       infx_d   = infx_d   + infx_h
-      rlt_d    = rlt_d    + rlt_h(2)   * 3600.d0  ! rlt_d in mol/day
+      rlt_d    = rlt_d    + rlt_h(2,2)   * 3600.d0  ! rlt_d in mol/day
       rlg_d    = rlg_d    + rlg_h(2,2,2) * 3600.d0
 
       return
@@ -1709,7 +1711,7 @@ write(*,*) lai_lg
      &    fyear(nday), fmonth(nday), fday(nday), nday, nhour,          &
      &    rain_h(th_), tair_h(th_), par_h(th_), vd_h(th_), esoil_h,    &
      &    o_cai + pcg_d(2), jmax25t_d(2), jmax25g_d(2), mqt_,          &
-     &    rlt_h(2) + rlg_h(2,2,2), lambdat_d, lambdag_d, rrt_d + rrg_d,  &
+     &    rlt_h(2,2) + rlg_h(2,2,2), lambdat_d, lambdag_d, rrt_d + rrg_d,  &
      &    asst_h(2,2), assg_h(2,2,2), etmt_h, etmg_h, su__(1), zw_, wsnew, &
      &    spgfcf_h, infx_h
 

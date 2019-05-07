@@ -200,7 +200,7 @@
       REAL*8  :: gstomt                 ! Tree stomatal conductance
       REAL*8  :: gstomg(3,3,3)          ! Grass stomatal conductance
 
-      REAL*8  :: rlt_h(3)               ! Tree leaf respiration for different values of Jmax (rlt_h(2) is actual value)
+      REAL*8  :: rlt_h(3,3)             ! Tree leaf respiration for different values of Jmax (rlt_h(2) is actual value)
       REAL*8  :: rlt_d                  ! Daily tree leaf respiration
       REAL*8  :: rlt_y                  ! Annual tree leaf respiration
       REAL*8  :: rlg_h(3,3,3)           ! Grass leaf respiration
