@@ -1293,7 +1293,7 @@
         Ma_lg(:) = 1.0d0 - p_E ** (-lai_lg(:)/2.0d0)
 !write(*,*) Ma_lg
 !write(*,*) Ma_lt
-write(*,*) lai_lt
+!write(*,*) lai_lt
 
 !       * calculate electron transport capacity grasses
         do ii = 1,3
