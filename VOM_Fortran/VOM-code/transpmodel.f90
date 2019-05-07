@@ -1130,7 +1130,7 @@
       case(2)
 !        * foliage turnover costs, varying lai
          do ii = 1,3
-            tcg_d(ii, :)   = i_tcf * pcg_d(:) * lai_lg(ii) !grasses 
+            tcg_d(ii, :) = i_tcf * pcg_d(:) * lai_lg(ii) !grasses 
          end do
          q_tct_d(:) = i_tcf * o_cai * lai_lt(:)     !trees
       end select
@@ -1291,7 +1291,7 @@
         Ma_lg(:) = 1.0d0 - p_E ** (-lai_lg(:)/2.0d0)
 !write(*,*) Ma_lg
 !write(*,*) p_E
-!write(*,*) lai_lg
+write(*,*) lai_lg
 
 !       * calculate electron transport capacity grasses
         do ii = 1,3
