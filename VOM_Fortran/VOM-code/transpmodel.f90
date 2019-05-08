@@ -1135,6 +1135,7 @@
          q_tct_d(:) = i_tcf * o_cai * lai_lt(:)     !trees
       end select
 
+
 !     * (3.40), (Out[190])  root respiration [mol/s]
       rrt_d        = 2.55d-7 * SUM(rsurft_(1:pos_slt))
 
@@ -1291,7 +1292,7 @@
 
 !       * fraction of absorbed radiation per crown area grasses (Beer-lambert)
         Ma_lg(:) = 1.0d0 - p_E ** (-lai_lg(:)/2.0d0)
-!write(*,*) Ma_lg
+!write(*,*) Ma_lg(2), pcg_d(2), pcg_d(2) * Ma_lg(2)
 !write(*,*) Ma_lt
 !write(*,*) lai_lt
 
