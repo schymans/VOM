@@ -1182,7 +1182,9 @@
       use vom_vegwat_mod
       implicit none
 
-      INTEGER :: ii
+      INTEGER :: ii           !counter
+      REAL*8 :: Ma_lg(3)      !fraction of absorbed radiation grasses
+      REAL*8 :: Ma_lt(3)      !fraction of absorbed radiation trees
 
 !     * (Out[274], derived from (3.25))
       gammastar = 0.00004275d0                                         &
@@ -1199,9 +1201,12 @@
      &           * (273.d0 + tair_h(th_) - topt_)) / (tair_h(th_)      &
      &           + 273.d0 * p_R_ * topt_))) * i_ha + i_hd)
 
+!       * fraction of absorbed radiation per crown area (Beer-lambert)
+        Ma_lt(:) = 1.0d0 - p_E ** (-lai_lt(:)/2.0d0)
+
 !     * (3.24), (Out[312]), leaf respiration trees
      do ii = 1,3 !loop for LAI-values
-      rlt_h(:,ii) = ((ca_h(th_) - gammastar) * o_cai * lai_lt(ii) * jmaxt_h(:)         &
+      rlt_h(:,ii) = ((ca_h(th_) - gammastar) * o_cai * Ma_lt(ii) * jmaxt_h(:)         &
      &         * i_rlratio) / (4.d0 * (ca_h(th_) + 2.d0 * gammastar)   &
      &         * (1.d0 + i_rlratio))
      end do
@@ -1216,15 +1221,18 @@
      &           * (273.d0 + tair_h(th_) - topt_)) / (tair_h(th_)      &
      &           + 273.d0 * p_R_ * topt_))) * i_ha + i_hd)
 
+!       * fraction of absorbed radiation per crown area grasses (Beer-lambert)
+        Ma_lg(:) = 1.0d0 - p_E ** (-lai_lg(:)/2.0d0)
+
 !    * respiration grasses
      do ii = 1,3 !loop for LAI-values
-         rlg_h(1,:,ii) = ((ca_h(th_) - gammastar) * pcg_d(1) * lai_lg(ii) * jmaxg_h(:)    &
+         rlg_h(1,:,ii) = ((ca_h(th_) - gammastar) * pcg_d(1) * Ma_lg(ii) * jmaxg_h(:)    &
         &           * i_rlratio) / (4.d0 * (ca_h(th_) + 2.d0 * gammastar) &
         &           * (1.d0 + i_rlratio))  ! (3.24), (Out[312])
-         rlg_h(2,:,ii) = ((ca_h(th_) - gammastar) * pcg_d(2) * lai_lg(ii) * jmaxg_h(:)    &
+         rlg_h(2,:,ii) = ((ca_h(th_) - gammastar) * pcg_d(2) * Ma_lg(ii) * jmaxg_h(:)    &
         &           * i_rlratio) / (4.d0 * (ca_h(th_) + 2.d0 * gammastar) &
         &           * (1.d0 + i_rlratio))  ! (3.24), (Out[312])
-         rlg_h(3,:,ii) = ((ca_h(th_) - gammastar) * pcg_d(3) * lai_lg(ii) * jmaxg_h(:)    &
+         rlg_h(3,:,ii) = ((ca_h(th_) - gammastar) * pcg_d(3) * Ma_lg(ii) * jmaxg_h(:)    &
         &           * i_rlratio) / (4.d0 * (ca_h(th_) + 2.d0 * gammastar) &
         &           * (1.d0 + i_rlratio))  ! (3.24), (Out[312])
      end do
@@ -1292,9 +1300,6 @@
 
 !       * fraction of absorbed radiation per crown area grasses (Beer-lambert)
         Ma_lg(:) = 1.0d0 - p_E ** (-lai_lg(:)/2.0d0)
-!write(*,*) Ma_lg(2), pcg_d(2), pcg_d(2) * Ma_lg(2)
-!write(*,*) Ma_lt
-!write(*,*) lai_lt
 
 !       * calculate electron transport capacity grasses
         do ii = 1,3
@@ -2103,11 +2108,10 @@
       end do
 
       !save all temporary variables to the global vectors
-      pcg_d(2)     = MIN(1.d0 - o_cai, pcg_d_tmp )
+      pcg_d(2)     = pcg_d_tmp
       jmax25g_d(2) = jmax25g_tmp
       lai_lg(2)    = lai_g_tmp
-!write(*,*) "adapt foliage"
-!write(*,*) lai_lg
+
       !set daily value back to zero
       assg_d(:,:,:)  = 0.d0
 
