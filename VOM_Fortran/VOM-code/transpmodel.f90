@@ -1111,7 +1111,7 @@
       lai_lg(:) = MAX( lai_lg(:), 0.1d0 ) !minimum value, else lai doesn't pick up anymore
 
       if( i_read_pc == 1) then   
-         pcg_d(:) = perc_cov_veg(nday)
+         pcg_d(:) = perc_cov_veg(nday)  
 
          !adjust value if perennial + seasonal > 1
          if( (pcg_d(1) + o_cai) .gt. 1.0) then
