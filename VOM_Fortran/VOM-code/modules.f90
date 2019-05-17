@@ -185,16 +185,16 @@
       REAL*8  :: wsnew                  ! Total soil water store at next time step
       REAL*8  :: wsold                  ! Previous total soil water storage
 
-      REAL*8  :: o_cai = 0.300000d+00   ! Projected cover perennial vegetation (0-1)
+      REAL*8  :: o_cai                  ! Projected cover perennial vegetation (0-1)
       REAL*8  :: pcg_d(3)               ! Projected cover seasonal vegetation (pcg_d(2) is actual value)
       REAL*8  :: c_pcgmin               ! Minimum grass pc; initial point for growth
 
 !     * leaf
 
-      REAL*8  :: o_wstexp   = -0.564496d+00  ! Exponent for calculating lambdat_d
-      REAL*8  :: o_wsgexp   = -0.132889d+01  ! Exponent for calculating lambdag
-      REAL*8  :: o_lambdatf =  0.160181d+04  ! Factor for calculating lambdat_d
-      REAL*8  :: o_lambdagf =  0.779827d+03  ! Factor for calculating lambdag_d
+      REAL*8  :: o_wstexp               ! Exponent for calculating lambdat_d
+      REAL*8  :: o_wsgexp               ! Exponent for calculating lambdag
+      REAL*8  :: o_lambdatf             ! Factor for calculating lambdat_d
+      REAL*8  :: o_lambdagf             ! Factor for calculating lambdag_d
       REAL*8  :: lambdat_d              ! Target dE/dA for calculating gstomt
       REAL*8  :: lambdag_d              ! Target dE/dA for calculating gstomg
       REAL*8  :: gstomt                 ! Tree stomatal conductance
@@ -260,12 +260,12 @@
       REAL*8  :: mqsstmin               ! Tree water content at turgor loss point
 
       REAL*8  :: q_md                     ! Tree dry mass per unit ground area
-      REAL*8  :: o_mdstore = 1.000000d+02 ! Wood water storage parameter of trees
+      REAL*8  :: o_mdstore                ! Wood water storage parameter of trees
 
 !     * roots
 
-      REAL*8  :: o_rtdepth = 0.300000d+01 ! Tree rooting depth (m)
-      REAL*8  :: o_rgdepth = 0.100000d+01 ! Grass rooting depth
+      REAL*8  :: o_rtdepth               ! Tree rooting depth (m)
+      REAL*8  :: o_rgdepth               ! Grass rooting depth
 
       INTEGER             :: pos_slt    ! Lowest soil layer containing tree roots
       INTEGER             :: pos_slg    ! Lowest soil layer containing grass roots
@@ -308,20 +308,20 @@
 !     * input parameters input.par
 !     ****************************
 
-      REAL*8  :: i_alpha   = 0.3d0      ! Initial slope of electron transport curve
-      REAL*8  :: i_cpccf   = 1.2d-6     ! Water transport costs per m root depth and m^2 cover
-      REAL*8  :: i_tcf     = 2.2d-7     ! Turnover cost factor for foliage (tc=i_tcf*LAI)
-      INTEGER :: i_maxyear = 30         ! Number of years to process
-      INTEGER :: i_testyear = 1         ! Number of years after which to perform initial test of netass
-      REAL*8  :: i_ha      = 43790.0d0  ! Temperature response parameter
-      REAL*8  :: i_hd      = 2.0d5      ! Temperature response parameter
-      REAL*8  :: i_toptf   = 0.0d0      ! Parameter to calculate adaptation of topt (range 0-1 for no to full adaptation)
-      REAL*8  :: i_toptstart = 305.0d0  ! Start parameter for topt to calculate jmax(temp in K)
-      REAL*8  :: i_rlratio = 0.07d0     ! Ratio of leaf respiration to photosynthetic capacity
+      REAL*8  :: i_alpha                ! Initial slope of electron transport curve
+      REAL*8  :: i_cpccf                ! Water transport costs per m root depth and m^2 cover
+      REAL*8  :: i_tcf                  ! Turnover cost factor for foliage (tc=i_tcf*LAI)
+      INTEGER :: i_maxyear              ! Number of years to process
+      INTEGER :: i_testyear             ! Number of years after which to perform initial test of netass
+      REAL*8  :: i_ha                   ! Temperature response parameter
+      REAL*8  :: i_hd                   ! Temperature response parameter
+      REAL*8  :: i_toptf                ! Parameter to calculate adaptation of topt (range 0-1 for no to full adaptation)
+      REAL*8  :: i_toptstart            ! Start parameter for topt to calculate jmax(temp in K)
+      REAL*8  :: i_rlratio              ! Ratio of leaf respiration to photosynthetic capacity
 
 !     * Catchment parameters
 
-      REAL*8  :: i_lat     = 12.5d0     ! geogr. latitude
+      REAL*8  :: i_lat                 ! geogr. latitude
 
 !     * Soil parameters
 
@@ -329,24 +329,24 @@
 
 !     * Vegetation Parameters
 
-      REAL*8  :: i_mdtf    = 10000.0d0  ! Total dry mass of living tissues of trees per unit pc (g/m^2)
-      REAL*8  :: i_mqxtf   = 1.0d0      ! Total water storage capacity in living tissues of trees per unit md
-      REAL*8  :: i_rrootm  = 1.02d8     ! Root water uptake resistivity in soil
-      REAL*8  :: i_rsurfmin = 0.03d0    ! Minimum root area per m^3 to be maintained
-      REAL*8  :: i_rsurf_  = 0.3d0      ! Initial root surface area per m^3
-      REAL*8  :: i_rootrad = 0.3d-3     ! Average fine root radius
-      REAL*8  :: i_prootmg = 150.0d0    ! Constant root balance pressure of 1.5 MPa in grasses
-      REAL*8  :: i_growthmax = 0.1d0    ! Parameter determining maximum daily growth increment of root surface area
-      REAL*8  :: i_incrcovg = 0.02d0    ! parameter determining maximum increment percentage of grass cover
-      REAL*8  :: i_incrjmax = 0.01d0    ! parameter determining maximum increment percentage of jmax25
-      REAL*8  :: i_incrlait = 0.01d0    ! parameter determining maximum increment percentage of lai trees
-      REAL*8  :: i_incrlaig = 0.01d0    ! parameter determining maximum increment percentage of lai grasses
+      REAL*8  :: i_mdtf                 ! Total dry mass of living tissues of trees per unit pc (g/m^2)
+      REAL*8  :: i_mqxtf                ! Total water storage capacity in living tissues of trees per unit md
+      REAL*8  :: i_rrootm               ! Root water uptake resistivity in soil
+      REAL*8  :: i_rsurfmin             ! Minimum root area per m^3 to be maintained
+      REAL*8  :: i_rsurf_               ! Initial root surface area per m^3
+      REAL*8  :: i_rootrad              ! Average fine root radius
+      REAL*8  :: i_prootmg              ! Constant root balance pressure of 1.5 MPa in grasses
+      REAL*8  :: i_growthmax            ! Parameter determining maximum daily growth increment of root surface area
+      REAL*8  :: i_incrcovg             ! parameter determining maximum increment percentage of grass cover
+      REAL*8  :: i_incrjmax             ! parameter determining maximum increment percentage of jmax25
+      REAL*8  :: i_incrlait             ! parameter determining maximum increment percentage of lai trees
+      REAL*8  :: i_incrlaig             ! parameter determining maximum increment percentage of lai grasses
 
-      INTEGER :: i_firstyear = 2000     ! First year for the generation of hourly output in computation mode
-      INTEGER :: i_lastyear = 2000      ! Last year for the generation of hourly output in computation mode
+      INTEGER :: i_firstyear            ! First year for the generation of hourly output in computation mode
+      INTEGER :: i_lastyear             ! Last year for the generation of hourly output in computation mode
 
-      INTEGER :: i_write_h = 0          ! Flag to write out hourly input values after conversation from daily values
-      INTEGER :: i_read_pc = 0          ! Flag to write out hourly input values after conversation from daily values
+      INTEGER :: i_write_h              ! Flag to write out hourly input values after conversation from daily values
+      INTEGER :: i_read_pc              ! Flag to write out hourly input values after conversation from daily values
       INTEGER :: i_lai_function         ! Switch to use 1) linear or 2) exponential LAI estimate, as function of cover
 
 !     * Derived parameters
@@ -441,17 +441,17 @@
 
 !     * Catchment parameters
 
-      REAL*8  :: i_cgs     = 10.0d0     ! Capital Gamma S (length scale for seepage outflow) (m)
-      REAL*8  :: i_zr      = 10.0d0     ! Average channel elevation
-      REAL*8  :: i_go      = 0.033d0    ! Slope close to channel in radians
+      REAL*8  :: i_cgs                  ! Capital Gamma S (length scale for seepage outflow) (m)
+      REAL*8  :: i_zr                   ! Average channel elevation
+      REAL*8  :: i_go                   ! Slope close to channel in radians
 
 !     * Soil parameters
 
-      REAL*8  :: i_ksat    = 1.23d-5    ! Saturated hydraulic conductivity
-      REAL*8  :: i_thetar  = 0.065d0    ! Residual soil water content
-      REAL*8  :: i_thetas  = 0.41d0     ! Saturated soil water content
-      REAL*8  :: i_nvg     = 1.89d0     ! Van Genuchten soil parameter n
-      REAL*8  :: i_avg     = 7.5d0      ! Van Genuchten soil parameter a
+      REAL*8  :: i_ksat                 ! Saturated hydraulic conductivity
+      REAL*8  :: i_thetar               ! Residual soil water content
+      REAL*8  :: i_thetas               ! Saturated soil water content
+      REAL*8  :: i_nvg                  ! Van Genuchten soil parameter n
+      REAL*8  :: i_avg                  ! Van Genuchten soil parameter a
       REAL*8  :: i_mvg                  ! Van Genuchten soil parameter m
 
       !$OMP threadprivate(wlayer_, wlayernew, dt_, dtmax, dtsu_count, dtmax_count, esoil__, esoil_h, &
@@ -475,9 +475,9 @@
 
       INTEGER :: s_maxlayer             ! Number of soil layers
 
-      REAL*8  :: i_cz      = 15.0d0     ! Average soil elevation in m
+      REAL*8  :: i_cz                   ! Average soil elevation in m
 
-      REAL*8  :: i_delz    = 0.5d0      ! Thickness of each soil layer (m)
+      REAL*8  :: i_delz                 ! Thickness of each soil layer (m)
       REAL*8, ALLOCATABLE :: s_delz(:)  ! Thickness of each soil layer
 
       !$OMP threadprivate( i_cz )
@@ -496,9 +496,9 @@
       use vom_file_mod
       implicit none
 
-      INTEGER :: n_thread = 1           ! Number of threads to be used
+      INTEGER :: n_thread               ! Number of threads to be used
 
-      INTEGER :: success = 0            ! Indicator wheter optimisation ended successfully
+      INTEGER :: success                ! Indicator wheter optimisation ended successfully
 
       INTEGER :: ncomp2                 ! Number of complexes
       INTEGER :: nopt                   ! Number of optimised parameters
@@ -548,7 +548,7 @@
 !      REAL*8, ALLOCATABLE :: centroid(:)  ! Centroid of parameter sets for simplex procedure
  !     REAL*8, ALLOCATABLE :: newpoint(:)  ! New parameter set resulting from simplex procedure
 
-      INTEGER, parameter  :: nparmax = 17
+      INTEGER, parameter  :: nparmax 
 
 !     ************************************
 !     * namelist parameters for shufflepar
@@ -556,16 +556,16 @@
 
       INTEGER :: vom_command            ! Indicator of optimisation mode (0 for -optimise, 1 for -continue, 2 for compute, 3 for compute ncp only with pars.txt, 4 for optimise without random_seed)
 
-      INTEGER :: i_ncomp_     = 2       ! Initial number of complexes
-      INTEGER :: i_ncompmin   = 2       ! Minimum number of complexes
-      REAL*8  :: i_resolution = 1.0     ! Convergence criterion (fraction of max variation when optimisation stops)
-      INTEGER :: i_patience   = 10      ! Number of runs without improvement until optimisation is aborted
-      INTEGER :: i_nsimp      = 3       ! Number of simplex runs per complex
-      REAL*8  :: i_focus      = 1.0     ! Spread of the random seed around the initial values (if <1, then limited)
-      INTEGER :: i_iter       = 10      ! Maximum iterations in case of random runs
-      INTEGER :: vom_npar     = 8       ! Number of model parameters carried through
-      LOGICAL :: sce_restart  = .FALSE. ! Restarting SCE or starting from scratch
-      REAL*8  :: runtime_limit = 1440.0 ! Maximum runtime for sce; 1day (= 1440 minutes)
+      INTEGER :: i_ncomp_               ! Initial number of complexes
+      INTEGER :: i_ncompmin             ! Minimum number of complexes
+      REAL*8  :: i_resolution           ! Convergence criterion (fraction of max variation when optimisation stops)
+      INTEGER :: i_patience             ! Number of runs without improvement until optimisation is aborted
+      INTEGER :: i_nsimp                ! Number of simplex runs per complex
+      REAL*8  :: i_focus                ! Spread of the random seed around the initial values (if <1, then limited)
+      INTEGER :: i_iter                 ! Maximum iterations in case of random runs
+      INTEGER :: vom_npar               ! Number of model parameters carried through
+      LOGICAL :: sce_restart            ! Restarting SCE or starting from scratch
+      REAL*8  :: runtime_limit          ! Maximum runtime for sce; 1day (= 1440 minutes)
 
 !     ************************************
 !     * namelist parameters for shufflevar
