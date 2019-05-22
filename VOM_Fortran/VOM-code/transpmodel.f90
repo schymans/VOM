@@ -434,6 +434,7 @@
      &                    i_rrootm, i_rsurfmin, i_rsurf_, i_rootrad,   &
      &                    i_prootmg, i_growthmax, i_incrcovg,          &
      &                    i_incrjmax, i_incrlait, i_incrlaig,          &
+     &                    i_extcoeffg, i_extcoefft,                    &
      &                    i_firstyear,i_lastyear, i_write_h, i_read_pc,&
      &                    i_lai_function,                              &
      &                    i_inputpath, i_outputpath,                   &
@@ -1209,7 +1210,7 @@
      &           + 273.d0 * p_R_ * topt_))) * i_ha + i_hd)
 
 !       * fraction of absorbed radiation per crown area (Beer-lambert)
-        Ma_lt(:) = 1.0d0 - p_E ** (-lai_lt(:)/2.0d0)
+        Ma_lt(:) = 1.0d0 - p_E ** (-lai_lt(:) * i_extcoefft )
 
 !     * (3.24), (Out[312]), leaf respiration trees
      do ii = 1,3 !loop for LAI-values
@@ -1229,7 +1230,7 @@
      &           + 273.d0 * p_R_ * topt_))) * i_ha + i_hd)
 
 !       * fraction of absorbed radiation per crown area grasses (Beer-lambert)
-        Ma_lg(:) = 1.0d0 - p_E ** (-lai_lg(:)/2.0d0)
+        Ma_lg(:) = 1.0d0 - p_E ** (-lai_lg(:) * i_extcoeffg)
 
 !    * respiration grasses
      do ii = 1,3 !loop for LAI-values
@@ -1297,7 +1298,7 @@
         topt_ = topt_ + i_toptf * (tair_h(th_) + 273.d0 - topt_)
 
 !       * fraction of absorbed radiation per crown area (Beer-lambert)
-        Ma_lt(:) = 1.0d0 - p_E ** (-lai_lt(:)/2.0d0)
+        Ma_lt(:) = 1.0d0 - p_E ** (-lai_lt(:) * i_extcoefft)
 
 !       * calculate electron transport capacity trees
         do ii = 1,3
@@ -1306,7 +1307,7 @@
         end do
 
 !       * fraction of absorbed radiation per crown area grasses (Beer-lambert)
-        Ma_lg(:) = 1.0d0 - p_E ** (-lai_lg(:)/2.0d0)
+        Ma_lg(:) = 1.0d0 - p_E ** (-lai_lg(:) * i_extcoeffg)
 
 !       * calculate electron transport capacity grasses
         do ii = 1,3
