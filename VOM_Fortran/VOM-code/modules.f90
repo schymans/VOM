@@ -548,7 +548,7 @@
 !      REAL*8, ALLOCATABLE :: centroid(:)  ! Centroid of parameter sets for simplex procedure
  !     REAL*8, ALLOCATABLE :: newpoint(:)  ! New parameter set resulting from simplex procedure
 
-      INTEGER, parameter  :: nparmax 
+      INTEGER, parameter  :: nparmax = 8
 
 !     ************************************
 !     * namelist parameters for shufflepar
