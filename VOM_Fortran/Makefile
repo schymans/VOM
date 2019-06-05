@@ -66,15 +66,9 @@ check:
 	cp ../ref_test/pars.txt input/pars.txt; \
 	cp ../../model.x model.x; \
     ./model.x > /dev/null; \
-    echo "Testing if files are different ..."; \
-	if diff output/results_daily.txt ../ref_test/results_daily.txt > /dev/null 2>&1;\
-	then \
-		echo "TEST PASSED"; \
-	else \
-		echo "TEST FAILED"; python check_outcomes.py; \
-	fi ; echo "test"; \
-    cd ../../ ; \
-	#rm -r VOM_test/test_tmp/; \
+    echo "Testing if results are different ..."; \
+	python3 check_outcomes.py; cd ../../ ; \
+	rm -r VOM_test/test_tmp/; \
  
 
 
