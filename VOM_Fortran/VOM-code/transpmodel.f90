@@ -454,6 +454,10 @@
       endif
       close(kfile_namelist)
 
+
+      call read_commandline()
+
+
       c_epsln = i_thetas - i_thetar     ! epsilon, porosity see Reggiani (2000)
       i_mvg = 1.d0 - (1.d0 / i_nvg)     ! van Genuchten soil parameter m
 
