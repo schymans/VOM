@@ -58,14 +58,14 @@ def check_results(var, varname):
         print(diff)
         print("Conclusions are not valid any more")
         print(colored("TEST FAILED", "red"))
-        #sys.exit(1)
+        sys.exit(1)
 
     if np.abs(diff) < 10:
         print("Mean annual " + varname + " changed less than 10%:")
         print(diff)
         print("Conclusions are still valid")
         print(colored("TEST PASSED", "green"))
-        #sys.exit(0)
+        sys.exit(0)
 
 
 
