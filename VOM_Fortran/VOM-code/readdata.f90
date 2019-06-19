@@ -31,33 +31,59 @@
 
 
 
-subroutine read_commandline()
+subroutine read_commandline(outputpath_tmp, inputpath_tmp, change_in, change_out )
       use vom_vegwat_mod
       implicit none
 
-     integer :: num_args, ix
-     character(len=100), dimension(:), allocatable :: args
+     CHARACTER*100, INTENT(out)                    :: outputpath_tmp ! Temporary outputpath 
+     CHARACTER*100, INTENT(out)                    :: inputpath_tmp  ! Temporary inputpath
+     LOGICAL, INTENT(out)                          :: change_in      ! Change input true/false
+     LOGICAL, INTENT(out)                          :: change_out     ! Change output true/false
 
+     CHARACTER(len=100), DIMENSION(:), ALLOCATABLE :: args           ! array for arguments
+     INTEGER                                       :: ix             ! Counter
+     INTEGER                                       :: num_args       ! Number of arguments
+
+
+     !count arguments
      num_args = command_argument_count()
-     allocate(args(num_args))  ! I've omitted checking the return status of the allocation 
+
+     !create array to save arguments
+     allocate(args(num_args))  
 
      do ix = 1, num_args
+         !loop over arguments and save them
          call get_command_argument(ix,args(ix))
-         ! now parse the argument as you wis
      end do
 
+     change_in  = .FALSE.
+     change_out = .FALSE.
 
+     !loop over saved arguments and check flags
      do ix = 1, num_args
+
+        !check inputpath
         if(args(ix) .eq. "-i") then
-           i_inputpath = args(ix+1)
-           write(*,*) "Changed inputpath to:", i_inputpath
+           inputpath_tmp = args(ix+1)
+           change_in = .True.
         end if
 
+        !check outputpath
         if(args(ix) .eq. "-o") then
-           i_outputpath = args(ix+1)
-           write(*,*) "Changed outputpath to:",i_outputpath
+           outputpath_tmp = args(ix+1)
+           change_out = .True.
+        end if
+
+        !check namelist and read again if needed
+        if(args(ix) .eq. "-n") then
+           sfile_namelist = args(ix+1)
+           write(*,*) "Changed vom_namelist:", sfile_namelist
         end if
 
      end do
+
+
+
+
 
 end subroutine read_commandline

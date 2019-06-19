@@ -424,7 +424,11 @@
       use vom_vegwat_mod
       implicit none
 
-      INTEGER :: iostat
+      INTEGER                        :: iostat
+      CHARACTER*100                  :: outputpath_tmp ! Temporary outputpath 
+      CHARACTER*100                  :: inputpath_tmp  ! Temporary inputpath
+      LOGICAL                        :: change_in      ! Change input true/false
+      LOGICAL                        :: change_out     ! Change output true/false
 
 !     * Definition of variable parameters
 
@@ -444,6 +448,9 @@
       namelist /input2par/ i_lat, i_cz, i_cgs, i_zr, i_go, i_ksat,     &
      &                     i_thetar, i_thetas, i_nvg, i_avg, i_delz
 
+
+      call read_commandline(outputpath_tmp, inputpath_tmp, change_in, change_out)
+
 !     * Input of variable parameters from the parameter file
 
       open(kfile_namelist, FILE=sfile_namelist, STATUS='old',          &
@@ -454,8 +461,17 @@
       endif
       close(kfile_namelist)
 
+    !change input and/or outputpaths
+    if(change_in .eqv. .True.) then
+        i_inputpath = inputpath_tmp
+        write(*,*) "Changed inputpath to:", i_inputpath
+     end if
 
-      call read_commandline()
+     if(change_out .eqv. .True.) then
+        i_outputpath = outputpath_tmp
+        write(*,*) "Changed outputpath to:", i_outputpath
+     end if
+
 
 
       c_epsln = i_thetas - i_thetar     ! epsilon, porosity see Reggiani (2000)
