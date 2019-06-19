@@ -30,7 +30,7 @@ FCFLAGS =
 FLFLAGS =
 
 #source objects
-SRC = VOM-code/modules.f90 VOM-code/coreprog.f90 VOM-code/sample.f90 VOM-code/sce.f90 VOM-code/transpmodel.f90 VOM-code/watbal.f90 
+SRC = VOM-code/modules.f90 VOM-code/readdata.f90 VOM-code/coreprog.f90 VOM-code/sample.f90 VOM-code/sce.f90 VOM-code/transpmodel.f90 VOM-code/watbal.f90 
 
 TESTS = VOM_test/test_tmp/model.x
 

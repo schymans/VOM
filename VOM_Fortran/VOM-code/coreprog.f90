@@ -42,9 +42,15 @@
       REAL                :: starttime
       REAL                :: currtime
       REAL                :: runtime
+      CHARACTER*100       :: outputpath_tmp ! Temporary outputpath 
+      CHARACTER*100       :: inputpath_tmp  ! Temporary inputpath
+      LOGICAL             :: change_in      ! Change input true/false
+      LOGICAL             :: change_out     ! Change output true/false
 
       beststat = 0
       call cpu_time(starttime)
+
+      call read_commandline(outputpath_tmp, inputpath_tmp, change_in, change_out)
 
 !     * Parameter definitions
 
