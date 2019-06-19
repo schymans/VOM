@@ -50,15 +50,14 @@ subroutine read_commandline()
      do ix = 1, num_args
         if(args(ix) .eq. "-i") then
            i_inputpath = args(ix+1)
+           write(*,*) "Changed inputpath to:", i_inputpath
         end if
 
         if(args(ix) .eq. "-o") then
            i_outputpath = args(ix+1)
+           write(*,*) "Changed outputpath to:",i_outputpath
         end if
 
      end do
-
-     write(*,*) i_inputpath
-     write(*,*) i_outputpath
 
 end subroutine read_commandline
