@@ -190,6 +190,27 @@ and the model should always be run with the directory of this namelist as workin
         </tbody>
     </table>
 
+    <p> All options can be specified in the VOM_namelist. The inputpath, outputpath and VOM_namelist can also be specified on the command line, overruling the values set in the VOM_namelist <p>
+   <table border="1" width="100%">
+      <tbody>
+        <tr>
+          <td>-i</td>
+          <td>Inputpath to directory with dailyweather.prn, and optionally pars.txt. </td>
+        </tr>
+        <tr>
+          <td>-o</td>
+          <td>Outputpath for all outputfiles.</td>
+        </tr>
+        <tr>
+          <td>-n</td>
+          <td>The VOM_namelist (filename can be different)</td>
+        </tr>
+        </tbody>
+    </table>
+
+
+
+
     <h3>Running the model in parallel</h3>
     The SCE-algorithm (mode 1) can be run in parallel. The number of threads has to be specified in the VOM_namelist, with the variable <pre>n_threads</pre> 
     When specified, the SCE-algorithm runs over the different complexes in parallel (one complex per thread). 
