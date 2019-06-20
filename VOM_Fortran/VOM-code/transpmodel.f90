@@ -1052,8 +1052,7 @@
 
       else       
          pcg_d(2)     = MIN(1.d0 - o_cai, c_pcgmin)
-         pcg_d(:)     = pcg_d(2) * (/1.0d0-i_incrcovg,1.0d0,1.0d0+i_incrcovg/)  ! perc. change grass cover
-         !pcg_d(:)     = pcg_d(2) + (/-i_incrcovg,0.0d0,i_incrcovg/)  ! vector with values varying by 1%
+         pcg_d(:)     = pcg_d(2) + (/-i_incrcovg,0.0d0,i_incrcovg/)  ! vector with values varying by 1%
          pcg_d(3)     = MIN(MAX(c_pcgmin, pcg_d(3)), 1.d0 - o_cai)
       end if
 
@@ -1142,8 +1141,7 @@
          end if
 
       else
-         !pcg_d(:)     = pcg_d(2) + (/-i_incrcovg,0.0d0,i_incrcovg/)  ! perc. change grass cover
-         pcg_d(:)     = pcg_d(2) * (/1.0d0-i_incrcovg,1.0d0,1.0d0+i_incrcovg/)  ! perc. change grass cover
+         pcg_d(:)     = pcg_d(2) + (/-i_incrcovg,0.0d0,i_incrcovg/)  ! perc. change grass cover
          pcg_d(:)     = MAX(pcg_d(:), 0.d0)
          pcg_d(3)     = MIN(MAX(c_pcgmin, pcg_d(3)), 1.d0 - o_cai)
       end if
