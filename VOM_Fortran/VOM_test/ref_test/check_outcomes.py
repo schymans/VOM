@@ -4,7 +4,7 @@ import csv
 import sys
 from termcolor import colored
 
-print("Files are not identical")
+
 print("Checking for differences in results...")
 
 
