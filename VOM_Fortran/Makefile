@@ -67,7 +67,7 @@ check:
 	cp ../../model.x model.x; \
     ./model.x > /dev/null; \
     echo "Testing if results are different ..."; \
-	python3 check_outcomes.py; cd ../../ ; \
+	python3 check_outcomes.py || exit 1; cd ../../ ; \
 	rm -r VOM_test/test_tmp/; \
  
 
