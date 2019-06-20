@@ -1,7 +1,6 @@
 import numpy as np
 import pandas as pd
 import csv
-import os
 import sys
 from termcolor import colored
 
