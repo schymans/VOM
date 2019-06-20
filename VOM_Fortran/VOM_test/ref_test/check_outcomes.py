@@ -2,9 +2,9 @@ import numpy as np
 import pandas as pd
 import csv
 import sys
+from termcolor import colored
 
 
-print("Files are not identical")
 print("Checking for differences in results...")
 
 
@@ -41,28 +41,56 @@ index = pd.DatetimeIndex( pddatetime)
 reference.index = index
 
 ########################################
-#make mean yearly values
+#make mean yearly values etmt
 
-etmt_results = results['etmt'].resample('Y').mean()   
-etmt_reference = results['etmt'].resample('Y').mean()   
+def check_results(var, var_ref, varname):
 
-ann_etmt_results = np.mean(etmt_results)
-ann_etmt_reference = np.mean(etmt_reference)
+    results = var.resample('Y').mean()   
+    reference = var_ref.resample('Y').mean()   
 
-d_etmt = ((ann_etmt_results - ann_etmt_reference) / ann_etmt_reference)*100
+    ann_results = np.mean(results)
+    ann_reference = np.mean(reference)
 
-if np.abs(d_etmt) > 10:
-    print("Mean annual etmt changed more than 10%:")
-    print(d_etmt)
-    print("Conclusions are not valid any more")
-    print("TEST FAILED")
+    diff = ((ann_results - ann_reference) / ann_reference)*100
+
+    if np.abs(diff) > 10:
+        print("Mean annual " + varname + " changed more than 10%:")
+        print(diff)
+        print("Conclusions are not valid any more")
+        print(colored("TEST FAILED", "red"))
+        success = False
+
+
+    if np.abs(diff) < 10:
+        print("Mean annual " + varname + " changed less than 10%:")
+        print(diff)
+        print("Conclusions are still valid")
+        print(colored("TEST PASSED", "green"))
+        success = True
+    return success
+
+succes = np.ones((7), dtype=bool)
+succes[0] = check_results(results["etmt"], reference["etmt"],"etmt", )
+succes[1] = check_results(results["etmg"], reference["etmg"], "etmg")
+succes[2] = check_results(results["esoil"], reference["esoil"], "esoil")
+succes[3] = check_results(results["assg"], reference["assg"], "assg")
+succes[4] = check_results(results["asst"], reference["asst"], "asst")
+succes[5] = check_results(results["jmax25t"], reference["jmax25t"], "jmax25t")
+succes[6] = check_results(results["jmax25g"], reference["jmax25g"], "jmax25g")
+
+print("")
+print("===================================================")
+print("")
+print("Result:")
+print(str(np.sum(succes)) + "tests out of 6 passed")
+
+if( np.sum(succes) > 3):
+    print("More then 3 conclusions still valid")
+    sys.exit(0)
+else:
+    print("Less then 3 conclusions valid")
+    print("Throwing an error, good luck next time!")
     sys.exit(1)
 
-if np.abs(d_etmt) < 10:
-    print("Mean annual etmt changed less than 10%:")
-    print(d_etmt)
-    print("Conclusions are still valid")
-    print("TEST PASSED")
-    sys.exit(0)
 
 
