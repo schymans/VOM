@@ -63,7 +63,7 @@
       CHARACTER(len=*),parameter :: sfile_dailyweather  = 'dailyweather.prn'
       CHARACTER(len=*),parameter :: sfile_hourlyweather = 'hourlyweather.prn'
 
-      CHARACTER(len=*),parameter :: sfile_namelist      = 'vom_namelist'
+      CHARACTER*100              :: sfile_namelist      = 'vom_namelist'
       CHARACTER(len=*),parameter :: sfile_outputlist    = 'output_namelist'
       CHARACTER(len=*),parameter :: sfile_resultshourly = 'results_hourly.txt'
       CHARACTER(len=*),parameter :: sfile_resultsdaily  = 'results_daily.txt'

@@ -424,7 +424,11 @@
       use vom_vegwat_mod
       implicit none
 
-      INTEGER :: iostat
+      INTEGER                        :: iostat
+      CHARACTER*100                  :: outputpath_tmp ! Temporary outputpath 
+      CHARACTER*100                  :: inputpath_tmp  ! Temporary inputpath
+      LOGICAL                        :: change_in      ! Change input true/false
+      LOGICAL                        :: change_out     ! Change output true/false
 
 !     * Definition of variable parameters
 
@@ -444,6 +448,9 @@
       namelist /input2par/ i_lat, i_cz, i_cgs, i_zr, i_go, i_ksat,     &
      &                     i_thetar, i_thetas, i_nvg, i_avg, i_delz
 
+
+      call read_commandline(outputpath_tmp, inputpath_tmp, change_in, change_out)
+
 !     * Input of variable parameters from the parameter file
 
       open(kfile_namelist, FILE=sfile_namelist, STATUS='old',          &
@@ -453,6 +460,19 @@
         read(kfile_namelist, input2par)
       endif
       close(kfile_namelist)
+
+    !change input and/or outputpaths
+    if(change_in .eqv. .True.) then
+        i_inputpath = inputpath_tmp
+        write(*,*) "Changed inputpath to:", i_inputpath
+     end if
+
+     if(change_out .eqv. .True.) then
+        i_outputpath = outputpath_tmp
+        write(*,*) "Changed outputpath to:", i_outputpath
+     end if
+
+
 
       c_epsln = i_thetas - i_thetar     ! epsilon, porosity see Reggiani (2000)
       i_mvg = 1.d0 - (1.d0 / i_nvg)     ! van Genuchten soil parameter m
@@ -1032,8 +1052,7 @@
 
       else       
          pcg_d(2)     = MIN(1.d0 - o_cai, c_pcgmin)
-         pcg_d(:)     = pcg_d(2) * (/1.0d0-i_incrcovg,1.0d0,1.0d0+i_incrcovg/)  ! perc. change grass cover
-         !pcg_d(:)     = pcg_d(2) + (/-i_incrcovg,0.0d0,i_incrcovg/)  ! vector with values varying by 1%
+         pcg_d(:)     = pcg_d(2) + (/-i_incrcovg,0.0d0,i_incrcovg/)  ! vector with values varying by 1%
          pcg_d(3)     = MIN(MAX(c_pcgmin, pcg_d(3)), 1.d0 - o_cai)
       end if
 
@@ -1122,8 +1141,7 @@
          end if
 
       else
-         !pcg_d(:)     = pcg_d(2) + (/-i_incrcovg,0.0d0,i_incrcovg/)  ! perc. change grass cover
-         pcg_d(:)     = pcg_d(2) * (/1.0d0-i_incrcovg,1.0d0,1.0d0+i_incrcovg/)  ! perc. change grass cover
+         pcg_d(:)     = pcg_d(2) + (/-i_incrcovg,0.0d0,i_incrcovg/)  ! perc. change grass cover
          pcg_d(:)     = MAX(pcg_d(:), 0.d0)
          pcg_d(3)     = MIN(MAX(c_pcgmin, pcg_d(3)), 1.d0 - o_cai)
       end if
