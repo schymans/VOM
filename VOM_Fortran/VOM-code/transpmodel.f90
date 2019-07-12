@@ -400,7 +400,7 @@
          o_wsgexp   = 0.0
          o_lambdatf = 0.0 
          o_wstexp   = 0.0
-         o_pct      = 0.0
+         o_cai      = 0.0
          o_rtdepth  = 0.0
          o_mdstore  = 0.0
          o_rgdepth  = 0.0
