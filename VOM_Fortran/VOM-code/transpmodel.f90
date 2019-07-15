@@ -1023,7 +1023,6 @@
       lai_lt(:) = 2.5d0 * (/1.0d0-i_incrlait,1.0d0,1.0d0+i_incrlait/)
       lai_lg(:) = 2.5d0 * (/1.0d0-i_incrlaig,1.0d0,1.0d0+i_incrlaig/)
 
- 
 !     * Determining the position of the bottom of the tree root zone
 
       pos_slt = 0

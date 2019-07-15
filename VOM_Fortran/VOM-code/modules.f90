@@ -329,6 +329,7 @@
 
 !     * Vegetation Parameters
 
+
       REAL*8  :: i_mdtf                 ! Total dry mass of living tissues of trees per unit pc (g/m^2)
       REAL*8  :: i_mqxtf                ! Total water storage capacity in living tissues of trees per unit md
       REAL*8  :: i_rrootm               ! Root water uptake resistivity in soil
