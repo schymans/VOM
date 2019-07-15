@@ -161,7 +161,7 @@ and the model should always be run with the directory of this namelist as workin
 
     <h3>Running the model</h3>
     
-      <p>The executable "model.x" can be run with these input-files" <p>
+      <p>The executable "model.x" can be run with these input-files: <p>
 
 <table border="1" width="100%">
       <tbody>
@@ -174,32 +174,40 @@ and the model should always be run with the directory of this namelist as workin
           </td>
         </tr>
         <tr>
-          <td>vom_namelist</td>
+          <td><a href="vom_namelist.html">vom_namelist</a></td>
           <td>Contains all settings to run the VOM. </td>
-
-<td><a href="resultsdaily.txt_inf.html">Description</a></td>
-
-
         </tr>
         <tr>
-          <td>2</td>
-          <td>Run without optimization, based on the parameters in pars.txt.</td>
+          <td>pars.txt</td>
+          <td>Contains the (optimized) vegetation parameters (only needed for single run).</td>
         </tr>
         <tr>
-          <td>3</td>
-          <td>Run without optimization, based on the parameters in pars.txt. Returns only NCP values as output.</td>
+          <td><a href="dailyweather.prn_inf">dailyweather.prn</a></td>
+          <td>Contains the meteorological forcing.</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <p> All options can be specified in the VOM_namelist. The inputpath, outputpath and VOM_namelist can also be specified on the command line, overruling the values set in the VOM_namelist: <p>
+   <table border="1" width="100%">
+      <tbody>
+        <tr>
+          <td>-i</td>
+          <td>Inputpath to directory with dailyweather.prn, and optionally pars.txt. </td>
         </tr>
         <tr>
-          <td>5</td>
-          <td>Randomly run the model.</td>
+          <td>-o</td>
+          <td>Outputpath for all outputfiles.</td>
+        </tr>
+        <tr>
+          <td>-n</td>
+          <td>The VOM_namelist (filename can be different)</td>
         </tr>
         </tbody>
     </table>
 
 
-
-
-
+<h3>Different model modes</h3>
 
 <p>The model can be run in 4 different modes, defined by VOM_command in the VOM_namelist: <p>
    <table border="1" width="100%">
@@ -231,23 +239,7 @@ and the model should always be run with the directory of this namelist as workin
         </tbody>
     </table>
 
-    <p> All options can be specified in the VOM_namelist. The inputpath, outputpath and VOM_namelist can also be specified on the command line, overruling the values set in the VOM_namelist <p>
-   <table border="1" width="100%">
-      <tbody>
-        <tr>
-          <td>-i</td>
-          <td>Inputpath to directory with dailyweather.prn, and optionally pars.txt. </td>
-        </tr>
-        <tr>
-          <td>-o</td>
-          <td>Outputpath for all outputfiles.</td>
-        </tr>
-        <tr>
-          <td>-n</td>
-          <td>The VOM_namelist (filename can be different)</td>
-        </tr>
-        </tbody>
-    </table>
+
 
 
 
