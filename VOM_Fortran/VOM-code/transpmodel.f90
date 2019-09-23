@@ -453,7 +453,7 @@
      &                    i_rrootm, i_rsurfmin, i_rsurf_, i_rootrad,   &
      &                    i_prootmg, i_growthmax, i_incrcovg,          &
      &                    i_incrjmax, i_incrlait, i_incrlaig,          &
-     &                    i_extcoeffg, i_extcoefft,                    &
+     &                    i_extcoeffg, i_extcoefft, i_barefrac,        &
      &                    i_firstyear,i_lastyear, i_write_h, i_read_pc,&
      &                    i_lai_function,  i_no_veg,                   &
      &                    i_inputpath, i_outputpath,                   &
