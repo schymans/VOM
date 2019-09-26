@@ -134,6 +134,10 @@
       REAL*8, PARAMETER :: p_mpbar = 10.2d0       ! Conversion factor from MPa to bar
       REAL*8, PARAMETER :: p_E     = 2.7182818d0  ! Eurler's number
       REAL*8, PARAMETER :: p_R_    = 8.314d0      ! Molar gas konstant
+      REAL*8, PARAMETER :: l_E_    = 2.45d0       ! Latent heat of vaporization (MJ/kg)
+      REAL*8, PARAMETER :: srad2par_h = 2.0699d0  ! Conversion from srad to par hourly (mol/MJ)
+      REAL*8, PARAMETER :: srad2par_d = 2.0804d0  ! Conversion from srad to par daily (mol/MJ)
+      REAL*8, PARAMETER :: rho_wat = 1000.0d0     ! Density of water (kg/m3)
 
       INTEGER :: nyear                  ! Year
       INTEGER :: nday                   ! Day since start of run
@@ -344,6 +348,7 @@
       REAL*8  :: i_incrlaig             ! parameter determining maximum increment percentage of lai grasses
       REAL*8  :: i_extcoeffg            ! extinction coefficient beer's law grasses
       REAL*8  :: i_extcoefft            ! extinction coefficient beer's law trees
+      REAL*8  :: i_trans_vegcov         ! fraction of radiative energy reaching soil under full cover (0-1)
 
       INTEGER :: i_firstyear            ! First year for the generation of hourly output in computation mode
       INTEGER :: i_lastyear             ! Last year for the generation of hourly output in computation mode
