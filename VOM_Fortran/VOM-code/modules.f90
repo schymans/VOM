@@ -348,7 +348,7 @@
       REAL*8  :: i_incrlaig             ! parameter determining maximum increment percentage of lai grasses
       REAL*8  :: i_extcoeffg            ! extinction coefficient beer's law grasses
       REAL*8  :: i_extcoefft            ! extinction coefficient beer's law trees
-      REAL*8  :: i_trans_vegcov         ! radiative transmissivity of vegetation cover (0-1)
+      REAL*8  :: i_trans_vegcov         ! fraction of radiative energy reaching soil under full cover (0-1)
 
       INTEGER :: i_firstyear            ! First year for the generation of hourly output in computation mode
       INTEGER :: i_lastyear             ! Last year for the generation of hourly output in computation mode
