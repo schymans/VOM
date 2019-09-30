@@ -691,6 +691,7 @@
       implicit none
 
       INTEGER :: iostat, i, j, indlayer
+      LOGICAL :: foundlayer
 
 !     * The file soilprofile.par can contain information about thickness
 !       and soil properties in each soil layer, with the layer number in
@@ -717,11 +718,12 @@
 !        Raise a warning and correct if this is not the case
 
 !       Find the layer of i_zr
+        foundlayer = .FALSE.
         do j = 1, s_maxlayer
-           if( sum(s_delz(1:j)) .lt. (i_cz - i_zr) ) then
-               indlayer = 0
-           else
+           if( (abs(sum(s_delz(1:j)) - (i_cz - i_zr) ) .lt. 1.0d-6) .and. &
+               (foundlayer .eqv. .FALSE.)  ) then
                indlayer = j
+               foundlayer = .TRUE.
            end if
         enddo
 
