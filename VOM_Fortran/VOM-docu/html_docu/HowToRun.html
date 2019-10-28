@@ -312,9 +312,9 @@ only when the a runtime_limit is set (in minutes), it will stop when this is rea
     restarted again as described above. Every start of the executable adds
     another loop to the file "sce_progress.txt" and a new group of parameter
     sets and objective function values, until the optimal set has been found and
-    the file "sce_status.txt" is written to the disc. 
+    the file "sce_status.txt" is written to the disc.  <br>
 
-
+<br>
     If the file "sce_status.txt" appears, the model has to be run one more time to write the
     results obtained with the optimised parameter set to the disc. The VOM_command has to be set to
     2 in the vom_namelist, and the file pars.txt has to be added to the input directory. Pars.txt should contain the parameters of the best run of the SCE-algorithm, that can be found in sce_lastbest.txt. Note that the last value in sce_lastbest.txt is the obtained NCP-value, and needs to be removed. 
