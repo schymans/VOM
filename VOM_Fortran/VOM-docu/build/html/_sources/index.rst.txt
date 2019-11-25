@@ -10,7 +10,7 @@ Welcome to VOM's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-
+   general
 
 Indices and tables
 ==================
