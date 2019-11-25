@@ -139,8 +139,29 @@ all settings for the model runs:</p>
 	<td align="center"> - </td>
 </tr>
 <tr>
+	<td align="center">i_trans_vegcov</td>
+	<td align="center">fraction of radiative energy reaching soil under full cover (0-1), used only for calculation of soil evaporation. </td>
+	<td align="center"> - </td>
+</tr>
+<tr>
 	<td align="center">i_lai_function</td>
 	<td align="center">switch for 1) linear or 2) exponential function of LAI for foliage cost</td>
+	<td align="center"> - </td>
+</tr>
+
+<tr>
+	<td align="center">i_no_veg</td>
+	<td align="center">switch for running VOM without vegetation (0-with, 1-without)</td>
+	<td align="center"> - </td>
+</tr>
+<tr>
+	<td align="center">i_extcoeffg</td>
+	<td align="center">extinction coefficient beer's law grasses </td>
+	<td align="center"> - </td>
+</tr>
+<tr>
+	<td align="center">i_extcoefft</td>
+	<td align="center">extinction coefficient beer's law trees </td>
 	<td align="center"> - </td>
 </tr>
 <tr>
@@ -305,8 +326,20 @@ all settings for the model runs:</p>
 <tr>
 	<td align="center">n_thread</td>
 	<td align="center">number of threads to be used in parallel</td>
+	<td align="center"> True/False </td>
+</tr>
+<tr>
+	<td align="center">sce_restart</td>
+	<td align="center">restart SCE from previous run</td>
 	<td align="center"> - </td>
 </tr>
+<tr>
+	<td align="center">runtime_limit</td>
+	<td align="center">time before sce stops</td>
+	<td align="center"> minutes </td>
+</tr>
+
+
 
 
 <tr>
