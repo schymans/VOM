@@ -1,0 +1,393 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>VOM_namelist &#8212; VOM  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Quickstart" href="quickstart.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="vom-namelist">
+<h1>VOM_namelist<a class="headerlink" href="#vom-namelist" title="Permalink to this headline">¶</a></h1>
+<p>The file “vom_namelist” is an input file for the VOM, containing all settings for the model runs:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 79%" />
+<col style="width: 8%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>i_alpha</p></td>
+<td><p>initial slope of j(par) curve</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-even"><td><p>i_cpccf</p></td>
+<td><p>water transport cost factor (cpcc=pc*rootdepth*cpccf)</p></td>
+<td><p>mol/m/m2/s</p></td>
+</tr>
+<tr class="row-odd"><td><p>i_tcf</p></td>
+<td><p>turnover cost factor for foliage (tc=tcf*LAI)</p></td>
+<td><p>mol/m2/s</p></td>
+</tr>
+<tr class="row-even"><td><p>i_maxyear</p></td>
+<td><p>number of years to process</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-odd"><td><p>i_testyear</p></td>
+<td><p>number of years after which to perform initial test of netass</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-even"><td><p>i_ha</p></td>
+<td><p>parameters to calculate jmax(temp)</p></td>
+<td><p>J/mol</p></td>
+</tr>
+<tr class="row-odd"><td><p>i_hd</p></td>
+<td><p>parameters to calculate jmax(temp)</p></td>
+<td><p>J/mol</p></td>
+</tr>
+<tr class="row-even"><td><p>i_toptf</p></td>
+<td><p>parameter to calculate adaptation of topt (range 0-1, 0.0 means no  adaption, 1.0 means topt=tair)</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-odd"><td><p>i_toptstart</p></td>
+<td><p>start parameter for topt to calculate jmax</p></td>
+<td><p>K</p></td>
+</tr>
+<tr class="row-even"><td><p>i_rlratio</p></td>
+<td><p>leaf respiration parameter (rl=rlratio*assmax)</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-odd"><td><p>i_mdtf</p></td>
+<td><p>total dry mass of living tissues of trees per unit pc</p></td>
+<td><p>g/m^2</p></td>
+</tr>
+<tr class="row-even"><td><p>i_mqxtf</p></td>
+<td><p>total water storage capacity in living tissues of trees per unit md</p></td>
+<td><p>kg/m^2</p></td>
+</tr>
+<tr class="row-odd"><td><p>i_rrootm</p></td>
+<td><p>root water uptake resistivity</p></td>
+<td><p>s</p></td>
+</tr>
+<tr class="row-even"><td><p>i_rsurfmin</p></td>
+<td><p>minimum root area to be maintained</p></td>
+<td><p>m^2/m^3</p></td>
+</tr>
+<tr class="row-odd"><td><p>i_rsurf</p></td>
+<td><p>initial root surface area</p></td>
+<td><p>m^2/m^3</p></td>
+</tr>
+<tr class="row-even"><td><p>i_rootrad</p></td>
+<td><p>fine root radius</p></td>
+<td><p>m</p></td>
+</tr>
+<tr class="row-odd"><td><p>i_prootmg</p></td>
+<td><p>constant root balance pressure in grasses</p></td>
+<td><p>m</p></td>
+</tr>
+<tr class="row-even"><td><p>i_growthmax</p></td>
+<td><p>parameter determining maximum daily growth increment of root surface area</p></td>
+<td><p>m^2/m^3/d</p></td>
+</tr>
+<tr class="row-odd"><td><p>i_incrcovg</p></td>
+<td><p>parameter determining maximum increment percentage of grass cover</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-even"><td><p>i_incrjmax</p></td>
+<td><p>parameter determining maximum increment percentage of jmax25</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-odd"><td><p>i_incrlait</p></td>
+<td><p>parameter determining maximum increment percentage of LAI grasses</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-even"><td><p>i_incrlaig</p></td>
+<td><p>parameter determining maximum increment percentage of LAI trees</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-odd"><td><p>i_firstyear</p></td>
+<td><p>firstyear for the generation of hourly output in computation mode</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-even"><td><p>i_lastyear</p></td>
+<td><p>lastyear for the generation of hourly output in computation mode</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-odd"><td><p>i_write_h</p></td>
+<td><p>flag to greate a file with hourly values from daily values</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-even"><td><p>i_read_pc</p></td>
+<td><p>flag to read vegetation coverage values from file</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-odd"><td><p>i_trans_vegcov</p></td>
+<td><p>fraction of radiative energy reaching soil under full cover (0-1)</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-even"><td><p>i_la|i_function</p></td>
+<td><p>switch for 1) linear or 2) exponential function of LAI for foliage cost</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-odd"><td><p>i_n|o_veg</p></td>
+<td><p>switch for running VOM without vegetation (0-with, 1-without)</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-even"><td><p>i_extcoeffg</p></td>
+<td><p>extinction coefficient beer’s law grasses</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-odd"><td><p>i_extcoefft</p></td>
+<td><p>extinction coefficient beer’s law trees</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-even"><td><p>i_inputpath</p></td>
+<td><p>path to folder with inputfiles</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-odd"><td><p>i_outputpath</p></td>
+<td><p>path to folder with outputfiles</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-even"><td><p>o_lambdagf</p></td>
+<td><p>factor for calculating lambdag_d</p></td>
+<td><p>mol/mol/m</p></td>
+</tr>
+<tr class="row-odd"><td><p>o_wsgexp</p></td>
+<td><p>exponent for calculating lambdag</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-even"><td><p>o_lambdatf</p></td>
+<td><p>factor for calculating lambdat_d</p></td>
+<td><p>mol/mol/m</p></td>
+</tr>
+<tr class="row-odd"><td><p>o_wstexp</p></td>
+<td><p>exponent for calculating lambdat_d</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-even"><td><p>o_cai</p></td>
+<td><p>projected cover perennial vegetation (0-1)</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-odd"><td><p>o_rtdepth</p></td>
+<td><p>tree rooting depth</p></td>
+<td><p>m</p></td>
+</tr>
+<tr class="row-even"><td><p>o_mdstore</p></td>
+<td><p>wood water storage parameter of trees (can be in shufflepar)</p></td>
+<td><p>g/m^2</p></td>
+</tr>
+<tr class="row-odd"><td><p>o_rgdepth</p></td>
+<td><p>root depth grasses (can be in shufflepar)</p></td>
+<td><p>m</p></td>
+</tr>
+<tr class="row-even"><td><p>i_lat</p></td>
+<td><p>geogr. latitude in degrees</p></td>
+<td><p>degrees</p></td>
+</tr>
+<tr class="row-odd"><td><p>i_cz</p></td>
+<td><p>average soil elevation</p></td>
+<td><p>m</p></td>
+</tr>
+<tr class="row-even"><td><p>i_cgs</p></td>
+<td><p>Capital Gamma S (length scale for seepage outflow REG)</p></td>
+<td><p>m</p></td>
+</tr>
+<tr class="row-odd"><td><p>i_zr</p></td>
+<td><p>average channel bed elevation</p></td>
+<td><p>m</p></td>
+</tr>
+<tr class="row-even"><td><p>i_go</p></td>
+<td><p>slope close to channel</p></td>
+<td><p>rad</p></td>
+</tr>
+<tr class="row-odd"><td><p>i_ksat</p></td>
+<td><p>Saturated hydraulic conductivity</p></td>
+<td><p>m/s</p></td>
+</tr>
+<tr class="row-even"><td><p>i_thetar</p></td>
+<td><p>residual soil moisture</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-odd"><td><p>i_thetas</p></td>
+<td><p>saturated soil moisture</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-even"><td><p>i_nvg</p></td>
+<td><p>van Genuchten soil parameter n</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-odd"><td><p>i_avg</p></td>
+<td><p>van Genuchten soil parameter alpha</p></td>
+<td><p>1/m</p></td>
+</tr>
+<tr class="row-even"><td><p>i_delz</p></td>
+<td><p>thickness of soil sublayers</p></td>
+<td><p>m</p></td>
+</tr>
+<tr class="row-odd"><td><p>vom_command</p></td>
+<td><p>COMMAND LINE TO RUN ASSIMILATION MODEL</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-even"><td><p>i_ncomp</p></td>
+<td><p>MAXIMUM NUMBER OF COMPLEXES (p)</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-odd"><td><p>i_ncompmin</p></td>
+<td><p>MINIMUM NUMBER OF COMPLEXES (pmin)</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-even"><td><p>i_resolution</p></td>
+<td><p>RESOLUTION OF OPTIMISATION (% OF MAX VARIATION WHEN OPTIMISATION STOPS)</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-odd"><td><p>i_patience</p></td>
+<td><p>NUMBER OF LOOPS WITHOUT INCREASE IN OF BEFORE OPTIMISATION STOPS</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-even"><td><p>i_nsimp</p></td>
+<td><p>NUMBER OF OPTIMISATIONS PER COMPLEX AND RUN</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-odd"><td><p>i_focus</p></td>
+<td><p>IF &lt;1.0, THE SPREAD OF THE RANDOM SEED AROUND THE INITIAL VALUES IS LIMITED</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-even"><td><p>i_iter</p></td>
+<td><p>Maximum iterations in case of random runs</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-odd"><td><p>vom_npar</p></td>
+<td><p>number of parameters in shuffle2par used for optimization in SCE</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-even"><td><p>n_thread</p></td>
+<td><p>number of threads to be used in parallel</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-odd"><td><p>sce_restart</p></td>
+<td><p>restart SCE from previous run</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-even"><td><p>runtime_limit</p></td>
+<td><p>time in minutes before sce stops</p></td>
+<td><p>minutes</p></td>
+</tr>
+<tr class="row-odd"><td><p>parname0</p></td>
+<td><p>list of parameter names</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-even"><td><p>parval0</p></td>
+<td><p>list of default parameter values</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-odd"><td><p>parmin0</p></td>
+<td><p>list of minimum parameter values</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-even"><td><p>parmax0</p></td>
+<td><p>list of maximum parameter values</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-odd"><td><p>paropt0</p></td>
+<td><p>list of parameters to optimize (0-1)</p></td>
+<td><p>-</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">VOM</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">VOM_namelist</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="quickstart.html" title="previous chapter">Quickstart</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Schymanski.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/vom_namelist.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

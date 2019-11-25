@@ -1,0 +1,232 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Soil data &#8212; VOM  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Outputfiles" href="outputfiles.html" />
+    <link rel="prev" title="Meteorological forcing" href="meteorological_forcing.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="soil-data">
+<h1>Soil data<a class="headerlink" href="#soil-data" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="soil-layers">
+<h2>Soil layers<a class="headerlink" href="#soil-layers" title="Permalink to this headline">¶</a></h2>
+<p>Soil layer thickness is globally defined with the parameter i_delz, or in the file soilprofile.par for each soil layer separately. The sum of the soil layers need to be equal to the topographical parameter i_cz (maximum elevation). The VOM will raise a warning and correct i_cz if this is not the case. The river bed level i_zr needs to align with the soil layers. Also here, the VOM will give a warning and correct i_zr if needed.</p>
+</div>
+<div class="section" id="soil-properties">
+<h2>Soil properties<a class="headerlink" href="#soil-properties" title="Permalink to this headline">¶</a></h2>
+<p>Soil water retention and hydraulic conductivity parameters for 12 major soil textural groups according to <a class="footnote-reference brackets" href="#id2" id="id1">1</a>. Some units of the parameters (alpha and Ksat) are converted for the use in the VOM.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 24%" />
+<col style="width: 13%" />
+<col style="width: 17%" />
+<col style="width: 19%" />
+<col style="width: 8%" />
+<col style="width: 19%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Texture</p></td>
+<td><p>theta-r</p></td>
+<td><p>theta-s</p></td>
+<td><p>alpha (1/m)</p></td>
+<td><p>n</p></td>
+<td><p>K-sat (m/s)</p></td>
+</tr>
+<tr class="row-even"><td><p>Sand</p></td>
+<td><p>0.045</p></td>
+<td><p>0.43</p></td>
+<td><p>14.5</p></td>
+<td><p>2.68</p></td>
+<td><p>8.25*10-5</p></td>
+</tr>
+<tr class="row-odd"><td><p>Loamy Sand</p></td>
+<td><p>0.057</p></td>
+<td><p>0.41</p></td>
+<td><p>12.4</p></td>
+<td><p>2.28</p></td>
+<td><p>4.053*10-5</p></td>
+</tr>
+<tr class="row-even"><td><p>Sandy Loam</p></td>
+<td><p>0.065</p></td>
+<td><p>0.41</p></td>
+<td><p>7.5</p></td>
+<td><p>1.89</p></td>
+<td><p>1.228*10-5</p></td>
+</tr>
+<tr class="row-odd"><td><p>Loam</p></td>
+<td><p>0.078</p></td>
+<td><p>0.43</p></td>
+<td><p>3.6</p></td>
+<td><p>1.56</p></td>
+<td><p>2.889*10-6</p></td>
+</tr>
+<tr class="row-even"><td><p>Silt</p></td>
+<td><p>0.034</p></td>
+<td><p>0.46</p></td>
+<td><p>1.6</p></td>
+<td><p>1.37</p></td>
+<td><p>6.944*10-7</p></td>
+</tr>
+<tr class="row-odd"><td><p>Silt Loam</p></td>
+<td><p>0.067</p></td>
+<td><p>0.45</p></td>
+<td><p>2.0</p></td>
+<td><p>1.41</p></td>
+<td><p>1.25*10-6</p></td>
+</tr>
+<tr class="row-even"><td><p>Sandy Clay Loam</p></td>
+<td><p>0.100</p></td>
+<td><p>0.39</p></td>
+<td><p>5.9</p></td>
+<td><p>1.48</p></td>
+<td><p>3.639*10-6</p></td>
+</tr>
+<tr class="row-odd"><td><p>Clay Loam</p></td>
+<td><p>0.095</p></td>
+<td><p>0.41</p></td>
+<td><p>1.9</p></td>
+<td><p>1.31</p></td>
+<td><p>7.222*10-7</p></td>
+</tr>
+<tr class="row-even"><td><p>Silty Clay Loam</p></td>
+<td><p>0.089</p></td>
+<td><p>0.43</p></td>
+<td><p>1.0</p></td>
+<td><p>1.23</p></td>
+<td><p>1.944*10-7</p></td>
+</tr>
+<tr class="row-odd"><td><p>Sandy Clay</p></td>
+<td><p>0.100</p></td>
+<td><p>0.38</p></td>
+<td><p>2.7</p></td>
+<td><p>1.23</p></td>
+<td><p>3.333*10-7</p></td>
+</tr>
+<tr class="row-even"><td><p>Silty Clay</p></td>
+<td><p>0.070</p></td>
+<td><p>0.36</p></td>
+<td><p>0.5</p></td>
+<td><p>1.09</p></td>
+<td><p>5.555*10-8</p></td>
+</tr>
+<tr class="row-odd"><td><p>Clay</p></td>
+<td><p>0.068</p></td>
+<td><p>0.38</p></td>
+<td><p>0.8</p></td>
+<td><p>1.09</p></td>
+<td><p>5.555*10-7</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="footnote brackets">
+<dt class="label" id="id2"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<dd><p>Carsel, R.F. &amp; R.S.Parrish (1988): Developing joint probability distributions of soil water retention characteristics.-Water Resource Research 24:755-769.</p>
+</dd>
+</dl>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">VOM</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vom_namelist.html">VOM_namelist</a></li>
+<li class="toctree-l1"><a class="reference internal" href="meteorological_forcing.html">Meteorological forcing</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Soil data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#soil-layers">Soil layers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#soil-properties">Soil properties</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="outputfiles.html">Outputfiles</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="meteorological_forcing.html" title="previous chapter">Meteorological forcing</a></li>
+      <li>Next: <a href="outputfiles.html" title="next chapter">Outputfiles</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Schymanski.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/soildata.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>General VOM-description &#8212; VOM  documentation</title>
+    <title>Quickstart &#8212; VOM  documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -30,38 +30,34 @@
 
           <div class="body" role="main">
             
-  <div class="section" id="general-vom-description">
-<h1>General VOM-description<a class="headerlink" href="#general-vom-description" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="model-information">
-<h2>Model Information<a class="headerlink" href="#model-information" title="Permalink to this headline">¶</a></h2>
-<p>Name:
-Coupled Water Balance and Vegetation Optimality Model
-Author Contact:
-Stan Schymanski, ETH Zurich
-Date of first version:
-April 2006
-Date of last update:
-September 2013</p>
+  <div class="section" id="quickstart">
+<h1>Quickstart<a class="headerlink" href="#quickstart" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="compiling-and-testing-the-model">
+<h2>Compiling and testing the model<a class="headerlink" href="#compiling-and-testing-the-model" title="Permalink to this headline">¶</a></h2>
+<p>To compile the model on a unix machine with
+the gfortran compiler, type :</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make
+</pre></div>
 </div>
-<div class="section" id="model-purpose">
-<h2>Model Purpose:<a class="headerlink" href="#model-purpose" title="Permalink to this headline">¶</a></h2>
-<p>The vegetation optimality model was developed to model the water use by
-natural vegetation for use in hydrological models. The aim of the model is
-to predict vegetation water use based on meterological information, soils
-and topography only, without the need for prescribing site-specific
-vegetation properties or calibration against observed fluxes.</p>
-<p>The original theory and equations used in the model are described in:</p>
-<blockquote>
-<div><blockquote>
-<div><p>S. J. Schymanski. Transpiration as the Leak in the Carbon Factory: A Model
-of Self-Optimising Vegetation. PhD thesis, University of Western
-Australia, Perth, Australia, 2007.</p>
-</div></blockquote>
+<p>This will create an executable file called “model.x”. Now test the model
+by typing:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make check
+</pre></div>
+</div>
+<p>When the test is passed, the model is ready to use. The VOM_namelist contains all settings,
+and the model should always be run with the directory of this namelist as working directory. Input and output directories can be defined in the namelist with absolute or relative paths from the working directory.</p>
+</div>
+<div class="section" id="running-the-model">
+<h2>Running the model<a class="headerlink" href="#running-the-model" title="Permalink to this headline">¶</a></h2>
+<p>The executable “model.x” can be run with these input-files:</p>
 <dl class="simple">
-<dt>However, the present version uses a simplified catchment geometry</dt><dd><p>(rectangular slab of soil), as described in Watbal3.pdf.</p>
+<dt><strong>vom_namelist</strong></dt><dd><p>Contains all settings to run the VOM.</p>
+</dd>
+<dt><strong>pars.txt</strong></dt><dd><p>Contains the (optimized) vegetation parameters (only needed for single run).</p>
+</dd>
+<dt><strong>dailyweather.prn</strong></dt><dd><p>Contains the meteorological forcing.</p>
 </dd>
 </dl>
-</div></blockquote>
 </div>
 </div>
 
@@ -85,6 +81,7 @@ Australia, Perth, Australia, 2007.</p>
 <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vom_namelist.html">VOM_namelist</a></li>
 </ul>
 
 <div class="relations">
@@ -124,7 +121,7 @@ Australia, Perth, Australia, 2007.</p>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
-      <a href="_sources/general.rst.txt"
+      <a href="_sources/inputfiles.rst.txt"
           rel="nofollow">Page source</a>
     </div>
 

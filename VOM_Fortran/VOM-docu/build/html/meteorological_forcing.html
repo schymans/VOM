@@ -1,0 +1,173 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Meteorological forcing &#8212; VOM  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Outputfiles" href="outputfiles.html" />
+    <link rel="prev" title="VOM_namelist" href="vom_namelist.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="meteorological-forcing">
+<h1>Meteorological forcing<a class="headerlink" href="#meteorological-forcing" title="Permalink to this headline">¶</a></h1>
+<p>The file “dailyweather.prn” is an input file for the VOM, containing all meteorologicald data:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 74%" />
+<col style="width: 14%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Dcum</p></td>
+<td><p>Day of the year</p></td>
+<td><p>Integer</p></td>
+</tr>
+<tr class="row-even"><td><p>Day</p></td>
+<td><p>Day of the month</p></td>
+<td><p>Integer</p></td>
+</tr>
+<tr class="row-odd"><td><p>Month</p></td>
+<td><p>Month of the year</p></td>
+<td><p>Integer</p></td>
+</tr>
+<tr class="row-even"><td><p>Year</p></td>
+<td><p>Year</p></td>
+<td><p>Integer, 4 digits</p></td>
+</tr>
+<tr class="row-odd"><td><p>T.Max</p></td>
+<td><p>Daily max. Air temp in °C</p></td>
+<td><p>Decimal, #.##</p></td>
+</tr>
+<tr class="row-even"><td><p>T.Min</p></td>
+<td><p>Daily min. Air temp in °C</p></td>
+<td><p>Decimal, #.##</p></td>
+</tr>
+<tr class="row-odd"><td><p>Rain</p></td>
+<td><p>Daily rain fall in mm</p></td>
+<td><p>Decimal, #.##</p></td>
+</tr>
+<tr class="row-even"><td><p>Radn</p></td>
+<td><p>Global solar irradiance in MJ/m2</p></td>
+<td><p>Decimal, #.##</p></td>
+</tr>
+<tr class="row-odd"><td><p>VP</p></td>
+<td><p>Water vapour pressure in hPa</p></td>
+<td><p>Decimal, #.##</p></td>
+</tr>
+<tr class="row-even"><td><p>Pres</p></td>
+<td><p>air pressure in hPa</p></td>
+<td><p>Decimal, #.##</p></td>
+</tr>
+<tr class="row-odd"><td><p>Ca</p></td>
+<td><p>ambient air CO2 concentration in µmol</p></td>
+<td><p>Decimal, #.##</p></td>
+</tr>
+</tbody>
+</table>
+<p>The first line contains the variable names and is omitted when reading the file. All fields are 8 characters long and need to be filled from behind, e.g.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Dcum</span>     <span class="n">Day</span>   <span class="n">Month</span>    <span class="n">Year</span>   <span class="n">T</span><span class="o">.</span><span class="n">Max</span>   <span class="n">T</span><span class="o">.</span><span class="n">Min</span>    <span class="n">Rain</span>    <span class="n">Radn</span>      <span class="n">VP</span>    <span class="n">Pres</span>      <span class="n">Ca</span>
+   <span class="mi">1</span>       <span class="mi">1</span>       <span class="mi">1</span>    <span class="mi">1971</span>   <span class="mf">32.87</span>   <span class="mf">24.75</span>    <span class="mf">0.00</span>   <span class="mf">16.44</span>   <span class="mf">33.17</span>  <span class="mf">999.32</span>  <span class="mf">350.00</span>
+</pre></div>
+</div>
+<p><strong>NOTE: when creating your own dailyweather.prn, make sure the alignments are exactly the same as the example input</strong>
+I.e. in the following format:
+%8.0f%8.0f%8.0f%8.0f%8.2f%8.2f%8.2f%8.2f%8.2f%8.2f%8.2f</p>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">VOM</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vom_namelist.html">VOM_namelist</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Meteorological forcing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="outputfiles.html">Outputfiles</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="vom_namelist.html" title="previous chapter">VOM_namelist</a></li>
+      <li>Next: <a href="outputfiles.html" title="next chapter">Outputfiles</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Schymanski.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/meteorological_forcing.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
