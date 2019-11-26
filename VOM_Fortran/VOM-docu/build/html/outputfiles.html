@@ -1,0 +1,489 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Outputfiles &#8212; VOM  documentation</title>
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Shuffled Complex Evolutionary algorithm" href="sce.html" />
+    <link rel="prev" title="Soil data" href="soildata.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="sce.html" title="Shuffled Complex Evolutionary algorithm"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="soildata.html" title="Soil data"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">VOM  documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="outputfiles">
+<h1>Outputfiles<a class="headerlink" href="#outputfiles" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="results-daily-txt">
+<h2>results_daily.txt<a class="headerlink" href="#results-daily-txt" title="Permalink to this headline">¶</a></h2>
+<p>The file “results_daily.txt” is an output file from VOM, containing daily weather, flux and state variable data in ascii format, e.g.:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 87%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>fyear</p></td>
+<td><p>Day of the year</p></td>
+</tr>
+<tr class="row-even"><td><p>fmonth</p></td>
+<td><p>Month of the year</p></td>
+</tr>
+<tr class="row-odd"><td><p>fday</p></td>
+<td><p>Day of the month</p></td>
+</tr>
+<tr class="row-even"><td><p>nday</p></td>
+<td><p>Day of the model</p></td>
+</tr>
+<tr class="row-odd"><td><p>nhour</p></td>
+<td><p>Last hour of day</p></td>
+</tr>
+<tr class="row-even"><td><p>rain</p></td>
+<td><p>Daily rain fall in mm/d</p></td>
+</tr>
+<tr class="row-odd"><td><p>tairmax</p></td>
+<td><p>Daily max. Air temp in °C</p></td>
+</tr>
+<tr class="row-even"><td><p>tairmin</p></td>
+<td><p>Daily min. Air temp in °C</p></td>
+</tr>
+<tr class="row-odd"><td><p>par</p></td>
+<td><p>Photosynthetically active Photon Flux Density (in mol m-2 d-1)</p></td>
+</tr>
+<tr class="row-even"><td><p>vd</p></td>
+<td><p>Daily average atmospheric vapour deficit (in mol mol-1)</p></td>
+</tr>
+<tr class="row-odd"><td><p>esoil</p></td>
+<td><p>Daily soil evaporation rate (m d-1)</p></td>
+</tr>
+<tr class="row-even"><td><p>jmax25t</p></td>
+<td><p>Electron transport capacity at 25oC by trees (in mol m-2 s-1)</p></td>
+</tr>
+<tr class="row-odd"><td><p>jmax25g</p></td>
+<td><p>Electron transport capacity at 25oC by grasses (in mol m-2 s-1)</p></td>
+</tr>
+<tr class="row-even"><td><p>pc</p></td>
+<td><p>Area fraction covered by grasses and trees combined</p></td>
+</tr>
+<tr class="row-odd"><td><p>rl</p></td>
+<td><p>Daily leaf respiration rate by trees and grasses combined (in mol m-2 d-1)</p></td>
+</tr>
+<tr class="row-even"><td><p>lambdat</p></td>
+<td><p>dE/dA in trees, in mol/mol</p></td>
+</tr>
+<tr class="row-odd"><td><p>lambdag</p></td>
+<td><p>dE/dA in grasses, in mol/mol</p></td>
+</tr>
+<tr class="row-even"><td><p>rrt</p></td>
+<td><p>Daily root respiration rate by trees (in mol m-2 d-1)</p></td>
+</tr>
+<tr class="row-odd"><td><p>rrg</p></td>
+<td><p>Daily root respiration rate by grasses (in mol m-2 d-1)</p></td>
+</tr>
+<tr class="row-even"><td><p>asst</p></td>
+<td><p>CO2 uptake rate by trees (in mol m-2 d-1)</p></td>
+</tr>
+<tr class="row-odd"><td><p>assg</p></td>
+<td><p>CO2 uptake rate by grasses (in mol m-2 d-1)</p></td>
+</tr>
+<tr class="row-even"><td><p>su_avg</p></td>
+<td><p>Average soil saturation degree in the unsaturated zone at midnight (dimensionless)</p></td>
+</tr>
+<tr class="row-odd"><td><p>zw</p></td>
+<td><p>Thickness of the saturated zone (in m)</p></td>
+</tr>
+<tr class="row-even"><td><p>ws</p></td>
+<td><p>Total soil water storage (in m)</p></td>
+</tr>
+<tr class="row-odd"><td><p>spgfcf</p></td>
+<td><p>Daily seepage face flow (=subsurface runoff, in m d-1)</p></td>
+</tr>
+<tr class="row-even"><td><p>infx</p></td>
+<td><p>Dail infiltration excess runoff (in m d-1)</p></td>
+</tr>
+<tr class="row-odd"><td><p>etmt</p></td>
+<td><p>Daily transpiration rate by trees (in m d-1)</p></td>
+</tr>
+<tr class="row-even"><td><p>etmg</p></td>
+<td><p>Daily transpiration rate by grasses (in m d-1)</p></td>
+</tr>
+<tr class="row-odd"><td><p>su_1</p></td>
+<td><p>Soil saturation degree in the top soil layer at midnight (dimensionless)</p></td>
+</tr>
+<tr class="row-even"><td><p>topt</p></td>
+<td><p>Optimal temperature for photosynthesis (in oC)</p></td>
+</tr>
+<tr class="row-odd"><td><p>ncp_g</p></td>
+<td><p>Daily Net Carbon profit grasses (in mol m-2)</p></td>
+</tr>
+<tr class="row-even"><td><p>ncp_g</p></td>
+<td><p>Daily Net Carbon profit trees (in mol m-2)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="results-hourly-txt">
+<h2>results_hourly.txt<a class="headerlink" href="#results-hourly-txt" title="Permalink to this headline">¶</a></h2>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 87%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>fyear</p></td>
+<td><p>Day of the year</p></td>
+</tr>
+<tr class="row-even"><td><p>fmonth</p></td>
+<td><p>Month of the year</p></td>
+</tr>
+<tr class="row-odd"><td><p>fday</p></td>
+<td><p>Day of the month</p></td>
+</tr>
+<tr class="row-even"><td><p>nday</p></td>
+<td><p>Day of the model</p></td>
+</tr>
+<tr class="row-odd"><td><p>nhour</p></td>
+<td><p>Hour</p></td>
+</tr>
+<tr class="row-even"><td><p>rain</p></td>
+<td><p>Rainfall rate in m/s</p></td>
+</tr>
+<tr class="row-odd"><td><p>tair</p></td>
+<td><p>Air temp in °C</p></td>
+</tr>
+<tr class="row-even"><td><p>par</p></td>
+<td><p>Photosynthetically active Photon Flux Density (in mol m-2 s-1)</p></td>
+</tr>
+<tr class="row-odd"><td><p>vd</p></td>
+<td><p>Atmospheric vapour deficit (in mol mol-1)</p></td>
+</tr>
+<tr class="row-even"><td><p>esoil</p></td>
+<td><p>Hourly soil evaporation rate (m h-1)</p></td>
+</tr>
+<tr class="row-odd"><td><p>jmax25t</p></td>
+<td><p>Electron transport capacity at 25oC by trees (in mol m-2 s-1)</p></td>
+</tr>
+<tr class="row-even"><td><p>jmax25g</p></td>
+<td><p>Electron transport capacity at 25oC by grasses (in mol m-2 s-1)</p></td>
+</tr>
+<tr class="row-odd"><td><p>pc</p></td>
+<td><p>Area fraction covered by grasses and trees combined</p></td>
+</tr>
+<tr class="row-even"><td><p>mqt</p></td>
+<td><p>Tissue water content in trees (in kg m-2)</p></td>
+</tr>
+<tr class="row-odd"><td><p>rl</p></td>
+<td><p>Leaf respiration rate by trees and grasses combined (in mol m-2 s-1)</p></td>
+</tr>
+<tr class="row-even"><td><p>lambdat</p></td>
+<td><p>dE/dA in trees, in mol/mol</p></td>
+</tr>
+<tr class="row-odd"><td><p>lambdag</p></td>
+<td><p>dE/dA in grasses, in mol/mol</p></td>
+</tr>
+<tr class="row-even"><td><p>rr</p></td>
+<td><p>Rroot respiration rate by trees and grasses combined (in mol m-2 s-1)</p></td>
+</tr>
+<tr class="row-odd"><td><p>asst</p></td>
+<td><p>Hourly CO2 uptake rate by trees (in mol m-2 h-1)</p></td>
+</tr>
+<tr class="row-even"><td><p>assg</p></td>
+<td><p>Hourly CO2 uptake rate by grasses (in mol m-2 h-1)</p></td>
+</tr>
+<tr class="row-odd"><td><p>zw</p></td>
+<td><p>Thickness of the saturated zone (in m)</p></td>
+</tr>
+<tr class="row-even"><td><p>ws</p></td>
+<td><p>Total soil water storage (in m)</p></td>
+</tr>
+<tr class="row-odd"><td><p>spgfcf</p></td>
+<td><p>Hourly seepage face flow (=subsurface runoff, in m h-1)</p></td>
+</tr>
+<tr class="row-even"><td><p>infx</p></td>
+<td><p>Hourly infiltration excess runoff (in m h-1)</p></td>
+</tr>
+<tr class="row-odd"><td><p>etmt</p></td>
+<td><p>Daily transpiration rate by trees (in m h-1)</p></td>
+</tr>
+<tr class="row-even"><td><p>etmg</p></td>
+<td><p>Daily transpiration rate by grasses (in m h-1)</p></td>
+</tr>
+<tr class="row-odd"><td><p>su_1</p></td>
+<td><p>Soil saturation degree in the top soil layer at midnight (dimensionless)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="results-yearly-txt">
+<h2>results_yearly.txt<a class="headerlink" href="#results-yearly-txt" title="Permalink to this headline">¶</a></h2>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 87%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>nyear</p></td>
+<td><p>Year</p></td>
+</tr>
+<tr class="row-even"><td><p>rain</p></td>
+<td><p>Annual rainfall (mm/year)</p></td>
+</tr>
+<tr class="row-odd"><td><p>par</p></td>
+<td><p>Photosynthetically active Photon Flux Density (in mol m-2 s-1)</p></td>
+</tr>
+<tr class="row-even"><td><p>srad</p></td>
+<td><p>Global solar irradiance (in MJ m-2 a-1)</p></td>
+</tr>
+<tr class="row-odd"><td><p>vd</p></td>
+<td><p>Yearly average vapour deficit (in mol mol-1)</p></td>
+</tr>
+<tr class="row-even"><td><p>esoil</p></td>
+<td><p>Yearly soil evaporation rate (m/year)</p></td>
+</tr>
+<tr class="row-odd"><td><p>etmt</p></td>
+<td><p>Yearly transpiration rate by trees (in m/year)</p></td>
+</tr>
+<tr class="row-even"><td><p>etmg</p></td>
+<td><p>Yearly transpiration rate by grasses (in m/year)</p></td>
+</tr>
+<tr class="row-odd"><td><p>assg</p></td>
+<td><p>CO2 uptake rate by seasonal vegetation (in mol m-2 a-1)</p></td>
+</tr>
+<tr class="row-even"><td><p>asst</p></td>
+<td><p>CO2 uptake rate by trees (in mol m-2 h-1)</p></td>
+</tr>
+<tr class="row-odd"><td><p>rlg</p></td>
+<td><p>Leaf respiration rate by seasonal vegetation (in mol m-2 a-1)</p></td>
+</tr>
+<tr class="row-even"><td><p>rrg</p></td>
+<td><p>Root respiration rate by seasonal vegetation  (in mol m-2 a-1)</p></td>
+</tr>
+<tr class="row-odd"><td><p>rlt</p></td>
+<td><p>Leaf respiration rate by perennial vegetation (in mol m-2 a-1)</p></td>
+</tr>
+<tr class="row-even"><td><p>rrt</p></td>
+<td><p>Root respiration rate by perennial vegetation  (in mol m-2 a-1)</p></td>
+</tr>
+<tr class="row-odd"><td><p>cpccg</p></td>
+<td><p>Carbon costs related to water distribution and storage for seasonal vegetation (in mol m-2 a-1)</p></td>
+</tr>
+<tr class="row-even"><td><p>tcg</p></td>
+<td><p>Carbon costs related to maintenance of gras foliage (in mol m-2 a-1)</p></td>
+</tr>
+<tr class="row-odd"><td><p>cpcct</p></td>
+<td><p>Carbon costs related to water distribution and storage for perennial vegetation (in mol m-2 a-1)</p></td>
+</tr>
+<tr class="row-even"><td><p>tct</p></td>
+<td><p>Carbon costs related to maintenance of tree foliage (in mol m-2 a-1)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="rsurf-daily-txt">
+<h2>rsurf_daily.txt<a class="headerlink" href="#rsurf-daily-txt" title="Permalink to this headline">¶</a></h2>
+<p>The file “rsurf_daily.txt” is an output file from VOM, containing a midnight snapshots of the root surface distributions in the soil profile in ascii format.</p>
+<p>As the number of soil layers also depends on given soil depth, this file has a variable number of columns. These columns do not have their own variable names. They are all saved within and behind the last variable name (rsurft_sublayer), e.g.:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 87%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>fyear</p></td>
+<td><p>Year</p></td>
+</tr>
+<tr class="row-even"><td><p>fmonth</p></td>
+<td><p>Month of the year</p></td>
+</tr>
+<tr class="row-odd"><td><p>fday</p></td>
+<td><p>Day of the month</p></td>
+</tr>
+<tr class="row-even"><td><p>nday</p></td>
+<td><p>Day of the model</p></td>
+</tr>
+<tr class="row-odd"><td><p>rsurft_sublayer</p></td>
+<td><p>Root surface area density (root surface area per unit soil volume) in each soil layer (in m2 m-3 d-1)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="ruptk-hourly-txt">
+<h2>ruptk_hourly.txt<a class="headerlink" href="#ruptk-hourly-txt" title="Permalink to this headline">¶</a></h2>
+<p>The file “ruptkt_hourly.txt” is an output file from VOM, containing hourly root water uptake rates in each soil layer during the last few years of the model run in ascii format.</p>
+<p>As the number of soil layers also depends on input given soil depth, this file has a variably number of rows. These rows don’t have their own variable names. They are all saved within and behind the last variable name (delyusublayer), e.g.:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 87%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>fyear</p></td>
+<td><p>Year</p></td>
+</tr>
+<tr class="row-even"><td><p>fmonth</p></td>
+<td><p>Month of the year</p></td>
+</tr>
+<tr class="row-odd"><td><p>fday</p></td>
+<td><p>Day of the month</p></td>
+</tr>
+<tr class="row-even"><td><p>nday</p></td>
+<td><p>Day of the model</p></td>
+</tr>
+<tr class="row-odd"><td><p>ruptkt_sublayer</p></td>
+<td><p>Root water uptake rate in each soil layer (in m h-1)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="su-hourly-txt">
+<h2>su_hourly.txt<a class="headerlink" href="#su-hourly-txt" title="Permalink to this headline">¶</a></h2>
+<p>The file “su_hourly.txt” is an output file from VOM, containing hourly soil saturation degrees in each soil layer during the last few years of the model run in ascii format.</p>
+<p>As the number of soil layers also depends on input given soil depth, this file has a variably number of rows. These rows don’t have their own variable names. They are all saved within and behind the last variable name (su_sublayer), e.g.:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 87%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>fyear</p></td>
+<td><p>Year</p></td>
+</tr>
+<tr class="row-even"><td><p>fmonth</p></td>
+<td><p>Month of the year</p></td>
+</tr>
+<tr class="row-odd"><td><p>fday</p></td>
+<td><p>Day of the month</p></td>
+</tr>
+<tr class="row-even"><td><p>nday</p></td>
+<td><p>Day of the model</p></td>
+</tr>
+<tr class="row-odd"><td><p>su_sublayer</p></td>
+<td><p>Soil saturation degree in each sublayer (1.0 means fully saturated)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="delz-hourly-txt">
+<h2>delz_hourly.txt<a class="headerlink" href="#delz-hourly-txt" title="Permalink to this headline">¶</a></h2>
+<p>The file “delz_hourly.txt” is an output file from VOM, containing the thickness of each unsaturated soil layers in ascii format.</p>
+<p>As the number of soil layers also depends on the position of the water table, this file has a variable number of rows. These rows do not have their own variable names. They are all saved within and behind the last variable name (delz_sublayer), e.g.:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 87%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>fyear</p></td>
+<td><p>Year</p></td>
+</tr>
+<tr class="row-even"><td><p>fmonth</p></td>
+<td><p>Month of the year</p></td>
+</tr>
+<tr class="row-odd"><td><p>fday</p></td>
+<td><p>Day of the month</p></td>
+</tr>
+<tr class="row-even"><td><p>nday</p></td>
+<td><p>Day of the model</p></td>
+</tr>
+<tr class="row-odd"><td><p>delz_sublayer</p></td>
+<td><p>Thickness of each unsaturated soil layer (in m)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Outputfiles</a><ul>
+<li><a class="reference internal" href="#results-daily-txt">results_daily.txt</a></li>
+<li><a class="reference internal" href="#results-hourly-txt">results_hourly.txt</a></li>
+<li><a class="reference internal" href="#results-yearly-txt">results_yearly.txt</a></li>
+<li><a class="reference internal" href="#rsurf-daily-txt">rsurf_daily.txt</a></li>
+<li><a class="reference internal" href="#ruptk-hourly-txt">ruptk_hourly.txt</a></li>
+<li><a class="reference internal" href="#su-hourly-txt">su_hourly.txt</a></li>
+<li><a class="reference internal" href="#delz-hourly-txt">delz_hourly.txt</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="soildata.html"
+                        title="previous chapter">Soil data</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="sce.html"
+                        title="next chapter">Shuffled Complex Evolutionary algorithm</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/outputfiles.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="sce.html" title="Shuffled Complex Evolutionary algorithm"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="soildata.html" title="Soil data"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">VOM  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Schymanski.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    </div>
+  </body>
+</html>
