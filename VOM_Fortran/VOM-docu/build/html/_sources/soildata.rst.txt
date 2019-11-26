@@ -12,6 +12,7 @@ Soil properties
 -------------------------------
 Soil water retention and hydraulic conductivity parameters for 12 major soil textural groups according to [1]_. Some units of the parameters (alpha and Ksat) are converted for the use in the VOM.
 
+
 +-----------------+---------+------------+--------------+------+--------------+
 |Texture          | theta-r |	theta-s  | alpha (1/m)  | n    | K-sat (m/s)  |
 +-----------------+---------+------------+--------------+------+--------------+
@@ -39,6 +40,9 @@ Soil water retention and hydraulic conductivity parameters for 12 major soil tex
 +-----------------+---------+------------+--------------+------+--------------+
 |Clay             | 0.068   |   0.38     | 0.8          | 1.09 | 5.555*10-7   |
 +-----------------+---------+------------+--------------+------+--------------+
+
+
+
 
 
 .. [1] Carsel, R.F. & R.S.Parrish (1988): Developing joint probability distributions of soil water retention characteristics.-Water Resource Research 24:755-769.
