@@ -37,9 +37,28 @@ The initial author of the code and documentation is Stan Schymanski, and initial
         /vom-input
             input files needed by the model and example forcing data
  
-A copy of the model documentation can also be found at:
+## Documentation
+
+The model documentation can be found at:
 https://vom.readthedocs.io/en/latest/
 
-An offline version of the documentation can be found in html-format in the folder VOM-docu/build/html/ 
+An offline version of the documentation can be found in html-format in the folder VOM-docu/build/html/.
+Two additional pdf files containing equations, can be found in VOM-docu:
+- Equations.pdf
+- Watbal3.pdf
+
+
+The directory html_docu contains hand-written html documentation. This is helpful for compiling and
+running the model.
+
+The directory Fordocu contains automatically generated documenation
+based on commens in the .f90 files. This one is helpful for understanding the
+structure of the source code.
+
+
+
+
+
+
 
 
