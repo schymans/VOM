@@ -22,6 +22,7 @@ vegetation properties or calibration against observed fluxes.
    soildata 
    outputfiles
    sce
+   background
 
 
 Indices and tables
