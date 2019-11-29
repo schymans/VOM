@@ -38,4 +38,8 @@ The initial author of the code and documentation is Stan Schymanski, and initial
             input files needed by the model and example forcing data
  
 A copy of the model documentation can also be found at:
-http://schymans.github.io/VOM/
+https://vom.readthedocs.io/en/latest/
+
+An offline version of the documentation can be found in html-format in the folder VOM-docu/build/html/ 
+
+
