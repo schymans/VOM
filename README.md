@@ -40,15 +40,14 @@ The initial author of the code and documentation is Stan Schymanski, and initial
 ## Documentation
 
 The model documentation can be found at:
-https://vom.readthedocs.io/en/latest/
+[https://vom.readthedocs.io/](https://vom.readthedocs.io/en/latest/)
 
-An offline version of the documentation can be found in html-format in the folder VOM-docu/build/html/.
-Two additional pdf files containing equations can be found in VOM-docu:
-- Equations.pdf
-- Watbal3.pdf
+An offline version of the documentation can be found in html-format in the folder [VOM-docu/build/html/](VOM-docu/build/html/).
+Two additional pdf files containing equations can be found in VOM-docu: [VOM-docu/Equations.pdf](VOM-docu/Equations.pdf) and 
+[VOM-docu/Watbal3.pdf](VOM-docu/Watbal3.pdf).
 
-The directory VOM-docu/Fordocu contains automatically generated documenation
-based on commens in the .f90 files. This one is helpful for understanding the
+The directory [VOM-docu/Fordocu](VOM-docu/Fordocu) contains automatically generated documenation
+based on comments in the .f90 files. This one is helpful for understanding the
 structure of the source code.
 
 
