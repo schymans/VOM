@@ -1,0 +1,227 @@
+Called by ... routines/interfaces:
+==================================
+8: variable   year                             
+8: ?function  year                             
+7: ?function  rainvec                          
+7: variable   rainvec                          
+6: variable   tmin                             
+6: variable   tmax                             
+6: ?function  optid                            
+6: ?function  pcg_                             
+6: variable   pcg_                             
+6: ?function  day                              
+6: variable   day                              
+6: ?function  month                            
+6: variable   optid                            
+6: variable   parvec                           
+6: ?function  tmax                             
+6: ?function  parvec                           
+6: ?function  tmin                             
+6: variable   month                            
+5: variable   parmin                           
+5: ?function  parmax                           
+5: variable   parmax                           
+5: variable   ofvec                            
+5: ?function  srad                             
+5: variable   srad                             
+5: ?function  ofvec                            
+5: ?function  parmin                           
+4: variable   rainh                            
+4: ?function  cah                              
+4: variable   tairh                            
+4: ?function  dayyear                          
+4: variable   delzvec                          
+4: variable   parname                          
+4: ?function  rainh                            
+4: variable   jmax25g                          
+4: ?function  vdh                              
+4: variable   jmax25_                          
+4: ?function  tairh                            
+4: ?function  shufflevar                       
+4: variable   vdh                              
+4: ?function  gammastarvec                     
+4: variable   gammastarvec                     
+4: ?function  parname                          
+4: ?function  jmax25g                          
+4: ?function  parh                             
+4: variable   shufflevar                       
+4: ?function  jmax25_                          
+4: variable   cah                              
+4: variable   parh                             
+4: ?function  delzvec                          
+4: variable   dayyear                          
+3: variable   avgvec                           
+3: variable   suvec_                           
+3: subroutine writepars                        (in file       sce.f90)
+3: variable   nvgvec                           
+3: ?function  tcg                              
+3: variable   cavec                            
+3: ?function  avgvec                           
+3: variable   hassg                            
+3: ?function  epan                             
+3: variable   press                            
+3: variable   epan                             
+3: ?function  press                            
+3: subroutine transpmodel                      (in file       transpmodel.f90)
+3: variable   ranarr                           
+3: ?function  pcapnewvec                       
+3: variable   pcapnewvec                       
+3: ?function  cavec                            
+3: variable   cv_                              
+3: ?function  hass_                            
+3: ?function  ranarr                           
+3: variable   hass_                            
+3: variable   ksatvec                          
+3: ?function  hassg                            
+3: ?function  vpvec                            
+3: ?function  rl__                             
+3: variable   cpccg                            
+3: variable   vpvec                            
+3: ?function  mvgvec                           
+3: variable   tcg                              
+3: variable   rl__                             
+3: ?function  nvgvec                           
+3: subroutine sortcomp                         (in file       sce.f90)
+3: variable   mvgvec                           
+3: ?function  cpccg                            
+3: ?function  suvec_                           
+3: ?function  cv_                              
+3: ?function  ksatvec                          
+2: ?function  kunsatvec                        
+2: ?function  shufflevar2                      
+2: variable   ruptkg                           
+2: ?function  pcapvec                          
+2: ?function  thetasvec                        
+2: variable   dsuvec                           
+2: variable   epslnvec                         
+2: subroutine runmodel                         (in file       sce.f90)
+2: variable   netassvecg                       
+2: subroutine waterbalance                     (in file       watbal.f90)
+2: ?function  sunewvec                         
+2: variable   rlg__                            
+2: ?function  assg_d                           
+2: variable   assg_d                           
+2: variable   pos2                             
+2: ?function  pos2                             
+2: ?function  rlg__                            
+2: ?function  phydrostaticvec                  
+2: variable   kunsatvec                        
+2: variable   pcapvec                          
+2: variable   dataarray                        
+2: ?function  selected                         
+2: variable   iovec                            
+2: ?function  qblvec                           
+2: ?function  ruptkvec                         
+2: variable   sueqvec                          
+2: variable   thetarvec                        
+2: variable   newpoint                         
+2: variable   selected                         
+2: ?function  dataarray                        
+2: variable   centroid                         
+2: ?function  dsuvec                           
+2: ?function  newpoint                         
+2: subroutine vom_mqss                         (in file       transpmodel.f90)
+2: variable   qblvec                           
+2: subroutine writeloop                        (in file       sce.f90)
+2: ?function  ass_d                            
+2: variable   ass_d                            
+2: variable   netassvec                        
+2: ?function  ruptkg                           
+2: ?function  thetarvec                        
+2: variable   phydrostaticvec                  
+2: variable   shufflevar2                      
+2: variable   sunewvec                         
+2: subroutine vom_add_yearly                   (in file       transpmodel.f90)
+2: variable   thetasvec                        
+2: ?function  centroid                         
+2: variable   parentsid                        
+2: ?function  epslnvec                         
+2: ?function  netassvec                        
+2: ?function  sueqvec                          
+2: ?function  netassvecg                       
+2: ?function  parentsid                        
+2: variable   ruptkvec                         
+2: ?function  iovec                            
+1: subroutine vom_add_hourly                   (in file       transpmodel.f90)
+1: ?function  rsoilvec                         
+1: subroutine vom_adapt_roots                  (in file       transpmodel.f90)
+1: ?function  jmax__                           
+1: ?function  wgt                              
+1: subroutine vom_open_ncp_output              (in file       transpmodel.f90)
+1: ?function  rootlim                          
+1: variable   rsurfnewvec                      
+1: ?function  kunsatnewvec                     
+1: ?function  invarsub                         
+1: subroutine vom_read_input                   (in file       transpmodel.f90)
+1: variable   kunsatnewvec                     
+1: subroutine vom_init_vegpar                  (in file       transpmodel.f90)
+1: ?function  rsurfvec                         
+1: subroutine vom_calc_derived                 (in file       transpmodel.f90)
+1: variable   rootlim                          
+1: ?function  hruptkvec                        
+1: subroutine vom_subhourly                    (in file       transpmodel.f90)
+1: subroutine vom_tissue_water_et              (in file       transpmodel.f90)
+1: subroutine vom_gstom                        (in file       transpmodel.f90)
+1: ?function  ruptkg_d                         
+1: subroutine optsensitivity                   (in file       sce.f90)
+1: variable   wgt                              
+1: ?function  rsurfg_                          
+1: ?function  gstomg__                         
+1: ?function  reffg                            
+1: ?function  prootmvec                        
+1: subroutine vom_daily_init                   (in file       transpmodel.f90)
+1: variable   ruptkvec_d                       
+1: variable   jact_                            
+1: variable   reffg                            
+1: subroutine vom_write_dayyear                (in file       transpmodel.f90)
+1: ?function  hruptkg                          
+1: ?function  rsurfnewvec                      
+1: variable   etmg__                           
+1: variable   gstomg__                         
+1: variable   hruptkg                          
+1: variable   jmaxg__                          
+1: variable   rsurfg_                          
+1: variable   pos1                             
+1: variable   rsurfvec                         
+1: ?function  ruptkvec_d                       
+1: ?function  jmaxg__                          
+1: variable   parval                           
+1: subroutine vom_write_model_output           (in file       transpmodel.f90)
+1: subroutine run_cce                          (in file       sce.f90)
+1: subroutine vom_add_daily                    (in file       transpmodel.f90)
+1: variable   ruptkg_d                         
+1: subroutine vom_adapt_foliage                (in file       transpmodel.f90)
+1: subroutine vom_write_hourly                 (in file       transpmodel.f90)
+1: ?function  etmg__                           
+1: subroutine vom_hourly_init                  (in file       transpmodel.f90)
+1: variable   invarsub                         
+1: variable   rsurfgnew                        
+1: subroutine sce                              (in file       sce.f90)
+1: variable   ch2ol_s                          
+1: ?function  reff                             
+1: subroutine sce_init                         (in file       sce.f90)
+1: variable   rsoilvec                         
+1: ?function  pos1                             
+1: variable   objfunsub                        
+1: ?function  ch2ol_s                          
+1: subroutine vom_alloc                        (in file       transpmodel.f90)
+1: subroutine vom_rootuptake                   (in file       transpmodel.f90)
+1: subroutine vom_check_water                  (in file       transpmodel.f90)
+1: ?function  parval                           
+1: subroutine qsort                            (in file       sce.f90)
+1: subroutine ck_success                       (in file       sce.f90)
+1: ?function  objfunsub                        
+1: subroutine vom_get_hourly_clim              (in file       transpmodel.f90)
+1: variable   hruptkvec                        
+1: subroutine cce                              (in file       sce.f90)
+1: subroutine vom_open_output                  (in file       transpmodel.f90)
+1: subroutine vom_get_soilprofile              (in file       transpmodel.f90)
+1: subroutine vom_subhourly_init               (in file       transpmodel.f90)
+1: variable   jmax__                           
+1: subroutine initialseed                      (in file       sce.f90)
+1: ?function  rsurfgnew                        
+1: variable   prootmvec                        
+1: ?function  jact_                            
+1: subroutine simplex                          (in file       sce.f90)
+1: variable   reff                             
+

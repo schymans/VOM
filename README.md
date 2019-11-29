@@ -43,15 +43,11 @@ The model documentation can be found at:
 https://vom.readthedocs.io/en/latest/
 
 An offline version of the documentation can be found in html-format in the folder VOM-docu/build/html/.
-Two additional pdf files containing equations, can be found in VOM-docu:
+Two additional pdf files containing equations can be found in VOM-docu:
 - Equations.pdf
 - Watbal3.pdf
 
-
-The directory html_docu contains hand-written html documentation. This is helpful for compiling and
-running the model.
-
-The directory Fordocu contains automatically generated documenation
+The directory VOM-docu/Fordocu contains automatically generated documenation
 based on commens in the .f90 files. This one is helpful for understanding the
 structure of the source code.
 
