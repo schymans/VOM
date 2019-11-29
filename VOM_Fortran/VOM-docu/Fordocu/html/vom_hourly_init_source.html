@@ -136,7 +136,6 @@ function printCallRows(xmlhttp,locargs) {
 <div class="tabs">
   <ul>
       <li><a href="vom_hourly_init.html"><span>Header</span></a></li>
-      <li><a href="vom_hourly_init_version_history.html"><span>Version history</span></a></li>
       <li><a href="vom_hourly_init_subroutines_called.html"><span>Subroutines called</span></a></li>
       <li><a href="vom_hourly_init_variables.html"><span>Variables</span></a></li>
       <li><a href="vom_hourly_init_called_by.html"><span>Called by</span></a></li>
@@ -145,80 +144,109 @@ function printCallRows(xmlhttp,locargs) {
 </div>
 <h1>Subroutine vom_hourly_init</h1>
 <PRE>
-<A NAME="884">884 : </A><font color="#007700"></font>
-<A NAME="885">885 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
-<A NAME="886">886 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
-<A NAME="887">887 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
-<A NAME="888">888 : </A><font color="#007700"></font>
-<A NAME="889">889 : </A>      <font color='#aa2200'>subroutine</font> vom_hourly_init ()<font color="#007700"></font>
-<A NAME="890">890 : </A>      <font color='#aa2200'>use</font> vegmod<font color="#007700"></font>
-<A NAME="891">891 : </A>      <font color='#aa2200'>use</font> vegwatmod<font color="#007700"></font>
-<A NAME="892">892 : </A>      <font color='#aa2200'>use</font> watmod<font color="#007700"></font>
-<A NAME="893">893 : </A>      <font color='#aa2200'>implicit</font> <font color='#aa2200'>none</font><font color="#007700"></font>
-<A NAME="894">894 : </A><font color="#007700"></font>
-<A NAME="895">895 : </A>      <font color='#aa2200'>INTEGER</font> :: <A HREF='vom_hourly_init_variables.html#ii'>ii</A><font color="#007700"></font>
-<A NAME="896">896 : </A><font color="#007700"></font>
-<A NAME="897">897 : </A>      <A HREF='vom_hourly_init_variables.html#ii'>ii</A>        = d___ * 24 + h__ - 24<font color="#007700"></font>
-<A NAME="898">898 : </A>      rain_     = <A HREF='vom_hourly_init_subroutines_called.html#rainh'>rainh</A>(<A HREF='vom_hourly_init_variables.html#ii'>ii</A>)<font color="#007700"></font>
-<A NAME="899">899 : </A>      gammastar = <A HREF='vom_hourly_init_subroutines_called.html#gammastarvec'>gammastarvec</A>(<A HREF='vom_hourly_init_variables.html#ii'>ii</A>)<font color="#007700"></font>
-<A NAME="900">900 : </A>      tair      = <A HREF='vom_hourly_init_subroutines_called.html#tairh'>tairh</A>(<A HREF='vom_hourly_init_variables.html#ii'>ii</A>)<font color="#007700"></font>
-<A NAME="901">901 : </A>      vd__      = <A HREF='vom_hourly_init_subroutines_called.html#vdh'>vdh</A>(<A HREF='vom_hourly_init_variables.html#ii'>ii</A>)<font color="#007700"></font>
-<A NAME="902">902 : </A>      par_      = <A HREF='vom_hourly_init_subroutines_called.html#parh'>parh</A>(<A HREF='vom_hourly_init_variables.html#ii'>ii</A>)<font color="#007700"></font>
-<A NAME="903">903 : </A>      ca_       = <A HREF='vom_hourly_init_subroutines_called.html#cah'>cah</A>(<A HREF='vom_hourly_init_variables.html#ii'>ii</A>) / 1.0d6<font color="#007700"></font>
-<A NAME="904">904 : </A><font color="#007700"></font>
-<A NAME="905">905 : </A>!<font color="#007700">     * (Out[310], derived from (3.26)) Temperature dependence of Jmax</font>
-<A NAME="906">906 : </A>      jmax__(:) = (E__ ** ((ha_ * (-25.d0 + tair) * (-273.d0 + topt_   &<font color="#007700"></font>
-<A NAME="907">907 : </A>     &          + 273.d0 * R__ * topt_)) / ((25.d0 + 273.d0 * R__ * topt_) &<font color="#007700"></font>
-<A NAME="908">908 : </A>     &          * (tair + 273.d0 * R__ * topt_))) * ((-1.d0 + E__ ** (-(hd &<font color="#007700"></font>
-<A NAME="909">909 : </A>     &          * (-298.d0 + topt_)) / (25.d0 + 273.d0 * R__ * topt_)))  &<font color="#007700"></font>
-<A NAME="910">910 : </A>     &          * ha_ + hd) * jmax25_(:)) / ((-1.d0 + E__ ** ((hd * (273.d0 &<font color="#007700"></font>
-<A NAME="911">911 : </A>     &          + tair - topt_)) / (tair + 273.d0 * R__ * topt_))) * ha_ + hd)<font color="#007700"></font>
-<A NAME="912">912 : </A>      rl__(:) = ((ca_ - gammastar) * pc_ * jmax__(:) * rlratio) / (4.d0 &<font color="#007700"></font>
-<A NAME="913">913 : </A>     &        * (ca_ + 2.d0 * gammastar) * (1.d0 + rlratio))  !<font color="#007700"> (3.24), (Out[312])</font>
-<A NAME="914">914 : </A>!<font color="#007700">     * (Out[310], derived from (3.26)) Temperature dependence of Jmax</font>
-<A NAME="915">915 : </A>      jmaxg__(:) = (E__ ** ((ha_ * (-25.d0 + tair) * (-273.d0 + topt_  &<font color="#007700"></font>
-<A NAME="916">916 : </A>     &           + 273.d0 * R__ * topt_)) / ((25.d0 + 273.d0 * R__ * topt_) &<font color="#007700"></font>
-<A NAME="917">917 : </A>     &           * (tair + 273.d0 * R__ * topt_))) * ((-1.d0 + E__ ** (-(hd &<font color="#007700"></font>
-<A NAME="918">918 : </A>     &           * (-298.d0 + topt_)) / (25.d0 + 273.d0 * R__ * topt_))) &<font color="#007700"></font>
-<A NAME="919">919 : </A>     &           * ha_ + hd) * jmax25g(:)) / ((-1.d0 + E__ ** ((hd * (273.d0 &<font color="#007700"></font>
-<A NAME="920">920 : </A>     &           + tair - topt_)) / (tair + 273.d0 * R__ * topt_))) * ha_ + hd)<font color="#007700"></font>
-<A NAME="921">921 : </A>      rlg__(1,:) = ((ca_ - gammastar) * pcg_(1) * jmaxg__(:) * rlratio) &<font color="#007700"></font>
-<A NAME="922">922 : </A>     &           / (4.d0 * (ca_ + 2.d0 * gammastar) * (1.d0 + rlratio))  !<font color="#007700"> (3.24), (Out[312])</font>
-<A NAME="923">923 : </A>      rlg__(2,:) = ((ca_ - gammastar) * pcg_(2) * jmaxg__(:) * rlratio) &<font color="#007700"></font>
-<A NAME="924">924 : </A>     &           / (4.d0 * (ca_ + 2.d0 * gammastar) * (1.d0 + rlratio))  !<font color="#007700"> (3.24), (Out[312])</font>
-<A NAME="925">925 : </A>      rlg__(3,:) = ((ca_ - gammastar) * pcg_(3) * jmaxg__(:) * rlratio) &<font color="#007700"></font>
-<A NAME="926">926 : </A>     &           / (4.d0 * (ca_ + 2.d0 * gammastar) * (1.d0 + rlratio))  !<font color="#007700"> (3.24), (Out[312])</font>
-<A NAME="927">927 : </A><font color="#007700"></font>
-<A NAME="928">928 : </A>!<font color="#007700">     * daily recalculation for resultsdaily</font>
-<A NAME="929">929 : </A>      <font color='#aa2200'>if</font> (optmode <font color='#cc00cc'>.eq.</font> 0) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="930">930 : </A>        <A HREF='vom_hourly_init_subroutines_called.html#rainvec'>rainvec</A>(d___) = <A HREF='vom_hourly_init_subroutines_called.html#rainvec'>rainvec</A>(d___) + rain_ * 3600.d0 * 1000.d0  !<font color="#007700"> mm/d</font>
-<A NAME="931">931 : </A>        <A HREF='vom_hourly_init_subroutines_called.html#parvec'>parvec</A>(d___)  = <A HREF='vom_hourly_init_subroutines_called.html#parvec'>parvec</A>(d___) + par_ * 3600.d0  !<font color="#007700"> in mol/m2/d</font>
-<A NAME="932">932 : </A>        <A HREF='vom_hourly_init_subroutines_called.html#srad'>srad</A>(d___)    = <A HREF='vom_hourly_init_subroutines_called.html#parvec'>parvec</A>(d___) / 2.0804d0  !<font color="#007700"> MJ/m2/d</font>
-<A NAME="933">933 : </A><font color="#007700"></font>
-<A NAME="934">934 : </A>        <font color='#aa2200'>if</font> (tair <font color='#cc00cc'>.gt.</font> <A HREF='vom_hourly_init_subroutines_called.html#tmax'>tmax</A>(d___)) <A HREF='vom_hourly_init_subroutines_called.html#tmax'>tmax</A>(d___) = tair<font color="#007700"></font>
-<A NAME="935">935 : </A>        <font color='#aa2200'>if</font> (tair <font color='#cc00cc'>.lt.</font> <A HREF='vom_hourly_init_subroutines_called.html#tmin'>tmin</A>(d___)) <A HREF='vom_hourly_init_subroutines_called.html#tmin'>tmin</A>(d___) = tair<font color="#007700"></font>
-<A NAME="936">936 : </A>      <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="937">937 : </A><font color="#007700"></font>
-<A NAME="938">938 : </A>      <font color='#aa2200'>if</font> (optmode <font color='#cc00cc'>.eq.</font> 0) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="939">939 : </A>        mqold   = mqnew<font color="#007700"></font>
-<A NAME="940">940 : </A>        hspgfcf = 0.d0<font color="#007700"></font>
-<A NAME="941">941 : </A>        hinf_   = 0.d0<font color="#007700"></font>
-<A NAME="942">942 : </A>        hinfx   = 0.d0<font color="#007700"></font>
-<A NAME="943">943 : </A>        hio     = 0.d0<font color="#007700"></font>
-<A NAME="944">944 : </A>        hesoil  = 0.d0<font color="#007700"></font>
-<A NAME="945">945 : </A>        hetm_   = 0.d0<font color="#007700"></font>
-<A NAME="946">946 : </A>        hetmg   = 0.d0<font color="#007700"></font>
-<A NAME="947">947 : </A>        hruptk_ = 0.d0<font color="#007700"></font>
-<A NAME="948">948 : </A>      <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="949">949 : </A><font color="#007700"></font>
-<A NAME="950">950 : </A>      <font color='#aa2200'>time</font>         = 0.d0<font color="#007700"></font>
-<A NAME="951">951 : </A>      hass_(:)     = 0.d0                    !<font color="#007700"> hourly assimilation</font>
-<A NAME="952">952 : </A>      hassg(:,:)   = 0.d0<font color="#007700"></font>
-<A NAME="953">953 : </A>      hruptkvec(:) = 0.d0<font color="#007700"></font>
-<A NAME="954">954 : </A>      hruptkg(:)   = 0.d0<font color="#007700"></font>
-<A NAME="955">955 : </A><font color="#007700"></font>
-<A NAME="956">956 : </A>      <font color='#aa2200'>return</font><font color="#007700"></font>
-<A NAME="957">957 : </A>      <font color='#aa2200'>end</font> <font color='#aa2200'>subroutine</font> vom_hourly_init<font color="#007700"></font>
+<A NAME="1227">1227 : </A><font color="#007700"></font>
+<A NAME="1228">1228 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+<A NAME="1229">1229 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+<A NAME="1230">1230 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+<A NAME="1231">1231 : </A><font color="#007700"></font>
+<A NAME="1232">1232 : </A>      <font color='#aa2200'>subroutine</font> vom_hourly_init ()<font color="#007700"></font>
+<A NAME="1233">1233 : </A>      <font color='#aa2200'>use</font> vom_vegwat_mod<font color="#007700"></font>
+<A NAME="1234">1234 : </A>      <font color='#aa2200'>implicit</font> <font color='#aa2200'>none</font><font color="#007700"></font>
+<A NAME="1235">1235 : </A><font color="#007700"></font>
+<A NAME="1236">1236 : </A>      <font color='#aa2200'>INTEGER</font> :: <A HREF='vom_hourly_init_variables.html#ii'>ii</A>           !<font color="#007700">counter</font>
+<A NAME="1237">1237 : </A>      <font color='#aa2200'>REAL</font>*8 :: <A HREF='vom_hourly_init_variables.html#ma_lg'>Ma_lg</A>(3)      !<font color="#007700">fraction of absorbed radiation grasses</font>
+<A NAME="1238">1238 : </A>      <font color='#aa2200'>REAL</font>*8 :: <A HREF='vom_hourly_init_variables.html#ma_lt'>Ma_lt</A>(3)      !<font color="#007700">fraction of absorbed radiation trees</font>
+<A NAME="1239">1239 : </A><font color="#007700"></font>
+<A NAME="1240">1240 : </A>!<font color="#007700">     * (Out[274], derived from (3.25))</font>
+<A NAME="1241">1241 : </A>      gammastar = 0.00004275d0                                         &<font color="#007700"></font>
+<A NAME="1242">1242 : </A>     &          * p_E ** ((18915.d0 * (-25.d0 + <A HREF='vom_hourly_init_subroutines_called.html#tair_h'>tair_h</A>(th_)))          &<font color="#007700"></font>
+<A NAME="1243">1243 : </A>     &          / (149.d0 * p_R_ * (273.d0 + <A HREF='vom_hourly_init_subroutines_called.html#tair_h'>tair_h</A>(th_))))<font color="#007700"></font>
+<A NAME="1244">1244 : </A><font color="#007700"></font>
+<A NAME="1245">1245 : </A>!<font color="#007700">     * (Out[310], derived from (3.26)) Temperature dependence of Jmax</font>
+<A NAME="1246">1246 : </A>      jmaxt_h(:) = (p_E ** ((i_ha * (-25.d0 + <A HREF='vom_hourly_init_subroutines_called.html#tair_h'>tair_h</A>(th_)) * (-273.d0  &<font color="#007700"></font>
+<A NAME="1247">1247 : </A>     &           + topt_ + 273.d0 * p_R_ * topt_)) / ((25.d0 + 273.d0  &<font color="#007700"></font>
+<A NAME="1248">1248 : </A>     &           * p_R_ * topt_) * (<A HREF='vom_hourly_init_subroutines_called.html#tair_h'>tair_h</A>(th_) + 273.d0 * p_R_        &<font color="#007700"></font>
+<A NAME="1249">1249 : </A>     &           * topt_))) * ((-1.d0 + p_E ** (-(i_hd * (-298.d0      &<font color="#007700"></font>
+<A NAME="1250">1250 : </A>     &           + topt_)) / (25.d0 + 273.d0 * p_R_ * topt_))) * i_ha  &<font color="#007700"></font>
+<A NAME="1251">1251 : </A>     &           + i_hd) * jmax25t_d(:)) / ((-1.d0 + p_E ** ((i_hd     &<font color="#007700"></font>
+<A NAME="1252">1252 : </A>     &           * (273.d0 + <A HREF='vom_hourly_init_subroutines_called.html#tair_h'>tair_h</A>(th_) - topt_)) / (<A HREF='vom_hourly_init_subroutines_called.html#tair_h'>tair_h</A>(th_)      &<font color="#007700"></font>
+<A NAME="1253">1253 : </A>     &           + 273.d0 * p_R_ * topt_))) * i_ha + i_hd)<font color="#007700"></font>
+<A NAME="1254">1254 : </A><font color="#007700"></font>
+<A NAME="1255">1255 : </A>      <font color='#aa2200'>select</font> <font color='#aa2200'>case</font>(i_lai_function)<font color="#007700"></font>
+<A NAME="1256">1256 : </A>      <font color='#aa2200'>case</font>(1)<font color="#007700"></font>
+<A NAME="1257">1257 : </A>        <A HREF='vom_hourly_init_variables.html#ma_lt'>Ma_lt</A>(:) = 1.0d0<font color="#007700"></font>
+<A NAME="1258">1258 : </A>      <font color='#aa2200'>case</font>(2)<font color="#007700"></font>
+<A NAME="1259">1259 : </A>!<font color="#007700">       * fraction of absorbed radiation per crown area (Beer-lambert)</font>
+<A NAME="1260">1260 : </A>        <A HREF='vom_hourly_init_variables.html#ma_lt'>Ma_lt</A>(:) = 1.0d0 - p_E ** (-lai_lt(:) * i_extcoefft )<font color="#007700"></font>
+<A NAME="1261">1261 : </A>      <font color='#aa2200'>end</font> <font color='#aa2200'>select</font><font color="#007700"></font>
+<A NAME="1262">1262 : </A><font color="#007700"></font>
+<A NAME="1263">1263 : </A>!<font color="#007700">     * (3.24), (Out[312]), leaf respiration trees</font>
+<A NAME="1264">1264 : </A>     <font color='#aa2200'>do</font> <A HREF='vom_hourly_init_variables.html#ii'>ii</A> = 1,3 !<font color="#007700">loop for LAI-values</font>
+<A NAME="1265">1265 : </A>      rlt_h(:,<A HREF='vom_hourly_init_variables.html#ii'>ii</A>) = ((ca_h(th_) - gammastar) * o_cai * <A HREF='vom_hourly_init_variables.html#ma_lt'>Ma_lt</A>(<A HREF='vom_hourly_init_variables.html#ii'>ii</A>) * jmaxt_h(:)         &<font color="#007700"></font>
+<A NAME="1266">1266 : </A>     &         * i_rlratio) / (4.d0 * (ca_h(th_) + 2.d0 * gammastar)   &<font color="#007700"></font>
+<A NAME="1267">1267 : </A>     &         * (1.d0 + i_rlratio))<font color="#007700"></font>
+<A NAME="1268">1268 : </A>     <font color='#aa2200'>end</font> <font color='#aa2200'>do</font><font color="#007700"></font>
+<A NAME="1269">1269 : </A><font color="#007700"></font>
+<A NAME="1270">1270 : </A>!<font color="#007700">     * (Out[310], derived from (3.26)) Temperature dependence of Jmax</font>
+<A NAME="1271">1271 : </A>      jmaxg_h(:) = (p_E ** ((i_ha * (-25.d0 + <A HREF='vom_hourly_init_subroutines_called.html#tair_h'>tair_h</A>(th_)) * (-273.d0  &<font color="#007700"></font>
+<A NAME="1272">1272 : </A>     &           + topt_ + 273.d0 * p_R_ * topt_)) / ((25.d0 + 273.d0  &<font color="#007700"></font>
+<A NAME="1273">1273 : </A>     &           * p_R_ * topt_) * (<A HREF='vom_hourly_init_subroutines_called.html#tair_h'>tair_h</A>(th_) + 273.d0 * p_R_        &<font color="#007700"></font>
+<A NAME="1274">1274 : </A>     &           * topt_))) * ((-1.d0 + p_E ** (-(i_hd * (-298.d0      &<font color="#007700"></font>
+<A NAME="1275">1275 : </A>     &           + topt_)) / (25.d0 + 273.d0 * p_R_ * topt_))) * i_ha  &<font color="#007700"></font>
+<A NAME="1276">1276 : </A>     &           + i_hd) * jmax25g_d(:)) / ((-1.d0 + p_E ** ((i_hd     &<font color="#007700"></font>
+<A NAME="1277">1277 : </A>     &           * (273.d0 + <A HREF='vom_hourly_init_subroutines_called.html#tair_h'>tair_h</A>(th_) - topt_)) / (<A HREF='vom_hourly_init_subroutines_called.html#tair_h'>tair_h</A>(th_)      &<font color="#007700"></font>
+<A NAME="1278">1278 : </A>     &           + 273.d0 * p_R_ * topt_))) * i_ha + i_hd)<font color="#007700"></font>
+<A NAME="1279">1279 : </A><font color="#007700"></font>
+<A NAME="1280">1280 : </A>      <font color='#aa2200'>select</font> <font color='#aa2200'>case</font>(i_lai_function)<font color="#007700"></font>
+<A NAME="1281">1281 : </A>      <font color='#aa2200'>case</font>(1)<font color="#007700"></font>
+<A NAME="1282">1282 : </A>        <A HREF='vom_hourly_init_variables.html#ma_lg'>Ma_lg</A>(:) = 1.0d0<font color="#007700"></font>
+<A NAME="1283">1283 : </A>      <font color='#aa2200'>case</font>(2)<font color="#007700"></font>
+<A NAME="1284">1284 : </A>!<font color="#007700">       * fraction of absorbed radiation per crown area grasses (Beer-lambert)</font>
+<A NAME="1285">1285 : </A>        <A HREF='vom_hourly_init_variables.html#ma_lg'>Ma_lg</A>(:) = 1.0d0 - p_E ** (-lai_lg(:) * i_extcoeffg)<font color="#007700"></font>
+<A NAME="1286">1286 : </A>      <font color='#aa2200'>end</font> <font color='#aa2200'>select</font><font color="#007700"></font>
+<A NAME="1287">1287 : </A><font color="#007700"></font>
+<A NAME="1288">1288 : </A>!<font color="#007700">    * respiration grasses</font>
+<A NAME="1289">1289 : </A>     <font color='#aa2200'>do</font> <A HREF='vom_hourly_init_variables.html#ii'>ii</A> = 1,3 !<font color="#007700">loop for LAI-values</font>
+<A NAME="1290">1290 : </A>         rlg_h(1,:,<A HREF='vom_hourly_init_variables.html#ii'>ii</A>) = ((ca_h(th_) - gammastar) * pcg_d(1) * <A HREF='vom_hourly_init_variables.html#ma_lg'>Ma_lg</A>(<A HREF='vom_hourly_init_variables.html#ii'>ii</A>) * jmaxg_h(:)    &<font color="#007700"></font>
+<A NAME="1291">1291 : </A>        &           * i_rlratio) / (4.d0 * (ca_h(th_) + 2.d0 * gammastar) &<font color="#007700"></font>
+<A NAME="1292">1292 : </A>        &           * (1.d0 + i_rlratio))  !<font color="#007700"> (3.24), (Out[312])</font>
+<A NAME="1293">1293 : </A>         rlg_h(2,:,<A HREF='vom_hourly_init_variables.html#ii'>ii</A>) = ((ca_h(th_) - gammastar) * pcg_d(2) * <A HREF='vom_hourly_init_variables.html#ma_lg'>Ma_lg</A>(<A HREF='vom_hourly_init_variables.html#ii'>ii</A>) * jmaxg_h(:)    &<font color="#007700"></font>
+<A NAME="1294">1294 : </A>        &           * i_rlratio) / (4.d0 * (ca_h(th_) + 2.d0 * gammastar) &<font color="#007700"></font>
+<A NAME="1295">1295 : </A>        &           * (1.d0 + i_rlratio))  !<font color="#007700"> (3.24), (Out[312])</font>
+<A NAME="1296">1296 : </A>         rlg_h(3,:,<A HREF='vom_hourly_init_variables.html#ii'>ii</A>) = ((ca_h(th_) - gammastar) * pcg_d(3) * <A HREF='vom_hourly_init_variables.html#ma_lg'>Ma_lg</A>(<A HREF='vom_hourly_init_variables.html#ii'>ii</A>) * jmaxg_h(:)    &<font color="#007700"></font>
+<A NAME="1297">1297 : </A>        &           * i_rlratio) / (4.d0 * (ca_h(th_) + 2.d0 * gammastar) &<font color="#007700"></font>
+<A NAME="1298">1298 : </A>        &           * (1.d0 + i_rlratio))  !<font color="#007700"> (3.24), (Out[312])</font>
+<A NAME="1299">1299 : </A>     <font color='#aa2200'>end</font> <font color='#aa2200'>do</font><font color="#007700"></font>
+<A NAME="1300">1300 : </A><font color="#007700"></font>
+<A NAME="1301">1301 : </A>!<font color="#007700">     * daily recalculation for resultsdaily</font>
+<A NAME="1302">1302 : </A>      <font color='#aa2200'>if</font> (optmode <font color='#cc00cc'>.eq.</font> 0) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="1303">1303 : </A>        <A HREF='vom_hourly_init_subroutines_called.html#rain_d'>rain_d</A>(nday) = <A HREF='vom_hourly_init_subroutines_called.html#rain_d'>rain_d</A>(nday) + <A HREF='vom_hourly_init_subroutines_called.html#rain_h'>rain_h</A>(th_) * 3600.d0 * 1000.d0  !<font color="#007700"> mm/d</font>
+<A NAME="1304">1304 : </A>        <A HREF='vom_hourly_init_subroutines_called.html#par_d'>par_d</A>(nday)  = <A HREF='vom_hourly_init_subroutines_called.html#par_d'>par_d</A>(nday) + <A HREF='vom_hourly_init_subroutines_called.html#par_h'>par_h</A>(th_) * 3600.d0  !<font color="#007700"> in mol/m2/d</font>
+<A NAME="1305">1305 : </A>        <A HREF='vom_hourly_init_subroutines_called.html#srad_d'>srad_d</A>(nday) = <A HREF='vom_hourly_init_subroutines_called.html#par_d'>par_d</A>(nday) / 2.0804d0  !<font color="#007700"> MJ/m2/d</font>
+<A NAME="1306">1306 : </A><font color="#007700"></font>
+<A NAME="1307">1307 : </A>        <font color='#aa2200'>if</font> (<A HREF='vom_hourly_init_subroutines_called.html#tair_h'>tair_h</A>(th_) <font color='#cc00cc'>.gt.</font> <A HREF='vom_hourly_init_subroutines_called.html#tairmax_d'>tairmax_d</A>(nday)) <A HREF='vom_hourly_init_subroutines_called.html#tairmax_d'>tairmax_d</A>(nday) = <A HREF='vom_hourly_init_subroutines_called.html#tair_h'>tair_h</A>(th_)<font color="#007700"></font>
+<A NAME="1308">1308 : </A>        <font color='#aa2200'>if</font> (<A HREF='vom_hourly_init_subroutines_called.html#tair_h'>tair_h</A>(th_) <font color='#cc00cc'>.lt.</font> <A HREF='vom_hourly_init_subroutines_called.html#tairmin_d'>tairmin_d</A>(nday)) <A HREF='vom_hourly_init_subroutines_called.html#tairmin_d'>tairmin_d</A>(nday) = <A HREF='vom_hourly_init_subroutines_called.html#tair_h'>tair_h</A>(th_)<font color="#007700"></font>
+<A NAME="1309">1309 : </A>      <font color='#aa2200'>endif</font><font color="#007700"></font>
+<A NAME="1310">1310 : </A><font color="#007700"></font>
+<A NAME="1311">1311 : </A>      <font color='#aa2200'>if</font> (optmode <font color='#cc00cc'>.eq.</font> 0) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="1312">1312 : </A>        mqtold      = mqtnew<font color="#007700"></font>
+<A NAME="1313">1313 : </A>        spgfcf_h    = 0.d0<font color="#007700"></font>
+<A NAME="1314">1314 : </A>        infx_h      = 0.d0<font color="#007700"></font>
+<A NAME="1315">1315 : </A>        io_h        = 0.d0<font color="#007700"></font>
+<A NAME="1316">1316 : </A>        esoil_h     = 0.d0<font color="#007700"></font>
+<A NAME="1317">1317 : </A>        etmt_h      = 0.d0<font color="#007700"></font>
+<A NAME="1318">1318 : </A>        etmg_h      = 0.d0<font color="#007700"></font>
+<A NAME="1319">1319 : </A>        sumruptkt_h = 0.d0<font color="#007700"></font>
+<A NAME="1320">1320 : </A>      <font color='#aa2200'>endif</font><font color="#007700"></font>
+<A NAME="1321">1321 : </A><font color="#007700"></font>
+<A NAME="1322">1322 : </A>      <font color='#aa2200'>time</font>        = 0.d0<font color="#007700"></font>
+<A NAME="1323">1323 : </A>      asst_h(:,:)   = 0.d0<font color="#007700"></font>
+<A NAME="1324">1324 : </A>      assg_h(:,:,:) = 0.d0<font color="#007700"></font>
+<A NAME="1325">1325 : </A>      ruptkt_h(:) = 0.d0<font color="#007700"></font>
+<A NAME="1326">1326 : </A>      ruptkg_h(:) = 0.d0<font color="#007700"></font>
+<A NAME="1327">1327 : </A><font color="#007700"></font>
+<A NAME="1328">1328 : </A>      <font color='#aa2200'>return</font><font color="#007700"></font>
+<A NAME="1329">1329 : </A>      <font color='#aa2200'>end</font> <font color='#aa2200'>subroutine</font> vom_hourly_init<font color="#007700"></font>
 
 </PRE>
 </BODY></HTML>

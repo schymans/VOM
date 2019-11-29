@@ -136,7 +136,6 @@ function printCallRows(xmlhttp,locargs) {
 <div class="tabs">
   <ul>
       <li><a href="vom.html"><span>Header</span></a></li>
-      <li><a href="vom_version_history.html"><span>Version history</span></a></li>
       <li class="current"><a href="vom_subroutines_called.html"><span>Subroutines called</span></a></li>
       <li><a href="vom_variables.html"><span>Variables</span></a></li>
       <li><a href="vom_source.html"><span>Source</span></a></li>
@@ -146,22 +145,86 @@ function printCallRows(xmlhttp,locargs) {
 <HR><H2>SUBROUTINES CALLED</H2>
 <TABLE>
    <tr valign="top">
+      <td class='indexkey'><script type='text/javascript'>document.write(getURL('read_commandline','read_commandline.html'));</script></td>
+      <td class="indexvalue" width="40%"><PRE><script type='text/javascript'>var xmlhttp = openURL('read_commandline.html');if (xmlhttp) {   document.write(getHeaderText(xmlhttp,'read_commandline'));}</script></PRE>
+</td>
+      <td class="indexvalue" width="20%"><A HREF="vom_source.html#53">53</A></td>
+   </tr>
+   <tr valign="top">
+      <td class='indexkey'><script type='text/javascript'>document.write(getURL('read_shufflepar','read_shufflepar.html'));</script></td>
+      <td class="indexvalue" width="40%"><PRE><script type='text/javascript'>var xmlhttp = openURL('read_shufflepar.html');if (xmlhttp) {   document.write(getHeaderText(xmlhttp,'read_shufflepar'));}</script></PRE>
+</td>
+      <td class="indexvalue" width="20%"><A HREF="vom_source.html#57">57</A></td>
+   </tr>
+   <tr valign="top">
+      <td class='indexkey'><script type='text/javascript'>document.write(getURL('transpmodel_init_once','transpmodel_init_once.html'));</script></td>
+      <td class="indexvalue" width="40%"><PRE><script type='text/javascript'>var xmlhttp = openURL('transpmodel_init_once.html');if (xmlhttp) {   document.write(getHeaderText(xmlhttp,'transpmodel_init_once'));}</script></PRE>
+</td>
+      <td class="indexvalue" width="20%"><A HREF="vom_source.html#65">65</A>, <A HREF="vom_source.html#150">150</A>, <A HREF="vom_source.html#183">183</A></td>
+   </tr>
+   <tr valign="top">
+      <td class='indexkey'><script type='text/javascript'>document.write(getURL('sce_main','sce_main.html'));</script></td>
+      <td class="indexvalue" width="40%"><PRE><script type='text/javascript'>var xmlhttp = openURL('sce_main.html');if (xmlhttp) {   document.write(getHeaderText(xmlhttp,'sce_main'));}</script></PRE>
+</td>
+      <td class="indexvalue" width="20%"><A HREF="vom_source.html#90">90</A>, <A HREF="vom_source.html#106">106</A>, <A HREF="vom_source.html#125">125</A></td>
+   </tr>
+   <tr valign="top">
       <td class='indexkey'><script type='text/javascript'>document.write(getURL('transpmodel','transpmodel.html'));</script></td>
       <td class="indexvalue" width="40%"><PRE><script type='text/javascript'>var xmlhttp = openURL('transpmodel.html');if (xmlhttp) {   document.write(getHeaderText(xmlhttp,'transpmodel'));}</script></PRE>
 </td>
-      <td class="indexvalue" width="20%"><A HREF="vom_source.html#69">69</A>, <A HREF="vom_source.html#105">105</A></td>
+      <td class="indexvalue" width="20%"><A HREF="vom_source.html#164">164</A>, <A HREF="vom_source.html#184">184</A></td>
    </tr>
    <tr valign="top">
-      <td class='indexkey'><script type='text/javascript'>document.write(getURL('sce','sce.html'));</script></td>
-      <td class="indexvalue" width="40%"><PRE><script type='text/javascript'>var xmlhttp = openURL('sce.html');if (xmlhttp) {   document.write(getHeaderText(xmlhttp,'sce'));}</script></PRE>
+      <td class='indexkey'><script type='text/javascript'>document.write(getURL('random_samples','random_samples.html'));</script></td>
+      <td class="indexvalue" width="40%"><PRE><script type='text/javascript'>var xmlhttp = openURL('random_samples.html');if (xmlhttp) {   document.write(getHeaderText(xmlhttp,'random_samples'));}</script></PRE>
 </td>
-      <td class="indexvalue" width="20%"><A HREF="vom_source.html#131">131</A></td>
+      <td class="indexvalue" width="20%"><A HREF="vom_source.html#192">192</A></td>
    </tr>
 </TABLE>
 <HR><H2>CALL DETAILS</H2>
 <script type='text/javascript'>
-xmlhttp = openURL('sce.html')
+xmlhttp = openURL('read_commandline.html')
 if (xmlhttp) {
+   var remname = getURL('read_commandline','read_commandline.html', xmlhttp);
+   document.write('<P>Call to ' + remname +' on line <A HREF="vom_source.html#53">53</A>');
+   document.write('<TABLE>')
+   document.write('<tr valign="top"><td class="indexkey">vom</td><td class="indexkey">read_commandline</td><td class="indexkey">description</td></tr>');
+   var locargs = new Array('outputpath_tmp','inputpath_tmp','change_in','change_out');
+   printCallRows(xmlhttp,locargs);
+   document.write('</TABLE></P>');
+}
+</script>
+
+<script type='text/javascript'>
+xmlhttp = openURL('read_shufflepar.html')
+if (xmlhttp) {
+}
+</script>
+
+<script type='text/javascript'>
+xmlhttp = openURL('transpmodel_init_once.html')
+if (xmlhttp) {
+   var remname = getURL('transpmodel_init_once','transpmodel_init_once.html', xmlhttp);
+   document.write('<P>Call to ' + remname +' on line <A HREF="vom_source.html#65">65</A>');
+   document.write('<TABLE>')
+   document.write('<tr valign="top"><td class="indexkey">vom</td><td class="indexkey">transpmodel_init_once</td><td class="indexkey">description</td></tr>');
+   var locargs = new Array('vom_command');
+   printCallRows(xmlhttp,locargs);
+   document.write('</TABLE></P>');
+   var remname = getURL('transpmodel_init_once','transpmodel_init_once.html', xmlhttp);
+   document.write('<P>Call to ' + remname +' on line <A HREF="vom_source.html#150">150</A>');
+   document.write('<TABLE>')
+   document.write('<tr valign="top"><td class="indexkey">vom</td><td class="indexkey">transpmodel_init_once</td><td class="indexkey">description</td></tr>');
+   var locargs = new Array('vom_command');
+   printCallRows(xmlhttp,locargs);
+   document.write('</TABLE></P>');
+   var remname = getURL('transpmodel_init_once','transpmodel_init_once.html', xmlhttp);
+   document.write('<P>Call to ' + remname +' on line <A HREF="vom_source.html#183">183</A>');
+   document.write('<TABLE>')
+   document.write('<tr valign="top"><td class="indexkey">vom</td><td class="indexkey">transpmodel_init_once</td><td class="indexkey">description</td></tr>');
+   var locargs = new Array('vom_command');
+   printCallRows(xmlhttp,locargs);
+   document.write('</TABLE></P>');
 }
 </script>
 
@@ -169,19 +232,31 @@ if (xmlhttp) {
 xmlhttp = openURL('transpmodel.html')
 if (xmlhttp) {
    var remname = getURL('transpmodel','transpmodel.html', xmlhttp);
-   document.write('<P>Call to ' + remname +' on line <A HREF="vom_source.html#69">69</A>');
+   document.write('<P>Call to ' + remname +' on line <A HREF="vom_source.html#164">164</A>');
    document.write('<TABLE>')
    document.write('<tr valign="top"><td class="indexkey">vom</td><td class="indexkey">transpmodel</td><td class="indexkey">description</td></tr>');
-   var locargs = new Array('invar','size(invar)','nrun','netass','command');
+   var locargs = new Array('vom_invar','SIZE(vom_invar)','vom_objfun','vom_command');
    printCallRows(xmlhttp,locargs);
    document.write('</TABLE></P>');
    var remname = getURL('transpmodel','transpmodel.html', xmlhttp);
-   document.write('<P>Call to ' + remname +' on line <A HREF="vom_source.html#105">105</A>');
+   document.write('<P>Call to ' + remname +' on line <A HREF="vom_source.html#184">184</A>');
    document.write('<TABLE>')
    document.write('<tr valign="top"><td class="indexkey">vom</td><td class="indexkey">transpmodel</td><td class="indexkey">description</td></tr>');
-   var locargs = new Array('invar','size(invar)','nrun','netass','command');
+   var locargs = new Array('vom_invar','SIZE(vom_invar)','vom_objfun','vom_command');
    printCallRows(xmlhttp,locargs);
    document.write('</TABLE></P>');
+}
+</script>
+
+<script type='text/javascript'>
+xmlhttp = openURL('random_samples.html')
+if (xmlhttp) {
+}
+</script>
+
+<script type='text/javascript'>
+xmlhttp = openURL('sce_main.html')
+if (xmlhttp) {
 }
 </script>
 

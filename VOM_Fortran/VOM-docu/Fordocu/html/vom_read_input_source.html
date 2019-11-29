@@ -136,7 +136,7 @@ function printCallRows(xmlhttp,locargs) {
 <div class="tabs">
   <ul>
       <li><a href="vom_read_input.html"><span>Header</span></a></li>
-      <li><a href="vom_read_input_version_history.html"><span>Version history</span></a></li>
+      <li><a href="vom_read_input_subroutines_called.html"><span>Subroutines called</span></a></li>
       <li><a href="vom_read_input_variables.html"><span>Variables</span></a></li>
       <li><a href="vom_read_input_called_by.html"><span>Called by</span></a></li>
       <li class="current"><a href="vom_read_input_source.html"><span>Source</span></a></li>
@@ -144,95 +144,111 @@ function printCallRows(xmlhttp,locargs) {
 </div>
 <h1>Subroutine vom_read_input</h1>
 <PRE>
-<A NAME="253">253 : </A><font color="#007700"></font>
-<A NAME="254">254 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
-<A NAME="255">255 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
-<A NAME="256">256 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
-<A NAME="257">257 : </A>!<font color="#007700">*-----PARAMETER READING FROM INPUT.PAR---------------------------------</font>
-<A NAME="258">258 : </A><font color="#007700"></font>
-<A NAME="259">259 : </A>      <font color='#aa2200'>subroutine</font> vom_read_input ()<font color="#007700"></font>
-<A NAME="260">260 : </A>      <font color='#aa2200'>use</font> vegmod<font color="#007700"></font>
-<A NAME="261">261 : </A>      <font color='#aa2200'>use</font> vegwatmod<font color="#007700"></font>
-<A NAME="262">262 : </A>      <font color='#aa2200'>use</font> watmod<font color="#007700"></font>
-<A NAME="263">263 : </A>      <font color='#aa2200'>implicit</font> <font color='#aa2200'>none</font><font color="#007700"></font>
-<A NAME="264">264 : </A><font color="#007700"></font>
-<A NAME="265">265 : </A>      <font color='#aa2200'>INTEGER</font> :: <A HREF='vom_read_input_variables.html#stat'>stat</A><font color="#007700"></font>
-<A NAME="266">266 : </A><font color="#007700"></font>
-<A NAME="267">267 : </A>      <font color='#aa2200'>open</font>(kfile_inputpar, <font color='#aa2200'>status</font>='old',                               &<font color="#007700"></font>
-<A NAME="268">268 : </A>     &     <font color='#aa2200'>file</font>=sfile_inputpar(1:<font color='#aa2200'>len_trim</font>(sfile_inputpar)))<font color="#007700"></font>
-<A NAME="269">269 : </A>      <font color='#aa2200'>read</font>(kfile_inputpar,*) oa<font color="#007700"></font>
-<A NAME="270">270 : </A>      <font color='#aa2200'>read</font>(kfile_inputpar,*) alpha<font color="#007700"></font>
-<A NAME="271">271 : </A>      <font color='#aa2200'>read</font>(kfile_inputpar,*) cpccf<font color="#007700"></font>
-<A NAME="272">272 : </A>      <font color='#aa2200'>read</font>(kfile_inputpar,*) tcf<font color="#007700"></font>
-<A NAME="273">273 : </A>      <font color='#aa2200'>read</font>(kfile_inputpar,*) ny_<font color="#007700"></font>
-<A NAME="274">274 : </A>      <font color='#aa2200'>read</font>(kfile_inputpar,*) nyt<font color="#007700"></font>
-<A NAME="275">275 : </A>      <font color='#aa2200'>read</font>(kfile_inputpar,*) k25<font color="#007700"></font>
-<A NAME="276">276 : </A>      <font color='#aa2200'>read</font>(kfile_inputpar,*) kopt<font color="#007700"></font>
-<A NAME="277">277 : </A>      <font color='#aa2200'>read</font>(kfile_inputpar,*) ha_<font color="#007700"></font>
-<A NAME="278">278 : </A>      <font color='#aa2200'>read</font>(kfile_inputpar,*) hd<font color="#007700"></font>
-<A NAME="279">279 : </A>      <font color='#aa2200'>read</font>(kfile_inputpar,*) toptfac<font color="#007700"></font>
-<A NAME="280">280 : </A>      <font color='#aa2200'>read</font>(kfile_inputpar,*) tstart<font color="#007700"></font>
-<A NAME="281">281 : </A>      <font color='#aa2200'>read</font>(kfile_inputpar,*) rlratio<font color="#007700"></font>
-<A NAME="282">282 : </A><font color="#007700"></font>
-<A NAME="283">283 : </A>!<font color="#007700">*-----Catchment parameters --------------------------------------------</font>
-<A NAME="284">284 : </A><font color="#007700"></font>
-<A NAME="285">285 : </A>      <font color='#aa2200'>read</font>(kfile_inputpar,*) lat<font color="#007700"></font>
-<A NAME="286">286 : </A>      <font color='#aa2200'>read</font>(kfile_inputpar,*) cz<font color="#007700"></font>
-<A NAME="287">287 : </A>      <font color='#aa2200'>read</font>(kfile_inputpar,*) zs_<font color="#007700"></font>
-<A NAME="288">288 : </A>      <font color='#aa2200'>read</font>(kfile_inputpar,*) cgs<font color="#007700"></font>
-<A NAME="289">289 : </A>      <font color='#aa2200'>read</font>(kfile_inputpar,*) zr_<font color="#007700"></font>
-<A NAME="290">290 : </A>      <font color='#aa2200'>read</font>(kfile_inputpar,*) go_    <font color="#007700"></font>
-<A NAME="291">291 : </A><font color="#007700"></font>
-<A NAME="292">292 : </A>!<font color="#007700">*-----Soil parameters -------------------------------------------------</font>
-<A NAME="293">293 : </A><font color="#007700"></font>
-<A NAME="294">294 : </A>      <font color='#aa2200'>read</font>(kfile_inputpar,*) ksat_<font color="#007700"></font>
-<A NAME="295">295 : </A>      <font color='#aa2200'>read</font>(kfile_inputpar,*) thetar_<font color="#007700"></font>
-<A NAME="296">296 : </A>      <font color='#aa2200'>read</font>(kfile_inputpar,*) thetas_<font color="#007700"></font>
-<A NAME="297">297 : </A>      <font color='#aa2200'>read</font>(kfile_inputpar,*) nvg_<font color="#007700"></font>
-<A NAME="298">298 : </A>      <font color='#aa2200'>read</font>(kfile_inputpar,*) avg_<font color="#007700"></font>
-<A NAME="299">299 : </A>      epsln_ = thetas_ - thetar_             !<font color="#007700"> epsilon, porosity see Reggiani (2000)</font>
-<A NAME="300">300 : </A>      mvg_ = 1.d0 - (1.d0 / nvg_)            !<font color="#007700"> van Genuchten soil parameter m</font>
-<A NAME="301">301 : </A><font color="#007700"></font>
-<A NAME="302">302 : </A>!<font color="#007700">*-----Vertical Resolution ---------------------------------------------</font>
-<A NAME="303">303 : </A><font color="#007700"></font>
-<A NAME="304">304 : </A>      <font color='#aa2200'>read</font>(kfile_inputpar,*) delz_<font color="#007700"></font>
-<A NAME="305">305 : </A><font color="#007700"></font>
-<A NAME="306">306 : </A>!<font color="#007700">*-----Vegetation Parameters -------------------------------------------</font>
-<A NAME="307">307 : </A><font color="#007700"></font>
-<A NAME="308">308 : </A>      <font color='#aa2200'>read</font>(kfile_inputpar,*) mdf<font color="#007700"></font>
-<A NAME="309">309 : </A>      <font color='#aa2200'>read</font>(kfile_inputpar,*) mqxf<font color="#007700"></font>
-<A NAME="310">310 : </A>      <font color='#aa2200'>read</font>(kfile_inputpar,*) rrootm<font color="#007700"></font>
-<A NAME="311">311 : </A>      <font color='#aa2200'>read</font>(kfile_inputpar,*) rsurfmin<font color="#007700"></font>
-<A NAME="312">312 : </A>      <font color='#aa2200'>read</font>(kfile_inputpar,*) rsurfinit<font color="#007700"></font>
-<A NAME="313">313 : </A>      <font color='#aa2200'>read</font>(kfile_inputpar,*) rootrad<font color="#007700"></font>
-<A NAME="314">314 : </A>      <font color='#aa2200'>read</font>(kfile_inputpar,*) prootmg<font color="#007700"></font>
-<A NAME="315">315 : </A>      <font color='#aa2200'>read</font>(kfile_inputpar,*) growthmax<font color="#007700"></font>
-<A NAME="316">316 : </A>      <font color='#aa2200'>read</font>(kfile_inputpar,*) mdstore<font color="#007700"></font>
-<A NAME="317">317 : </A>      <font color='#aa2200'>read</font>(kfile_inputpar,*) rgdepth<font color="#007700"></font>
-<A NAME="318">318 : </A>      <font color='#aa2200'>read</font>(kfile_inputpar,*) firstyear<font color="#007700"></font>
-<A NAME="319">319 : </A>      <font color='#aa2200'>read</font>(kfile_inputpar,*) lastyear<font color="#007700"></font>
-<A NAME="320">320 : </A>      <font color='#aa2200'>close</font>(kfile_inputpar)<font color="#007700"></font>
-<A NAME="321">321 : </A><font color="#007700"></font>
-<A NAME="322">322 : </A>!<font color="#007700">     * The file soilprofile.par contain information about thickness and</font>
-<A NAME="323">323 : </A>!<font color="#007700">       soil properties in each soil layer, with the layer number in the</font>
-<A NAME="324">324 : </A>!<font color="#007700">       first column.</font>
-<A NAME="325">325 : </A><font color="#007700"></font>
-<A NAME="326">326 : </A>      M___ = 0<font color="#007700"></font>
-<A NAME="327">327 : </A><font color="#007700"></font>
-<A NAME="328">328 : </A>      <font color='#aa2200'>open</font>(kfile_soilprofile, <font color='#aa2200'>status</font>='old', <font color='#aa2200'>iostat</font>=<A HREF='vom_read_input_variables.html#stat'>stat</A>,               &<font color="#007700"></font>
-<A NAME="329">329 : </A>     &     <font color='#aa2200'>file</font>=sfile_soilprofile(1:<font color='#aa2200'>len_trim</font>(sfile_soilprofile)))<font color="#007700"></font>
-<A NAME="330">330 : </A>      <font color='#aa2200'>if</font> (<A HREF='vom_read_input_variables.html#stat'>stat</A> <font color='#cc00cc'>.eq.</font> 0) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="331">331 : </A>        <font color='#aa2200'>read</font>(kfile_soilprofile,*) M___<font color="#007700"></font>
-<A NAME="332">332 : </A>      <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="333">333 : </A>      <font color='#aa2200'>close</font>(kfile_soilprofile)<font color="#007700"></font>
-<A NAME="334">334 : </A><font color="#007700"></font>
-<A NAME="335">335 : </A>!<font color="#007700">     * number of soil layers M___ assuming same thickness everywhere</font>
-<A NAME="336">336 : </A>      <font color='#aa2200'>if</font> (M___ <font color='#cc00cc'>.eq.</font> 0) M___ = <font color='#aa2200'>ceiling</font>(cz / delz_)<font color="#007700"></font>
-<A NAME="337">337 : </A>      N__ = <font color='#aa2200'>ceiling</font>(ny_ * 365.d0)<font color="#007700"></font>
-<A NAME="338">338 : </A>      Nh_ = N__ * 24<font color="#007700"></font>
-<A NAME="339">339 : </A><font color="#007700"></font>
-<A NAME="340">340 : </A>      <font color='#aa2200'>return</font><font color="#007700"></font>
-<A NAME="341">341 : </A>      <font color='#aa2200'>end</font> <font color='#aa2200'>subroutine</font> vom_read_input<font color="#007700"></font>
+<A NAME="432">432 : </A><font color="#007700"></font>
+<A NAME="433">433 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+<A NAME="434">434 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+<A NAME="435">435 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+<A NAME="436">436 : </A>!<font color="#007700">*-----PARAMETER READING FROM INPUT.PAR---------------------------------</font>
+<A NAME="437">437 : </A><font color="#007700"></font>
+<A NAME="438">438 : </A>      <font color='#aa2200'>subroutine</font> vom_read_input ()<font color="#007700"></font>
+<A NAME="439">439 : </A>      <font color='#aa2200'>use</font> vom_vegwat_mod<font color="#007700"></font>
+<A NAME="440">440 : </A>      <font color='#aa2200'>implicit</font> <font color='#aa2200'>none</font><font color="#007700"></font>
+<A NAME="441">441 : </A><font color="#007700"></font>
+<A NAME="442">442 : </A>      <font color='#aa2200'>INTEGER</font>                        :: <A HREF='vom_read_input_variables.html#iostat'>iostat</A><font color="#007700"></font>
+<A NAME="443">443 : </A>      <font color='#aa2200'>CHARACTER</font>*100                  :: <A HREF='vom_read_input_variables.html#outputpath_tmp'>outputpath_tmp</A> !<font color="#007700"> Temporary outputpath </font>
+<A NAME="444">444 : </A>      <font color='#aa2200'>CHARACTER</font>*100                  :: <A HREF='vom_read_input_variables.html#inputpath_tmp'>inputpath_tmp</A>  !<font color="#007700"> Temporary inputpath</font>
+<A NAME="445">445 : </A>      <font color='#aa2200'>LOGICAL</font>                        :: <A HREF='vom_read_input_variables.html#change_in'>change_in</A>      !<font color="#007700"> Change input true/false</font>
+<A NAME="446">446 : </A>      <font color='#aa2200'>LOGICAL</font>                        :: <A HREF='vom_read_input_variables.html#change_out'>change_out</A>     !<font color="#007700"> Change output true/false</font>
+<A NAME="447">447 : </A><font color="#007700"></font>
+<A NAME="448">448 : </A>!<font color="#007700">     * Definition of variable parameters</font>
+<A NAME="449">449 : </A><font color="#007700"></font>
+<A NAME="450">450 : </A>      <font color='#aa2200'>namelist</font> /inputpar/ i_alpha, i_cpccf, i_tcf, i_maxyear,          &<font color="#007700"></font>
+<A NAME="451">451 : </A>     &                    i_testyear, i_ha, i_hd, i_toptf,             &<font color="#007700"></font>
+<A NAME="452">452 : </A>     &                    i_toptstart, i_rlratio, i_mdtf, i_mqxtf,     &<font color="#007700"></font>
+<A NAME="453">453 : </A>     &                    i_rrootm, i_rsurfmin, i_rsurf_, i_rootrad,   &<font color="#007700"></font>
+<A NAME="454">454 : </A>     &                    i_prootmg, i_growthmax, i_incrcovg,          &<font color="#007700"></font>
+<A NAME="455">455 : </A>     &                    i_incrjmax, i_incrlait, i_incrlaig,          &<font color="#007700"></font>
+<A NAME="456">456 : </A>     &                    i_extcoeffg, i_extcoefft, i_trans_vegcov,    &<font color="#007700"></font>
+<A NAME="457">457 : </A>     &                    i_firstyear,i_lastyear, i_write_h, i_read_pc,&<font color="#007700"></font>
+<A NAME="458">458 : </A>     &                    i_lai_function,  i_no_veg,                   &<font color="#007700"></font>
+<A NAME="459">459 : </A>     &                    i_inputpath, i_outputpath,                   &<font color="#007700"></font>
+<A NAME="460">460 : </A>     &                    o_lambdagf, o_wsgexp, o_lambdatf, o_wstexp,  &<font color="#007700"></font>
+<A NAME="461">461 : </A>     &                    o_cai, o_rtdepth, o_mdstore, o_rgdepth<font color="#007700"></font>
+<A NAME="462">462 : </A><font color="#007700"></font>
+<A NAME="463">463 : </A>      <font color='#aa2200'>namelist</font> /input2par/ i_lat, i_cz, i_cgs, i_zr, i_go, i_ksat,     &<font color="#007700"></font>
+<A NAME="464">464 : </A>     &                     i_thetar, i_thetas, i_nvg, i_avg, i_delz<font color="#007700"></font>
+<A NAME="465">465 : </A><font color="#007700"></font>
+<A NAME="466">466 : </A><font color="#007700"></font>
+<A NAME="467">467 : </A>      <font color='#aa2200'>call</font> <A HREF='vom_read_input_subroutines_called.html#read_commandline'>read_commandline</A>(<A HREF='vom_read_input_variables.html#outputpath_tmp'>outputpath_tmp</A>, <A HREF='vom_read_input_variables.html#inputpath_tmp'>inputpath_tmp</A>, <A HREF='vom_read_input_variables.html#change_in'>change_in</A>, <A HREF='vom_read_input_variables.html#change_out'>change_out</A>)<font color="#007700"></font>
+<A NAME="468">468 : </A><font color="#007700"></font>
+<A NAME="469">469 : </A>!<font color="#007700">     * Input of variable parameters from the parameter file</font>
+<A NAME="470">470 : </A><font color="#007700"></font>
+<A NAME="471">471 : </A>      <font color='#aa2200'>open</font>(kfile_namelist, <font color='#aa2200'>FILE</font>=sfile_namelist, <font color='#aa2200'>STATUS</font>='old',          &<font color="#007700"></font>
+<A NAME="472">472 : </A>     &                     <font color='#aa2200'>FORM</font>='<font color='#aa2200'>formatted</font>', <A HREF='vom_read_input_variables.html#iostat'>IOSTAT</A>=<A HREF='vom_read_input_variables.html#iostat'>iostat</A>)<font color="#007700"></font>
+<A NAME="473">473 : </A>      <font color='#aa2200'>if</font> (<A HREF='vom_read_input_variables.html#iostat'>iostat</A> <font color='#cc00cc'>.eq.</font> 0) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="474">474 : </A>        <font color='#aa2200'>read</font>(kfile_namelist, inputpar)<font color="#007700"></font>
+<A NAME="475">475 : </A>        <font color='#aa2200'>read</font>(kfile_namelist, input2par)<font color="#007700"></font>
+<A NAME="476">476 : </A>      <font color='#aa2200'>endif</font><font color="#007700"></font>
+<A NAME="477">477 : </A>      <font color='#aa2200'>close</font>(kfile_namelist)<font color="#007700"></font>
+<A NAME="478">478 : </A><font color="#007700"></font>
+<A NAME="479">479 : </A>    !<font color="#007700">change input and/or outputpaths</font>
+<A NAME="480">480 : </A>    <font color='#aa2200'>if</font>(<A HREF='vom_read_input_variables.html#change_in'>change_in</A> .<font color='#aa2200'>eqv</font>. <font color='#cc00cc'>.True.</font>) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="481">481 : </A>        i_inputpath = <A HREF='vom_read_input_variables.html#inputpath_tmp'>inputpath_tmp</A><font color="#007700"></font>
+<A NAME="482">482 : </A>        <font color='#aa2200'>write</font>(*,*) "Changed inputpath <font color='#aa2200'>to</font>:", i_inputpath<font color="#007700"></font>
+<A NAME="483">483 : </A>     <font color='#aa2200'>end</font> <font color='#aa2200'>if</font><font color="#007700"></font>
+<A NAME="484">484 : </A><font color="#007700"></font>
+<A NAME="485">485 : </A>     <font color='#aa2200'>if</font>(<A HREF='vom_read_input_variables.html#change_out'>change_out</A> .<font color='#aa2200'>eqv</font>. <font color='#cc00cc'>.True.</font>) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="486">486 : </A>        i_outputpath = <A HREF='vom_read_input_variables.html#outputpath_tmp'>outputpath_tmp</A><font color="#007700"></font>
+<A NAME="487">487 : </A>        <font color='#aa2200'>write</font>(*,*) "Changed outputpath <font color='#aa2200'>to</font>:", i_outputpath<font color="#007700"></font>
+<A NAME="488">488 : </A>     <font color='#aa2200'>end</font> <font color='#aa2200'>if</font><font color="#007700"></font>
+<A NAME="489">489 : </A><font color="#007700"></font>
+<A NAME="490">490 : </A><font color="#007700"></font>
+<A NAME="491">491 : </A><font color="#007700"></font>
+<A NAME="492">492 : </A>      c_epsln = i_thetas - i_thetar     !<font color="#007700"> epsilon, porosity see Reggiani (2000)</font>
+<A NAME="493">493 : </A>      i_mvg = 1.d0 - (1.d0 / i_nvg)     !<font color="#007700"> van Genuchten soil parameter m</font>
+<A NAME="494">494 : </A><font color="#007700"></font>
+<A NAME="495">495 : </A>      c_maxday = i_maxyear * 365<font color="#007700"></font>
+<A NAME="496">496 : </A>      c_maxhour = c_maxday * 24<font color="#007700"></font>
+<A NAME="497">497 : </A><font color="#007700"></font>
+<A NAME="498">498 : </A>!<font color="#007700">     * The file soilprofile.par contain information about thickness and</font>
+<A NAME="499">499 : </A>!<font color="#007700">       soil properties in each soil layer, with the layer number in the</font>
+<A NAME="500">500 : </A>!<font color="#007700">       first column.</font>
+<A NAME="501">501 : </A><font color="#007700"></font>
+<A NAME="502">502 : </A>      s_maxlayer = 0<font color="#007700"></font>
+<A NAME="503">503 : </A><font color="#007700"></font>
+<A NAME="504">504 : </A>      <font color='#aa2200'>open</font>(kfile_soilprofile, <font color='#aa2200'>FILE</font>=<font color='#aa2200'>trim</font>(<font color='#aa2200'>adjustl</font>(i_inputpath))// &<font color="#007700"></font>
+<A NAME="505">505 : </A>           <font color='#aa2200'>trim</font>(<font color='#aa2200'>adjustl</font>(sfile_soilprofile)),                  &<font color="#007700"></font>
+<A NAME="506">506 : </A>     &                        <font color='#aa2200'>STATUS</font>='old', <A HREF='vom_read_input_variables.html#iostat'>IOSTAT</A>=<A HREF='vom_read_input_variables.html#iostat'>iostat</A>)<font color="#007700"></font>
+<A NAME="507">507 : </A>      <font color='#aa2200'>if</font> (<A HREF='vom_read_input_variables.html#iostat'>iostat</A> <font color='#cc00cc'>.eq.</font> 0) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="508">508 : </A>        <font color='#aa2200'>read</font>(kfile_soilprofile,*) s_maxlayer<font color="#007700"></font>
+<A NAME="509">509 : </A>      <font color='#aa2200'>endif</font><font color="#007700"></font>
+<A NAME="510">510 : </A>      <font color='#aa2200'>close</font>(kfile_soilprofile)<font color="#007700"></font>
+<A NAME="511">511 : </A><font color="#007700"></font>
+<A NAME="512">512 : </A>!<font color="#007700">     * number of soil layers s_maxlayer assuming same thickness everywhere</font>
+<A NAME="513">513 : </A>      <font color='#aa2200'>if</font> (s_maxlayer <font color='#cc00cc'>.eq.</font> 0) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="514">514 : </A><font color="#007700"></font>
+<A NAME="515">515 : </A>!<font color="#007700">        Check if i_cz is a multiple of i_delz</font>
+<A NAME="516">516 : </A>!<font color="#007700">        Raise a warning and correct if this is not the case</font>
+<A NAME="517">517 : </A>         <font color='#aa2200'>if</font> ( <font color='#aa2200'>abs</font>( <font color='#aa2200'>nint</font>(i_cz / i_delz) - (i_cz / i_delz) )  <font color='#cc00cc'>.gt.</font> 1.0d-6) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="518">518 : </A>           <font color='#aa2200'>write</font>(*,*) <font color='#aa2200'>nint</font>(i_cz / i_delz) , (i_cz / i_delz)<font color="#007700"></font>
+<A NAME="519">519 : </A>           <font color='#aa2200'>write</font>(*,*) "ERROR: i_cz must be a multiple of i_delz"<font color="#007700"></font>
+<A NAME="520">520 : </A>           <font color='#aa2200'>write</font>(*,*) " Please correct <font color='#aa2200'>in</font> vom_namelist <font color='#aa2200'>and</font> restart"<font color="#007700"></font>
+<A NAME="521">521 : </A>           <font color='#aa2200'>stop</font><font color="#007700"></font>
+<A NAME="522">522 : </A>         <font color='#aa2200'>end</font> <font color='#aa2200'>if</font><font color="#007700"></font>
+<A NAME="523">523 : </A><font color="#007700"></font>
+<A NAME="524">524 : </A>!<font color="#007700">        Check if i_cz - i_zr is a multiple of i_delz</font>
+<A NAME="525">525 : </A>!<font color="#007700">        Raise a warning and correct if this is not the case</font>
+<A NAME="526">526 : </A>         <font color='#aa2200'>if</font> ( <font color='#aa2200'>abs</font>(<font color='#aa2200'>nint</font>( (i_cz - i_zr) /i_delz) - ( (i_cz - i_zr) /i_delz) ) <font color='#cc00cc'>.gt.</font> 1.0d-6) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="527">527 : </A>           <font color='#aa2200'>write</font>(*,*) "ERROR: i_cz-i_zr must be a multiple of i_delz"<font color="#007700"></font>
+<A NAME="528">528 : </A>           <font color='#aa2200'>write</font>(*,*) " Please correct <font color='#aa2200'>in</font> vom_namelist <font color='#aa2200'>and</font> restart"<font color="#007700"></font>
+<A NAME="529">529 : </A>         <font color='#aa2200'>stop</font><font color="#007700"></font>
+<A NAME="530">530 : </A>         <font color='#aa2200'>end</font> <font color='#aa2200'>if</font><font color="#007700"></font>
+<A NAME="531">531 : </A><font color="#007700"></font>
+<A NAME="532">532 : </A>         s_maxlayer = <font color='#aa2200'>nint</font>(i_cz / i_delz)<font color="#007700"></font>
+<A NAME="533">533 : </A>      <font color='#aa2200'>end</font> <font color='#aa2200'>if</font><font color="#007700"></font>
+<A NAME="534">534 : </A><font color="#007700"></font>
+<A NAME="535">535 : </A>      <font color='#aa2200'>return</font><font color="#007700"></font>
+<A NAME="536">536 : </A>      <font color='#aa2200'>end</font> <font color='#aa2200'>subroutine</font> vom_read_input<font color="#007700"></font>
 
 </PRE>
 </BODY></HTML>

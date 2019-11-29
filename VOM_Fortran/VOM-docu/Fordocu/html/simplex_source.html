@@ -136,7 +136,6 @@ function printCallRows(xmlhttp,locargs) {
 <div class="tabs">
   <ul>
       <li><a href="simplex.html"><span>Header</span></a></li>
-      <li><a href="simplex_version_history.html"><span>Version history</span></a></li>
       <li><a href="simplex_subroutines_called.html"><span>Subroutines called</span></a></li>
       <li><a href="simplex_variables.html"><span>Variables</span></a></li>
       <li><a href="simplex_called_by.html"><span>Called by</span></a></li>
@@ -145,121 +144,138 @@ function printCallRows(xmlhttp,locargs) {
 </div>
 <h1>Subroutine simplex</h1>
 <PRE>
-<A NAME="755">755 : </A><font color="#007700"></font>
-<A NAME="756">756 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
-<A NAME="757">757 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
-<A NAME="758">758 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
-<A NAME="759">759 : </A><font color="#007700"></font>
-<A NAME="760">760 : </A>      <font color='#aa2200'>subroutine</font> simplex (<A HREF='simplex.html#invar'>invar</A>, <A HREF='simplex.html#objfun'>objfun</A>)<font color="#007700"></font>
-<A NAME="761">761 : </A>      <font color='#aa2200'>use</font> sce_mod<font color="#007700"></font>
-<A NAME="762">762 : </A>      <font color='#aa2200'>implicit</font> <font color='#aa2200'>none</font><font color="#007700"></font>
-<A NAME="763">763 : </A><font color="#007700"></font>
-<A NAME="764">764 : </A>!<font color="#007700">     * Declarations</font>
-<A NAME="765">765 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>DIMENSION</font>(npar,qopt), <font color='#aa2200'>INTENT</font>(<font color='#aa2200'>inout</font>) :: <A HREF='simplex.html#invar'>invar</A><font color="#007700"></font>
-<A NAME="766">766 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>DIMENSION</font>(qopt),      <font color='#aa2200'>INTENT</font>(<font color='#aa2200'>inout</font>) :: <A HREF='simplex.html#objfun'>objfun</A><font color="#007700"></font>
-<A NAME="767">767 : </A><font color="#007700"></font>
-<A NAME="768">768 : </A>!<font color="#007700">     * Definitions</font>
-<A NAME="769">769 : </A>      <font color='#aa2200'>INTEGER</font> :: <A HREF='simplex_variables.html#i_'>i_</A>, <A HREF='simplex_variables.html#j_'>j_</A><font color="#007700"></font>
-<A NAME="770">770 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='simplex_variables.html#newobjfun'>newobjfun</A>, <A HREF='simplex_variables.html#minj'>minj</A>, <A HREF='simplex_variables.html#rangej'>rangej</A><font color="#007700"></font>
-<A NAME="771">771 : </A><font color="#007700"></font>
-<A NAME="772">772 : </A>!<font color="#007700">     * REFLECTION STEP</font>
-<A NAME="773">773 : </A><font color="#007700"></font>
-<A NAME="774">774 : </A>      evolution = 'reflection'<font color="#007700"></font>
-<A NAME="775">775 : </A>      <A HREF='simplex_subroutines_called.html#newpoint'>newpoint</A>(:) = <A HREF='simplex.html#invar'>invar</A>(:,qopt)<font color="#007700"></font>
-<A NAME="776">776 : </A>      <A HREF='simplex_subroutines_called.html#centroid'>centroid</A>(<A HREF='simplex_subroutines_called.html#optid'>optid</A>(:)) = 1.d0 / (qopt - 1) * <font color='#aa2200'>sum</font>(<A HREF='simplex.html#invar'>invar</A>(<A HREF='simplex_subroutines_called.html#optid'>optid</A>(:), 1:qopt - 1), 2)<font color="#007700"></font>
-<A NAME="777">777 : </A>      <A HREF='simplex_subroutines_called.html#newpoint'>newpoint</A>(<A HREF='simplex_subroutines_called.html#optid'>optid</A>(:)) = 2.d0 * <A HREF='simplex_subroutines_called.html#centroid'>centroid</A>(<A HREF='simplex_subroutines_called.html#optid'>optid</A>(:)) - <A HREF='simplex.html#invar'>invar</A>(<A HREF='simplex_subroutines_called.html#optid'>optid</A>(:),qopt)<font color="#007700"></font>
-<A NAME="778">778 : </A>      <font color='#aa2200'>if</font> (<font color='#aa2200'>minval</font>(<A HREF='simplex_subroutines_called.html#newpoint'>newpoint</A>(:) - <A HREF='simplex_subroutines_called.html#parmin'>parmin</A>(:)) <font color='#cc00cc'>.lt.</font> 0.d0 .or.                     &<font color="#007700"></font>
-<A NAME="779">779 : </A>     &    <font color='#aa2200'>maxval</font>(<A HREF='simplex_subroutines_called.html#newpoint'>newpoint</A>(:) - <A HREF='simplex_subroutines_called.html#parmax'>parmax</A>(:)) <font color='#cc00cc'>.gt.</font> 0.d0) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="780">780 : </A><font color="#007700"></font>
-<A NAME="781">781 : </A>!<font color="#007700">       * MUTATION STEP</font>
-<A NAME="782">782 : </A>!<font color="#007700">       * NB: MUTATION IS BASED ON THE SMALLEST HYPERCUBE OF THE SUBCOMPLEX,</font>
-<A NAME="783">783 : </A>!<font color="#007700">       * NOT THE SMALLEST HYPERCUBE OF THE COMPLEX AS SUGGESTED BY DUAN ET AL.</font>
-<A NAME="784">784 : </A><font color="#007700"></font>
-<A NAME="785">785 : </A>        <font color='#aa2200'>do</font> <A HREF='simplex_variables.html#i_'>i_</A> = 1, nopt<font color="#007700"></font>
-<A NAME="786">786 : </A>          <font color='#aa2200'>call</font> <font color='#aa2200'>random_number</font>(ranscal)             !<font color="#007700"> SCALAR RANDOM NUMBER</font>
-<A NAME="787">787 : </A>          <A HREF='simplex_variables.html#j_'>j_</A> = <A HREF='simplex_subroutines_called.html#optid'>optid</A>(<A HREF='simplex_variables.html#i_'>i_</A>)<font color="#007700"></font>
-<A NAME="788">788 : </A>          <A HREF='simplex_variables.html#minj'>minj</A> = <A HREF='simplex_subroutines_called.html#parmin'>parmin</A>(<A HREF='simplex_variables.html#j_'>j_</A>)<font color="#007700"></font>
-<A NAME="789">789 : </A>          <A HREF='simplex_variables.html#rangej'>rangej</A> = <A HREF='simplex_subroutines_called.html#parmax'>parmax</A>(<A HREF='simplex_variables.html#j_'>j_</A>) - <A HREF='simplex_variables.html#minj'>minj</A><font color="#007700"></font>
-<A NAME="790">790 : </A>          <A HREF='simplex_subroutines_called.html#newpoint'>newpoint</A>(<A HREF='simplex_variables.html#j_'>j_</A>) = <A HREF='simplex_variables.html#minj'>minj</A> + <A HREF='simplex_variables.html#rangej'>rangej</A> * ranscal   !<font color="#007700"> UNIFORMLY DISTRIBUTED SAMPLE</font>
-<A NAME="791">791 : </A>        <font color='#aa2200'>enddo</font><font color="#007700"></font>
-<A NAME="792">792 : </A>        evolution = 'mutation'<font color="#007700"></font>
-<A NAME="793">793 : </A><font color="#007700"></font>
-<A NAME="794">794 : </A>!<font color="#007700">       * CALCULATE OBJECTIVE FUNCTION</font>
-<A NAME="795">795 : </A><font color="#007700"></font>
-<A NAME="796">796 : </A>      <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="797">797 : </A>      <font color='#aa2200'>call</font> <A HREF='simplex_subroutines_called.html#runmodel'>runmodel</A>(<A HREF='simplex_subroutines_called.html#newpoint'>newpoint</A>(:), <A HREF='simplex_variables.html#newobjfun'>newobjfun</A>)<font color="#007700"></font>
-<A NAME="798">798 : </A>      <font color='#aa2200'>if</font> (<A HREF='simplex_variables.html#newobjfun'>newobjfun</A> <font color='#cc00cc'>.gt.</font> <A HREF='simplex.html#objfun'>objfun</A>(qopt)) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="799">799 : </A>        <font color='#aa2200'>do</font> <A HREF='simplex_variables.html#j_'>j_</A> = 1, qopt<font color="#007700"></font>
-<A NAME="800">800 : </A>          <font color='#aa2200'>if</font> (<A HREF='simplex_variables.html#newobjfun'>newobjfun</A> <font color='#cc00cc'>.gt.</font> <A HREF='simplex.html#objfun'>objfun</A>(<A HREF='simplex_variables.html#j_'>j_</A>)) <font color='#aa2200'>then</font>     !<font color="#007700"> SORT objfun HERE</font>
-<A NAME="801">801 : </A>            <A HREF='simplex.html#objfun'>objfun</A>(<A HREF='simplex_variables.html#j_'>j_</A>+1:qopt) = <A HREF='simplex.html#objfun'>objfun</A>(<A HREF='simplex_variables.html#j_'>j_</A>:qopt-1) !<font color="#007700"> IN CASE alpha &gt; 1</font>
-<A NAME="802">802 : </A>            <A HREF='simplex.html#invar'>invar</A>(:,<A HREF='simplex_variables.html#j_'>j_</A>+1:qopt) = <A HREF='simplex.html#invar'>invar</A>(:,<A HREF='simplex_variables.html#j_'>j_</A>:qopt-1)<font color="#007700"></font>
-<A NAME="803">803 : </A>            <A HREF='simplex.html#objfun'>objfun</A>(<A HREF='simplex_variables.html#j_'>j_</A>) = <A HREF='simplex_variables.html#newobjfun'>newobjfun</A><font color="#007700"></font>
-<A NAME="804">804 : </A>            <A HREF='simplex.html#invar'>invar</A>(:,<A HREF='simplex_variables.html#j_'>j_</A>) = <A HREF='simplex_subroutines_called.html#newpoint'>newpoint</A>(:)<font color="#007700"></font>
-<A NAME="805">805 : </A>            <font color='#aa2200'>exit</font><font color="#007700"></font>
-<A NAME="806">806 : </A>          <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="807">807 : </A>        <font color='#aa2200'>enddo</font><font color="#007700"></font>
-<A NAME="808">808 : </A>      <font color='#aa2200'>else</font><font color="#007700"></font>
-<A NAME="809">809 : </A><font color="#007700"></font>
-<A NAME="810">810 : </A>!<font color="#007700">       * CONTRACTION STEP</font>
-<A NAME="811">811 : </A><font color="#007700"></font>
-<A NAME="812">812 : </A>        <A HREF='simplex_subroutines_called.html#newpoint'>newpoint</A>(<A HREF='simplex_subroutines_called.html#optid'>optid</A>(:)) = (<A HREF='simplex_subroutines_called.html#centroid'>centroid</A>(<A HREF='simplex_subroutines_called.html#optid'>optid</A>(:)) + <A HREF='simplex.html#invar'>invar</A>(<A HREF='simplex_subroutines_called.html#optid'>optid</A>(:),qopt)) * 0.5d0<font color="#007700"></font>
-<A NAME="813">813 : </A>        evolution = 'contraction'<font color="#007700"></font>
-<A NAME="814">814 : </A>        <font color='#aa2200'>call</font> <A HREF='simplex_subroutines_called.html#runmodel'>runmodel</A>(<A HREF='simplex_subroutines_called.html#newpoint'>newpoint</A>(:), <A HREF='simplex_variables.html#newobjfun'>newobjfun</A>)<font color="#007700"></font>
-<A NAME="815">815 : </A>        <font color='#aa2200'>if</font> (<A HREF='simplex_variables.html#newobjfun'>newobjfun</A> <font color='#cc00cc'>.gt.</font> <A HREF='simplex.html#objfun'>objfun</A>(qopt)) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="816">816 : </A>          <font color='#aa2200'>do</font> <A HREF='simplex_variables.html#j_'>j_</A> = 1, qopt<font color="#007700"></font>
-<A NAME="817">817 : </A>            <font color='#aa2200'>if</font> (<A HREF='simplex_variables.html#newobjfun'>newobjfun</A> <font color='#cc00cc'>.gt.</font> <A HREF='simplex.html#objfun'>objfun</A>(<A HREF='simplex_variables.html#j_'>j_</A>)) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="818">818 : </A>              <A HREF='simplex.html#objfun'>objfun</A>(<A HREF='simplex_variables.html#j_'>j_</A>+1:qopt) = <A HREF='simplex.html#objfun'>objfun</A>(<A HREF='simplex_variables.html#j_'>j_</A>:qopt-1)<font color="#007700"></font>
-<A NAME="819">819 : </A>              <A HREF='simplex.html#invar'>invar</A>(:,<A HREF='simplex_variables.html#j_'>j_</A>+1:qopt) = <A HREF='simplex.html#invar'>invar</A>(:,<A HREF='simplex_variables.html#j_'>j_</A>:qopt-1)<font color="#007700"></font>
-<A NAME="820">820 : </A>              <A HREF='simplex.html#objfun'>objfun</A>(<A HREF='simplex_variables.html#j_'>j_</A>) = <A HREF='simplex_variables.html#newobjfun'>newobjfun</A><font color="#007700"></font>
-<A NAME="821">821 : </A>              <A HREF='simplex.html#invar'>invar</A>(:,<A HREF='simplex_variables.html#j_'>j_</A>) = <A HREF='simplex_subroutines_called.html#newpoint'>newpoint</A>(:)<font color="#007700"></font>
-<A NAME="822">822 : </A>              <font color='#aa2200'>exit</font><font color="#007700"></font>
-<A NAME="823">823 : </A>            <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="824">824 : </A>          <font color='#aa2200'>enddo</font><font color="#007700"></font>
-<A NAME="825">825 : </A>        <font color='#aa2200'>else</font><font color="#007700"></font>
-<A NAME="826">826 : </A><font color="#007700"></font>
-<A NAME="827">827 : </A>!<font color="#007700">         * ANOTHER MUTATION STEP</font>
-<A NAME="828">828 : </A><font color="#007700"></font>
-<A NAME="829">829 : </A>          <font color='#aa2200'>do</font> <A HREF='simplex_variables.html#i_'>i_</A> = 1, nopt<font color="#007700"></font>
-<A NAME="830">830 : </A>            <font color='#aa2200'>call</font> <font color='#aa2200'>random_number</font>(<A HREF='simplex_subroutines_called.html#ranarr'>ranarr</A>(:))         !<font color="#007700"> RANDOM ARRAY OF SIZE 1:nopt</font>
-<A NAME="831">831 : </A>            <A HREF='simplex_variables.html#j_'>j_</A> = <A HREF='simplex_subroutines_called.html#optid'>optid</A>(<A HREF='simplex_variables.html#i_'>i_</A>)<font color="#007700"></font>
-<A NAME="832">832 : </A>            <A HREF='simplex_variables.html#minj'>minj</A> = <font color='#aa2200'>minval</font>(<A HREF='simplex.html#invar'>invar</A>(<A HREF='simplex_variables.html#j_'>j_</A>,:))<font color="#007700"></font>
-<A NAME="833">833 : </A>            <A HREF='simplex_variables.html#rangej'>rangej</A> = <font color='#aa2200'>maxval</font>(<A HREF='simplex.html#invar'>invar</A>(<A HREF='simplex_variables.html#j_'>j_</A>,:)) - <A HREF='simplex_variables.html#minj'>minj</A><font color="#007700"></font>
-<A NAME="834">834 : </A>            <A HREF='simplex_subroutines_called.html#newpoint'>newpoint</A>(<A HREF='simplex_variables.html#j_'>j_</A>) = <A HREF='simplex_variables.html#minj'>minj</A> + <A HREF='simplex_variables.html#rangej'>rangej</A> * <A HREF='simplex_subroutines_called.html#ranarr'>ranarr</A>(<A HREF='simplex_variables.html#i_'>i_</A>)  !<font color="#007700"> UNIFORMLY DISTRIBUTED SAMPLE</font>
-<A NAME="835">835 : </A>          <font color='#aa2200'>enddo</font><font color="#007700"></font>
-<A NAME="836">836 : </A>          evolution = 'mutation'<font color="#007700"></font>
-<A NAME="837">837 : </A>          <font color='#aa2200'>call</font> <A HREF='simplex_subroutines_called.html#runmodel'>runmodel</A>(<A HREF='simplex_subroutines_called.html#newpoint'>newpoint</A>(:), <A HREF='simplex_variables.html#newobjfun'>newobjfun</A>)<font color="#007700"></font>
-<A NAME="838">838 : </A>          <font color='#aa2200'>if</font> (<A HREF='simplex_variables.html#newobjfun'>newobjfun</A> <font color='#cc00cc'>.gt.</font> <A HREF='simplex.html#objfun'>objfun</A>(qopt-1)) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="839">839 : </A>            <font color='#aa2200'>do</font> <A HREF='simplex_variables.html#j_'>j_</A> = 1, qopt - 1<font color="#007700"></font>
-<A NAME="840">840 : </A>              <font color='#aa2200'>if</font> (<A HREF='simplex_variables.html#newobjfun'>newobjfun</A> <font color='#cc00cc'>.gt.</font> <A HREF='simplex.html#objfun'>objfun</A>(<A HREF='simplex_variables.html#j_'>j_</A>)) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="841">841 : </A>                <A HREF='simplex.html#objfun'>objfun</A>(<A HREF='simplex_variables.html#j_'>j_</A>+1:qopt) = <A HREF='simplex.html#objfun'>objfun</A>(<A HREF='simplex_variables.html#j_'>j_</A>:qopt-1)<font color="#007700"></font>
-<A NAME="842">842 : </A>                <A HREF='simplex.html#invar'>invar</A>(:,<A HREF='simplex_variables.html#j_'>j_</A>+1:qopt) = <A HREF='simplex.html#invar'>invar</A>(:,<A HREF='simplex_variables.html#j_'>j_</A>:qopt-1)<font color="#007700"></font>
-<A NAME="843">843 : </A>                <A HREF='simplex.html#objfun'>objfun</A>(<A HREF='simplex_variables.html#j_'>j_</A>) = <A HREF='simplex_variables.html#newobjfun'>newobjfun</A><font color="#007700"></font>
-<A NAME="844">844 : </A>                <A HREF='simplex.html#invar'>invar</A>(:,<A HREF='simplex_variables.html#j_'>j_</A>) = <A HREF='simplex_subroutines_called.html#newpoint'>newpoint</A>(:)<font color="#007700"></font>
-<A NAME="845">845 : </A>                <font color='#aa2200'>exit</font><font color="#007700"></font>
-<A NAME="846">846 : </A>              <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="847">847 : </A>            <font color='#aa2200'>enddo</font><font color="#007700"></font>
-<A NAME="848">848 : </A>          <font color='#aa2200'>elseif</font> (<A HREF='simplex_variables.html#newobjfun'>newobjfun</A> <font color='#cc00cc'>.gt.</font> 0.d0) <font color='#aa2200'>then</font>       !<font color="#007700"> REPLACE ANYWAY</font>
-<A NAME="849">849 : </A>            <A HREF='simplex.html#objfun'>objfun</A>(qopt) = <A HREF='simplex_variables.html#newobjfun'>newobjfun</A><font color="#007700"></font>
-<A NAME="850">850 : </A>            <A HREF='simplex.html#invar'>invar</A>(:,qopt) = <A HREF='simplex_subroutines_called.html#newpoint'>newpoint</A>(:)<font color="#007700"></font>
-<A NAME="851">851 : </A>          <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="852">852 : </A>        <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="853">853 : </A>      <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="854">854 : </A><font color="#007700"></font>
-<A NAME="855">855 : </A>!<font color="#007700">     * UPDATE 'currentbest' IF APPROPRIATE</font>
-<A NAME="856">856 : </A><font color="#007700"></font>
-<A NAME="857">857 : </A>      <font color='#aa2200'>if</font> (<A HREF='simplex_variables.html#newobjfun'>newobjfun</A> <font color='#cc00cc'>.gt.</font> bestobj) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="858">858 : </A>        bestobj = <A HREF='simplex_variables.html#newobjfun'>newobjfun</A><font color="#007700"></font>
-<A NAME="859">859 : </A>        bestincomp = <A HREF='simplex_variables.html#newobjfun'>newobjfun</A><font color="#007700"></font>
-<A NAME="860">860 : </A>        <font color='#aa2200'>open</font>(kfile_currentbest,<font color='#aa2200'>file</font>=sfile_currentbest(1:<font color='#aa2200'>len_trim</font>(sfile_currentbest)))<font color="#007700"></font>
-<A NAME="861">861 : </A>        <font color='#aa2200'>write</font>(kfile_currentbest,outformat) <A HREF='simplex.html#invar'>invar</A>(:,1), bestobj<font color="#007700"></font>
-<A NAME="862">862 : </A>        <font color='#aa2200'>close</font>(kfile_currentbest)<font color="#007700"></font>
-<A NAME="863">863 : </A>        nsincebest = 0<font color="#007700"></font>
-<A NAME="864">864 : </A>      <font color='#aa2200'>elseif</font> (<A HREF='simplex_variables.html#newobjfun'>newobjfun</A> <font color='#cc00cc'>.gt.</font> bestincomp) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="865">865 : </A>        bestincomp = <A HREF='simplex_variables.html#newobjfun'>newobjfun</A><font color="#007700"></font>
-<A NAME="866">866 : </A>      <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="867">867 : </A><font color="#007700"></font>
-<A NAME="868">868 : </A>      <font color='#aa2200'>return</font><font color="#007700"></font>
-<A NAME="869">869 : </A>      <font color='#aa2200'>end</font> <font color='#aa2200'>subroutine</font> simplex<font color="#007700"></font>
+<A NAME="942">942 : </A><font color="#007700"></font>
+<A NAME="943">943 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+<A NAME="944">944 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+<A NAME="945">945 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+<A NAME="946">946 : </A><font color="#007700"></font>
+<A NAME="947">947 : </A>      <font color='#aa2200'>subroutine</font> simplex (<A HREF='simplex.html#invar'>invar</A>, <A HREF='simplex.html#objfun'>objfun</A>)<font color="#007700"></font>
+<A NAME="948">948 : </A>      <font color='#aa2200'>use</font> vom_sce_mod<font color="#007700"></font>
+<A NAME="949">949 : </A><font color="#007700"></font>
+<A NAME="950">950 : </A>      <font color='#aa2200'>implicit</font> <font color='#aa2200'>none</font><font color="#007700"></font>
+<A NAME="951">951 : </A><font color="#007700"></font>
+<A NAME="952">952 : </A>!<font color="#007700">     * Declarations</font>
+<A NAME="953">953 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>DIMENSION</font>(vom_npar,qopt), <font color='#aa2200'>INTENT</font>(<font color='#aa2200'>inout</font>) :: <A HREF='simplex.html#invar'>invar</A><font color="#007700"></font>
+<A NAME="954">954 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>DIMENSION</font>(qopt),          <font color='#aa2200'>INTENT</font>(<font color='#aa2200'>inout</font>) :: <A HREF='simplex.html#objfun'>objfun</A><font color="#007700"></font>
+<A NAME="955">955 : </A><font color="#007700"></font>
+<A NAME="956">956 : </A>!<font color="#007700">     * Definitions</font>
+<A NAME="957">957 : </A>      <font color='#aa2200'>INTEGER</font>       :: <A HREF='simplex_variables.html#l_'>l_</A>, <A HREF='simplex_variables.html#kk'>kk</A><font color="#007700"></font>
+<A NAME="958">958 : </A>      <font color='#aa2200'>INTEGER</font>       :: <A HREF='simplex_variables.html#ii'>ii</A>, <A HREF='simplex_variables.html#jj'>jj</A><font color="#007700"></font>
+<A NAME="959">959 : </A>      <font color='#aa2200'>INTEGER</font>       :: <A HREF='simplex_variables.html#max_j_'>max_j_</A><font color="#007700"></font>
+<A NAME="960">960 : </A>      <font color='#aa2200'>REAL</font>*8        :: <A HREF='simplex_variables.html#newobjfun'>newobjfun</A><font color="#007700"></font>
+<A NAME="961">961 : </A>      <font color='#aa2200'>REAL</font>*8        :: <A HREF='simplex_variables.html#minj'>minj</A>, <A HREF='simplex_variables.html#rangej'>rangej</A><font color="#007700"></font>
+<A NAME="962">962 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>DIMENSION</font>(vom_npar) :: <A HREF='simplex_variables.html#centroid'>centroid</A>  !<font color="#007700"> Centroid of parameter sets for simplex procedure</font>
+<A NAME="963">963 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>DIMENSION</font>(vom_npar) :: <A HREF='simplex_variables.html#newpoint'>newpoint</A>  !<font color="#007700"> New parameter set resulting from simplex procedure</font>
+<A NAME="964">964 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='simplex_variables.html#ranarr_simplex'>ranarr_simplex</A>(:)  !<font color="#007700"> Array of random numbers</font>
+<A NAME="965">965 : </A><font color="#007700"></font>
+<A NAME="966">966 : </A>      <font color='#aa2200'>allocate</font>(<A HREF='simplex_variables.html#ranarr_simplex'>ranarr_simplex</A>(nopt))<font color="#007700"></font>
+<A NAME="967">967 : </A><font color="#007700"></font>
+<A NAME="968">968 : </A>      <font color='#aa2200'>do</font> <A HREF='simplex_variables.html#l_'>l_</A> = 1, i_nsimp<font color="#007700"></font>
+<A NAME="969">969 : </A><font color="#007700"></font>
+<A NAME="970">970 : </A>!<font color="#007700">         * REFLECTION STEP</font>
+<A NAME="971">971 : </A><font color="#007700"></font>
+<A NAME="972">972 : </A>          evolution = 'reflection'<font color="#007700"></font>
+<A NAME="973">973 : </A>          <A HREF='simplex_variables.html#newpoint'>newpoint</A>(:) = <A HREF='simplex.html#invar'>invar</A>(:,qopt)<font color="#007700"></font>
+<A NAME="974">974 : </A>          <A HREF='simplex_variables.html#centroid'>centroid</A>(<A HREF='simplex_subroutines_called.html#optid'>optid</A>(:)) = 1.d0 / (qopt - 1) * <font color='#aa2200'>SUM</font>(<A HREF='simplex.html#invar'>invar</A>(<A HREF='simplex_subroutines_called.html#optid'>optid</A>(:), 1:qopt - 1), 2)<font color="#007700"></font>
+<A NAME="975">975 : </A>          <A HREF='simplex_variables.html#newpoint'>newpoint</A>(<A HREF='simplex_subroutines_called.html#optid'>optid</A>(:)) = 2.d0 * <A HREF='simplex_variables.html#centroid'>centroid</A>(<A HREF='simplex_subroutines_called.html#optid'>optid</A>(:)) - <A HREF='simplex.html#invar'>invar</A>(<A HREF='simplex_subroutines_called.html#optid'>optid</A>(:),qopt)<font color="#007700"></font>
+<A NAME="976">976 : </A>          <font color='#aa2200'>if</font> (<font color='#aa2200'>MINVAL</font>(<A HREF='simplex_variables.html#newpoint'>newpoint</A>(:) - <A HREF='simplex_subroutines_called.html#parmin'>parmin</A>(:)) <font color='#cc00cc'>.lt.</font> 0.d0 .or.           &<font color="#007700"></font>
+<A NAME="977">977 : </A>     &        <font color='#aa2200'>MAXVAL</font>(<A HREF='simplex_variables.html#newpoint'>newpoint</A>(:) - <A HREF='simplex_subroutines_called.html#parmax'>parmax</A>(:)) <font color='#cc00cc'>.gt.</font> 0.d0) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="978">978 : </A><font color="#007700"></font>
+<A NAME="979">979 : </A>!<font color="#007700">           * MUTATION STEP</font>
+<A NAME="980">980 : </A>!<font color="#007700">           * NB: MUTATION IS BASED ON THE SMALLEST HYPERCUBE OF THE SUBCOMPLEX,</font>
+<A NAME="981">981 : </A>!<font color="#007700">           * NOT THE SMALLEST HYPERCUBE OF THE COMPLEX AS SUGGESTED BY DUAN ET AL.</font>
+<A NAME="982">982 : </A><font color="#007700"></font>
+<A NAME="983">983 : </A>            <font color='#aa2200'>do</font> <A HREF='simplex_variables.html#ii'>ii</A> = 1, nopt<font color="#007700"></font>
+<A NAME="984">984 : </A>              <font color='#aa2200'>call</font> <font color='#aa2200'>random_number</font>(ranscal)  !<font color="#007700"> SCALAR RANDOM NUMBER</font>
+<A NAME="985">985 : </A>              <A HREF='simplex_variables.html#jj'>jj</A> = <A HREF='simplex_subroutines_called.html#optid'>optid</A>(<A HREF='simplex_variables.html#ii'>ii</A>)<font color="#007700"></font>
+<A NAME="986">986 : </A>              <A HREF='simplex_variables.html#minj'>minj</A> = <A HREF='simplex_subroutines_called.html#parmin'>parmin</A>(<A HREF='simplex_variables.html#jj'>jj</A>)<font color="#007700"></font>
+<A NAME="987">987 : </A>              <A HREF='simplex_variables.html#rangej'>rangej</A> = <A HREF='simplex_subroutines_called.html#parmax'>parmax</A>(<A HREF='simplex_variables.html#jj'>jj</A>) - <A HREF='simplex_variables.html#minj'>minj</A><font color="#007700"></font>
+<A NAME="988">988 : </A>              <A HREF='simplex_variables.html#newpoint'>newpoint</A>(<A HREF='simplex_variables.html#jj'>jj</A>) = <A HREF='simplex_variables.html#minj'>minj</A> + <A HREF='simplex_variables.html#rangej'>rangej</A> * ranscal  !<font color="#007700"> UNIFORMLY DISTRIBUTED SAMPLE</font>
+<A NAME="989">989 : </A>            <font color='#aa2200'>enddo</font><font color="#007700"></font>
+<A NAME="990">990 : </A>            evolution = 'mutation'<font color="#007700"></font>
+<A NAME="991">991 : </A>          <font color='#aa2200'>endif</font><font color="#007700"></font>
+<A NAME="992">992 : </A><font color="#007700"></font>
+<A NAME="993">993 : </A>          <A HREF='simplex_variables.html#kk'>kk</A> = 1<font color="#007700"></font>
+<A NAME="994">994 : </A>        <font color='#aa2200'>do</font> <font color='#aa2200'>while</font> (<A HREF='simplex_variables.html#kk'>kk</A> <font color='#cc00cc'>.le.</font> 3)<font color="#007700"></font>
+<A NAME="995">995 : </A><font color="#007700"></font>
+<A NAME="996">996 : </A>!<font color="#007700">         * CALCULATE OBJECTIVE FUNCTION</font>
+<A NAME="997">997 : </A>          <font color='#aa2200'>call</font> <A HREF='simplex_subroutines_called.html#runmodel'>runmodel</A>(<A HREF='simplex_variables.html#newpoint'>newpoint</A>(:), <A HREF='simplex_variables.html#newobjfun'>newobjfun</A>)<font color="#007700"></font>
+<A NAME="998">998 : </A><font color="#007700"></font>
+<A NAME="999">999 : </A>            <A HREF='simplex_variables.html#jj'>jj</A> = 1<font color="#007700"></font>
+<A NAME="1000">1000 : </A>            <font color='#aa2200'>if</font> (<A HREF='simplex_variables.html#kk'>kk</A> <font color='#cc00cc'>.eq.</font> 1) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="1001">1001 : </A>              <font color='#aa2200'>if</font> (<A HREF='simplex_variables.html#newobjfun'>newobjfun</A> <font color='#cc00cc'>.gt.</font> <A HREF='simplex.html#objfun'>objfun</A>(qopt)) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="1002">1002 : </A>                <A HREF='simplex_variables.html#max_j_'>max_j_</A> = qopt<font color="#007700"></font>
+<A NAME="1003">1003 : </A>                <A HREF='simplex_variables.html#kk'>kk</A> = 4<font color="#007700"></font>
+<A NAME="1004">1004 : </A>              <font color='#aa2200'>else</font><font color="#007700"></font>
+<A NAME="1005">1005 : </A>!<font color="#007700">               * CONTRACTION STEP</font>
+<A NAME="1006">1006 : </A>                <A HREF='simplex_variables.html#newpoint'>newpoint</A>(<A HREF='simplex_subroutines_called.html#optid'>optid</A>(:)) = (<A HREF='simplex_variables.html#centroid'>centroid</A>(<A HREF='simplex_subroutines_called.html#optid'>optid</A>(:)) + <A HREF='simplex.html#invar'>invar</A>(<A HREF='simplex_subroutines_called.html#optid'>optid</A>(:),qopt)) * 0.5d0<font color="#007700"></font>
+<A NAME="1007">1007 : </A>                evolution = 'contraction'<font color="#007700"></font>
+<A NAME="1008">1008 : </A>              <font color='#aa2200'>endif</font><font color="#007700"></font>
+<A NAME="1009">1009 : </A>            <font color='#aa2200'>endif</font><font color="#007700"></font>
+<A NAME="1010">1010 : </A><font color="#007700"></font>
+<A NAME="1011">1011 : </A>            <font color='#aa2200'>if</font> (<A HREF='simplex_variables.html#kk'>kk</A> <font color='#cc00cc'>.eq.</font> 2) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="1012">1012 : </A>              <font color='#aa2200'>if</font> (<A HREF='simplex_variables.html#newobjfun'>newobjfun</A> <font color='#cc00cc'>.gt.</font> <A HREF='simplex.html#objfun'>objfun</A>(qopt)) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="1013">1013 : </A>                <A HREF='simplex_variables.html#max_j_'>max_j_</A> = qopt<font color="#007700"></font>
+<A NAME="1014">1014 : </A>                <A HREF='simplex_variables.html#kk'>kk</A> = 4<font color="#007700"></font>
+<A NAME="1015">1015 : </A>              <font color='#aa2200'>else</font><font color="#007700"></font>
+<A NAME="1016">1016 : </A>!<font color="#007700">               * ANOTHER MUTATION STEP</font>
+<A NAME="1017">1017 : </A>                <font color='#aa2200'>do</font> <A HREF='simplex_variables.html#ii'>ii</A> = 1, nopt<font color="#007700"></font>
+<A NAME="1018">1018 : </A>                  <font color='#aa2200'>call</font> <font color='#aa2200'>random_number</font>(<A HREF='simplex_variables.html#ranarr_simplex'>ranarr_simplex</A>(:))  !<font color="#007700"> RANDOM ARRAY OF SIZE 1:nopt</font>
+<A NAME="1019">1019 : </A>                  <A HREF='simplex_variables.html#jj'>jj</A> = <A HREF='simplex_subroutines_called.html#optid'>optid</A>(<A HREF='simplex_variables.html#ii'>ii</A>)<font color="#007700"></font>
+<A NAME="1020">1020 : </A>                  <A HREF='simplex_variables.html#minj'>minj</A> = <font color='#aa2200'>MINVAL</font>(<A HREF='simplex.html#invar'>invar</A>(<A HREF='simplex_variables.html#jj'>jj</A>,:))<font color="#007700"></font>
+<A NAME="1021">1021 : </A>                  <A HREF='simplex_variables.html#rangej'>rangej</A> = <font color='#aa2200'>MAXVAL</font>(<A HREF='simplex.html#invar'>invar</A>(<A HREF='simplex_variables.html#jj'>jj</A>,:)) - <A HREF='simplex_variables.html#minj'>minj</A><font color="#007700"></font>
+<A NAME="1022">1022 : </A>                  <A HREF='simplex_variables.html#newpoint'>newpoint</A>(<A HREF='simplex_variables.html#jj'>jj</A>) = <A HREF='simplex_variables.html#minj'>minj</A> + <A HREF='simplex_variables.html#rangej'>rangej</A> * <A HREF='simplex_variables.html#ranarr_simplex'>ranarr_simplex</A>(<A HREF='simplex_variables.html#ii'>ii</A>)  !<font color="#007700"> UNIFORMLY DISTRIBUTED SAMPLE</font>
+<A NAME="1023">1023 : </A>                <font color='#aa2200'>enddo</font><font color="#007700"></font>
+<A NAME="1024">1024 : </A>                evolution = 'mutation'<font color="#007700"></font>
+<A NAME="1025">1025 : </A>              <font color='#aa2200'>endif</font><font color="#007700"></font>
+<A NAME="1026">1026 : </A>            <font color='#aa2200'>endif</font><font color="#007700"></font>
+<A NAME="1027">1027 : </A><font color="#007700"></font>
+<A NAME="1028">1028 : </A>            <font color='#aa2200'>if</font> (<A HREF='simplex_variables.html#kk'>kk</A> <font color='#cc00cc'>.eq.</font> 3) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="1029">1029 : </A>              <font color='#aa2200'>if</font> (<A HREF='simplex_variables.html#newobjfun'>newobjfun</A> <font color='#cc00cc'>.gt.</font> <A HREF='simplex.html#objfun'>objfun</A>(qopt-1)) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="1030">1030 : </A>                <A HREF='simplex_variables.html#max_j_'>max_j_</A> = qopt - 1<font color="#007700"></font>
+<A NAME="1031">1031 : </A>                <A HREF='simplex_variables.html#kk'>kk</A> = 4<font color="#007700"></font>
+<A NAME="1032">1032 : </A>              <font color='#aa2200'>elseif</font> (<A HREF='simplex_variables.html#newobjfun'>newobjfun</A> <font color='#cc00cc'>.gt.</font> 0.d0) <font color='#aa2200'>then</font>  !<font color="#007700"> REPLACE ANYWAY</font>
+<A NAME="1033">1033 : </A>                <A HREF='simplex.html#objfun'>objfun</A>(qopt) = <A HREF='simplex_variables.html#newobjfun'>newobjfun</A><font color="#007700"></font>
+<A NAME="1034">1034 : </A>                <A HREF='simplex.html#invar'>invar</A>(:,qopt) = <A HREF='simplex_variables.html#newpoint'>newpoint</A>(:)<font color="#007700"></font>
+<A NAME="1035">1035 : </A>              <font color='#aa2200'>endif</font><font color="#007700"></font>
+<A NAME="1036">1036 : </A>            <font color='#aa2200'>endif</font><font color="#007700"></font>
+<A NAME="1037">1037 : </A><font color="#007700"></font>
+<A NAME="1038">1038 : </A>            <font color='#aa2200'>if</font> (<A HREF='simplex_variables.html#kk'>kk</A> <font color='#cc00cc'>.eq.</font> 4) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="1039">1039 : </A>!<font color="#007700">            * SORT objfun HERE IN CASE alpha &gt; 1</font>
+<A NAME="1040">1040 : </A>              <font color='#aa2200'>do</font> <font color='#aa2200'>while</font> (<A HREF='simplex_variables.html#newobjfun'>newobjfun</A> <font color='#cc00cc'>.le.</font> <A HREF='simplex.html#objfun'>objfun</A>(<A HREF='simplex_variables.html#jj'>jj</A>) .<font color='#aa2200'>and</font>. <A HREF='simplex_variables.html#jj'>jj</A> <font color='#cc00cc'>.le.</font> <A HREF='simplex_variables.html#max_j_'>max_j_</A>)<font color="#007700"></font>
+<A NAME="1041">1041 : </A>                <A HREF='simplex_variables.html#jj'>jj</A> = <A HREF='simplex_variables.html#jj'>jj</A> + 1<font color="#007700"></font>
+<A NAME="1042">1042 : </A>              <font color='#aa2200'>enddo</font><font color="#007700"></font>
+<A NAME="1043">1043 : </A>              <font color='#aa2200'>if</font> (<A HREF='simplex_variables.html#jj'>jj</A> <font color='#cc00cc'>.lt.</font> qopt) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="1044">1044 : </A>                <A HREF='simplex.html#objfun'>objfun</A>(<A HREF='simplex_variables.html#jj'>jj</A>+1:qopt) = <A HREF='simplex.html#objfun'>objfun</A>(<A HREF='simplex_variables.html#jj'>jj</A>:qopt-1)<font color="#007700"></font>
+<A NAME="1045">1045 : </A>                <A HREF='simplex.html#invar'>invar</A>(:,<A HREF='simplex_variables.html#jj'>jj</A>+1:qopt) = <A HREF='simplex.html#invar'>invar</A>(:,<A HREF='simplex_variables.html#jj'>jj</A>:qopt-1)<font color="#007700"></font>
+<A NAME="1046">1046 : </A>              <font color='#aa2200'>endif</font><font color="#007700"></font>
+<A NAME="1047">1047 : </A>              <font color='#aa2200'>if</font> (<A HREF='simplex_variables.html#jj'>jj</A> <font color='#cc00cc'>.le.</font> qopt) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="1048">1048 : </A>                <A HREF='simplex.html#objfun'>objfun</A>(<A HREF='simplex_variables.html#jj'>jj</A>) = <A HREF='simplex_variables.html#newobjfun'>newobjfun</A><font color="#007700"></font>
+<A NAME="1049">1049 : </A>                <A HREF='simplex.html#invar'>invar</A>(:,<A HREF='simplex_variables.html#jj'>jj</A>) = <A HREF='simplex_variables.html#newpoint'>newpoint</A>(:)<font color="#007700"></font>
+<A NAME="1050">1050 : </A>              <font color='#aa2200'>endif</font><font color="#007700"></font>
+<A NAME="1051">1051 : </A>            <font color='#aa2200'>endif</font><font color="#007700"></font>
+<A NAME="1052">1052 : </A><font color="#007700"></font>
+<A NAME="1053">1053 : </A>            <A HREF='simplex_variables.html#kk'>kk</A> = <A HREF='simplex_variables.html#kk'>kk</A> + 1<font color="#007700"></font>
+<A NAME="1054">1054 : </A><font color="#007700"></font>
+<A NAME="1055">1055 : </A>          <font color='#aa2200'>enddo</font><font color="#007700"></font>
+<A NAME="1056">1056 : </A><font color="#007700"></font>
+<A NAME="1057">1057 : </A>!<font color="#007700">         * UPDATE 'currentbest' IF APPROPRIATE</font>
+<A NAME="1058">1058 : </A><font color="#007700"></font>
+<A NAME="1059">1059 : </A>          <font color='#aa2200'>if</font> (<A HREF='simplex_variables.html#newobjfun'>newobjfun</A> <font color='#cc00cc'>.gt.</font> bestobj) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="1060">1060 : </A>            bestobj = <A HREF='simplex_variables.html#newobjfun'>newobjfun</A><font color="#007700"></font>
+<A NAME="1061">1061 : </A>            bestincomp = <A HREF='simplex_variables.html#newobjfun'>newobjfun</A><font color="#007700"></font>
+<A NAME="1062">1062 : </A>            <font color='#aa2200'>call</font> <A HREF='simplex_subroutines_called.html#write_lastbest'>write_lastbest</A>(<A HREF='simplex.html#invar'>invar</A>(:,1), vom_npar, bestobj, 0)<font color="#007700"></font>
+<A NAME="1063">1063 : </A>            nsincebest = 0<font color="#007700"></font>
+<A NAME="1064">1064 : </A>          <font color='#aa2200'>elseif</font> (<A HREF='simplex_variables.html#newobjfun'>newobjfun</A> <font color='#cc00cc'>.gt.</font> bestincomp) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="1065">1065 : </A>            bestincomp = <A HREF='simplex_variables.html#newobjfun'>newobjfun</A><font color="#007700"></font>
+<A NAME="1066">1066 : </A>          <font color='#aa2200'>endif</font><font color="#007700"></font>
+<A NAME="1067">1067 : </A><font color="#007700"></font>
+<A NAME="1068">1068 : </A>      <font color='#aa2200'>enddo</font><font color="#007700"></font>
+<A NAME="1069">1069 : </A><font color="#007700"></font>
+<A NAME="1070">1070 : </A>      <font color='#aa2200'>deallocate</font>(<A HREF='simplex_variables.html#ranarr_simplex'>ranarr_simplex</A>)<font color="#007700"></font>
+<A NAME="1071">1071 : </A><font color="#007700"></font>
+<A NAME="1072">1072 : </A>      <font color='#aa2200'>return</font><font color="#007700"></font>
+<A NAME="1073">1073 : </A>      <font color='#aa2200'>end</font> <font color='#aa2200'>subroutine</font> simplex<font color="#007700"></font>
 
 </PRE>
 </BODY></HTML>

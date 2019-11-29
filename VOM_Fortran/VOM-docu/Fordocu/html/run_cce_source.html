@@ -136,7 +136,6 @@ function printCallRows(xmlhttp,locargs) {
 <div class="tabs">
   <ul>
       <li><a href="run_cce.html"><span>Header</span></a></li>
-      <li><a href="run_cce_version_history.html"><span>Version history</span></a></li>
       <li><a href="run_cce_subroutines_called.html"><span>Subroutines called</span></a></li>
       <li><a href="run_cce_variables.html"><span>Variables</span></a></li>
       <li><a href="run_cce_called_by.html"><span>Called by</span></a></li>
@@ -145,69 +144,109 @@ function printCallRows(xmlhttp,locargs) {
 </div>
 <h1>Subroutine run_cce</h1>
 <PRE>
-<A NAME="633">633 : </A><font color="#007700"></font>
-<A NAME="634">634 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
-<A NAME="635">635 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
-<A NAME="636">636 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
-<A NAME="637">637 : </A><font color="#007700"></font>
-<A NAME="638">638 : </A>      <font color='#aa2200'>subroutine</font> run_cce ()<font color="#007700"></font>
-<A NAME="639">639 : </A>      <font color='#aa2200'>use</font> sce_mod<font color="#007700"></font>
-<A NAME="640">640 : </A>      <font color='#aa2200'>implicit</font> <font color='#aa2200'>none</font><font color="#007700"></font>
-<A NAME="641">641 : </A><font color="#007700"></font>
-<A NAME="642">642 : </A>      <font color='#aa2200'>INTEGER</font> :: <A HREF='run_cce_variables.html#m_'>m_</A>, <A HREF='run_cce_variables.html#first'>first</A><font color="#007700"></font>
-<A NAME="643">643 : </A>      <font color='#aa2200'>CHARACTER</font>(300) :: <A HREF='run_cce_variables.html#writeformat'>writeformat</A><font color="#007700"></font>
-<A NAME="644">644 : </A><font color="#007700"></font>
-<A NAME="645">645 : </A>!<font color="#007700">     * PARTITION THE sopt POINTS INTO ncomp2 COMPLEXES</font>
-<A NAME="646">646 : </A>!<font color="#007700">     * EXECUTE CCE ALGORITHM</font>
-<A NAME="647">647 : </A><font color="#007700"></font>
-<A NAME="648">648 : </A>      <font color='#aa2200'>if</font> (ncomp2 <font color='#cc00cc'>.gt.</font> 1) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="649">649 : </A>        <font color='#aa2200'>if</font> (nloop <font color='#cc00cc'>.gt.</font> 0) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="650">650 : </A>          <font color='#aa2200'>if</font> (ncomp2 <font color='#cc00cc'>.gt.</font> ncompmin) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="651">651 : </A>            ncomp2 = ncomp2 - 1                   !<font color="#007700"> REDUCE NUMBER OF COMPLEXES AS nloop INCREASES</font>
-<A NAME="652">652 : </A>          <font color='#aa2200'>else</font><font color="#007700"></font>
-<A NAME="653">653 : </A>            <font color='#aa2200'>if</font> (worstbest <font color='#cc00cc'>.le.</font> <A HREF='run_cce_subroutines_called.html#ofvec'>ofvec</A>(1+(ncomp2-1)*mopt)) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="654">654 : </A>              <A HREF='run_cce_variables.html#writeformat'>writeformat</A> = '("No gene pool mixing ... '<font color="#007700"></font>
-<A NAME="655">655 : </A>              <A HREF='run_cce_variables.html#writeformat'>writeformat</A>(27:64) = 'reducing <font color='#aa2200'>number</font> of complexes by one.")'<font color="#007700"></font>
-<A NAME="656">656 : </A>              <font color='#aa2200'>write</font>(*,<A HREF='run_cce_variables.html#writeformat'>writeformat</A>)<font color="#007700"></font>
-<A NAME="657">657 : </A>              <font color='#aa2200'>write</font>(kfile_progress,<A HREF='run_cce_variables.html#writeformat'>writeformat</A>)<font color="#007700"></font>
-<A NAME="658">658 : </A>              ncomp2 = ncomp2 - 1<font color="#007700"></font>
-<A NAME="659">659 : </A>            <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="660">660 : </A>          <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="661">661 : </A>        <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="662">662 : </A>      <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="663">663 : </A><font color="#007700"></font>
-<A NAME="664">664 : </A>!<font color="#007700">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</font>
-<A NAME="665">665 : </A>!<font color="#007700"> THIS BLOCK CAN BE PARALLELISED!</font>
-<A NAME="666">666 : </A>!<font color="#007700">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</font>
-<A NAME="667">667 : </A><font color="#007700"></font>
-<A NAME="668">668 : </A>      <font color='#aa2200'>do</font> <A HREF='run_cce_variables.html#m_'>m_</A> = 1, ncomp2<font color="#007700"></font>
-<A NAME="669">669 : </A>        <A HREF='run_cce_variables.html#first'>first</A> = 1 + (<A HREF='run_cce_variables.html#m_'>m_</A> - 1) * mopt<font color="#007700"></font>
-<A NAME="670">670 : </A>        <A HREF='run_cce_variables.html#writeformat'>writeformat</A> = '("Start of loop",i4,", <font color='#aa2200'>complex</font>",i2,'<font color="#007700"></font>
-<A NAME="671">671 : </A>        <A HREF='run_cce_variables.html#writeformat'>writeformat</A>(36:55) = '": best OF =",e12.6)'<font color="#007700"></font>
-<A NAME="672">672 : </A>        <font color='#aa2200'>write</font>(*,<A HREF='run_cce_variables.html#writeformat'>writeformat</A>) nloop + 1, <A HREF='run_cce_variables.html#m_'>m_</A>, <A HREF='run_cce_subroutines_called.html#ofvec'>ofvec</A>(<A HREF='run_cce_variables.html#first'>first</A>)<font color="#007700"></font>
-<A NAME="673">673 : </A>        <font color='#aa2200'>write</font>(kfile_progress,<A HREF='run_cce_variables.html#writeformat'>writeformat</A>) nloop + 1, <A HREF='run_cce_variables.html#m_'>m_</A> ,<A HREF='run_cce_subroutines_called.html#ofvec'>ofvec</A>(<A HREF='run_cce_variables.html#first'>first</A>)<font color="#007700"></font>
-<A NAME="674">674 : </A>        <font color='#aa2200'>if</font> (<A HREF='run_cce_variables.html#m_'>m_</A> <font color='#cc00cc'>.eq.</font> 1) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="675">675 : </A>          bestincomp = -9999.d0                   !<font color="#007700"> SET LESS THAN bestobj</font>
-<A NAME="676">676 : </A>        <font color='#aa2200'>else</font><font color="#007700"></font>
-<A NAME="677">677 : </A>          bestincomp = <A HREF='run_cce_subroutines_called.html#ofvec'>ofvec</A>(<A HREF='run_cce_variables.html#first'>first</A>)<font color="#007700"></font>
-<A NAME="678">678 : </A>        <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="679">679 : </A>        <font color='#aa2200'>call</font> <A HREF='run_cce_subroutines_called.html#cce'>cce</A>(<A HREF='run_cce_subroutines_called.html#ofvec'>ofvec</A>(<A HREF='run_cce_variables.html#first'>first</A>:<A HREF='run_cce_variables.html#m_'>m_</A>*mopt), shufflevar(:,<A HREF='run_cce_variables.html#first'>first</A>:<A HREF='run_cce_variables.html#m_'>m_</A>*mopt))<font color="#007700"></font>
-<A NAME="680">680 : </A>        <A HREF='run_cce_variables.html#writeformat'>writeformat</A>(3:7) = '  <font color='#aa2200'>End</font>'<font color="#007700"></font>
-<A NAME="681">681 : </A>        <font color='#aa2200'>write</font>(*,<A HREF='run_cce_variables.html#writeformat'>writeformat</A>) nloop + 1, <A HREF='run_cce_variables.html#m_'>m_</A>, <A HREF='run_cce_subroutines_called.html#ofvec'>ofvec</A>(<A HREF='run_cce_variables.html#first'>first</A>)<font color="#007700"></font>
-<A NAME="682">682 : </A>        <font color='#aa2200'>write</font>(kfile_progress,<A HREF='run_cce_variables.html#writeformat'>writeformat</A>) nloop + 1, <A HREF='run_cce_variables.html#m_'>m_</A>, <A HREF='run_cce_subroutines_called.html#ofvec'>ofvec</A>(<A HREF='run_cce_variables.html#first'>first</A>)<font color="#007700"></font>
-<A NAME="683">683 : </A>      <font color='#aa2200'>enddo</font><font color="#007700"></font>
-<A NAME="684">684 : </A>      worstbest = <A HREF='run_cce_subroutines_called.html#ofvec'>ofvec</A>(<A HREF='run_cce_variables.html#first'>first</A>)<font color="#007700"></font>
-<A NAME="685">685 : </A><font color="#007700"></font>
-<A NAME="686">686 : </A>!<font color="#007700">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</font>
-<A NAME="687">687 : </A>!<font color="#007700"> WRITE shufflevar AND ofvec OF LAST LOOP TO FILE</font>
-<A NAME="688">688 : </A><font color="#007700"></font>
-<A NAME="689">689 : </A>      <font color='#aa2200'>call</font> <A HREF='run_cce_subroutines_called.html#writeloop'>writeloop</A><font color="#007700"></font>
-<A NAME="690">690 : </A>      <font color='#aa2200'>close</font>(kfile_sceout)<font color="#007700"></font>
-<A NAME="691">691 : </A>      <font color='#aa2200'>close</font>(kfile_bestpars)<font color="#007700"></font>
-<A NAME="692">692 : </A>      <font color='#aa2200'>close</font>(kfile_progress)<font color="#007700"></font>
-<A NAME="693">693 : </A><font color="#007700"></font>
-<A NAME="694">694 : </A>      <font color='#aa2200'>return</font><font color="#007700"></font>
-<A NAME="695">695 : </A>      <font color='#aa2200'>end</font> <font color='#aa2200'>subroutine</font> run_cce<font color="#007700"></font>
+<A NAME="766">766 : </A><font color="#007700"></font>
+<A NAME="767">767 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+<A NAME="768">768 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+<A NAME="769">769 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+<A NAME="770">770 : </A><font color="#007700"></font>
+<A NAME="771">771 : </A>      <font color='#aa2200'>subroutine</font> run_cce ()<font color="#007700"></font>
+<A NAME="772">772 : </A>      <font color='#aa2200'>use</font> vom_sce_mod<font color="#007700"></font>
+<A NAME="773">773 : </A>      <font color='#aa2200'>use</font> vom_vegwat_mod<font color="#007700"></font>
+<A NAME="774">774 : </A>  !<font color="#007700">$ USE omp_lib</font>
+<A NAME="775">775 : </A>      <font color='#aa2200'>implicit</font> <font color='#aa2200'>none</font><font color="#007700"></font>
+<A NAME="776">776 : </A><font color="#007700"></font>
+<A NAME="777">777 : </A>      <font color='#aa2200'>INTEGER</font>              :: <A HREF='run_cce_variables.html#m_'>m_</A>, <A HREF='run_cce_variables.html#first'>first</A><font color="#007700"></font>
+<A NAME="778">778 : </A>      <font color='#aa2200'>CHARACTER</font>(300)       :: <A HREF='run_cce_variables.html#writeformat'>writeformat</A><font color="#007700"></font>
+<A NAME="779">779 : </A>      <font color='#aa2200'>CHARACTER</font>(<font color='#aa2200'>len</font>=135)   :: <A HREF='run_cce_variables.html#msg'>msg</A><font color="#007700"></font>
+<A NAME="780">780 : </A><font color="#007700"></font>
+<A NAME="781">781 : </A>!<font color="#007700">     * PARTITION THE sopt POINTS INTO ncomp2 COMPLEXES</font>
+<A NAME="782">782 : </A>!<font color="#007700">     * EXECUTE CCE ALGORITHM</font>
+<A NAME="783">783 : </A><font color="#007700"></font>
+<A NAME="784">784 : </A>        <font color='#aa2200'>if</font> (ncomp2 <font color='#cc00cc'>.gt.</font> 1) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="785">785 : </A>          <font color='#aa2200'>if</font> (nloop <font color='#cc00cc'>.gt.</font> 0) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="786">786 : </A>            <font color='#aa2200'>if</font> (ncomp2 <font color='#cc00cc'>.gt.</font> i_ncompmin) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="787">787 : </A>              ncomp2 = ncomp2 - 1       !<font color="#007700"> REDUCE NUMBER OF COMPLEXES AS nloop INCREASES</font>
+<A NAME="788">788 : </A>            <font color='#aa2200'>else</font><font color="#007700"></font>
+<A NAME="789">789 : </A>              <font color='#aa2200'>if</font> (worstbest <font color='#cc00cc'>.le.</font> <A HREF='run_cce_subroutines_called.html#ofvec'>ofvec</A>(1+(ncomp2-1)*mopt)) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="790">790 : </A>                <A HREF='run_cce_variables.html#writeformat'>writeformat</A> = '("No gene pool mixing ... '<font color="#007700"></font>
+<A NAME="791">791 : </A>                <A HREF='run_cce_variables.html#writeformat'>writeformat</A>(27:64) = 'reducing <font color='#aa2200'>number</font> of complexes by one.")'<font color="#007700"></font>
+<A NAME="792">792 : </A>                <font color='#aa2200'>write</font>(<A HREF='run_cce_variables.html#msg'>msg</A>,<A HREF='run_cce_variables.html#writeformat'>writeformat</A>)<font color="#007700"></font>
+<A NAME="793">793 : </A>                <font color='#aa2200'>write</font>(kfile_progress,*) <font color='#aa2200'>TRIM</font>(<A HREF='run_cce_variables.html#msg'>msg</A>)<font color="#007700"></font>
+<A NAME="794">794 : </A>                ncomp2 = ncomp2 - 1<font color="#007700"></font>
+<A NAME="795">795 : </A>              <font color='#aa2200'>endif</font><font color="#007700"></font>
+<A NAME="796">796 : </A>            <font color='#aa2200'>endif</font><font color="#007700"></font>
+<A NAME="797">797 : </A>          <font color='#aa2200'>endif</font><font color="#007700"></font>
+<A NAME="798">798 : </A>        <font color='#aa2200'>endif</font><font color="#007700"></font>
+<A NAME="799">799 : </A><font color="#007700"></font>
+<A NAME="800">800 : </A>      bestincomp = -9999.d0       !<font color="#007700"> SET LESS THAN bestobj</font>
+<A NAME="801">801 : </A>      <font color='#aa2200'>write</font>(kfile_progress,*) "Looping over complexes"<font color="#007700"></font>
+<A NAME="802">802 : </A><font color="#007700"></font>
+<A NAME="803">803 : </A>      <font color='#aa2200'>flush</font>(kfile_progress)<font color="#007700"></font>
+<A NAME="804">804 : </A>      <font color='#aa2200'>call</font> <A HREF='run_cce_subroutines_called.html#omp_set_num_threads'>OMP_SET_NUM_THREADS</A>(n_thread)<font color="#007700"></font>
+<A NAME="805">805 : </A>      <font color='#aa2200'>call</font> <A HREF='run_cce_subroutines_called.html#vom_dealloc'>vom_dealloc</A>()<font color="#007700"></font>
+<A NAME="806">806 : </A><font color="#007700"></font>
+<A NAME="807">807 : </A>      !<font color="#007700">loop over complexes</font>
+<A NAME="808">808 : </A>      !<font color="#007700">!$OMP shared( ofvec)</font>
+<A NAME="809">809 : </A>      !<font color="#007700">$OMP parallel default(shared) &</font>
+<A NAME="810">810 : </A>      !<font color="#007700">$OMP private( m_, first, msg, writeformat) &</font>
+<A NAME="811">811 : </A>      !<font color="#007700">$OMP COPYIN( time, error, finish, nyear, nday, nhour, th_, c_testday,   & </font>
+<A NAME="812">812 : </A>      !<font color="#007700">$OMP topt_, par_y, srad_y,  vd_d, vd_y, &</font>
+<A NAME="813">813 : </A>      !<font color="#007700">$OMP rain_y, gammastar, wsnew, wsold, o_cai, pcg_d, c_pcgmin, &</font>
+<A NAME="814">814 : </A>      !<font color="#007700">$OMP o_wstexp, o_wsgexp, o_lambdatf, o_lambdagf, &</font>
+<A NAME="815">815 : </A>      !<font color="#007700">$OMP i_cz, i_cgs, i_zr, i_go, i_ksat, i_thetar, i_thetas, i_nvg, i_avg, &</font>
+<A NAME="816">816 : </A>      !<font color="#007700">$OMP lambdat_d, lambdag_d, gstomt, gstomg, &</font>
+<A NAME="817">817 : </A>      !<font color="#007700">$OMP rlt_h, rlt_d, rlt_y, rlg_h, rlg_d, rlg_y, transpt, transpg, q_tct_d, tct_y, tcg_d, &</font>
+<A NAME="818">818 : </A>      !<font color="#007700">$OMP tcg_y, jactt, jactg, jmaxt_h, jmaxg_h, jmax25t_d, jmax25g_d, &</font>
+<A NAME="819">819 : </A>      !<font color="#007700">$OMP asst_h, asst_d, asst_y, assg_h, assg_d, assg_y, &</font>
+<A NAME="820">820 : </A>      !<font color="#007700">$OMP q_cpcct_d, cpcct_y, cpccg_d, cpccg_y, etmt__, etmt_h, etmt_d, etmt_y, etmg__, etmg_h, &</font>
+<A NAME="821">821 : </A>      !<font color="#007700">$OMP etmg_d, etmg_y, etm_y, mqt_, mqtnew, mqtold, dmqt, q_mqx, mqsst_, mqsstmin, q_md, &</font>
+<A NAME="822">822 : </A>      !<font color="#007700">$OMP o_mdstore, o_rtdepth, o_rgdepth, pos_slt, pos_slg, pos_ult, pos_ulg, changef, &</font>
+<A NAME="823">823 : </A>      !<font color="#007700">$OMP rootlim, posmna, rrt_d, rrt_y, rrg_d, rrg_y, sumruptkt_h,  &</font>
+<A NAME="824">824 : </A>      !<font color="#007700">$OMP wlayer_, wlayernew, dt_, dtmax, dtsu_count, dtmax_count, esoil__, esoil_h, &</font>
+<A NAME="825">825 : </A>      !<font color="#007700">$OMP esoil_d, esoil_y, spgfcf__, spgfcf_h, spgfcf_d, inf__, infx__, infx_h, infx_d, &</font>
+<A NAME="826">826 : </A>      !<font color="#007700">$OMP zw_, zwnew, wc_,  io__, io_h, ioacum, &</font>
+<A NAME="827">827 : </A>      !<font color="#007700">$OMP ranscal, bestobj, bestincomp, evolution)</font>
+<A NAME="828">828 : </A>      !<font color="#007700">$OMP do SCHEDULE(DYNAMIC)</font>
+<A NAME="829">829 : </A>      <font color='#aa2200'>do</font> <A HREF='run_cce_variables.html#m_'>m_</A> = 1, ncomp2<font color="#007700"></font>
+<A NAME="830">830 : </A><font color="#007700"></font>
+<A NAME="831">831 : </A>          <A HREF='run_cce_variables.html#first'>first</A> = 1 + (<A HREF='run_cce_variables.html#m_'>m_</A> - 1) * mopt<font color="#007700"></font>
+<A NAME="832">832 : </A>          <A HREF='run_cce_variables.html#writeformat'>writeformat</A> = '("Start of loop",i4,", <font color='#aa2200'>complex</font>",i2,'<font color="#007700"></font>
+<A NAME="833">833 : </A>          <A HREF='run_cce_variables.html#writeformat'>writeformat</A>(36:55) = '": best OF =",e12.6)'<font color="#007700"></font>
+<A NAME="834">834 : </A>          <font color='#aa2200'>write</font>(<A HREF='run_cce_variables.html#msg'>msg</A>,<A HREF='run_cce_variables.html#writeformat'>writeformat</A>) nloop + 1, <A HREF='run_cce_variables.html#m_'>m_</A>, <A HREF='run_cce_subroutines_called.html#ofvec'>ofvec</A>(<A HREF='run_cce_variables.html#first'>first</A>)<font color="#007700"></font>
+<A NAME="835">835 : </A>          <font color='#aa2200'>write</font>(kfile_progress,*) <font color='#aa2200'>TRIM</font>(<A HREF='run_cce_variables.html#msg'>msg</A>)<font color="#007700"></font>
+<A NAME="836">836 : </A>          <font color='#aa2200'>flush</font>(kfile_progress)<font color="#007700"></font>
+<A NAME="837">837 : </A><font color="#007700"></font>
+<A NAME="838">838 : </A>          <font color='#aa2200'>if</font> (<A HREF='run_cce_variables.html#m_'>m_</A> <font color='#cc00cc'>.eq.</font> 1) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="839">839 : </A>            bestincomp = -9999.d0       !<font color="#007700"> SET LESS THAN bestobj</font>
+<A NAME="840">840 : </A>          <font color='#aa2200'>else</font><font color="#007700"></font>
+<A NAME="841">841 : </A>            bestincomp = <A HREF='run_cce_subroutines_called.html#ofvec'>ofvec</A>(<A HREF='run_cce_variables.html#first'>first</A>)<font color="#007700"></font>
+<A NAME="842">842 : </A>          <font color='#aa2200'>endif</font><font color="#007700"></font>
+<A NAME="843">843 : </A><font color="#007700"></font>
+<A NAME="844">844 : </A>        !<font color="#007700">start CCE  </font>
+<A NAME="845">845 : </A>        <font color='#aa2200'>call</font> <A HREF='run_cce_subroutines_called.html#cce'>cce</A>(<A HREF='run_cce_subroutines_called.html#ofvec'>ofvec</A>(<A HREF='run_cce_variables.html#first'>first</A>:<A HREF='run_cce_variables.html#m_'>m_</A>*mopt), shufflevar(:,<A HREF='run_cce_variables.html#first'>first</A>:<A HREF='run_cce_variables.html#m_'>m_</A>*mopt))<font color="#007700"></font>
+<A NAME="846">846 : </A><font color="#007700"></font>
+<A NAME="847">847 : </A>        !<font color="#007700">Deallocate some variables to avoid problems in parallel</font>
+<A NAME="848">848 : </A>        <font color='#aa2200'>call</font> <A HREF='run_cce_subroutines_called.html#vom_dealloc'>vom_dealloc</A>()<font color="#007700"></font>
+<A NAME="849">849 : </A><font color="#007700"></font>
+<A NAME="850">850 : </A>          <A HREF='run_cce_variables.html#writeformat'>writeformat</A>(3:7) = '  <font color='#aa2200'>End</font>'<font color="#007700"></font>
+<A NAME="851">851 : </A>          <font color='#aa2200'>write</font>(<A HREF='run_cce_variables.html#msg'>msg</A>,<A HREF='run_cce_variables.html#writeformat'>writeformat</A>) nloop + 1, <A HREF='run_cce_variables.html#m_'>m_</A>, <A HREF='run_cce_subroutines_called.html#ofvec'>ofvec</A>(<A HREF='run_cce_variables.html#first'>first</A>)<font color="#007700"></font>
+<A NAME="852">852 : </A>          <font color='#aa2200'>write</font>(kfile_progress,*) <font color='#aa2200'>TRIM</font>(<A HREF='run_cce_variables.html#msg'>msg</A>)<font color="#007700"></font>
+<A NAME="853">853 : </A>          <font color='#aa2200'>flush</font>(kfile_progress)<font color="#007700"></font>
+<A NAME="854">854 : </A><font color="#007700"></font>
+<A NAME="855">855 : </A>      <font color='#aa2200'>enddo</font><font color="#007700"></font>
+<A NAME="856">856 : </A>      !<font color="#007700">$OMP end do</font>
+<A NAME="857">857 : </A>      !<font color="#007700">$OMP end parallel</font>
+<A NAME="858">858 : </A><font color="#007700"></font>
+<A NAME="859">859 : </A>        worstbest = <A HREF='run_cce_subroutines_called.html#ofvec'>ofvec</A>(<A HREF='run_cce_variables.html#first'>first</A>)<font color="#007700"></font>
+<A NAME="860">860 : </A><font color="#007700"></font>
+<A NAME="861">861 : </A>!<font color="#007700">       * WRITE shufflevar AND ofvec OF LAST LOOP TO FILE</font>
+<A NAME="862">862 : </A>        <font color='#aa2200'>call</font> <A HREF='run_cce_subroutines_called.html#writeloop'>writeloop</A>()<font color="#007700"></font>
+<A NAME="863">863 : </A>        !<font color="#007700">close(kfile_sceout)</font>
+<A NAME="864">864 : </A>        <font color='#aa2200'>close</font>(kfile_bestpars)<font color="#007700"></font>
+<A NAME="865">865 : </A>        <font color='#aa2200'>if</font> (kfile_progress <font color='#cc00cc'>.ne.</font> 6) <font color='#aa2200'>close</font>(kfile_progress)<font color="#007700"></font>
+<A NAME="866">866 : </A><font color="#007700"></font>
+<A NAME="867">867 : </A>      <font color='#aa2200'>return</font><font color="#007700"></font>
+<A NAME="868">868 : </A>      <font color='#aa2200'>end</font> <font color='#aa2200'>subroutine</font> run_cce<font color="#007700"></font>
 
 </PRE>
 </BODY></HTML>

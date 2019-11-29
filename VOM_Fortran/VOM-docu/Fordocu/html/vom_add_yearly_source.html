@@ -136,7 +136,6 @@ function printCallRows(xmlhttp,locargs) {
 <div class="tabs">
   <ul>
       <li><a href="vom_add_yearly.html"><span>Header</span></a></li>
-      <li><a href="vom_add_yearly_version_history.html"><span>Version history</span></a></li>
       <li><a href="vom_add_yearly_subroutines_called.html"><span>Subroutines called</span></a></li>
       <li><a href="vom_add_yearly_called_by.html"><span>Called by</span></a></li>
       <li class="current"><a href="vom_add_yearly_source.html"><span>Source</span></a></li>
@@ -144,72 +143,62 @@ function printCallRows(xmlhttp,locargs) {
 </div>
 <h1>Subroutine vom_add_yearly</h1>
 <PRE>
-<A NAME="1536">1536 : </A><font color="#007700"></font>
-<A NAME="1537">1537 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
-<A NAME="1538">1538 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
-<A NAME="1539">1539 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
-<A NAME="1540">1540 : </A><font color="#007700"></font>
-<A NAME="1541">1541 : </A>      <font color='#aa2200'>subroutine</font> vom_add_yearly ()<font color="#007700"></font>
-<A NAME="1542">1542 : </A>      <font color='#aa2200'>use</font> vegwatmod<font color="#007700"></font>
-<A NAME="1543">1543 : </A>      <font color='#aa2200'>use</font> vegmod<font color="#007700"></font>
-<A NAME="1544">1544 : </A>      <font color='#aa2200'>use</font> watmod<font color="#007700"></font>
-<A NAME="1545">1545 : </A>        <font color='#aa2200'>implicit</font> <font color='#aa2200'>none</font><font color="#007700"></font>
-<A NAME="1546">1546 : </A><font color="#007700"></font>
-<A NAME="1547">1547 : </A>        <font color='#aa2200'>if</font> (<A HREF='vom_add_yearly_subroutines_called.html#year'>year</A>(d___) <font color='#cc00cc'>.eq.</font> yr_) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="1548">1548 : </A>           rainyr   = rainyr + <A HREF='vom_add_yearly_subroutines_called.html#rainvec'>rainvec</A>(d___)    !<font color="#007700"> in [mm]</font>
-<A NAME="1549">1549 : </A>           epanyr   = epanyr + <A HREF='vom_add_yearly_subroutines_called.html#epan'>epan</A>(d___)       !<font color="#007700"> epan originally in [mm]/day</font>
-<A NAME="1550">1550 : </A>           paryr    = paryr + <A HREF='vom_add_yearly_subroutines_called.html#parvec'>parvec</A>(d___)<font color="#007700"></font>
-<A NAME="1551">1551 : </A>           radyr    = radyr + <A HREF='vom_add_yearly_subroutines_called.html#srad'>srad</A>(d___)        !<font color="#007700"> srad originally in MJ/day</font>
-<A NAME="1552">1552 : </A>           vdyr     = vdyr + vd_d / 24.d0<font color="#007700"></font>
-<A NAME="1553">1553 : </A>           etyr     = etyr + (etm_d + etmg_d) * 1000.d0  !<font color="#007700"> in[mm]</font>
-<A NAME="1554">1554 : </A>           evapyr   = evapyr + esoil_d * 1000.d0  !<font color="#007700"> in [mm]</font>
-<A NAME="1555">1555 : </A>           !<font color="#007700">d        netassyr = netassyr + ass_d(2) - (cpcc_ + rr_) * 3600.d0       &</font>
-<A NAME="1556">1556 : </A>           !<font color="#007700">d     &           * 24.d0 + assg_d(2,2) - (cpccg(2) + rrg) * 3600.d0 * 24.d0</font>
-<A NAME="1557">1557 : </A>           !<font color="#007700">d        gppyr    = gppyr + (ass_d(2) + rl_d) + assg_d(2,2) + rlg_d</font>
-<A NAME="1558">1558 : </A>           !<font color="#007700"> for grasses</font>
-<A NAME="1559">1559 : </A>           etmg_y   = etmg_y + etmg_d * 1000.d0 !<font color="#007700"> in [mm]</font>
-<A NAME="1560">1560 : </A>           assg_y   = assg_y + <A HREF='vom_add_yearly_subroutines_called.html#assg_d'>assg_d</A>(2,2)<font color="#007700"></font>
-<A NAME="1561">1561 : </A>           rlg_y    = rlg_y + rlg_d<font color="#007700"></font>
-<A NAME="1562">1562 : </A>           rrg_y    = rrg_y + rrg * 3600.d0 * 24.d0<font color="#007700"></font>
-<A NAME="1563">1563 : </A>           cpccg_y  = cpccg_y + <A HREF='vom_add_yearly_subroutines_called.html#cpccg'>cpccg</A>(2) * 3600.d0 * 24.d0<font color="#007700"></font>
-<A NAME="1564">1564 : </A>           tcg_y    = tcg_y + <A HREF='vom_add_yearly_subroutines_called.html#tcg'>tcg</A>(2) * 3600.d0 * 24.d0<font color="#007700"></font>
-<A NAME="1565">1565 : </A>           !<font color="#007700"> for trees</font>
-<A NAME="1566">1566 : </A>           etmt_y   = etmt_y + etm_d * 1000.d0   !<font color="#007700"> in [mm]</font>
-<A NAME="1567">1567 : </A>           asst_y   = asst_y + <A HREF='vom_add_yearly_subroutines_called.html#ass_d'>ass_d</A>(2)<font color="#007700"></font>
-<A NAME="1568">1568 : </A>           rlt_y    = rlt_y + rl_d<font color="#007700"></font>
-<A NAME="1569">1569 : </A>           rrt_y    = rrt_y + rr_ * 3600.d0 * 24.d0<font color="#007700"></font>
-<A NAME="1570">1570 : </A>           cpcct_y  = cpcct_y + cpcc_ * 3600.d0 * 24.d0<font color="#007700"></font>
-<A NAME="1571">1571 : </A>           tct_y    = tct_y + tc_ * 3600.d0 * 24.d0<font color="#007700"></font>
-<A NAME="1572">1572 : </A>        <font color='#aa2200'>else</font><font color="#007700"></font>
-<A NAME="1573">1573 : </A>           yr_      = <A HREF='vom_add_yearly_subroutines_called.html#year'>year</A>(d___)<font color="#007700"></font>
-<A NAME="1574">1574 : </A>           rainyr   = <A HREF='vom_add_yearly_subroutines_called.html#rainvec'>rainvec</A>(d___)<font color="#007700"></font>
-<A NAME="1575">1575 : </A>           epanyr   = <A HREF='vom_add_yearly_subroutines_called.html#epan'>epan</A>(d___)                !<font color="#007700"> epan originally in [mm]/day</font>
-<A NAME="1576">1576 : </A>           paryr    = <A HREF='vom_add_yearly_subroutines_called.html#parvec'>parvec</A>(d___)<font color="#007700"></font>
-<A NAME="1577">1577 : </A>           radyr    = <A HREF='vom_add_yearly_subroutines_called.html#srad'>srad</A>(d___)                !<font color="#007700"> srad originally in MJ/day</font>
-<A NAME="1578">1578 : </A>           vdyr     = vd_d / 24.d0<font color="#007700"></font>
-<A NAME="1579">1579 : </A>           etyr     = (etmg_d + etm_d) * 1000.d0<font color="#007700"></font>
-<A NAME="1580">1580 : </A>           evapyr   = esoil_d * 1000.d0<font color="#007700"></font>
-<A NAME="1581">1581 : </A>           !<font color="#007700">d        netassyr = ass_d(2) - (cpcc_ + rr_) * 3600.d0 * 24.d0          &</font>
-<A NAME="1582">1582 : </A>           !<font color="#007700">d    &           + assg_d(2,2) - (cpccg(2) + rrg) * 3600.d0 * 24.d0</font>
-<A NAME="1583">1583 : </A>           !<font color="#007700">d        gppyr    = (ass_d(2) + rl_d) + assg_d(2,2) + rlg_d</font>
-<A NAME="1584">1584 : </A>           !<font color="#007700"> for grasses</font>
-<A NAME="1585">1585 : </A>           etmg_y   = etmg_d * 1000.d0<font color="#007700"></font>
-<A NAME="1586">1586 : </A>           assg_y   = <A HREF='vom_add_yearly_subroutines_called.html#assg_d'>assg_d</A>(2,2)<font color="#007700"></font>
-<A NAME="1587">1587 : </A>           rlg_y    = rlg_d<font color="#007700"></font>
-<A NAME="1588">1588 : </A>           rrg_y    = rrg * 3600.d0 * 24.d0<font color="#007700"></font>
-<A NAME="1589">1589 : </A>           cpccg_y  = <A HREF='vom_add_yearly_subroutines_called.html#cpccg'>cpccg</A>(2) * 3600.d0 * 24.d0<font color="#007700"></font>
-<A NAME="1590">1590 : </A>           tcg_y    = <A HREF='vom_add_yearly_subroutines_called.html#tcg'>tcg</A>(2) * 3600.d0 * 24.d0<font color="#007700"></font>
-<A NAME="1591">1591 : </A>           !<font color="#007700"> for trees</font>
-<A NAME="1592">1592 : </A>           etmt_y = etm_d * 1000.d0<font color="#007700"></font>
-<A NAME="1593">1593 : </A>           asst_y   = <A HREF='vom_add_yearly_subroutines_called.html#ass_d'>ass_d</A>(2)<font color="#007700"></font>
-<A NAME="1594">1594 : </A>           rlt_y    = rl_d<font color="#007700"></font>
-<A NAME="1595">1595 : </A>           rrt_y    = rr_ * 3600.d0 * 24.d0<font color="#007700"></font>
-<A NAME="1596">1596 : </A>           cpcct_y  = cpcc_ * 3600.d0 * 24.d0<font color="#007700"></font>
-<A NAME="1597">1597 : </A>           tct_y    = tc_ * 3600.d0 * 24.d0<font color="#007700"></font>
-<A NAME="1598">1598 : </A>        <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="1599">1599 : </A><font color="#007700"></font>
-<A NAME="1600">1600 : </A>        <font color='#aa2200'>return</font><font color="#007700"></font>
-<A NAME="1601">1601 : </A>      <font color='#aa2200'>end</font> <font color='#aa2200'>subroutine</font> vom_add_yearly<font color="#007700"></font>
+<A NAME="2068">2068 : </A><font color="#007700"></font>
+<A NAME="2069">2069 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+<A NAME="2070">2070 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+<A NAME="2071">2071 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+<A NAME="2072">2072 : </A><font color="#007700"></font>
+<A NAME="2073">2073 : </A>      <font color='#aa2200'>subroutine</font> vom_add_yearly ()<font color="#007700"></font>
+<A NAME="2074">2074 : </A>      <font color='#aa2200'>use</font> vom_vegwat_mod<font color="#007700"></font>
+<A NAME="2075">2075 : </A>      <font color='#aa2200'>implicit</font> <font color='#aa2200'>none</font><font color="#007700"></font>
+<A NAME="2076">2076 : </A><font color="#007700"></font>
+<A NAME="2077">2077 : </A>      <font color='#aa2200'>if</font> (<A HREF='vom_add_yearly_subroutines_called.html#fyear'>fyear</A>(nday) <font color='#cc00cc'>.eq.</font> nyear) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="2078">2078 : </A>        rain_y   = rain_y  + <A HREF='vom_add_yearly_subroutines_called.html#rain_d'>rain_d</A>(nday)  !<font color="#007700"> in [mm]</font>
+<A NAME="2079">2079 : </A>        par_y    = par_y   + <A HREF='vom_add_yearly_subroutines_called.html#par_d'>par_d</A>(nday)<font color="#007700"></font>
+<A NAME="2080">2080 : </A>        srad_y   = srad_y  + <A HREF='vom_add_yearly_subroutines_called.html#srad_d'>srad_d</A>(nday)  !<font color="#007700"> srad originally in MJ/day</font>
+<A NAME="2081">2081 : </A>        vd_y     = vd_y    + vd_d / 24.d0<font color="#007700"></font>
+<A NAME="2082">2082 : </A>        etm_y    = etm_y   + (etmt_d + etmg_d) * 1000.d0  !<font color="#007700"> in[mm]</font>
+<A NAME="2083">2083 : </A>        esoil_y  = esoil_y + esoil_d           * 1000.d0  !<font color="#007700"> in [mm]</font>
+<A NAME="2084">2084 : </A>!<font color="#007700">       * for grasses</font>
+<A NAME="2085">2085 : </A>        etmg_y   = etmg_y  + etmg_d * 1000.d0 !<font color="#007700"> in [mm]</font>
+<A NAME="2086">2086 : </A>        assg_y   = assg_y  + <A HREF='vom_add_yearly_subroutines_called.html#assg_d'>assg_d</A>(2,2,2)<font color="#007700"></font>
+<A NAME="2087">2087 : </A>        rlg_y    = rlg_y   + rlg_d<font color="#007700"></font>
+<A NAME="2088">2088 : </A>        rrg_y    = rrg_y   + rrg_d      * 3600.d0 * 24.d0<font color="#007700"></font>
+<A NAME="2089">2089 : </A>        cpccg_y  = cpccg_y + <A HREF='vom_add_yearly_subroutines_called.html#cpccg_d'>cpccg_d</A>(2) * 3600.d0 * 24.d0<font color="#007700"></font>
+<A NAME="2090">2090 : </A>        tcg_y    = tcg_y   + <A HREF='vom_add_yearly_subroutines_called.html#tcg_d'>tcg_d</A>(2,2)   * 3600.d0 * 24.d0<font color="#007700"></font>
+<A NAME="2091">2091 : </A>!<font color="#007700">       * for trees</font>
+<A NAME="2092">2092 : </A>        etmt_y   = etmt_y  + etmt_d * 1000.d0  !<font color="#007700"> in [mm]</font>
+<A NAME="2093">2093 : </A>        asst_y   = asst_y  + <A HREF='vom_add_yearly_subroutines_called.html#asst_d'>asst_d</A>(2,2)<font color="#007700"></font>
+<A NAME="2094">2094 : </A>        rlt_y    = rlt_y   + rlt_d<font color="#007700"></font>
+<A NAME="2095">2095 : </A>        rrt_y    = rrt_y   + rrt_d     * 3600.d0 * 24.d0<font color="#007700"></font>
+<A NAME="2096">2096 : </A>        cpcct_y  = cpcct_y + q_cpcct_d * 3600.d0 * 24.d0<font color="#007700"></font>
+<A NAME="2097">2097 : </A>        tct_y    = tct_y   + <A HREF='vom_add_yearly_subroutines_called.html#q_tct_d'>q_tct_d</A>(2)   * 3600.d0 * 24.d0<font color="#007700"></font>
+<A NAME="2098">2098 : </A>      <font color='#aa2200'>else</font><font color="#007700"></font>
+<A NAME="2099">2099 : </A>        nyear    = <A HREF='vom_add_yearly_subroutines_called.html#fyear'>fyear</A>(nday)<font color="#007700"></font>
+<A NAME="2100">2100 : </A>        rain_y   = <A HREF='vom_add_yearly_subroutines_called.html#rain_d'>rain_d</A>(nday)<font color="#007700"></font>
+<A NAME="2101">2101 : </A>        par_y    = <A HREF='vom_add_yearly_subroutines_called.html#par_d'>par_d</A>(nday)<font color="#007700"></font>
+<A NAME="2102">2102 : </A>        srad_y   = <A HREF='vom_add_yearly_subroutines_called.html#srad_d'>srad_d</A>(nday)              !<font color="#007700"> srad originally in MJ/day</font>
+<A NAME="2103">2103 : </A>        vd_y     = vd_d / 24.d0<font color="#007700"></font>
+<A NAME="2104">2104 : </A>        etm_y    = (etmg_d + etmt_d) * 1000.d0<font color="#007700"></font>
+<A NAME="2105">2105 : </A>        esoil_y  = esoil_d * 1000.d0<font color="#007700"></font>
+<A NAME="2106">2106 : </A>!<font color="#007700">       * for grasses</font>
+<A NAME="2107">2107 : </A>        etmg_y   = etmg_d * 1000.d0<font color="#007700"></font>
+<A NAME="2108">2108 : </A>        assg_y   = <A HREF='vom_add_yearly_subroutines_called.html#assg_d'>assg_d</A>(2,2,2)<font color="#007700"></font>
+<A NAME="2109">2109 : </A>        rlg_y    = rlg_d<font color="#007700"></font>
+<A NAME="2110">2110 : </A>        rrg_y    = rrg_d      * 3600.d0 * 24.d0<font color="#007700"></font>
+<A NAME="2111">2111 : </A>        cpccg_y  = <A HREF='vom_add_yearly_subroutines_called.html#cpccg_d'>cpccg_d</A>(2) * 3600.d0 * 24.d0<font color="#007700"></font>
+<A NAME="2112">2112 : </A>        tcg_y    = <A HREF='vom_add_yearly_subroutines_called.html#tcg_d'>tcg_d</A>(2,2)   * 3600.d0 * 24.d0<font color="#007700"></font>
+<A NAME="2113">2113 : </A>!<font color="#007700">       * for trees</font>
+<A NAME="2114">2114 : </A>        etmt_y = etmt_d * 1000.d0<font color="#007700"></font>
+<A NAME="2115">2115 : </A>        asst_y   = <A HREF='vom_add_yearly_subroutines_called.html#asst_d'>asst_d</A>(2,2)<font color="#007700"></font>
+<A NAME="2116">2116 : </A>        rlt_y    = rlt_d<font color="#007700"></font>
+<A NAME="2117">2117 : </A>        rrt_y    = rrt_d     * 3600.d0 * 24.d0<font color="#007700"></font>
+<A NAME="2118">2118 : </A>        cpcct_y  = q_cpcct_d * 3600.d0 * 24.d0<font color="#007700"></font>
+<A NAME="2119">2119 : </A>        tct_y    = <A HREF='vom_add_yearly_subroutines_called.html#q_tct_d'>q_tct_d</A>(2)   * 3600.d0 * 24.d0<font color="#007700"></font>
+<A NAME="2120">2120 : </A>      <font color='#aa2200'>endif</font><font color="#007700"></font>
+<A NAME="2121">2121 : </A><font color="#007700"></font>
+<A NAME="2122">2122 : </A>      <font color='#aa2200'>return</font><font color="#007700"></font>
+<A NAME="2123">2123 : </A>      <font color='#aa2200'>end</font> <font color='#aa2200'>subroutine</font> vom_add_yearly<font color="#007700"></font>
 
 </PRE>
 </BODY></HTML>

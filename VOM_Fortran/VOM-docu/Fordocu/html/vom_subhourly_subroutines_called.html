@@ -136,7 +136,6 @@ function printCallRows(xmlhttp,locargs) {
 <div class="tabs">
   <ul>
       <li><a href="vom_subhourly.html"><span>Header</span></a></li>
-      <li><a href="vom_subhourly_version_history.html"><span>Version history</span></a></li>
       <li class="current"><a href="vom_subhourly_subroutines_called.html"><span>Subroutines called</span></a></li>
       <li><a href="vom_subhourly_variables.html"><span>Variables</span></a></li>
       <li><a href="vom_subhourly_called_by.html"><span>Called by</span></a></li>
@@ -150,20 +149,13 @@ function printCallRows(xmlhttp,locargs) {
       <td class='indexkey'><script type='text/javascript'>document.write(getURL('waterbalance','waterbalance.html'));</script></td>
       <td class="indexvalue" width="40%"><PRE><script type='text/javascript'>var xmlhttp = openURL('waterbalance.html');if (xmlhttp) {   document.write(getHeaderText(xmlhttp,'waterbalance'));}</script></PRE>
 </td>
-      <td class="indexvalue" width="20%"><A HREF="vom_subhourly_source.html#1337">1337</A></td>
+      <td class="indexvalue" width="20%"><A HREF="vom_subhourly_source.html#1703">1703</A></td>
    </tr>
 </TABLE>
 <HR><H2>CALL DETAILS</H2>
 <script type='text/javascript'>
 xmlhttp = openURL('waterbalance.html')
 if (xmlhttp) {
-   var remname = getURL('waterbalance','waterbalance.html', xmlhttp);
-   document.write('<P>Call to ' + remname +' on line <A HREF="vom_subhourly_source.html#1337">1337</A>');
-   document.write('<TABLE>')
-   document.write('<tr valign="top"><td class="indexkey">vom_subhourly</td><td class="indexkey">waterbalance</td><td class="indexkey">description</td></tr>');
-   var locargs = new Array('init');
-   printCallRows(xmlhttp,locargs);
-   document.write('</TABLE></P>');
 }
 </script>
 

@@ -136,7 +136,6 @@ function printCallRows(xmlhttp,locargs) {
 <div class="tabs">
   <ul>
       <li><a href="run_cce.html"><span>Header</span></a></li>
-      <li><a href="run_cce_version_history.html"><span>Version history</span></a></li>
       <li class="current"><a href="run_cce_subroutines_called.html"><span>Subroutines called</span></a></li>
       <li><a href="run_cce_variables.html"><span>Variables</span></a></li>
       <li><a href="run_cce_called_by.html"><span>Called by</span></a></li>
@@ -147,26 +146,38 @@ function printCallRows(xmlhttp,locargs) {
 <HR><H2>SUBROUTINES CALLED</H2>
 <TABLE>
    <tr valign="top">
+      <td class='indexkey'><script type='text/javascript'>document.write(getURL('OMP_SET_NUM_THREADS','omp_set_num_threads.html'));</script></td>
+      <td class="indexvalue" width="40%"><PRE><script type='text/javascript'>var xmlhttp = openURL('omp_set_num_threads.html');if (xmlhttp) {   document.write(getHeaderText(xmlhttp,'OMP_SET_NUM_THREADS'));}</script></PRE>
+</td>
+      <td class="indexvalue" width="20%"><A HREF="run_cce_source.html#804">804</A></td>
+   </tr>
+   <tr valign="top">
+      <td class='indexkey'><script type='text/javascript'>document.write(getURL('vom_dealloc','vom_dealloc.html'));</script></td>
+      <td class="indexvalue" width="40%"><PRE><script type='text/javascript'>var xmlhttp = openURL('vom_dealloc.html');if (xmlhttp) {   document.write(getHeaderText(xmlhttp,'vom_dealloc'));}</script></PRE>
+</td>
+      <td class="indexvalue" width="20%"><A HREF="run_cce_source.html#805">805</A>, <A HREF="run_cce_source.html#848">848</A></td>
+   </tr>
+   <tr valign="top">
       <td class='indexkey'><script type='text/javascript'>document.write(getURL('cce','cce.html'));</script></td>
       <td class="indexvalue" width="40%"><PRE><script type='text/javascript'>var xmlhttp = openURL('cce.html');if (xmlhttp) {   document.write(getHeaderText(xmlhttp,'cce'));}</script></PRE>
 </td>
-      <td class="indexvalue" width="20%"><A HREF="run_cce_source.html#679">679</A></td>
+      <td class="indexvalue" width="20%"><A HREF="run_cce_source.html#845">845</A></td>
    </tr>
    <tr valign="top">
       <td class='indexkey'><script type='text/javascript'>document.write(getURL('writeloop','writeloop.html'));</script></td>
       <td class="indexvalue" width="40%"><PRE><script type='text/javascript'>var xmlhttp = openURL('writeloop.html');if (xmlhttp) {   document.write(getHeaderText(xmlhttp,'writeloop'));}</script></PRE>
 </td>
-      <td class="indexvalue" width="20%"><A HREF="run_cce_source.html#689">689</A></td>
+      <td class="indexvalue" width="20%"><A HREF="run_cce_source.html#862">862</A></td>
    </tr>
 </TABLE>
 
 <HR><H2>POSSIBLE FUNCTIONS CALLED</H2>
 <TABLE>
    <tr valign="top">
-      <td class='indexkey'><script type='text/javascript'>document.write(getURL('ofvec','sce_mod_mp_ofvec.html'));</script></td>
-      <td class="indexvalue" width="40%"><PRE><script type='text/javascript'>var xmlhttp = openURL('sce_mod_mp_ofvec.html');if (xmlhttp) {   document.write(getHeaderText(xmlhttp,'ofvec'));}</script></PRE>
+      <td class='indexkey'><script type='text/javascript'>document.write(getURL('ofvec','vom_sce_mod_mp_ofvec.html'));</script></td>
+      <td class="indexvalue" width="40%"><PRE><script type='text/javascript'>var xmlhttp = openURL('vom_sce_mod_mp_ofvec.html');if (xmlhttp) {   document.write(getHeaderText(xmlhttp,'ofvec'));}</script></PRE>
 </td>
-      <td class="indexvalue" width="20%"><A HREF="run_cce_source.html#653">653</A>, <A HREF="run_cce_source.html#672">672</A>, <A HREF="run_cce_source.html#673">673</A>, <A HREF="run_cce_source.html#677">677</A>, <A HREF="run_cce_source.html#681">681</A>, <A HREF="run_cce_source.html#682">682</A>, <A HREF="run_cce_source.html#684">684</A></td>
+      <td class="indexvalue" width="20%"><A HREF="run_cce_source.html#789">789</A>, <A HREF="run_cce_source.html#834">834</A>, <A HREF="run_cce_source.html#841">841</A>, <A HREF="run_cce_source.html#851">851</A>, <A HREF="run_cce_source.html#859">859</A></td>
    </tr>
 </TABLE>
 <HR><H2>CALL DETAILS</H2>
@@ -180,10 +191,29 @@ if (xmlhttp) {
 xmlhttp = openURL('cce.html')
 if (xmlhttp) {
    var remname = getURL('cce','cce.html', xmlhttp);
-   document.write('<P>Call to ' + remname +' on line <A HREF="run_cce_source.html#679">679</A>');
+   document.write('<P>Call to ' + remname +' on line <A HREF="run_cce_source.html#845">845</A>');
    document.write('<TABLE>')
    document.write('<tr valign="top"><td class="indexkey">run_cce</td><td class="indexkey">cce</td><td class="indexkey">description</td></tr>');
    var locargs = new Array('ofvec(first:m_\*mopt)','shufflevar(:,first:m_\*mopt)');
+   printCallRows(xmlhttp,locargs);
+   document.write('</TABLE></P>');
+}
+</script>
+
+<script type='text/javascript'>
+xmlhttp = openURL('vom_dealloc.html')
+if (xmlhttp) {
+}
+</script>
+
+<script type='text/javascript'>
+xmlhttp = openURL('omp_set_num_threads.html')
+if (xmlhttp) {
+   var remname = getURL('OMP_SET_NUM_THREADS','omp_set_num_threads.html', xmlhttp);
+   document.write('<P>Call to ' + remname +' on line <A HREF="run_cce_source.html#804">804</A>');
+   document.write('<TABLE>')
+   document.write('<tr valign="top"><td class="indexkey">run_cce</td><td class="indexkey">OMP_SET_NUM_THREADS</td><td class="indexkey">description</td></tr>');
+   var locargs = new Array('n_thread');
    printCallRows(xmlhttp,locargs);
    document.write('</TABLE></P>');
 }

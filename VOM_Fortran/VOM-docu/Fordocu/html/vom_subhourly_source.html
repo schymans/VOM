@@ -136,7 +136,6 @@ function printCallRows(xmlhttp,locargs) {
 <div class="tabs">
   <ul>
       <li><a href="vom_subhourly.html"><span>Header</span></a></li>
-      <li><a href="vom_subhourly_version_history.html"><span>Version history</span></a></li>
       <li><a href="vom_subhourly_subroutines_called.html"><span>Subroutines called</span></a></li>
       <li><a href="vom_subhourly_variables.html"><span>Variables</span></a></li>
       <li><a href="vom_subhourly_called_by.html"><span>Called by</span></a></li>
@@ -145,48 +144,46 @@ function printCallRows(xmlhttp,locargs) {
 </div>
 <h1>Subroutine vom_subhourly</h1>
 <PRE>
-<A NAME="1299">1299 : </A><font color="#007700"></font>
-<A NAME="1300">1300 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
-<A NAME="1301">1301 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
-<A NAME="1302">1302 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
-<A NAME="1303">1303 : </A>!<font color="#007700">*----water balance and conditions at next time step--------------------</font>
-<A NAME="1304">1304 : </A><font color="#007700"></font>
-<A NAME="1305">1305 : </A>      <font color='#aa2200'>subroutine</font> vom_subhourly ()<font color="#007700"></font>
-<A NAME="1306">1306 : </A>      <font color='#aa2200'>use</font> vegwatmod<font color="#007700"></font>
-<A NAME="1307">1307 : </A>      <font color='#aa2200'>use</font> vegmod<font color="#007700"></font>
-<A NAME="1308">1308 : </A>      <font color='#aa2200'>implicit</font> <font color='#aa2200'>none</font><font color="#007700"></font>
-<A NAME="1309">1309 : </A><font color="#007700"></font>
-<A NAME="1310">1310 : </A>      <font color='#aa2200'>INTEGER</font> :: <A HREF='vom_subhourly_variables.html#init'>init</A><font color="#007700"></font>
-<A NAME="1311">1311 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vom_subhourly_variables.html#dtss'>dtss</A><font color="#007700"></font>
-<A NAME="1312">1312 : </A><font color="#007700"></font>
-<A NAME="1313">1313 : </A>      <A HREF='vom_subhourly_variables.html#init'>init</A> = 0<font color="#007700"></font>
-<A NAME="1314">1314 : </A><font color="#007700"></font>
-<A NAME="1315">1315 : </A>      dtmq = 99999.d0<font color="#007700"></font>
-<A NAME="1316">1316 : </A>      <font color='#aa2200'>if</font> (md_ <font color='#cc00cc'>.gt.</font> 0.d0) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="1317">1317 : </A>!<font color="#007700">     * avoids mq from becoming larger than mqx or smaller than 0.9mqx</font>
-<A NAME="1318">1318 : </A>        <font color='#aa2200'>if</font> (dmq <font color='#cc00cc'>.gt.</font> 0.d0) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="1319">1319 : </A>          dtmq = (mqx_ - mq_) / dmq<font color="#007700"></font>
-<A NAME="1320">1320 : </A>        <font color='#aa2200'>elseif</font> (dmq <font color='#cc00cc'>.lt.</font> 0.d0) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="1321">1321 : </A>          dtmq = (0.9d0 * mqx_ - mq_) / dmq<font color="#007700"></font>
-<A NAME="1322">1322 : </A>        <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="1323">1323 : </A>  <font color="#007700"></font>
-<A NAME="1324">1324 : </A>        <font color='#aa2200'>if</font> (<font color='#aa2200'>ABS</font>(mq_ - mqss_) <font color='#cc00cc'>.gt.</font> mqx_ / 1.d6) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="1325">1325 : </A>          <A HREF='vom_subhourly_variables.html#dtss'>dtss</A> = (mq_ - mqss_) / (1.d6 * (etm__ - <font color='#aa2200'>SUM</font>(ruptkvec(:))))<font color="#007700"></font>
-<A NAME="1326">1326 : </A>          <font color='#aa2200'>if</font> (<A HREF='vom_subhourly_variables.html#dtss'>dtss</A> <font color='#cc00cc'>.le.</font> 0.d0) <A HREF='vom_subhourly_variables.html#dtss'>dtss</A> = 99999.d0<font color="#007700"></font>
-<A NAME="1327">1327 : </A>        <font color='#aa2200'>else</font><font color="#007700"></font>
-<A NAME="1328">1328 : </A>          <A HREF='vom_subhourly_variables.html#dtss'>dtss</A> = 99999.d0<font color="#007700"></font>
-<A NAME="1329">1329 : </A>        <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="1330">1330 : </A>      <font color='#aa2200'>else</font><font color="#007700"></font>
-<A NAME="1331">1331 : </A>        <A HREF='vom_subhourly_variables.html#dtss'>dtss</A> = 99999.d0<font color="#007700"></font>
-<A NAME="1332">1332 : </A>      <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="1333">1333 : </A><font color="#007700"></font>
-<A NAME="1334">1334 : </A>      dtmax = <font color='#aa2200'>MIN</font>(<A HREF='vom_subhourly_variables.html#dtss'>dtss</A>, dtmq, 3600.d0 - <font color='#aa2200'>time</font>)<font color="#007700"></font>
-<A NAME="1335">1335 : </A><font color="#007700"></font>
-<A NAME="1336">1336 : </A>!<font color="#007700">     * waterbalance uses dtmax for the determination of dt</font>
-<A NAME="1337">1337 : </A>      <font color='#aa2200'>call</font> <A HREF='vom_subhourly_subroutines_called.html#waterbalance'>waterbalance</A>(<A HREF='vom_subhourly_variables.html#init'>init</A>)<font color="#007700"></font>
-<A NAME="1338">1338 : </A><font color="#007700"></font>
-<A NAME="1339">1339 : </A>      <font color='#aa2200'>return</font><font color="#007700"></font>
-<A NAME="1340">1340 : </A>      <font color='#aa2200'>end</font> <font color='#aa2200'>subroutine</font> vom_subhourly<font color="#007700"></font>
+<A NAME="1667">1667 : </A><font color="#007700"></font>
+<A NAME="1668">1668 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+<A NAME="1669">1669 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+<A NAME="1670">1670 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+<A NAME="1671">1671 : </A>!<font color="#007700">*----water balance and conditions at next time step--------------------</font>
+<A NAME="1672">1672 : </A><font color="#007700"></font>
+<A NAME="1673">1673 : </A>      <font color='#aa2200'>subroutine</font> vom_subhourly ()<font color="#007700"></font>
+<A NAME="1674">1674 : </A>      <font color='#aa2200'>use</font> vom_vegwat_mod<font color="#007700"></font>
+<A NAME="1675">1675 : </A>      <font color='#aa2200'>implicit</font> <font color='#aa2200'>none</font><font color="#007700"></font>
+<A NAME="1676">1676 : </A><font color="#007700"></font>
+<A NAME="1677">1677 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vom_subhourly_variables.html#dtss'>dtss</A><font color="#007700"></font>
+<A NAME="1678">1678 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vom_subhourly_variables.html#dtmq'>dtmq</A>         !<font color="#007700"> Maximum timestep allowed by tree water content change</font>
+<A NAME="1679">1679 : </A><font color="#007700"></font>
+<A NAME="1680">1680 : </A>      <A HREF='vom_subhourly_variables.html#dtmq'>dtmq</A> = 99999.d0<font color="#007700"></font>
+<A NAME="1681">1681 : </A><font color="#007700"></font>
+<A NAME="1682">1682 : </A>      <font color='#aa2200'>if</font> (q_md <font color='#cc00cc'>.gt.</font> 0.d0) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="1683">1683 : </A>!<font color="#007700">       * avoids mq from becoming larger than mqx or smaller than 0.9mqx</font>
+<A NAME="1684">1684 : </A>        <font color='#aa2200'>if</font> (dmqt <font color='#cc00cc'>.gt.</font> 0.d0) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="1685">1685 : </A>          <A HREF='vom_subhourly_variables.html#dtmq'>dtmq</A> = (q_mqx - mqt_) / dmqt<font color="#007700"></font>
+<A NAME="1686">1686 : </A>        <font color='#aa2200'>elseif</font> (dmqt <font color='#cc00cc'>.lt.</font> 0.d0) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="1687">1687 : </A>          <A HREF='vom_subhourly_variables.html#dtmq'>dtmq</A> = (0.9d0 * q_mqx - mqt_) / dmqt<font color="#007700"></font>
+<A NAME="1688">1688 : </A>        <font color='#aa2200'>endif</font><font color="#007700"></font>
+<A NAME="1689">1689 : </A><font color="#007700"></font>
+<A NAME="1690">1690 : </A>        <font color='#aa2200'>if</font> (<font color='#aa2200'>ABS</font>(mqt_ - mqsst_) <font color='#cc00cc'>.gt.</font> q_mqx / 1.d6) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="1691">1691 : </A>          <A HREF='vom_subhourly_variables.html#dtss'>dtss</A> = (mqt_ - mqsst_) / (1.d6 * (etmt__ - <font color='#aa2200'>SUM</font>(ruptkt__(:))))<font color="#007700"></font>
+<A NAME="1692">1692 : </A>          <font color='#aa2200'>if</font> (<A HREF='vom_subhourly_variables.html#dtss'>dtss</A> <font color='#cc00cc'>.le.</font> 0.d0) <A HREF='vom_subhourly_variables.html#dtss'>dtss</A> = 99999.d0<font color="#007700"></font>
+<A NAME="1693">1693 : </A>        <font color='#aa2200'>else</font><font color="#007700"></font>
+<A NAME="1694">1694 : </A>          <A HREF='vom_subhourly_variables.html#dtss'>dtss</A> = 99999.d0<font color="#007700"></font>
+<A NAME="1695">1695 : </A>        <font color='#aa2200'>endif</font><font color="#007700"></font>
+<A NAME="1696">1696 : </A>      <font color='#aa2200'>else</font><font color="#007700"></font>
+<A NAME="1697">1697 : </A>        <A HREF='vom_subhourly_variables.html#dtss'>dtss</A> = 99999.d0<font color="#007700"></font>
+<A NAME="1698">1698 : </A>      <font color='#aa2200'>endif</font><font color="#007700"></font>
+<A NAME="1699">1699 : </A><font color="#007700"></font>
+<A NAME="1700">1700 : </A>      dtmax = <font color='#aa2200'>MIN</font>(<A HREF='vom_subhourly_variables.html#dtss'>dtss</A>, <A HREF='vom_subhourly_variables.html#dtmq'>dtmq</A>, 3600.d0 - <font color='#aa2200'>time</font>)<font color="#007700"></font>
+<A NAME="1701">1701 : </A><font color="#007700"></font>
+<A NAME="1702">1702 : </A>!<font color="#007700">     * waterbalance uses dtmax for the determination of dt</font>
+<A NAME="1703">1703 : </A>      <font color='#aa2200'>call</font> <A HREF='vom_subhourly_subroutines_called.html#waterbalance'>waterbalance</A>()<font color="#007700"></font>
+<A NAME="1704">1704 : </A><font color="#007700"></font>
+<A NAME="1705">1705 : </A>      <font color='#aa2200'>return</font><font color="#007700"></font>
+<A NAME="1706">1706 : </A>      <font color='#aa2200'>end</font> <font color='#aa2200'>subroutine</font> vom_subhourly<font color="#007700"></font>
 
 </PRE>
 </BODY></HTML>

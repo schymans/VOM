@@ -136,62 +136,62 @@ function printCallRows(xmlhttp,locargs) {
 <div class="tabs">
   <ul>
       <li><a href="vom_tissue_water_et.html"><span>Header</span></a></li>
-      <li><a href="vom_tissue_water_et_version_history.html"><span>Version history</span></a></li>
       <li><a href="vom_tissue_water_et_subroutines_called.html"><span>Subroutines called</span></a></li>
+      <li><a href="vom_tissue_water_et_variables.html"><span>Variables</span></a></li>
       <li><a href="vom_tissue_water_et_called_by.html"><span>Called by</span></a></li>
       <li class="current"><a href="vom_tissue_water_et_source.html"><span>Source</span></a></li>
   </ul>
 </div>
 <h1>Subroutine vom_tissue_water_et</h1>
 <PRE>
-<A NAME="1251">1251 : </A><font color="#007700"></font>
-<A NAME="1252">1252 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
-<A NAME="1253">1253 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
-<A NAME="1254">1254 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
-<A NAME="1255">1255 : </A>!<font color="#007700">*-----transpiration, gstom and tissue water ---------------------------</font>
-<A NAME="1256">1256 : </A><font color="#007700"></font>
-<A NAME="1257">1257 : </A>      <font color='#aa2200'>subroutine</font> vom_tissue_water_et (<A HREF='vom_tissue_water_et.html#finish'>finish</A>, <A HREF='vom_tissue_water_et.html#netass'>netass</A>)<font color="#007700"></font>
-<A NAME="1258">1258 : </A>      <font color='#aa2200'>use</font> vegwatmod<font color="#007700"></font>
-<A NAME="1259">1259 : </A>      <font color='#aa2200'>use</font> vegmod<font color="#007700"></font>
-<A NAME="1260">1260 : </A>      <font color='#aa2200'>implicit</font> <font color='#aa2200'>none</font><font color="#007700"></font>
-<A NAME="1261">1261 : </A><font color="#007700"></font>
-<A NAME="1262">1262 : </A>      <font color='#aa2200'>INTEGER</font>, <font color='#aa2200'>INTENT</font>(<font color='#aa2200'>inout</font>) :: <A HREF='vom_tissue_water_et.html#finish'>finish</A><font color="#007700"></font>
-<A NAME="1263">1263 : </A>      <font color='#aa2200'>REAL</font>*8,  <font color='#aa2200'>INTENT</font>(<font color='#aa2200'>inout</font>) :: <A HREF='vom_tissue_water_et.html#netass'>netass</A><font color="#007700"></font>
-<A NAME="1264">1264 : </A><font color="#007700"></font>
-<A NAME="1265">1265 : </A>!<font color="#007700">     * makes sure that tissue water does not get below 0.9mqx</font>
-<A NAME="1266">1266 : </A>      <font color='#aa2200'>if</font> (mq_ <font color='#cc00cc'>.le.</font> 0.9d0 * mqx_) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="1267">1267 : </A>        <font color='#aa2200'>if</font> (nlayers_ <font color='#cc00cc'>.ge.</font> 1) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="1268">1268 : </A>          <font color='#aa2200'>if</font> (etm__ <font color='#cc00cc'>.gt.</font> 0.9d0 * <font color='#aa2200'>SUM</font>(ruptkvec(:))) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="1269">1269 : </A>            <font color='#aa2200'>if</font> (<font color='#aa2200'>SUM</font>(ruptkvec(:)) <font color='#cc00cc'>.ge.</font> 0.d0) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="1270">1270 : </A>              etm__ = <font color='#aa2200'>SUM</font>(ruptkvec(:))<font color="#007700"></font>
-<A NAME="1271">1271 : </A>              transp_ = etm__ * 55555.555555555555d0  !<font color="#007700"> (Out[249]) mol/s=m/s*10^6 g/m/(18g/mol)</font>
-<A NAME="1272">1272 : </A>              gstom__ = transp_ / (a__ * vd__)<font color="#007700"></font>
-<A NAME="1273">1273 : </A>            <font color='#aa2200'>else</font><font color="#007700"></font>
-<A NAME="1274">1274 : </A>              <font color='#aa2200'>write</font>(*,'(a20,i2,a1,i2,a1,i4)') 'vegetation dies on: ',  &<font color="#007700"></font>
-<A NAME="1275">1275 : </A>     &          <A HREF='vom_tissue_water_et_subroutines_called.html#day'>day</A>(d___), '/', <A HREF='vom_tissue_water_et_subroutines_called.html#month'>month</A>(d___), '/', <A HREF='vom_tissue_water_et_subroutines_called.html#year'>year</A>(d___)<font color="#007700"></font>
-<A NAME="1276">1276 : </A>              <A HREF='vom_tissue_water_et.html#netass'>netass</A> = 0.d0<font color="#007700"></font>
-<A NAME="1277">1277 : </A>!<font color="#007700">             * if tissues water depleted, but still loosing water -&gt; death</font>
-<A NAME="1278">1278 : </A>              <A HREF='vom_tissue_water_et.html#finish'>finish</A> = 1<font color="#007700"></font>
-<A NAME="1279">1279 : </A>              <font color='#aa2200'>return</font><font color="#007700"></font>
-<A NAME="1280">1280 : </A>            <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="1281">1281 : </A>            <font color='#aa2200'>call</font> <A HREF='vom_tissue_water_et_subroutines_called.html#vom_mqss'>vom_mqss</A>(mqss_)<font color="#007700"></font>
-<A NAME="1282">1282 : </A>            mqssmin = <font color='#aa2200'>MIN</font>(mqssmin, mqss_)<font color="#007700"></font>
-<A NAME="1283">1283 : </A>          <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="1284">1284 : </A>        <font color='#aa2200'>else</font><font color="#007700"></font>
-<A NAME="1285">1285 : </A>          etm__   = 0.d0<font color="#007700"></font>
-<A NAME="1286">1286 : </A>          transp_ = 0.d0<font color="#007700"></font>
-<A NAME="1287">1287 : </A>          gstom__ = 0.d0<font color="#007700"></font>
-<A NAME="1288">1288 : </A>        <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="1289">1289 : </A>      <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="1290">1290 : </A>      <font color='#aa2200'>if</font> (nlayers_ <font color='#cc00cc'>.ge.</font> 0) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="1291">1291 : </A>!<font color="#007700">       * (3.35), 1.e6 to convert from m (=1000kg/m2) to g/m2; (Out[250])</font>
-<A NAME="1292">1292 : </A>        dmq = (<font color='#aa2200'>SUM</font>(ruptkvec(:)) - etm__) * 1.d6<font color="#007700"></font>
-<A NAME="1293">1293 : </A>      <font color='#aa2200'>else</font><font color="#007700"></font>
-<A NAME="1294">1294 : </A>        dmq = -etm__ * 1.d6<font color="#007700"></font>
-<A NAME="1295">1295 : </A>      <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="1296">1296 : </A><font color="#007700"></font>
-<A NAME="1297">1297 : </A>      <font color='#aa2200'>return</font><font color="#007700"></font>
-<A NAME="1298">1298 : </A>      <font color='#aa2200'>end</font> <font color='#aa2200'>subroutine</font> vom_tissue_water_et<font color="#007700"></font>
+<A NAME="1619">1619 : </A><font color="#007700"></font>
+<A NAME="1620">1620 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+<A NAME="1621">1621 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+<A NAME="1622">1622 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+<A NAME="1623">1623 : </A>!<font color="#007700">*-----transpiration, gstom and tissue water ---------------------------</font>
+<A NAME="1624">1624 : </A><font color="#007700"></font>
+<A NAME="1625">1625 : </A>      <font color='#aa2200'>subroutine</font> vom_tissue_water_et (<A HREF='vom_tissue_water_et.html#netass'>netass</A>)<font color="#007700"></font>
+<A NAME="1626">1626 : </A>      <font color='#aa2200'>use</font> vom_vegwat_mod<font color="#007700"></font>
+<A NAME="1627">1627 : </A>      <font color='#aa2200'>implicit</font> <font color='#aa2200'>none</font><font color="#007700"></font>
+<A NAME="1628">1628 : </A><font color="#007700"></font>
+<A NAME="1629">1629 : </A>      <font color='#aa2200'>REAL</font>*8,  <font color='#aa2200'>INTENT</font>(<font color='#aa2200'>inout</font>) :: <A HREF='vom_tissue_water_et.html#netass'>netass</A><font color="#007700"></font>
+<A NAME="1630">1630 : </A>      <font color='#aa2200'>CHARACTER</font>(<font color='#aa2200'>len</font>=135) :: <A HREF='vom_tissue_water_et_variables.html#msg'>msg</A><font color="#007700"></font>
+<A NAME="1631">1631 : </A><font color="#007700"></font>
+<A NAME="1632">1632 : </A>!<font color="#007700">     * makes sure that tissue water does not get below 0.9mqx</font>
+<A NAME="1633">1633 : </A>      <font color='#aa2200'>if</font> (mqt_ <font color='#cc00cc'>.le.</font> 0.9d0 * q_mqx) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="1634">1634 : </A>        <font color='#aa2200'>if</font> (wlayer_ <font color='#cc00cc'>.ge.</font> 1) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="1635">1635 : </A>          <font color='#aa2200'>if</font> (etmt__ <font color='#cc00cc'>.gt.</font> 0.9d0 * <font color='#aa2200'>SUM</font>(ruptkt__(:))) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="1636">1636 : </A>            <font color='#aa2200'>if</font> (<font color='#aa2200'>SUM</font>(ruptkt__(:)) <font color='#cc00cc'>.ge.</font> 0.d0) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="1637">1637 : </A>              etmt__ = <font color='#aa2200'>SUM</font>(ruptkt__(:))<font color="#007700"></font>
+<A NAME="1638">1638 : </A>              transpt = etmt__ * 55555.555555555555d0  !<font color="#007700"> (Out[249]) mol/s=m/s*10^6 g/m/(18g/mol)</font>
+<A NAME="1639">1639 : </A>              gstomt = transpt / (p_a * <A HREF='vom_tissue_water_et_subroutines_called.html#vd_h'>vd_h</A>(th_))<font color="#007700"></font>
+<A NAME="1640">1640 : </A>            <font color='#aa2200'>else</font><font color="#007700"></font>
+<A NAME="1641">1641 : </A>              <font color='#aa2200'>write</font>(<A HREF='vom_tissue_water_et_variables.html#msg'>msg</A>,'(A20,I2,A1,I2,A1,I4)') 'vegetation dies on: ', &<font color="#007700"></font>
+<A NAME="1642">1642 : </A>     &          <A HREF='vom_tissue_water_et_subroutines_called.html#fday'>fday</A>(nday), '/', <A HREF='vom_tissue_water_et_subroutines_called.html#fmonth'>fmonth</A>(nday), '/', <A HREF='vom_tissue_water_et_subroutines_called.html#fyear'>fyear</A>(nday)<font color="#007700"></font>
+<A NAME="1643">1643 : </A>              <font color='#aa2200'>write</font>(*,*) <font color='#aa2200'>TRIM</font>(<A HREF='vom_tissue_water_et_variables.html#msg'>msg</A>)<font color="#007700"></font>
+<A NAME="1644">1644 : </A>              <A HREF='vom_tissue_water_et.html#netass'>netass</A> = 0.d0<font color="#007700"></font>
+<A NAME="1645">1645 : </A>!<font color="#007700">             * if tissues water depleted, but still loosing water -&gt; death</font>
+<A NAME="1646">1646 : </A>              finish = 1<font color="#007700"></font>
+<A NAME="1647">1647 : </A>              <font color='#aa2200'>return</font><font color="#007700"></font>
+<A NAME="1648">1648 : </A>            <font color='#aa2200'>endif</font><font color="#007700"></font>
+<A NAME="1649">1649 : </A>            <font color='#aa2200'>call</font> <A HREF='vom_tissue_water_et_subroutines_called.html#vom_mqss'>vom_mqss</A>(mqsst_)<font color="#007700"></font>
+<A NAME="1650">1650 : </A>            mqsstmin = <font color='#aa2200'>MIN</font>(mqsstmin, mqsst_)<font color="#007700"></font>
+<A NAME="1651">1651 : </A>          <font color='#aa2200'>endif</font><font color="#007700"></font>
+<A NAME="1652">1652 : </A>        <font color='#aa2200'>else</font><font color="#007700"></font>
+<A NAME="1653">1653 : </A>          etmt__  = 0.d0<font color="#007700"></font>
+<A NAME="1654">1654 : </A>          transpt = 0.d0<font color="#007700"></font>
+<A NAME="1655">1655 : </A>          gstomt  = 0.d0<font color="#007700"></font>
+<A NAME="1656">1656 : </A>        <font color='#aa2200'>endif</font><font color="#007700"></font>
+<A NAME="1657">1657 : </A>      <font color='#aa2200'>endif</font><font color="#007700"></font>
+<A NAME="1658">1658 : </A>      <font color='#aa2200'>if</font> (wlayer_ <font color='#cc00cc'>.ge.</font> 0) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="1659">1659 : </A>!<font color="#007700">       * (3.35), 1.e6 to convert from m (=1000kg/m2) to g/m2; (Out[250])</font>
+<A NAME="1660">1660 : </A>        dmqt = (<font color='#aa2200'>SUM</font>(ruptkt__(:)) - etmt__) * 1.d6<font color="#007700"></font>
+<A NAME="1661">1661 : </A>      <font color='#aa2200'>else</font><font color="#007700"></font>
+<A NAME="1662">1662 : </A>        dmqt = -etmt__ * 1.d6<font color="#007700"></font>
+<A NAME="1663">1663 : </A>      <font color='#aa2200'>endif</font><font color="#007700"></font>
+<A NAME="1664">1664 : </A><font color="#007700"></font>
+<A NAME="1665">1665 : </A>      <font color='#aa2200'>return</font><font color="#007700"></font>
+<A NAME="1666">1666 : </A>      <font color='#aa2200'>end</font> <font color='#aa2200'>subroutine</font> vom_tissue_water_et<font color="#007700"></font>
 
 </PRE>
 </BODY></HTML>

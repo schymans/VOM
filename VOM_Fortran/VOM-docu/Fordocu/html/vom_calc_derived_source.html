@@ -136,7 +136,6 @@ function printCallRows(xmlhttp,locargs) {
 <div class="tabs">
   <ul>
       <li><a href="vom_calc_derived.html"><span>Header</span></a></li>
-      <li><a href="vom_calc_derived_version_history.html"><span>Version history</span></a></li>
       <li><a href="vom_calc_derived_subroutines_called.html"><span>Subroutines called</span></a></li>
       <li><a href="vom_calc_derived_variables.html"><span>Variables</span></a></li>
       <li><a href="vom_calc_derived_called_by.html"><span>Called by</span></a></li>
@@ -145,94 +144,109 @@ function printCallRows(xmlhttp,locargs) {
 </div>
 <h1>Subroutine vom_calc_derived</h1>
 <PRE>
-<A NAME="602">602 : </A><font color="#007700"></font>
-<A NAME="603">603 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
-<A NAME="604">604 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
-<A NAME="605">605 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
-<A NAME="606">606 : </A>!<font color="#007700">*-----Calculation of derived parameters--------------------------------</font>
-<A NAME="607">607 : </A><font color="#007700"></font>
-<A NAME="608">608 : </A>      <font color='#aa2200'>subroutine</font> vom_calc_derived ()<font color="#007700"></font>
-<A NAME="609">609 : </A>      <font color='#aa2200'>use</font> vegwatmod<font color="#007700"></font>
-<A NAME="610">610 : </A>      <font color='#aa2200'>use</font> vegmod<font color="#007700"></font>
-<A NAME="611">611 : </A>      <font color='#aa2200'>implicit</font> <font color='#aa2200'>none</font><font color="#007700"></font>
-<A NAME="612">612 : </A><font color="#007700"></font>
-<A NAME="613">613 : </A>      <font color='#aa2200'>INTEGER</font> :: <A HREF='vom_calc_derived_variables.html#in'>in</A>, <A HREF='vom_calc_derived_variables.html#ik'>ik</A>, <A HREF='vom_calc_derived_variables.html#ii'>ii</A><font color="#007700"></font>
-<A NAME="614">614 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vom_calc_derived_variables.html#sunr'>sunr</A>, <A HREF='vom_calc_derived_variables.html#suns'>suns</A><font color="#007700"></font>
-<A NAME="615">615 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vom_calc_derived_variables.html#tamean'>tamean</A><font color="#007700"></font>
-<A NAME="616">616 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vom_calc_derived_variables.html#dtr'>dtr</A><font color="#007700"></font>
-<A NAME="617">617 : </A><font color="#007700"></font>
-<A NAME="618">618 : </A>      <A HREF='vom_calc_derived_subroutines_called.html#parvec'>parvec</A>(:) = 2.0804d0 * srad(:)         !<font color="#007700"> (Out[17]), par in mol/m2 if srad was MJ/m2</font>
-<A NAME="619">619 : </A>      <font color='#aa2200'>do</font> <A HREF='vom_calc_derived_variables.html#in'>in</A> = 1, N__<font color="#007700"></font>
-<A NAME="620">620 : </A>        daylength = 12.d0 - 7.639437d0 * <font color='#aa2200'>ASIN</font>((0.397949d0              &<font color="#007700"></font>
-<A NAME="621">621 : </A>     &            * <font color='#aa2200'>COS</font>(0.172142d0 + 0.017214d0 * <A HREF='vom_calc_derived_subroutines_called.html#dayyear'>dayyear</A>(<A HREF='vom_calc_derived_variables.html#in'>in</A>))         &<font color="#007700"></font>
-<A NAME="622">622 : </A>     &            * <font color='#aa2200'>TAN</font>(0.017453d0 * lat))                             &<font color="#007700"></font>
-<A NAME="623">623 : </A>     &            / <font color='#aa2200'>SQRT</font>(0.920818d0 - 0.079182d0                       &<font color="#007700"></font>
-<A NAME="624">624 : </A>     &            * <font color='#aa2200'>COS</font>(0.344284d0 + 0.034428d0 * <A HREF='vom_calc_derived_subroutines_called.html#dayyear'>dayyear</A>(<A HREF='vom_calc_derived_variables.html#in'>in</A>))))  !<font color="#007700"> (Out[22]), in hours</font>
-<A NAME="625">625 : </A>!<font color="#007700">       * sets time of sunrise and sunset</font>
-<A NAME="626">626 : </A>        <A HREF='vom_calc_derived_variables.html#sunr'>sunr</A> = 12d0 - 0.5d0 * daylength<font color="#007700"></font>
-<A NAME="627">627 : </A>        <A HREF='vom_calc_derived_variables.html#suns'>suns</A> = 12d0 + 0.5d0 * daylength <font color="#007700"></font>
-<A NAME="628">628 : </A>        <A HREF='vom_calc_derived_variables.html#tamean'>tamean</A> = (<A HREF='vom_calc_derived_subroutines_called.html#tmax'>tmax</A>(<A HREF='vom_calc_derived_variables.html#in'>in</A>) + <A HREF='vom_calc_derived_subroutines_called.html#tmin'>tmin</A>(<A HREF='vom_calc_derived_variables.html#in'>in</A>)) / 2.d0<font color="#007700"></font>
-<A NAME="629">629 : </A>        <A HREF='vom_calc_derived_variables.html#dtr'>dtr</A> = <A HREF='vom_calc_derived_subroutines_called.html#tmax'>tmax</A>(<A HREF='vom_calc_derived_variables.html#in'>in</A>) - <A HREF='vom_calc_derived_subroutines_called.html#tmin'>tmin</A>(<A HREF='vom_calc_derived_variables.html#in'>in</A>)<font color="#007700"></font>
-<A NAME="630">630 : </A>        vp_ = <A HREF='vom_calc_derived_subroutines_called.html#vpvec'>vpvec</A>(<A HREF='vom_calc_derived_variables.html#in'>in</A>) * 100.d0             !<font color="#007700"> vp in Pa</font>
-<A NAME="631">631 : </A><font color="#007700"></font>
-<A NAME="632">632 : </A>!<font color="#007700">       * Loop through every hour of day, where ik=hour</font>
-<A NAME="633">633 : </A>        <font color='#aa2200'>do</font> <A HREF='vom_calc_derived_variables.html#ik'>ik</A> = 1, 24<font color="#007700"></font>
-<A NAME="634">634 : </A>          <A HREF='vom_calc_derived_variables.html#ii'>ii</A> = <A HREF='vom_calc_derived_variables.html#in'>in</A> * 24 + <A HREF='vom_calc_derived_variables.html#ik'>ik</A> - 24<font color="#007700"></font>
-<A NAME="635">635 : </A>!<font color="#007700">         * (derived from 3.52+3.53) (Out[38], accounts for diurnal</font>
-<A NAME="636">636 : </A>!<font color="#007700">           variation in air temperature</font>
-<A NAME="637">637 : </A>          tair = <A HREF='vom_calc_derived_variables.html#tamean'>tamean</A> + <A HREF='vom_calc_derived_variables.html#dtr'>dtr</A> * (0.0138d0                              &<font color="#007700"></font>
-<A NAME="638">638 : </A>     &         * <font color='#aa2200'>COS</font>(3.513d0 - ((-1.d0 + <A HREF='vom_calc_derived_variables.html#ik'>ik</A>) * Pi) / 3.d0) + 0.0168d0  &<font color="#007700"></font>
-<A NAME="639">639 : </A>     &         * <font color='#aa2200'>COS</font>(0.822d0 - ((-1.d0 + <A HREF='vom_calc_derived_variables.html#ik'>ik</A>) * Pi) / 4.d0) + 0.0984d0  &<font color="#007700"></font>
-<A NAME="640">640 : </A>     &         * <font color='#aa2200'>COS</font>(0.360d0 - ((-1.d0 + <A HREF='vom_calc_derived_variables.html#ik'>ik</A>) * Pi) / 6.d0) + 0.4632d0  &<font color="#007700"></font>
-<A NAME="641">641 : </A>     &         * <font color='#aa2200'>COS</font>(3.805d0 - ((-1.d0 + <A HREF='vom_calc_derived_variables.html#ik'>ik</A>) * Pi) / 12.d0))<font color="#007700"></font>
-<A NAME="642">642 : </A>          <A HREF='vom_calc_derived_subroutines_called.html#tairh'>tairh</A>(<A HREF='vom_calc_derived_variables.html#ii'>ii</A>) = tair<font color="#007700"></font>
-<A NAME="643">643 : </A>          <A HREF='vom_calc_derived_subroutines_called.html#cah'>cah</A>(<A HREF='vom_calc_derived_variables.html#ii'>ii</A>) = <A HREF='vom_calc_derived_subroutines_called.html#cavec'>cavec</A>(<A HREF='vom_calc_derived_variables.html#in'>in</A>)<font color="#007700"></font>
-<A NAME="644">644 : </A>!<font color="#007700">         vd__ = 0.006028127d0 * 2.718282d0 ** ((17.27d0 * tair)       &</font>
-<A NAME="645">645 : </A>!<font color="#007700">    &       / (237.3d0 + tair)) - 9.869233d-6 * vp_  ! (derived from 3.54+3.55) (Out[52]), accounts for diurnal variation in vapour deficit</font>
-<A NAME="646">646 : </A><font color="#007700"></font>
-<A NAME="647">647 : </A>          vd__ = (((0.6108d0 * E__ ** (17.27d0 * tair / (tair + 237.3d0))) &<font color="#007700"></font>
-<A NAME="648">648 : </A>     &         * 1000) - vp_) / (<A HREF='vom_calc_derived_subroutines_called.html#press'>press</A>(<A HREF='vom_calc_derived_variables.html#in'>in</A>) * 100.d0)<font color="#007700"></font>
-<A NAME="649">649 : </A><font color="#007700"></font>
-<A NAME="650">650 : </A>          <font color='#aa2200'>if</font> (vd__ <font color='#cc00cc'>.le.</font> 0.d0) vd__ = 0.d0<font color="#007700"></font>
-<A NAME="651">651 : </A>          <A HREF='vom_calc_derived_subroutines_called.html#vdh'>vdh</A>(<A HREF='vom_calc_derived_variables.html#ii'>ii</A>) = vd__<font color="#007700"></font>
-<A NAME="652">652 : </A>!<font color="#007700">         * average rainfall in hour ii (m/s)</font>
-<A NAME="653">653 : </A>          <A HREF='vom_calc_derived_subroutines_called.html#rainh'>rainh</A>(<A HREF='vom_calc_derived_variables.html#ii'>ii</A>) = <A HREF='vom_calc_derived_subroutines_called.html#rainvec'>rainvec</A>(<A HREF='vom_calc_derived_variables.html#in'>in</A>) / (24.d0 * 3600.d0 * 1000.d0)<font color="#007700"></font>
-<A NAME="654">654 : </A>          <font color='#aa2200'>if</font> (<A HREF='vom_calc_derived_variables.html#sunr'>sunr</A> <font color='#cc00cc'>.le.</font> <A HREF='vom_calc_derived_variables.html#ik'>ik</A> .<font color='#aa2200'>and</font>. <A HREF='vom_calc_derived_variables.html#ik'>ik</A> + 1 <font color='#cc00cc'>.le.</font> <A HREF='vom_calc_derived_variables.html#suns'>suns</A>) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="655">655 : </A>!<font color="#007700">           * ([Out30]), in mol/m2/s (derived from 3.51) accounts for</font>
-<A NAME="656">656 : </A>!<font color="#007700">             diurnal variation in global irradiance</font>
-<A NAME="657">657 : </A>            <A HREF='vom_calc_derived_subroutines_called.html#parh'>parh</A>(<A HREF='vom_calc_derived_variables.html#ii'>ii</A>) = (-0.000873d0 * <A HREF='vom_calc_derived_subroutines_called.html#parvec'>parvec</A>(<A HREF='vom_calc_derived_variables.html#in'>in</A>) * <font color='#aa2200'>COS</font>(0.017453d0 * lat) &<font color="#007700"></font>
-<A NAME="658">658 : </A>     &               * <font color='#aa2200'>SQRT</font>(0.920818d0 - 0.079182d0                    &<font color="#007700"></font>
-<A NAME="659">659 : </A>     &               * <font color='#aa2200'>COS</font>(0.034428d0 * (10.d0 + <A HREF='vom_calc_derived_subroutines_called.html#dayyear'>dayyear</A>(<A HREF='vom_calc_derived_variables.html#in'>in</A>))))        &<font color="#007700"></font>
-<A NAME="660">660 : </A>     &               * <font color='#aa2200'>COS</font>(0.2618d0 * <A HREF='vom_calc_derived_variables.html#ik'>ik</A>) - 0.000347d0 * <A HREF='vom_calc_derived_subroutines_called.html#parvec'>parvec</A>(<A HREF='vom_calc_derived_variables.html#in'>in</A>)    &<font color="#007700"></font>
-<A NAME="661">661 : </A>     &               * <font color='#aa2200'>COS</font>(0.017214d0 * (10.d0 + <A HREF='vom_calc_derived_subroutines_called.html#dayyear'>dayyear</A>(<A HREF='vom_calc_derived_variables.html#in'>in</A>)))         &<font color="#007700"></font>
-<A NAME="662">662 : </A>     &               * <font color='#aa2200'>SIN</font>(0.017453d0 * lat)) / (-1.250192d0 * daylength &<font color="#007700"></font>
-<A NAME="663">663 : </A>     &               * <font color='#aa2200'>COS</font>(0.017214d0 * (10.d0 + <A HREF='vom_calc_derived_subroutines_called.html#dayyear'>dayyear</A>(<A HREF='vom_calc_derived_variables.html#in'>in</A>)))         &<font color="#007700"></font>
-<A NAME="664">664 : </A>     &               * <font color='#aa2200'>SIN</font>(0.017453d0 * lat) + 24.d0                   &<font color="#007700"></font>
-<A NAME="665">665 : </A>     &               * <font color='#aa2200'>COS</font>(0.017453d0 * lat)                           &<font color="#007700"></font>
-<A NAME="666">666 : </A>     &               * <font color='#aa2200'>SQRT</font>(0.920818d0 - 0.079182d0                    &<font color="#007700"></font>
-<A NAME="667">667 : </A>     &               * <font color='#aa2200'>COS</font>(0.034428d0 * (10.d0 + <A HREF='vom_calc_derived_subroutines_called.html#dayyear'>dayyear</A>(<A HREF='vom_calc_derived_variables.html#in'>in</A>))))        &<font color="#007700"></font>
-<A NAME="668">668 : </A>     &               * (1.d0 - (0.158363d0                             &<font color="#007700"></font>
-<A NAME="669">669 : </A>     &               * <font color='#aa2200'>COS</font>(0.017214d0 * (10.d0 + <A HREF='vom_calc_derived_subroutines_called.html#dayyear'>dayyear</A>(<A HREF='vom_calc_derived_variables.html#in'>in</A>))) ** 2.d0 &<font color="#007700"></font>
-<A NAME="670">670 : </A>     &               * <font color='#aa2200'>TAN</font>(0.017453d0 * lat) ** 2.d0)                  &<font color="#007700"></font>
-<A NAME="671">671 : </A>     &               / (0.920818d0 - 0.079182d0 * <font color='#aa2200'>COS</font>(0.034428d0       &<font color="#007700"></font>
-<A NAME="672">672 : </A>     &               * (10.d0 + <A HREF='vom_calc_derived_subroutines_called.html#dayyear'>dayyear</A>(<A HREF='vom_calc_derived_variables.html#in'>in</A>))))) ** 0.5d0)<font color="#007700"></font>
-<A NAME="673">673 : </A>          <font color='#aa2200'>else</font> <font color="#007700"></font>
-<A NAME="674">674 : </A>            <A HREF='vom_calc_derived_subroutines_called.html#parh'>parh</A>(<A HREF='vom_calc_derived_variables.html#ii'>ii</A>) = 0.d0<font color="#007700"></font>
-<A NAME="675">675 : </A>          <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="676">676 : </A><font color="#007700"></font>
-<A NAME="677">677 : </A>          <font color='#aa2200'>write</font>(kfile_hourlyweather,'(5i8,5e11.3)') <A HREF='vom_calc_derived_variables.html#ik'>ik</A>, <A HREF='vom_calc_derived_subroutines_called.html#dayyear'>dayyear</A>(<A HREF='vom_calc_derived_variables.html#in'>in</A>),   &<font color="#007700"></font>
-<A NAME="678">678 : </A>     &      <A HREF='vom_calc_derived_subroutines_called.html#day'>day</A>(<A HREF='vom_calc_derived_variables.html#in'>in</A>), <A HREF='vom_calc_derived_subroutines_called.html#month'>month</A>(<A HREF='vom_calc_derived_variables.html#in'>in</A>), <A HREF='vom_calc_derived_subroutines_called.html#year'>year</A>(<A HREF='vom_calc_derived_variables.html#in'>in</A>), <A HREF='vom_calc_derived_subroutines_called.html#tairh'>tairh</A>(<A HREF='vom_calc_derived_variables.html#ii'>ii</A>), <A HREF='vom_calc_derived_subroutines_called.html#vdh'>vdh</A>(<A HREF='vom_calc_derived_variables.html#ii'>ii</A>),          &<font color="#007700"></font>
-<A NAME="679">679 : </A>     &      <A HREF='vom_calc_derived_subroutines_called.html#parh'>parh</A>(<A HREF='vom_calc_derived_variables.html#ii'>ii</A>), <A HREF='vom_calc_derived_subroutines_called.html#rainh'>rainh</A>(<A HREF='vom_calc_derived_variables.html#ii'>ii</A>), <A HREF='vom_calc_derived_subroutines_called.html#cah'>cah</A>(<A HREF='vom_calc_derived_variables.html#ii'>ii</A>)<font color="#007700"></font>
-<A NAME="680">680 : </A><font color="#007700"></font>
-<A NAME="681">681 : </A>!<font color="#007700">         * (Out[274], derived from (3.25))</font>
-<A NAME="682">682 : </A>          <A HREF='vom_calc_derived_subroutines_called.html#gammastarvec'>gammastarvec</A>(<A HREF='vom_calc_derived_variables.html#ii'>ii</A>) = 0.00004275d0 * E__ ** ((18915.d0          &<font color="#007700"></font>
-<A NAME="683">683 : </A>     &                     * (-25.d0 + <A HREF='vom_calc_derived_subroutines_called.html#tairh'>tairh</A>(<A HREF='vom_calc_derived_variables.html#ii'>ii</A>))) / (149.d0 * R__     &<font color="#007700"></font>
-<A NAME="684">684 : </A>     &                     * (273.d0 + <A HREF='vom_calc_derived_subroutines_called.html#tairh'>tairh</A>(<A HREF='vom_calc_derived_variables.html#ii'>ii</A>))))<font color="#007700"></font>
-<A NAME="685">685 : </A>        <font color='#aa2200'>enddo</font><font color="#007700"></font>
-<A NAME="686">686 : </A>      <font color='#aa2200'>enddo</font><font color="#007700"></font>
-<A NAME="687">687 : </A><font color="#007700"></font>
-<A NAME="688">688 : </A>      <font color='#aa2200'>return</font><font color="#007700"></font>
-<A NAME="689">689 : </A>      <font color='#aa2200'>end</font> <font color='#aa2200'>subroutine</font> vom_calc_derived<font color="#007700"></font>
+<A NAME="889">889 : </A><font color="#007700"></font>
+<A NAME="890">890 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+<A NAME="891">891 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+<A NAME="892">892 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+<A NAME="893">893 : </A>!<font color="#007700">*-----Calculation of derived parameters--------------------------------</font>
+<A NAME="894">894 : </A><font color="#007700"></font>
+<A NAME="895">895 : </A>      <font color='#aa2200'>subroutine</font> vom_calc_derived ()<font color="#007700"></font>
+<A NAME="896">896 : </A>      <font color='#aa2200'>use</font> vom_vegwat_mod<font color="#007700"></font>
+<A NAME="897">897 : </A>      <font color='#aa2200'>implicit</font> <font color='#aa2200'>none</font><font color="#007700"></font>
+<A NAME="898">898 : </A><font color="#007700"></font>
+<A NAME="899">899 : </A>      <font color='#aa2200'>INTEGER</font> :: <A HREF='vom_calc_derived_variables.html#in'>in</A>, <A HREF='vom_calc_derived_variables.html#ik'>ik</A>, <A HREF='vom_calc_derived_variables.html#ii'>ii</A><font color="#007700"></font>
+<A NAME="900">900 : </A>      <font color='#aa2200'>INTEGER</font> :: <A HREF='vom_calc_derived_variables.html#in1'>in1</A>, <A HREF='vom_calc_derived_variables.html#in2'>in2</A><font color="#007700"></font>
+<A NAME="901">901 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vom_calc_derived_variables.html#sunr'>sunr</A>, <A HREF='vom_calc_derived_variables.html#suns'>suns</A><font color="#007700"></font>
+<A NAME="902">902 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vom_calc_derived_variables.html#tairmean'>tairmean</A><font color="#007700"></font>
+<A NAME="903">903 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vom_calc_derived_variables.html#dtair'>dtair</A><font color="#007700"></font>
+<A NAME="904">904 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vom_calc_derived_variables.html#daylength'>daylength</A>              !<font color="#007700"> Day length (hours)</font>
+<A NAME="905">905 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vom_calc_derived_variables.html#vp__'>vp__</A>                   !<font color="#007700"> Absolute vapour pressure in the air (Pa)</font>
+<A NAME="906">906 : </A><font color="#007700"></font>
+<A NAME="907">907 : </A>        <A HREF='vom_calc_derived_variables.html#in1'>in1</A> = 1<font color="#007700"></font>
+<A NAME="908">908 : </A>        <A HREF='vom_calc_derived_variables.html#in2'>in2</A> = c_maxday<font color="#007700"></font>
+<A NAME="909">909 : </A><font color="#007700"></font>
+<A NAME="910">910 : </A>      <font color='#aa2200'>if</font> (i_write_h == 1) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="911">911 : </A>        <font color='#aa2200'>open</font>(kfile_hourlyweather, <font color='#aa2200'>FILE</font>=<font color='#aa2200'>trim</font>(<font color='#aa2200'>adjustl</font>(i_inputpath))// &<font color="#007700"></font>
+<A NAME="912">912 : </A>             <font color='#aa2200'>trim</font>(<font color='#aa2200'>adjustl</font>(sfile_hourlyweather)), <font color='#aa2200'>STATUS</font>='new')<font color="#007700"></font>
+<A NAME="913">913 : </A>        <font color='#aa2200'>write</font>(kfile_hourlyweather,'(5a8,5a11)') 'hour', '<A HREF='vom_calc_derived_subroutines_called.html#dayyear'>dayyear</A>', '<A HREF='vom_calc_derived_subroutines_called.html#fday'>fday</A>', &<font color="#007700"></font>
+<A NAME="914">914 : </A>     &    '<A HREF='vom_calc_derived_subroutines_called.html#fmonth'>fmonth</A>', '<A HREF='vom_calc_derived_subroutines_called.html#fyear'>fyear</A>', '<A HREF='vom_calc_derived_subroutines_called.html#tair_h'>tair_h</A>', '<A HREF='vom_calc_derived_subroutines_called.html#vd_h'>vd_h</A>', '<A HREF='vom_calc_derived_subroutines_called.html#par_h'>par_h</A>', '<A HREF='vom_calc_derived_subroutines_called.html#rain_h'>rain_h</A>', '<A HREF='vom_calc_derived_subroutines_called.html#ca_h'>ca_h</A>'<font color="#007700"></font>
+<A NAME="915">915 : </A>      <font color='#aa2200'>endif</font><font color="#007700"></font>
+<A NAME="916">916 : </A><font color="#007700"></font>
+<A NAME="917">917 : </A>      <font color='#aa2200'>do</font> <A HREF='vom_calc_derived_variables.html#in'>in</A> = <A HREF='vom_calc_derived_variables.html#in1'>in1</A>, <A HREF='vom_calc_derived_variables.html#in2'>in2</A><font color="#007700"></font>
+<A NAME="918">918 : </A>        <A HREF='vom_calc_derived_subroutines_called.html#par_d'>par_d</A>(<A HREF='vom_calc_derived_variables.html#in'>in</A>) = 2.0804d0 * <A HREF='vom_calc_derived_subroutines_called.html#srad_d'>srad_d</A>(<A HREF='vom_calc_derived_variables.html#in'>in</A>)  !<font color="#007700"> (Out[17]), par in mol/m2 if srad was MJ/m2</font>
+<A NAME="919">919 : </A>        <A HREF='vom_calc_derived_variables.html#daylength'>daylength</A> = 12.d0 - 7.639437d0 * <font color='#aa2200'>ASIN</font>((0.397949d0              &<font color="#007700"></font>
+<A NAME="920">920 : </A>     &            * <font color='#aa2200'>COS</font>(0.172142d0 + 0.017214d0 * <A HREF='vom_calc_derived_subroutines_called.html#dayyear'>dayyear</A>(<A HREF='vom_calc_derived_variables.html#in'>in</A>))         &<font color="#007700"></font>
+<A NAME="921">921 : </A>     &            * <font color='#aa2200'>TAN</font>(0.017453d0 * i_lat))                           &<font color="#007700"></font>
+<A NAME="922">922 : </A>     &            / <font color='#aa2200'>SQRT</font>(0.920818d0 - 0.079182d0                       &<font color="#007700"></font>
+<A NAME="923">923 : </A>     &            * <font color='#aa2200'>COS</font>(0.344284d0 + 0.034428d0 * <A HREF='vom_calc_derived_subroutines_called.html#dayyear'>dayyear</A>(<A HREF='vom_calc_derived_variables.html#in'>in</A>))))  !<font color="#007700"> (Out[22]), in hours</font>
+<A NAME="924">924 : </A>!<font color="#007700">       * sets time of sunrise and sunset</font>
+<A NAME="925">925 : </A>        <A HREF='vom_calc_derived_variables.html#sunr'>sunr</A> = 12d0 - 0.5d0 * <A HREF='vom_calc_derived_variables.html#daylength'>daylength</A><font color="#007700"></font>
+<A NAME="926">926 : </A>        <A HREF='vom_calc_derived_variables.html#suns'>suns</A> = 12d0 + 0.5d0 * <A HREF='vom_calc_derived_variables.html#daylength'>daylength</A><font color="#007700"></font>
+<A NAME="927">927 : </A>        <A HREF='vom_calc_derived_variables.html#tairmean'>tairmean</A> = (<A HREF='vom_calc_derived_subroutines_called.html#tairmax_d'>tairmax_d</A>(<A HREF='vom_calc_derived_variables.html#in'>in</A>) + <A HREF='vom_calc_derived_subroutines_called.html#tairmin_d'>tairmin_d</A>(<A HREF='vom_calc_derived_variables.html#in'>in</A>)) / 2.d0<font color="#007700"></font>
+<A NAME="928">928 : </A>        <A HREF='vom_calc_derived_variables.html#dtair'>dtair</A> = <A HREF='vom_calc_derived_subroutines_called.html#tairmax_d'>tairmax_d</A>(<A HREF='vom_calc_derived_variables.html#in'>in</A>) - <A HREF='vom_calc_derived_subroutines_called.html#tairmin_d'>tairmin_d</A>(<A HREF='vom_calc_derived_variables.html#in'>in</A>)<font color="#007700"></font>
+<A NAME="929">929 : </A>        <A HREF='vom_calc_derived_variables.html#vp__'>vp__</A> = <A HREF='vom_calc_derived_subroutines_called.html#vp_d'>vp_d</A>(<A HREF='vom_calc_derived_variables.html#in'>in</A>) * 100.d0             !<font color="#007700"> vp in Pa</font>
+<A NAME="930">930 : </A><font color="#007700"></font>
+<A NAME="931">931 : </A>!<font color="#007700">       * Loop through every hour of day, where ik=hour</font>
+<A NAME="932">932 : </A>        <font color='#aa2200'>do</font> <A HREF='vom_calc_derived_variables.html#ik'>ik</A> = 1, 24<font color="#007700"></font>
+<A NAME="933">933 : </A>          <A HREF='vom_calc_derived_variables.html#ii'>ii</A> = <A HREF='vom_calc_derived_variables.html#in'>in</A> * 24 + <A HREF='vom_calc_derived_variables.html#ik'>ik</A> - 24<font color="#007700"></font>
+<A NAME="934">934 : </A>!<font color="#007700">         * (derived from 3.52+3.53) (Out[38], accounts for diurnal</font>
+<A NAME="935">935 : </A>!<font color="#007700">           variation in air temperature</font>
+<A NAME="936">936 : </A>          <A HREF='vom_calc_derived_subroutines_called.html#tair_h'>tair_h</A>(<A HREF='vom_calc_derived_variables.html#ii'>ii</A>) = <A HREF='vom_calc_derived_variables.html#tairmean'>tairmean</A> + <A HREF='vom_calc_derived_variables.html#dtair'>dtair</A> * (0.0138d0                           &<font color="#007700"></font>
+<A NAME="937">937 : </A>     &               * <font color='#aa2200'>COS</font>(3.513d0 - ((-1.d0 + <A HREF='vom_calc_derived_variables.html#ik'>ik</A>) * p_pi) / 3.d0) + 0.0168d0 &<font color="#007700"></font>
+<A NAME="938">938 : </A>     &               * <font color='#aa2200'>COS</font>(0.822d0 - ((-1.d0 + <A HREF='vom_calc_derived_variables.html#ik'>ik</A>) * p_pi) / 4.d0) + 0.0984d0 &<font color="#007700"></font>
+<A NAME="939">939 : </A>     &               * <font color='#aa2200'>COS</font>(0.360d0 - ((-1.d0 + <A HREF='vom_calc_derived_variables.html#ik'>ik</A>) * p_pi) / 6.d0) + 0.4632d0 &<font color="#007700"></font>
+<A NAME="940">940 : </A>     &               * <font color='#aa2200'>COS</font>(3.805d0 - ((-1.d0 + <A HREF='vom_calc_derived_variables.html#ik'>ik</A>) * p_pi) / 12.d0))<font color="#007700"></font>
+<A NAME="941">941 : </A><font color="#007700"></font>
+<A NAME="942">942 : </A>          <A HREF='vom_calc_derived_subroutines_called.html#ca_h'>ca_h</A>(<A HREF='vom_calc_derived_variables.html#ii'>ii</A>) = <A HREF='vom_calc_derived_subroutines_called.html#ca_d'>ca_d</A>(<A HREF='vom_calc_derived_variables.html#in'>in</A>) / 1.0d6<font color="#007700"></font>
+<A NAME="943">943 : </A><font color="#007700"></font>
+<A NAME="944">944 : </A>!<font color="#007700">         vd_h(ii) = 0.006028127d0 * 2.718282d0 ** ((17.27d0 * tair_h(ii)) &</font>
+<A NAME="945">945 : </A>!<font color="#007700">    &             / (237.3d0 + tair_h(ii))) - 9.869233d-6 * vp__</font>
+<A NAME="946">946 : </A>!<font color="#007700">         * (derived from 3.54+3.55) (Out[52]), accounts for diurnal variation in vapour deficit</font>
+<A NAME="947">947 : </A>          <A HREF='vom_calc_derived_subroutines_called.html#vd_h'>vd_h</A>(<A HREF='vom_calc_derived_variables.html#ii'>ii</A>) = (((0.6108d0 * p_E ** (17.27d0 * <A HREF='vom_calc_derived_subroutines_called.html#tair_h'>tair_h</A>(<A HREF='vom_calc_derived_variables.html#ii'>ii</A>)        &<font color="#007700"></font>
+<A NAME="948">948 : </A>     &             / (<A HREF='vom_calc_derived_subroutines_called.html#tair_h'>tair_h</A>(<A HREF='vom_calc_derived_variables.html#ii'>ii</A>) + 237.3d0))) * 1000) - <A HREF='vom_calc_derived_variables.html#vp__'>vp__</A>)          &<font color="#007700"></font>
+<A NAME="949">949 : </A>     &             / (<A HREF='vom_calc_derived_subroutines_called.html#press_d'>press_d</A>(<A HREF='vom_calc_derived_variables.html#in'>in</A>) * 100.d0)<font color="#007700"></font>
+<A NAME="950">950 : </A>          <font color='#aa2200'>if</font> (<A HREF='vom_calc_derived_subroutines_called.html#vd_h'>vd_h</A>(<A HREF='vom_calc_derived_variables.html#ii'>ii</A>) <font color='#cc00cc'>.le.</font> 0.d0) <A HREF='vom_calc_derived_subroutines_called.html#vd_h'>vd_h</A>(<A HREF='vom_calc_derived_variables.html#ii'>ii</A>) = 0.d0<font color="#007700"></font>
+<A NAME="951">951 : </A><font color="#007700"></font>
+<A NAME="952">952 : </A>!<font color="#007700">         * average rainfall in hour ii (m/s)</font>
+<A NAME="953">953 : </A>          <A HREF='vom_calc_derived_subroutines_called.html#rain_h'>rain_h</A>(<A HREF='vom_calc_derived_variables.html#ii'>ii</A>) = <A HREF='vom_calc_derived_subroutines_called.html#rain_d'>rain_d</A>(<A HREF='vom_calc_derived_variables.html#in'>in</A>) / (24.d0 * 3600.d0 * 1000.d0)<font color="#007700"></font>
+<A NAME="954">954 : </A><font color="#007700"></font>
+<A NAME="955">955 : </A>          <font color='#aa2200'>if</font> (<A HREF='vom_calc_derived_variables.html#sunr'>sunr</A> <font color='#cc00cc'>.le.</font> <A HREF='vom_calc_derived_variables.html#ik'>ik</A> .<font color='#aa2200'>and</font>. <A HREF='vom_calc_derived_variables.html#ik'>ik</A> + 1 <font color='#cc00cc'>.le.</font> <A HREF='vom_calc_derived_variables.html#suns'>suns</A>) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="956">956 : </A>!<font color="#007700">           * ([Out30]), in mol/m2/s (derived from 3.51) accounts for</font>
+<A NAME="957">957 : </A>!<font color="#007700">             diurnal variation in global irradiance</font>
+<A NAME="958">958 : </A>            <A HREF='vom_calc_derived_subroutines_called.html#par_h'>par_h</A>(<A HREF='vom_calc_derived_variables.html#ii'>ii</A>) = (-0.000873d0 * <A HREF='vom_calc_derived_subroutines_called.html#par_d'>par_d</A>(<A HREF='vom_calc_derived_variables.html#in'>in</A>) * <font color='#aa2200'>COS</font>(0.017453d0 * i_lat) &<font color="#007700"></font>
+<A NAME="959">959 : </A>     &                * <font color='#aa2200'>SQRT</font>(0.920818d0 - 0.079182d0                   &<font color="#007700"></font>
+<A NAME="960">960 : </A>     &                * <font color='#aa2200'>COS</font>(0.034428d0 * (10.d0 + <A HREF='vom_calc_derived_subroutines_called.html#dayyear'>dayyear</A>(<A HREF='vom_calc_derived_variables.html#in'>in</A>))))       &<font color="#007700"></font>
+<A NAME="961">961 : </A>     &                * <font color='#aa2200'>COS</font>(0.2618d0 * <A HREF='vom_calc_derived_variables.html#ik'>ik</A>) - 0.000347d0 * <A HREF='vom_calc_derived_subroutines_called.html#par_d'>par_d</A>(<A HREF='vom_calc_derived_variables.html#in'>in</A>)    &<font color="#007700"></font>
+<A NAME="962">962 : </A>     &                * <font color='#aa2200'>COS</font>(0.017214d0 * (10.d0 + <A HREF='vom_calc_derived_subroutines_called.html#dayyear'>dayyear</A>(<A HREF='vom_calc_derived_variables.html#in'>in</A>)))        &<font color="#007700"></font>
+<A NAME="963">963 : </A>     &                * <font color='#aa2200'>SIN</font>(0.017453d0 * i_lat)) / (-1.250192d0 * <A HREF='vom_calc_derived_variables.html#daylength'>daylength</A> &<font color="#007700"></font>
+<A NAME="964">964 : </A>     &                * <font color='#aa2200'>COS</font>(0.017214d0 * (10.d0 + <A HREF='vom_calc_derived_subroutines_called.html#dayyear'>dayyear</A>(<A HREF='vom_calc_derived_variables.html#in'>in</A>)))        &<font color="#007700"></font>
+<A NAME="965">965 : </A>     &                * <font color='#aa2200'>SIN</font>(0.017453d0 * i_lat) + 24.d0                &<font color="#007700"></font>
+<A NAME="966">966 : </A>     &                * <font color='#aa2200'>COS</font>(0.017453d0 * i_lat)                        &<font color="#007700"></font>
+<A NAME="967">967 : </A>     &                * <font color='#aa2200'>SQRT</font>(0.920818d0 - 0.079182d0                   &<font color="#007700"></font>
+<A NAME="968">968 : </A>     &                * <font color='#aa2200'>COS</font>(0.034428d0 * (10.d0 + <A HREF='vom_calc_derived_subroutines_called.html#dayyear'>dayyear</A>(<A HREF='vom_calc_derived_variables.html#in'>in</A>))))       &<font color="#007700"></font>
+<A NAME="969">969 : </A>     &                * (1.d0 - (0.158363d0                            &<font color="#007700"></font>
+<A NAME="970">970 : </A>     &                * <font color='#aa2200'>COS</font>(0.017214d0 * (10.d0 + <A HREF='vom_calc_derived_subroutines_called.html#dayyear'>dayyear</A>(<A HREF='vom_calc_derived_variables.html#in'>in</A>))) ** 2.d0 &<font color="#007700"></font>
+<A NAME="971">971 : </A>     &                * <font color='#aa2200'>TAN</font>(0.017453d0 * i_lat) ** 2.d0)               &<font color="#007700"></font>
+<A NAME="972">972 : </A>     &                / (0.920818d0 - 0.079182d0 * <font color='#aa2200'>COS</font>(0.034428d0      &<font color="#007700"></font>
+<A NAME="973">973 : </A>     &                * (10.d0 + <A HREF='vom_calc_derived_subroutines_called.html#dayyear'>dayyear</A>(<A HREF='vom_calc_derived_variables.html#in'>in</A>))))) ** 0.5d0)<font color="#007700"></font>
+<A NAME="974">974 : </A>            <font color='#aa2200'>if</font> (<A HREF='vom_calc_derived_subroutines_called.html#par_h'>par_h</A>(<A HREF='vom_calc_derived_variables.html#ii'>ii</A>) <font color='#cc00cc'>.lt.</font> 0.d0) <A HREF='vom_calc_derived_subroutines_called.html#par_h'>par_h</A>(<A HREF='vom_calc_derived_variables.html#ii'>ii</A>) = 0.d0<font color="#007700"></font>
+<A NAME="975">975 : </A>          <font color='#aa2200'>else</font><font color="#007700"></font>
+<A NAME="976">976 : </A>            <A HREF='vom_calc_derived_subroutines_called.html#par_h'>par_h</A>(<A HREF='vom_calc_derived_variables.html#ii'>ii</A>) = 0.d0<font color="#007700"></font>
+<A NAME="977">977 : </A>          <font color='#aa2200'>endif</font><font color="#007700"></font>
+<A NAME="978">978 : </A><font color="#007700"></font>
+<A NAME="979">979 : </A>          <font color='#aa2200'>if</font> (i_write_h == 1) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="980">980 : </A>            <font color='#aa2200'>write</font>(kfile_hourlyweather,'(5i8,5e11.3)') <A HREF='vom_calc_derived_variables.html#ik'>ik</A>, <A HREF='vom_calc_derived_subroutines_called.html#dayyear'>dayyear</A>(<A HREF='vom_calc_derived_variables.html#in'>in</A>), &<font color="#007700"></font>
+<A NAME="981">981 : </A>     &        <A HREF='vom_calc_derived_subroutines_called.html#fday'>fday</A>(<A HREF='vom_calc_derived_variables.html#in'>in</A>), <A HREF='vom_calc_derived_subroutines_called.html#fmonth'>fmonth</A>(<A HREF='vom_calc_derived_variables.html#in'>in</A>), <A HREF='vom_calc_derived_subroutines_called.html#fyear'>fyear</A>(<A HREF='vom_calc_derived_variables.html#in'>in</A>), <A HREF='vom_calc_derived_subroutines_called.html#tair_h'>tair_h</A>(<A HREF='vom_calc_derived_variables.html#ii'>ii</A>), <A HREF='vom_calc_derived_subroutines_called.html#vd_h'>vd_h</A>(<A HREF='vom_calc_derived_variables.html#ii'>ii</A>),   &<font color="#007700"></font>
+<A NAME="982">982 : </A>     &        <A HREF='vom_calc_derived_subroutines_called.html#par_h'>par_h</A>(<A HREF='vom_calc_derived_variables.html#ii'>ii</A>), <A HREF='vom_calc_derived_subroutines_called.html#rain_h'>rain_h</A>(<A HREF='vom_calc_derived_variables.html#ii'>ii</A>), <A HREF='vom_calc_derived_subroutines_called.html#ca_h'>ca_h</A>(<A HREF='vom_calc_derived_variables.html#ii'>ii</A>)<font color="#007700"></font>
+<A NAME="983">983 : </A>          <font color='#aa2200'>endif</font><font color="#007700"></font>
+<A NAME="984">984 : </A><font color="#007700"></font>
+<A NAME="985">985 : </A>        <font color='#aa2200'>enddo</font><font color="#007700"></font>
+<A NAME="986">986 : </A>      <font color='#aa2200'>enddo</font><font color="#007700"></font>
+<A NAME="987">987 : </A><font color="#007700"></font>
+<A NAME="988">988 : </A>      <font color='#aa2200'>if</font> (i_write_h == 1) <font color='#aa2200'>close</font>(kfile_hourlyweather)<font color="#007700"></font>
+<A NAME="989">989 : </A><font color="#007700"></font>
+<A NAME="990">990 : </A>      <font color='#aa2200'>return</font><font color="#007700"></font>
+<A NAME="991">991 : </A>      <font color='#aa2200'>end</font> <font color='#aa2200'>subroutine</font> vom_calc_derived<font color="#007700"></font>
 
 </PRE>
 </BODY></HTML>

@@ -136,70 +136,71 @@ function printCallRows(xmlhttp,locargs) {
 <div class="tabs">
   <ul>
       <li><a href="vom_open_output.html"><span>Header</span></a></li>
-      <li><a href="vom_open_output_version_history.html"><span>Version history</span></a></li>
       <li><a href="vom_open_output_called_by.html"><span>Called by</span></a></li>
       <li class="current"><a href="vom_open_output_source.html"><span>Source</span></a></li>
   </ul>
 </div>
 <h1>Subroutine vom_open_output</h1>
 <PRE>
-<A NAME="416">416 : </A><font color="#007700"></font>
-<A NAME="417">417 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
-<A NAME="418">418 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
-<A NAME="419">419 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
-<A NAME="420">420 : </A>!<font color="#007700">*-----File opening (saving climate and gstom ass data)-----------------</font>
-<A NAME="421">421 : </A><font color="#007700"></font>
-<A NAME="422">422 : </A>      <font color='#aa2200'>subroutine</font> vom_open_output ()<font color="#007700"></font>
-<A NAME="423">423 : </A>      <font color='#aa2200'>use</font> vegmod<font color="#007700"></font>
-<A NAME="424">424 : </A>      <font color='#aa2200'>use</font> vegwatmod<font color="#007700"></font>
-<A NAME="425">425 : </A>      <font color='#aa2200'>implicit</font> <font color='#aa2200'>none</font><font color="#007700"></font>
-<A NAME="426">426 : </A><font color="#007700"></font>
-<A NAME="427">427 : </A>      <font color='#aa2200'>open</font>(kfile_resultshourly, <font color='#aa2200'>status</font>='replace',                      &<font color="#007700"></font>
-<A NAME="428">428 : </A>     &     <font color='#aa2200'>file</font>=sfile_resultshourly(1:<font color='#aa2200'>len_trim</font>(sfile_resultshourly)))<font color="#007700"></font>
-<A NAME="429">429 : </A>      <font color='#aa2200'>write</font>(kfile_resultshourly,'(a6,a7,a7,a7,a7,23a15)') 'year',      &<font color="#007700"></font>
-<A NAME="430">430 : </A>     &  'month', 'day', 'dcum', 'hour', 'rain', 'tair', 'par', 'vd',   &<font color="#007700"></font>
-<A NAME="431">431 : </A>     &  'esoil', 'pc', 'jmax25_t', 'jmax25_g', 'mq', 'rl', 'lambda_t', &<font color="#007700"></font>
-<A NAME="432">432 : </A>     &  'lambda_g', 'rr', 'ass_t', 'ass_g', 'het_t', 'het_g', 'su_1',  &<font color="#007700"></font>
-<A NAME="433">433 : </A>     &  'ys', 'Ws', 'spgfcf', 'infx'<font color="#007700"></font>
-<A NAME="434">434 : </A><font color="#007700"></font>
-<A NAME="435">435 : </A>      <font color='#aa2200'>open</font>(kfile_resultsdaily, <font color='#aa2200'>status</font>='replace',                       &<font color="#007700"></font>
-<A NAME="436">436 : </A>     &     <font color='#aa2200'>file</font>=sfile_resultsdaily(1:<font color='#aa2200'>len_trim</font>(sfile_resultsdaily)))<font color="#007700"></font>
-<A NAME="437">437 : </A>      <font color='#aa2200'>write</font>(kfile_resultsdaily,'(a6,a7,a7,a7,a7,25a15)') 'year',       &<font color="#007700"></font>
-<A NAME="438">438 : </A>     &  'month', 'day', 'dcum', 'hour', 'rain', 'tmax', 'tmin', 'par', &<font color="#007700"></font>
-<A NAME="439">439 : </A>     &  'vd', 'esoil', 'jmax25_t', 'jmax25_g', 'pc', '<font color='#aa2200'>rlt+</font>rlg',        &<font color="#007700"></font>
-<A NAME="440">440 : </A>     &  'lambda_t', 'lambda_g', 'rr_t', 'rr_g', 'ass_t', 'ass_g',      &<font color="#007700"></font>
-<A NAME="441">441 : </A>     &  'su_avg', 'ys', 'ws', 'spgfcf', 'infx', 'etm_t', 'etm_g',      &<font color="#007700"></font>
-<A NAME="442">442 : </A>     &  'su_1', 'topt'<font color="#007700"></font>
-<A NAME="443">443 : </A><font color="#007700"></font>
-<A NAME="444">444 : </A>      <font color='#aa2200'>open</font>(kfile_yearly, <font color='#aa2200'>status</font>='replace',                             &<font color="#007700"></font>
-<A NAME="445">445 : </A>     &     <font color='#aa2200'>file</font>=sfile_yearly(1:<font color='#aa2200'>len_trim</font>(sfile_yearly)))<font color="#007700"></font>
-<A NAME="446">446 : </A>      <font color='#aa2200'>write</font>(kfile_yearly,'(a6,19a16)') "year", "rainyr", "epanyr",     &<font color="#007700"></font>
-<A NAME="447">447 : </A>     &  "paryr", "radyr", "vdyr", "esoilyr", "etyr", "etmgyr",         &<font color="#007700"></font>
-<A NAME="448">448 : </A>   &  "assgyr", "rlgyr", "rrgyr", "cpccgyr", "tcgyr",                &<font color="#007700"></font>
-<A NAME="449">449 : </A>   &  "etmtyr", "asstyr", "rltyr", "rrtyr", "cpcctyr", "tcyr"<font color="#007700"></font>
-<A NAME="450">450 : </A><font color="#007700"></font>
-<A NAME="451">451 : </A>      <font color='#aa2200'>open</font>(kfile_rsurfdaily, <font color='#aa2200'>status</font>='replace',                         &<font color="#007700"></font>
-<A NAME="452">452 : </A>     &     <font color='#aa2200'>file</font>=sfile_rsurfdaily(1:<font color='#aa2200'>len_trim</font>(sfile_rsurfdaily)))<font color="#007700"></font>
-<A NAME="453">453 : </A>      <font color='#aa2200'>write</font>(kfile_rsurfdaily,*) ' year', ' month', ' day', '   dcum',  &<font color="#007700"></font>
-<A NAME="454">454 : </A>     &  '  rsurfsublayer'<font color="#007700"></font>
-<A NAME="455">455 : </A><font color="#007700"></font>
-<A NAME="456">456 : </A>      <font color='#aa2200'>open</font>(kfile_delyuhourly, <font color='#aa2200'>status</font>='replace',                         &<font color="#007700"></font>
-<A NAME="457">457 : </A>     &     <font color='#aa2200'>file</font>=sfile_delyuhourly(1:<font color='#aa2200'>len_trim</font>(sfile_delyuhourly)))<font color="#007700"></font>
-<A NAME="458">458 : </A>      <font color='#aa2200'>write</font>(kfile_delyuhourly,*) ' year', ' month', ' day', '   dcum',  &<font color="#007700"></font>
-<A NAME="459">459 : </A>     &  ' hour', '  delyusublayer'<font color="#007700"></font>
-<A NAME="460">460 : </A><font color="#007700"></font>
-<A NAME="461">461 : </A>      <font color='#aa2200'>open</font>(kfile_ruptkhourly, <font color='#aa2200'>status</font>='replace',                        &<font color="#007700"></font>
-<A NAME="462">462 : </A>     &     <font color='#aa2200'>file</font>=sfile_ruptkhourly(1:<font color='#aa2200'>len_trim</font>(sfile_ruptkhourly)))<font color="#007700"></font>
-<A NAME="463">463 : </A>      <font color='#aa2200'>write</font>(kfile_ruptkhourly,*) ' year', ' month', ' day', '   dcum', &<font color="#007700"></font>
-<A NAME="464">464 : </A>     &  ' hour', '  delyusublayer'<font color="#007700"></font>
-<A NAME="465">465 : </A><font color="#007700"></font>
-<A NAME="466">466 : </A>      <font color='#aa2200'>open</font>(kfile_suvechourly, <font color='#aa2200'>status</font>='replace',                        &<font color="#007700"></font>
-<A NAME="467">467 : </A>     &     <font color='#aa2200'>file</font>=sfile_suvechourly(1:<font color='#aa2200'>len_trim</font>(sfile_suvechourly)))<font color="#007700"></font>
-<A NAME="468">468 : </A>      <font color='#aa2200'>write</font>(kfile_suvechourly,*) ' year', ' month', ' day', '   dcum', &<font color="#007700"></font>
-<A NAME="469">469 : </A>     &  ' hour', '  susublayer'<font color="#007700"></font>
-<A NAME="470">470 : </A><font color="#007700"></font>
-<A NAME="471">471 : </A>      <font color='#aa2200'>return</font><font color="#007700"></font>
-<A NAME="472">472 : </A>      <font color='#aa2200'>end</font> <font color='#aa2200'>subroutine</font> vom_open_output<font color="#007700"></font>
+<A NAME="624">624 : </A><font color="#007700"></font>
+<A NAME="625">625 : </A><font color="#007700"></font>
+<A NAME="626">626 : </A><font color="#007700"></font>
+<A NAME="627">627 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+<A NAME="628">628 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+<A NAME="629">629 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+<A NAME="630">630 : </A>!<font color="#007700">*-----File opening (saving climate and gstom ass data)-----------------</font>
+<A NAME="631">631 : </A><font color="#007700"></font>
+<A NAME="632">632 : </A>      <font color='#aa2200'>subroutine</font> vom_open_output ()<font color="#007700"></font>
+<A NAME="633">633 : </A>      <font color='#aa2200'>use</font> vom_vegwat_mod<font color="#007700"></font>
+<A NAME="634">634 : </A>      <font color='#aa2200'>implicit</font> <font color='#aa2200'>none</font><font color="#007700"></font>
+<A NAME="635">635 : </A><font color="#007700"></font>
+<A NAME="636">636 : </A><font color="#007700"></font>
+<A NAME="637">637 : </A>      <font color='#aa2200'>open</font>(kfile_resultshourly, <font color='#aa2200'>FILE</font>=<font color='#aa2200'>trim</font>(<font color='#aa2200'>adjustl</font>(i_outputpath))//      &<font color="#007700"></font>
+<A NAME="638">638 : </A>           <font color='#aa2200'>trim</font>(<font color='#aa2200'>adjustl</font>(sfile_resultshourly)), <font color='#aa2200'>STATUS</font>='replace')<font color="#007700"></font>
+<A NAME="639">639 : </A>      <font color='#aa2200'>write</font>(kfile_resultshourly,'(A6,A7,A7,A7,A7,22A15)') 'fyear',     &<font color="#007700"></font>
+<A NAME="640">640 : </A>     &  'fmonth', 'fday', 'nday', 'nhour', 'rain', 'tair', 'par', 'vd',&<font color="#007700"></font>
+<A NAME="641">641 : </A>     &  'esoil', 'pc', 'jmax25t', 'jmax25g', 'mqt', 'rl', 'lambdat',   &<font color="#007700"></font>
+<A NAME="642">642 : </A>     &  'lambdag', 'rr', 'asst', 'assg', 'etmt', 'etmg', 'su_1',       &<font color="#007700"></font>
+<A NAME="643">643 : </A>     &  'zw', 'ws', 'spgfcf', 'infx'<font color="#007700"></font>
+<A NAME="644">644 : </A><font color="#007700"></font>
+<A NAME="645">645 : </A>      <font color='#aa2200'>open</font>(kfile_resultsdaily, <font color='#aa2200'>FILE</font>=<font color='#aa2200'>trim</font>(<font color='#aa2200'>adjustl</font>(i_outputpath))// &<font color="#007700"></font>
+<A NAME="646">646 : </A>           <font color='#aa2200'>trim</font>(<font color='#aa2200'>adjustl</font>(sfile_resultsdaily)), <font color='#aa2200'>STATUS</font>='replace')<font color="#007700"></font>
+<A NAME="647">647 : </A>      <font color='#aa2200'>write</font>(kfile_resultsdaily,'(A6,A7,A7,A7,A7, 34A15)') 'fyear',      &<font color="#007700"></font>
+<A NAME="648">648 : </A>     &  'fmonth', 'fday', 'nday', 'nhour', 'rain', 'tairmax', 'tairmin', &<font color="#007700"></font>
+<A NAME="649">649 : </A>     &  'par', 'vd', 'esoil', 'jmax25t', 'jmax25g', 'pc', 'rlt', 'rlg', &<font color="#007700"></font>
+<A NAME="650">650 : </A>     &  'lambdat', 'lambdag', 'rrt', 'rrg', 'asst', 'assg', 'su_avg',  &<font color="#007700"></font>
+<A NAME="651">651 : </A>     &  'zw', 'ws', 'spgfcf', 'infx', 'etmt', 'etmg', 'su_1', 'topt',  &<font color="#007700"></font>
+<A NAME="652">652 : </A>     &  'tcg', 'tct', 'cpccg_d', 'cpcct_d',  'lai_t', 'lai_g', &<font color="#007700"></font>
+<A NAME="653">653 : </A>     &'ncp_g', 'ncp_t'<font color="#007700"></font>
+<A NAME="654">654 : </A><font color="#007700"></font>
+<A NAME="655">655 : </A>      <font color='#aa2200'>open</font>(kfile_resultsyearly, <font color='#aa2200'>FILE</font>=<font color='#aa2200'>trim</font>(<font color='#aa2200'>adjustl</font>(i_outputpath))// &<font color="#007700"></font>
+<A NAME="656">656 : </A>           <font color='#aa2200'>trim</font>(<font color='#aa2200'>adjustl</font>(sfile_resultsyearly)), <font color='#aa2200'>STATUS</font>='replace')<font color="#007700"></font>
+<A NAME="657">657 : </A>      <font color='#aa2200'>write</font>(kfile_resultsyearly,'(A6,18A16)') "nyear", "rain", "par",  &<font color="#007700"></font>
+<A NAME="658">658 : </A>     &  "srad", "vd", "esoil", "etmt", "etmg", "assg", "rlg", "rrg",   &<font color="#007700"></font>
+<A NAME="659">659 : </A>     &  "cpccg", "tcg", "etmt", "asst", "rlt", "rrt", "cpcct", "tct"<font color="#007700"></font>
+<A NAME="660">660 : </A><font color="#007700"></font>
+<A NAME="661">661 : </A>        <font color='#aa2200'>open</font>(kfile_rsurfdaily, <font color='#aa2200'>FILE</font>=<font color='#aa2200'>trim</font>(<font color='#aa2200'>adjustl</font>(i_outputpath))// &<font color="#007700"></font>
+<A NAME="662">662 : </A>             <font color='#aa2200'>trim</font>(<font color='#aa2200'>adjustl</font>(sfile_rsurfdaily)), <font color='#aa2200'>STATUS</font>='replace')<font color="#007700"></font>
+<A NAME="663">663 : </A>        <font color='#aa2200'>write</font>(kfile_rsurfdaily,'(2A6,A4,A7,A)') 'fyear', 'fmonth',     &<font color="#007700"></font>
+<A NAME="664">664 : </A>     &    'fday', 'nday', 'rsurft_sublayer'<font color="#007700"></font>
+<A NAME="665">665 : </A><font color="#007700"></font>
+<A NAME="666">666 : </A>        <font color='#aa2200'>open</font>(kfile_delzhourly, <font color='#aa2200'>FILE</font>=<font color='#aa2200'>trim</font>(<font color='#aa2200'>adjustl</font>(i_outputpath))// &<font color="#007700"></font>
+<A NAME="667">667 : </A>             <font color='#aa2200'>trim</font>(<font color='#aa2200'>adjustl</font>(sfile_delzhourly)), <font color='#aa2200'>STATUS</font>='replace')<font color="#007700"></font>
+<A NAME="668">668 : </A>        <font color='#aa2200'>write</font>(kfile_delzhourly,'(2A6,A4,A7,A5,A)') 'fyear', 'fmonth',  &<font color="#007700"></font>
+<A NAME="669">669 : </A>     &    'fday', 'nday', 'nhour', 'delz_sublayer'<font color="#007700"></font>
+<A NAME="670">670 : </A><font color="#007700"></font>
+<A NAME="671">671 : </A>        <font color='#aa2200'>open</font>(kfile_ruptkthourly, <font color='#aa2200'>FILE</font>=<font color='#aa2200'>trim</font>(<font color='#aa2200'>adjustl</font>(i_outputpath))// &<font color="#007700"></font>
+<A NAME="672">672 : </A>             <font color='#aa2200'>trim</font>(<font color='#aa2200'>adjustl</font>(sfile_ruptkthourly)), <font color='#aa2200'>STATUS</font>='replace')<font color="#007700"></font>
+<A NAME="673">673 : </A>        <font color='#aa2200'>write</font>(kfile_ruptkthourly,'(2A6,A4,A7,A5,A)') 'fyear', 'fmonth',&<font color="#007700"></font>
+<A NAME="674">674 : </A>     &    'fday', 'nday', 'nhour', 'ruptkt_sublayer'<font color="#007700"></font>
+<A NAME="675">675 : </A><font color="#007700"></font>
+<A NAME="676">676 : </A>        <font color='#aa2200'>open</font>(kfile_suhourly, <font color='#aa2200'>FILE</font>=<font color='#aa2200'>trim</font>(<font color='#aa2200'>adjustl</font>(i_outputpath))// &<font color="#007700"></font>
+<A NAME="677">677 : </A>             <font color='#aa2200'>trim</font>(<font color='#aa2200'>adjustl</font>(sfile_suhourly)), <font color='#aa2200'>STATUS</font>='replace')<font color="#007700"></font>
+<A NAME="678">678 : </A>        <font color='#aa2200'>write</font>(kfile_suhourly,'(2A6,A4,A7,A5,A)') 'fyear', 'fmonth',    &<font color="#007700"></font>
+<A NAME="679">679 : </A>     &    'fday', 'nday', 'nhour', 'su_sublayer'<font color="#007700"></font>
+<A NAME="680">680 : </A><font color="#007700"></font>
+<A NAME="681">681 : </A>      <font color='#aa2200'>return</font><font color="#007700"></font>
+<A NAME="682">682 : </A>      <font color='#aa2200'>end</font> <font color='#aa2200'>subroutine</font> vom_open_output<font color="#007700"></font>
 
 </PRE>
 </BODY></HTML>

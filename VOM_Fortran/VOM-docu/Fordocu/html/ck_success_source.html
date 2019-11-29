@@ -136,44 +136,49 @@ function printCallRows(xmlhttp,locargs) {
 <div class="tabs">
   <ul>
       <li><a href="ck_success.html"><span>Header</span></a></li>
-      <li><a href="ck_success_version_history.html"><span>Version history</span></a></li>
       <li><a href="ck_success_subroutines_called.html"><span>Subroutines called</span></a></li>
+      <li><a href="ck_success_variables.html"><span>Variables</span></a></li>
       <li><a href="ck_success_called_by.html"><span>Called by</span></a></li>
       <li class="current"><a href="ck_success_source.html"><span>Source</span></a></li>
   </ul>
 </div>
 <h1>Subroutine ck_success</h1>
 <PRE>
-<A NAME="476">476 : </A><font color="#007700"></font>
-<A NAME="477">477 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
-<A NAME="478">478 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
-<A NAME="479">479 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
-<A NAME="480">480 : </A><font color="#007700"></font>
-<A NAME="481">481 : </A>      <font color='#aa2200'>subroutine</font> ck_success ()<font color="#007700"></font>
-<A NAME="482">482 : </A>      <font color='#aa2200'>use</font> sce_mod<font color="#007700"></font>
-<A NAME="483">483 : </A>      <font color='#aa2200'>implicit</font> <font color='#aa2200'>none</font><font color="#007700"></font>
-<A NAME="484">484 : </A><font color="#007700"></font>
-<A NAME="485">485 : </A>      <font color='#aa2200'>call</font> <A HREF='ck_success_subroutines_called.html#optsensitivity'>optsensitivity</A>()<font color="#007700"></font>
-<A NAME="486">486 : </A>      <font color='#aa2200'>if</font> (success <font color='#cc00cc'>.eq.</font> 1) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="487">487 : </A>        <font color='#aa2200'>call</font> <A HREF='ck_success_subroutines_called.html#sortcomp'>sortcomp</A>(shufflevar(:,:), <font color='#aa2200'>shape</font>(shufflevar(:,:)), ofvec(:), <font color='#aa2200'>size</font>(ofvec(:)))  !<font color="#007700"> [SORT ENTIRE ARRAYS]</font>
-<A NAME="488">488 : </A>        <font color='#aa2200'>call</font> <A HREF='ck_success_subroutines_called.html#writepars'>writepars</A><font color="#007700"></font>
-<A NAME="489">489 : </A>        <font color='#aa2200'>write</font>(*,'(/"Optimisation completed successfully."/)')<font color="#007700"></font>
-<A NAME="490">490 : </A>        <font color='#aa2200'>write</font>(kfile_progress,'(/"Optimisation completed successfully."/)')<font color="#007700"></font>
-<A NAME="491">491 : </A>        <font color='#aa2200'>print</font> *,<font color='#aa2200'>char</font>(7)<font color="#007700"></font>
-<A NAME="492">492 : </A>        <font color='#aa2200'>print</font> *,<font color='#aa2200'>char</font>(7)<font color="#007700"></font>
-<A NAME="493">493 : </A>        <font color='#aa2200'>print</font> *,<font color='#aa2200'>char</font>(7)<font color="#007700"></font>
-<A NAME="494">494 : </A>        <font color='#aa2200'>close</font>(kfile_sceout)<font color="#007700"></font>
-<A NAME="495">495 : </A>        <font color='#aa2200'>close</font>(kfile_bestpars)<font color="#007700"></font>
-<A NAME="496">496 : </A>        <font color='#aa2200'>close</font>(kfile_progress)<font color="#007700"></font>
-<A NAME="497">497 : </A>      <font color='#aa2200'>else</font><font color="#007700"></font>
-<A NAME="498">498 : </A>        <font color='#aa2200'>call</font> <A HREF='ck_success_subroutines_called.html#sortcomp'>sortcomp</A>(shufflevar(:,:), <font color='#aa2200'>shape</font>(shufflevar(:,:)), ofvec(:), <font color='#aa2200'>size</font>(ofvec(:)))  !<font color="#007700"> [SORT ENTIRE ARRAYS]</font>
-<A NAME="499">499 : </A>        <font color='#aa2200'>call</font> <A HREF='ck_success_subroutines_called.html#writepars'>writepars</A><font color="#007700"></font>
-<A NAME="500">500 : </A>        nsincebest = 0<font color="#007700"></font>
-<A NAME="501">501 : </A>        <font color='#aa2200'>write</font>(kfile_bestpars,outformat) shufflevar(:,1), bestobj<font color="#007700"></font>
-<A NAME="502">502 : </A>      <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="503">503 : </A><font color="#007700"></font>
-<A NAME="504">504 : </A>      <font color='#aa2200'>return</font><font color="#007700"></font>
-<A NAME="505">505 : </A>      <font color='#aa2200'>end</font> <font color='#aa2200'>subroutine</font> ck_success<font color="#007700"></font>
+<A NAME="598">598 : </A><font color="#007700"></font>
+<A NAME="599">599 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+<A NAME="600">600 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+<A NAME="601">601 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+<A NAME="602">602 : </A><font color="#007700"></font>
+<A NAME="603">603 : </A>      <font color='#aa2200'>subroutine</font> ck_success ()<font color="#007700"></font>
+<A NAME="604">604 : </A>      <font color='#aa2200'>use</font> vom_sce_mod<font color="#007700"></font>
+<A NAME="605">605 : </A>      <font color='#aa2200'>implicit</font> <font color='#aa2200'>none</font><font color="#007700"></font>
+<A NAME="606">606 : </A><font color="#007700"></font>
+<A NAME="607">607 : </A>      <font color='#aa2200'>INTEGER</font> :: <A HREF='ck_success_variables.html#tmp2'>tmp2</A>(2)<font color="#007700"></font>
+<A NAME="608">608 : </A><font color="#007700"></font>
+<A NAME="609">609 : </A>      <font color='#aa2200'>call</font> <A HREF='ck_success_subroutines_called.html#optsensitivity'>optsensitivity</A>()<font color="#007700"></font>
+<A NAME="610">610 : </A><font color="#007700"></font>
+<A NAME="611">611 : </A>        <font color='#aa2200'>if</font> (success <font color='#cc00cc'>.eq.</font> 1) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="612">612 : </A>!<font color="#007700">         * [SORT ENTIRE ARRAYS]</font>
+<A NAME="613">613 : </A>!<font color="#007700">         * use temporary variable to prevent warning in ifort</font>
+<A NAME="614">614 : </A>          <A HREF='ck_success_variables.html#tmp2'>tmp2</A>(:) = <font color='#aa2200'>SHAPE</font>(shufflevar(:,:))<font color="#007700"></font>
+<A NAME="615">615 : </A>          <font color='#aa2200'>call</font> <A HREF='ck_success_subroutines_called.html#sortcomp'>sortcomp</A>(shufflevar(:,:), <A HREF='ck_success_variables.html#tmp2'>tmp2</A>(:), ofvec(:), <font color='#aa2200'>SIZE</font>(ofvec(:)))<font color="#007700"></font>
+<A NAME="616">616 : </A>          <font color='#aa2200'>call</font> <A HREF='ck_success_subroutines_called.html#writepars'>writepars</A>()<font color="#007700"></font>
+<A NAME="617">617 : </A>          <font color='#aa2200'>write</font>(kfile_progress,*) 'Optimisation completed successfully.'<font color="#007700"></font>
+<A NAME="618">618 : </A>          !<font color="#007700">close(kfile_sceout)</font>
+<A NAME="619">619 : </A>          <font color='#aa2200'>close</font>(kfile_bestpars)<font color="#007700"></font>
+<A NAME="620">620 : </A>          <font color='#aa2200'>if</font> (kfile_progress <font color='#cc00cc'>.ne.</font> 6) <font color='#aa2200'>close</font>(kfile_progress)<font color="#007700"></font>
+<A NAME="621">621 : </A>        <font color='#aa2200'>else</font><font color="#007700"></font>
+<A NAME="622">622 : </A>!<font color="#007700">         * [SORT ENTIRE ARRAYS]</font>
+<A NAME="623">623 : </A>!<font color="#007700">         * use temporary variable to prevent warning in ifort</font>
+<A NAME="624">624 : </A>          <A HREF='ck_success_variables.html#tmp2'>tmp2</A>(:) = <font color='#aa2200'>SHAPE</font>(shufflevar(:,:))<font color="#007700"></font>
+<A NAME="625">625 : </A>          <font color='#aa2200'>call</font> <A HREF='ck_success_subroutines_called.html#sortcomp'>sortcomp</A>(shufflevar(:,:), <A HREF='ck_success_variables.html#tmp2'>tmp2</A>(:), ofvec(:), <font color='#aa2200'>SIZE</font>(ofvec(:)))<font color="#007700"></font>
+<A NAME="626">626 : </A>          <font color='#aa2200'>call</font> <A HREF='ck_success_subroutines_called.html#writepars'>writepars</A>()<font color="#007700"></font>
+<A NAME="627">627 : </A>          nsincebest = 0<font color="#007700"></font>
+<A NAME="628">628 : </A>            <font color='#aa2200'>write</font>(kfile_bestpars,outformat) shufflevar(:,1), bestobj<font color="#007700"></font>
+<A NAME="629">629 : </A>        <font color='#aa2200'>endif</font><font color="#007700"></font>
+<A NAME="630">630 : </A><font color="#007700"></font>
+<A NAME="631">631 : </A>      <font color='#aa2200'>return</font><font color="#007700"></font>
+<A NAME="632">632 : </A>      <font color='#aa2200'>end</font> <font color='#aa2200'>subroutine</font> ck_success<font color="#007700"></font>
 
 </PRE>
 </BODY></HTML>

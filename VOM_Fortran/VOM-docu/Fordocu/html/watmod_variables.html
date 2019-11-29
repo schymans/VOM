@@ -136,7 +136,6 @@ function printCallRows(xmlhttp,locargs) {
 <div class="tabs">
   <ul>
       <li><a href="watmod.html"><span>Header</span></a></li>
-      <li><a href="watmod_version_history.html"><span>Version history</span></a></li>
       <li class="current"><a href="watmod_variables.html"><span>Variables</span></a></li>
       <li><a href="watmod_source.html"><span>Source</span></a></li>
   </ul>
@@ -144,101 +143,103 @@ function printCallRows(xmlhttp,locargs) {
 <h1>Module watmod</h1>
 <HR><H2>VARIABLES</H2>
 <TABLE>
-<tr valign="top"><td class="indexkey"><A NAME="nlayersnew">nlayersnew</td><td class="indexvalue">integer</td><td class="indexvalue">&nbsp</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Number of layers in unsaturated zone for next time step</PRE>
-</td><td class="indexvalue"><A HREF="watmod_source.html#276">276</A></td></tr>
-<tr valign="top"><td class="indexkey"><A NAME="cz">cz</td><td class="indexvalue">real*8</td><td class="indexvalue">&nbsp</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Average soil elevation in m</PRE>
-</td><td class="indexvalue"><A HREF="watmod_source.html#278">278</A></td></tr>
-<tr valign="top"><td class="indexkey"><A NAME="cgs">cgs</td><td class="indexvalue">real*8</td><td class="indexvalue">&nbsp</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Capital Gamma S (length scale for seepage outflow) (m)</PRE>
-</td><td class="indexvalue"><A HREF="watmod_source.html#279">279</A></td></tr>
-<tr valign="top"><td class="indexkey"><A NAME="ksat_">ksat_</td><td class="indexvalue">real*8</td><td class="indexvalue">&nbsp</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Saturated hydraulic conductivity</PRE>
-</td><td class="indexvalue"><A HREF="watmod_source.html#281">281</A></td></tr>
-<tr valign="top"><td class="indexkey"><A NAME="epsln_">epsln_</td><td class="indexvalue">real*8</td><td class="indexvalue">&nbsp</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Soil porosity</PRE>
-</td><td class="indexvalue"><A HREF="watmod_source.html#282">282</A></td></tr>
-<tr valign="top"><td class="indexkey"><A NAME="nvg_">nvg_</td><td class="indexvalue">real*8</td><td class="indexvalue">&nbsp</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Van Genuchten soil parameter n</PRE>
-</td><td class="indexvalue"><A HREF="watmod_source.html#283">283</A></td></tr>
-<tr valign="top"><td class="indexkey"><A NAME="mvg_">mvg_</td><td class="indexvalue">real*8</td><td class="indexvalue">&nbsp</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Van Genuchten soil parameter m</PRE>
-</td><td class="indexvalue"><A HREF="watmod_source.html#284">284</A></td></tr>
-<tr valign="top"><td class="indexkey"><A NAME="avg_">avg_</td><td class="indexvalue">real*8</td><td class="indexvalue">&nbsp</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Van Genuchten soil parameter a</PRE>
-</td><td class="indexvalue"><A HREF="watmod_source.html#285">285</A></td></tr>
-<tr valign="top"><td class="indexkey"><A NAME="zs_">zs_</td><td class="indexvalue">real*8</td><td class="indexvalue">&nbsp</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Reference elevation point (set to 0)</PRE>
-</td><td class="indexvalue"><A HREF="watmod_source.html#286">286</A></td></tr>
-<tr valign="top"><td class="indexkey"><A NAME="zr_">zr_</td><td class="indexvalue">real*8</td><td class="indexvalue">&nbsp</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Average channel elevation</PRE>
-</td><td class="indexvalue"><A HREF="watmod_source.html#287">287</A></td></tr>
-<tr valign="top"><td class="indexkey"><A NAME="go_">go_</td><td class="indexvalue">real*8</td><td class="indexvalue">&nbsp</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Slope close to channel in radians </PRE>
-</td><td class="indexvalue"><A HREF="watmod_source.html#288">288</A></td></tr>
-<tr valign="top"><td class="indexkey"><A NAME="thetas_">thetas_</td><td class="indexvalue">real*8</td><td class="indexvalue">&nbsp</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Saturated soil water content</PRE>
-</td><td class="indexvalue"><A HREF="watmod_source.html#289">289</A></td></tr>
-<tr valign="top"><td class="indexkey"><A NAME="thetar_">thetar_</td><td class="indexvalue">real*8</td><td class="indexvalue">&nbsp</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Residual soil water content</PRE>
-</td><td class="indexvalue"><A HREF="watmod_source.html#290">290</A></td></tr>
-<tr valign="top"><td class="indexkey"><A NAME="wsold">wsold</td><td class="indexvalue">real*8</td><td class="indexvalue">&nbsp</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Previous total soil water storage</PRE>
-</td><td class="indexvalue"><A HREF="watmod_source.html#291">291</A></td></tr>
-<tr valign="top"><td class="indexkey"><A NAME="delz_">delz_</td><td class="indexvalue">real*8</td><td class="indexvalue">&nbsp</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Thickness of each soil layer (m)</PRE>
-</td><td class="indexvalue"><A HREF="watmod_source.html#292">292</A></td></tr>
-<tr valign="top"><td class="indexkey"><A NAME="ksatvec">ksatvec</td><td class="indexvalue">real*8</td><td class="indexvalue">(:)</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Saturated hydraulic conductivit</PRE>
-</td><td class="indexvalue"><A HREF="watmod_source.html#294">294</A></td></tr>
-<tr valign="top"><td class="indexkey"><A NAME="epslnvec">epslnvec</td><td class="indexvalue">real*8</td><td class="indexvalue">(:)</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Soil porosity</PRE>
-</td><td class="indexvalue"><A HREF="watmod_source.html#295">295</A></td></tr>
-<tr valign="top"><td class="indexkey"><A NAME="nvgvec">nvgvec</td><td class="indexvalue">real*8</td><td class="indexvalue">(:)</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Van Genuchten soil parameter n</PRE>
-</td><td class="indexvalue"><A HREF="watmod_source.html#296">296</A></td></tr>
-<tr valign="top"><td class="indexkey"><A NAME="mvgvec">mvgvec</td><td class="indexvalue">real*8</td><td class="indexvalue">(:)</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Van Genuchten soil parameter m</PRE>
-</td><td class="indexvalue"><A HREF="watmod_source.html#297">297</A></td></tr>
-<tr valign="top"><td class="indexkey"><A NAME="avgvec">avgvec</td><td class="indexvalue">real*8</td><td class="indexvalue">(:)</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Van Genuchten soil parameter a</PRE>
-</td><td class="indexvalue"><A HREF="watmod_source.html#298">298</A></td></tr>
-<tr valign="top"><td class="indexkey"><A NAME="thetasvec">thetasvec</td><td class="indexvalue">real*8</td><td class="indexvalue">(:)</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Saturated soil water content</PRE>
-</td><td class="indexvalue"><A HREF="watmod_source.html#299">299</A></td></tr>
-<tr valign="top"><td class="indexkey"><A NAME="thetarvec">thetarvec</td><td class="indexvalue">real*8</td><td class="indexvalue">(:)</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Residual soil water content</PRE>
-</td><td class="indexvalue"><A HREF="watmod_source.html#300">300</A></td></tr>
-<tr valign="top"><td class="indexkey"><A NAME="sueqvec">sueqvec</td><td class="indexvalue">real*8</td><td class="indexvalue">(:)</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Soil saturation degree above water table in hydrostatic equilibrium</PRE>
-</td><td class="indexvalue"><A HREF="watmod_source.html#301">301</A></td></tr>
-<tr valign="top"><td class="indexkey"><A NAME="cH2Ol_s">cH2Ol_s</td><td class="indexvalue">real*8</td><td class="indexvalue">(:)</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Soil water content in each layer (could also be called thetavec(:)) </PRE>
-</td><td class="indexvalue"><A HREF="watmod_source.html#302">302</A></td></tr>
-<tr valign="top"><td class="indexkey"><A NAME="iovec">iovec</td><td class="indexvalue">real*8</td><td class="indexvalue">(:)</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Mass balance for each soil layer</PRE>
-</td><td class="indexvalue"><A HREF="watmod_source.html#303">303</A></td></tr>
-<tr valign="top"><td class="indexkey"><A NAME="suvec_">suvec_</td><td class="indexvalue">real*8</td><td class="indexvalue">(:)</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Soil saturation degree in each layer</PRE>
-</td><td class="indexvalue"><A HREF="watmod_source.html#305">305</A></td></tr>
-<tr valign="top"><td class="indexkey"><A NAME="sunewvec">sunewvec</td><td class="indexvalue">real*8</td><td class="indexvalue">(:)</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Soil saturation degree in each layer at next time step</PRE>
-</td><td class="indexvalue"><A HREF="watmod_source.html#306">306</A></td></tr>
-<tr valign="top"><td class="indexkey"><A NAME="kunsatvec">kunsatvec</td><td class="indexvalue">real*8</td><td class="indexvalue">(:)</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Unsaturated hydraulic conductivity in each soil layer</PRE>
-</td><td class="indexvalue"><A HREF="watmod_source.html#307">307</A></td></tr>
-<tr valign="top"><td class="indexkey"><A NAME="delzvec">delzvec</td><td class="indexvalue">real*8</td><td class="indexvalue">(:)</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Thickness of each soil layer</PRE>
-</td><td class="indexvalue"><A HREF="watmod_source.html#308">308</A></td></tr>
-<tr valign="top"><td class="indexkey"><A NAME="qblvec">qblvec</td><td class="indexvalue">real*8</td><td class="indexvalue">(:)</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Water flux across bottom boundary of each layer (positive upwards)</PRE>
-</td><td class="indexvalue"><A HREF="watmod_source.html#310">310</A></td></tr>
-<tr valign="top"><td class="indexkey"><A NAME="dsuvec">dsuvec</td><td class="indexvalue">real*8</td><td class="indexvalue">(:)</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Rate of change in soil saturation degree in each layer</PRE>
-</td><td class="indexvalue"><A HREF="watmod_source.html#311">311</A></td></tr>
-<tr valign="top"><td class="indexkey"><A NAME="pcapnewvec">pcapnewvec</td><td class="indexvalue">real*8</td><td class="indexvalue">(:)</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>REAL*8, ALLOCATABLE :: wsnewvec(:)        ! Soil water content in each layer at next time step<br>Matric pressure head in each layer at next time step</PRE>
-</td><td class="indexvalue"><A HREF="watmod_source.html#314">314</A></td></tr>
-<tr valign="top"><td class="indexkey"><A NAME="kunsatnewvec">kunsatnewvec</td><td class="indexvalue">real*8</td><td class="indexvalue">(:)</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Unsaturated hydraulic conductivity in each layer at next time step</PRE>
-</td><td class="indexvalue"><A HREF="watmod_source.html#316">316</A></td></tr>
-<tr valign="top"><td class="indexkey"><A NAME="ys_">ys_</td><td class="indexvalue">real*8</td><td class="indexvalue">&nbsp</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Elevation of water table</PRE>
-</td><td class="indexvalue"><A HREF="watmod_source.html#318">318</A></td></tr>
+<tr valign="top"><td class="indexkey"><A NAME="wlayer_">wlayer_</td><td class="indexvalue">integer</td><td class="indexvalue">&nbsp</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Number of soil layers in unsaturated zone</PRE>
+</td><td class="indexvalue"><A HREF="watmod_source.html#395">395</A></td></tr>
+<tr valign="top"><td class="indexkey"><A NAME="wlayernew">wlayernew</td><td class="indexvalue">integer</td><td class="indexvalue">&nbsp</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Number of layers in unsaturated zone for next time step</PRE>
+</td><td class="indexvalue"><A HREF="watmod_source.html#396">396</A></td></tr>
+<tr valign="top"><td class="indexkey"><A NAME="dt_">dt_</td><td class="indexvalue">real*8</td><td class="indexvalue">&nbsp</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Length of time step (s)</PRE>
+</td><td class="indexvalue"><A HREF="watmod_source.html#398">398</A></td></tr>
+<tr valign="top"><td class="indexkey"><A NAME="dtmax">dtmax</td><td class="indexvalue">real*8</td><td class="indexvalue">&nbsp</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Maximum time step (s)</PRE>
+</td><td class="indexvalue"><A HREF="watmod_source.html#399">399</A></td></tr>
+<tr valign="top"><td class="indexkey"><A NAME="dtsu_count">dtsu_count</td><td class="indexvalue">integer</td><td class="indexvalue">&nbsp</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>For speed analysis, count of how often dtsu or dtmax is time limiting</PRE>
+</td><td class="indexvalue"><A HREF="watmod_source.html#400">400</A></td></tr>
+<tr valign="top"><td class="indexkey"><A NAME="dtmax_count">dtmax_count</td><td class="indexvalue">integer</td><td class="indexvalue">&nbsp</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>For speed analysis, count of how often dtsu or dtmax is time limiting</PRE>
+</td><td class="indexvalue"><A HREF="watmod_source.html#400">400</A></td></tr>
 <tr valign="top"><td class="indexkey"><A NAME="esoil__">esoil__</td><td class="indexvalue">real*8</td><td class="indexvalue">&nbsp</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Bare soil evaporation rate</PRE>
-</td><td class="indexvalue"><A HREF="watmod_source.html#322">322</A></td></tr>
-<tr valign="top"><td class="indexkey"><A NAME="ysnew">ysnew</td><td class="indexvalue">real*8</td><td class="indexvalue">&nbsp</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Elevation of water table at next time step</PRE>
-</td><td class="indexvalue"><A HREF="watmod_source.html#323">323</A></td></tr>
-<tr valign="top"><td class="indexkey"><A NAME="wsnew_">wsnew_</td><td class="indexvalue">real*8</td><td class="indexvalue">&nbsp</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Total soil water store at next time step</PRE>
-</td><td class="indexvalue"><A HREF="watmod_source.html#325">325</A></td></tr>
-<tr valign="top"><td class="indexkey"><A NAME="io_">io_</td><td class="indexvalue">real*8</td><td class="indexvalue">&nbsp</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Mass balance of soil water</PRE>
-</td><td class="indexvalue"><A HREF="watmod_source.html#326">326</A></td></tr>
-<tr valign="top"><td class="indexkey"><A NAME="iocum">iocum</td><td class="indexvalue">real*8</td><td class="indexvalue">&nbsp</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Cumulative mass balance of soil water</PRE>
-</td><td class="indexvalue"><A HREF="watmod_source.html#327">327</A></td></tr>
+</td><td class="indexvalue"><A HREF="watmod_source.html#402">402</A></td></tr>
+<tr valign="top"><td class="indexkey"><A NAME="esoil_h">esoil_h</td><td class="indexvalue">real*8</td><td class="indexvalue">&nbsp</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Hourly soil evaporation</PRE>
+</td><td class="indexvalue"><A HREF="watmod_source.html#403">403</A></td></tr>
+<tr valign="top"><td class="indexkey"><A NAME="esoil_d">esoil_d</td><td class="indexvalue">real*8</td><td class="indexvalue">&nbsp</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Daily soil evaporation rate</PRE>
+</td><td class="indexvalue"><A HREF="watmod_source.html#404">404</A></td></tr>
+<tr valign="top"><td class="indexkey"><A NAME="esoil_y">esoil_y</td><td class="indexvalue">real*8</td><td class="indexvalue">&nbsp</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Annual soil evaporation rate</PRE>
+</td><td class="indexvalue"><A HREF="watmod_source.html#405">405</A></td></tr>
 <tr valign="top"><td class="indexkey"><A NAME="spgfcf__">spgfcf__</td><td class="indexvalue">real*8</td><td class="indexvalue">&nbsp</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Seepage face flow rate</PRE>
-</td><td class="indexvalue"><A HREF="watmod_source.html#328">328</A></td></tr>
-<tr valign="top"><td class="indexkey"><A NAME="hspgfcf">hspgfcf</td><td class="indexvalue">real*8</td><td class="indexvalue">&nbsp</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Hourly seepage face flow</PRE>
-</td><td class="indexvalue"><A HREF="watmod_source.html#329">329</A></td></tr>
+</td><td class="indexvalue"><A HREF="watmod_source.html#407">407</A></td></tr>
+<tr valign="top"><td class="indexkey"><A NAME="spgfcf_h">spgfcf_h</td><td class="indexvalue">real*8</td><td class="indexvalue">&nbsp</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Hourly seepage face flow</PRE>
+</td><td class="indexvalue"><A HREF="watmod_source.html#408">408</A></td></tr>
+<tr valign="top"><td class="indexkey"><A NAME="spgfcf_d">spgfcf_d</td><td class="indexvalue">real*8</td><td class="indexvalue">&nbsp</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Daily seepage face flow</PRE>
+</td><td class="indexvalue"><A HREF="watmod_source.html#409">409</A></td></tr>
+<tr valign="top"><td class="indexkey"><A NAME="inf__">inf__</td><td class="indexvalue">real*8</td><td class="indexvalue">&nbsp</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Infiltration rate</PRE>
+</td><td class="indexvalue"><A HREF="watmod_source.html#411">411</A></td></tr>
 <tr valign="top"><td class="indexkey"><A NAME="infx__">infx__</td><td class="indexvalue">real*8</td><td class="indexvalue">&nbsp</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Infiltration excess runoff rate</PRE>
-</td><td class="indexvalue"><A HREF="watmod_source.html#330">330</A></td></tr>
-<tr valign="top"><td class="indexkey"><A NAME="hinfx">hinfx</td><td class="indexvalue">real*8</td><td class="indexvalue">&nbsp</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Hourly infiltration excess runoff</PRE>
-</td><td class="indexvalue"><A HREF="watmod_source.html#331">331</A></td></tr>
-<tr valign="top"><td class="indexkey"><A NAME="hio">hio</td><td class="indexvalue">real*8</td><td class="indexvalue">&nbsp</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Hourly mass balance of soil water</PRE>
-</td><td class="indexvalue"><A HREF="watmod_source.html#332">332</A></td></tr>
-<tr valign="top"><td class="indexkey"><A NAME="hesoil">hesoil</td><td class="indexvalue">real*8</td><td class="indexvalue">&nbsp</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Hourly soil evaporation</PRE>
-</td><td class="indexvalue"><A HREF="watmod_source.html#333">333</A></td></tr>
-<tr valign="top"><td class="indexkey"><A NAME="hetm_">hetm_</td><td class="indexvalue">real*8</td><td class="indexvalue">&nbsp</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Hourly transpiration</PRE>
-</td><td class="indexvalue"><A HREF="watmod_source.html#334">334</A></td></tr>
-<tr valign="top"><td class="indexkey"><A NAME="inf_">inf_</td><td class="indexvalue">real*8</td><td class="indexvalue">&nbsp</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Infiltration rate</PRE>
-</td><td class="indexvalue"><A HREF="watmod_source.html#335">335</A></td></tr>
-<tr valign="top"><td class="indexkey"><A NAME="hinf_">hinf_</td><td class="indexvalue">real*8</td><td class="indexvalue">&nbsp</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Hourly infiltration rate</PRE>
-</td><td class="indexvalue"><A HREF="watmod_source.html#338">338</A></td></tr>
+</td><td class="indexvalue"><A HREF="watmod_source.html#412">412</A></td></tr>
+<tr valign="top"><td class="indexkey"><A NAME="infx_h">infx_h</td><td class="indexvalue">real*8</td><td class="indexvalue">&nbsp</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Hourly infiltration excess runoff</PRE>
+</td><td class="indexvalue"><A HREF="watmod_source.html#413">413</A></td></tr>
+<tr valign="top"><td class="indexkey"><A NAME="infx_d">infx_d</td><td class="indexvalue">real*8</td><td class="indexvalue">&nbsp</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Daily infiltration excess runoff</PRE>
+</td><td class="indexvalue"><A HREF="watmod_source.html#414">414</A></td></tr>
+<tr valign="top"><td class="indexkey"><A NAME="zw_">zw_</td><td class="indexvalue">real*8</td><td class="indexvalue">&nbsp</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Elevation of water table</PRE>
+</td><td class="indexvalue"><A HREF="watmod_source.html#416">416</A></td></tr>
+<tr valign="top"><td class="indexkey"><A NAME="zwnew">zwnew</td><td class="indexvalue">real*8</td><td class="indexvalue">&nbsp</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Elevation of water table at next time step</PRE>
+</td><td class="indexvalue"><A HREF="watmod_source.html#417">417</A></td></tr>
+<tr valign="top"><td class="indexkey"><A NAME="wc_">wc_</td><td class="indexvalue">real*8</td><td class="indexvalue">&nbsp</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE><font color='gray'>? &nbsp</font></PRE>
+</td><td class="indexvalue"><A HREF="watmod_source.html#419">419</A></td></tr>
+<tr valign="top"><td class="indexkey"><A NAME="cH2Ol_s">cH2Ol_s</td><td class="indexvalue">real*8</td><td class="indexvalue">(:)</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Soil water content in each layer (could also be called theta(:))</PRE>
+</td><td class="indexvalue"><A HREF="watmod_source.html#421">421</A></td></tr>
+<tr valign="top"><td class="indexkey"><A NAME="qbl">qbl</td><td class="indexvalue">real*8</td><td class="indexvalue">(:)</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Water flux across bottom boundary of each layer (positive upwards)</PRE>
+</td><td class="indexvalue"><A HREF="watmod_source.html#423">423</A></td></tr>
+<tr valign="top"><td class="indexkey"><A NAME="pcap_">pcap_</td><td class="indexvalue">real*8</td><td class="indexvalue">(:)</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Soil matric head (m)</PRE>
+</td><td class="indexvalue"><A HREF="watmod_source.html#425">425</A></td></tr>
+<tr valign="top"><td class="indexkey"><A NAME="pcapnew">pcapnew</td><td class="indexvalue">real*8</td><td class="indexvalue">(:)</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Matric pressure head in each layer at next time step</PRE>
+</td><td class="indexvalue"><A HREF="watmod_source.html#426">426</A></td></tr>
+<tr valign="top"><td class="indexkey"><A NAME="iovec">iovec</td><td class="indexvalue">real*8</td><td class="indexvalue">(:)</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Mass balance for each soil layer</PRE>
+</td><td class="indexvalue"><A HREF="watmod_source.html#428">428</A></td></tr>
+<tr valign="top"><td class="indexkey"><A NAME="io__">io__</td><td class="indexvalue">real*8</td><td class="indexvalue">&nbsp</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Input minus output of water in soil domain</PRE>
+</td><td class="indexvalue"><A HREF="watmod_source.html#429">429</A></td></tr>
+<tr valign="top"><td class="indexkey"><A NAME="io_h">io_h</td><td class="indexvalue">real*8</td><td class="indexvalue">&nbsp</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Hourly input minus output of water in soil domain</PRE>
+</td><td class="indexvalue"><A HREF="watmod_source.html#430">430</A></td></tr>
+<tr valign="top"><td class="indexkey"><A NAME="ioacum">ioacum</td><td class="indexvalue">real*8</td><td class="indexvalue">&nbsp</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Cumulative mass balance of soil water</PRE>
+</td><td class="indexvalue"><A HREF="watmod_source.html#431">431</A></td></tr>
+<tr valign="top"><td class="indexkey"><A NAME="su__">su__</td><td class="indexvalue">real*8</td><td class="indexvalue">(:)</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Soil saturation degree in each layer</PRE>
+</td><td class="indexvalue"><A HREF="watmod_source.html#433">433</A></td></tr>
+<tr valign="top"><td class="indexkey"><A NAME="sunew">sunew</td><td class="indexvalue">real*8</td><td class="indexvalue">(:)</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Soil saturation degree in each layer at next time step</PRE>
+</td><td class="indexvalue"><A HREF="watmod_source.html#434">434</A></td></tr>
+<tr valign="top"><td class="indexkey"><A NAME="sueq">sueq</td><td class="indexvalue">real*8</td><td class="indexvalue">(:)</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Soil saturation degree above water table in hydrostatic equilibrium</PRE>
+</td><td class="indexvalue"><A HREF="watmod_source.html#435">435</A></td></tr>
+<tr valign="top"><td class="indexkey"><A NAME="dsu">dsu</td><td class="indexvalue">real*8</td><td class="indexvalue">(:)</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Rate of change in soil saturation degree in each layer</PRE>
+</td><td class="indexvalue"><A HREF="watmod_source.html#436">436</A></td></tr>
+<tr valign="top"><td class="indexkey"><A NAME="kunsat_">kunsat_</td><td class="indexvalue">real*8</td><td class="indexvalue">(:)</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Unsaturated hydraulic conductivity in each soil layer</PRE>
+</td><td class="indexvalue"><A HREF="watmod_source.html#438">438</A></td></tr>
+<tr valign="top"><td class="indexkey"><A NAME="kunsatnew">kunsatnew</td><td class="indexvalue">real*8</td><td class="indexvalue">(:)</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Unsaturated hydraulic conductivity in each layer at next time step</PRE>
+</td><td class="indexvalue"><A HREF="watmod_source.html#439">439</A></td></tr>
+<tr valign="top"><td class="indexkey"><A NAME="s_ksat">s_ksat</td><td class="indexvalue">real*8</td><td class="indexvalue">(:)</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Saturated hydraulic conductivity</PRE>
+</td><td class="indexvalue"><A HREF="watmod_source.html#441">441</A></td></tr>
+<tr valign="top"><td class="indexkey"><A NAME="s_thetas">s_thetas</td><td class="indexvalue">real*8</td><td class="indexvalue">(:)</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Saturated soil water content</PRE>
+</td><td class="indexvalue"><A HREF="watmod_source.html#442">442</A></td></tr>
+<tr valign="top"><td class="indexkey"><A NAME="s_thetar">s_thetar</td><td class="indexvalue">real*8</td><td class="indexvalue">(:)</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Residual soil water content</PRE>
+</td><td class="indexvalue"><A HREF="watmod_source.html#443">443</A></td></tr>
+<tr valign="top"><td class="indexkey"><A NAME="s_nvg">s_nvg</td><td class="indexvalue">real*8</td><td class="indexvalue">(:)</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Van Genuchten soil parameter n</PRE>
+</td><td class="indexvalue"><A HREF="watmod_source.html#444">444</A></td></tr>
+<tr valign="top"><td class="indexkey"><A NAME="s_avg">s_avg</td><td class="indexvalue">real*8</td><td class="indexvalue">(:)</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Van Genuchten soil parameter a</PRE>
+</td><td class="indexvalue"><A HREF="watmod_source.html#445">445</A></td></tr>
+<tr valign="top"><td class="indexkey"><A NAME="c_mvg">c_mvg</td><td class="indexvalue">real*8</td><td class="indexvalue">(:)</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Van Genuchten soil parameter m</PRE>
+</td><td class="indexvalue"><A HREF="watmod_source.html#446">446</A></td></tr>
+<tr valign="top"><td class="indexkey"><A NAME="i_cgs">i_cgs</td><td class="indexvalue">real*8</td><td class="indexvalue">&nbsp</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Capital Gamma S (length scale for seepage outflow) (m)</PRE>
+</td><td class="indexvalue"><A HREF="watmod_source.html#454">454</A></td></tr>
+<tr valign="top"><td class="indexkey"><A NAME="i_zr">i_zr</td><td class="indexvalue">real*8</td><td class="indexvalue">&nbsp</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Average channel elevation</PRE>
+</td><td class="indexvalue"><A HREF="watmod_source.html#455">455</A></td></tr>
+<tr valign="top"><td class="indexkey"><A NAME="i_go">i_go</td><td class="indexvalue">real*8</td><td class="indexvalue">&nbsp</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Slope close to channel in radians</PRE>
+</td><td class="indexvalue"><A HREF="watmod_source.html#456">456</A></td></tr>
+<tr valign="top"><td class="indexkey"><A NAME="i_ksat">i_ksat</td><td class="indexvalue">real*8</td><td class="indexvalue">&nbsp</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Saturated hydraulic conductivity</PRE>
+</td><td class="indexvalue"><A HREF="watmod_source.html#460">460</A></td></tr>
+<tr valign="top"><td class="indexkey"><A NAME="i_thetar">i_thetar</td><td class="indexvalue">real*8</td><td class="indexvalue">&nbsp</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Residual soil water content</PRE>
+</td><td class="indexvalue"><A HREF="watmod_source.html#461">461</A></td></tr>
+<tr valign="top"><td class="indexkey"><A NAME="i_thetas">i_thetas</td><td class="indexvalue">real*8</td><td class="indexvalue">&nbsp</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Saturated soil water content</PRE>
+</td><td class="indexvalue"><A HREF="watmod_source.html#462">462</A></td></tr>
+<tr valign="top"><td class="indexkey"><A NAME="i_nvg">i_nvg</td><td class="indexvalue">real*8</td><td class="indexvalue">&nbsp</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Van Genuchten soil parameter n</PRE>
+</td><td class="indexvalue"><A HREF="watmod_source.html#463">463</A></td></tr>
+<tr valign="top"><td class="indexkey"><A NAME="i_avg">i_avg</td><td class="indexvalue">real*8</td><td class="indexvalue">&nbsp</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Van Genuchten soil parameter a</PRE>
+</td><td class="indexvalue"><A HREF="watmod_source.html#464">464</A></td></tr>
+<tr valign="top"><td class="indexkey"><A NAME="i_mvg">i_mvg</td><td class="indexvalue">real*8</td><td class="indexvalue">&nbsp</td><td class="indexvalue">public</td></A></td><td class="indexvalue"><PRE>Van Genuchten soil parameter m</PRE>
+</td><td class="indexvalue"><A HREF="watmod_source.html#465">465</A></td></tr>
 </TABLE>
 </BODY></HTML>

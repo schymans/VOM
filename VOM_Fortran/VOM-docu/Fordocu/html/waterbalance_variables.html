@@ -136,7 +136,6 @@ function printCallRows(xmlhttp,locargs) {
 <div class="tabs">
   <ul>
       <li><a href="waterbalance.html"><span>Header</span></a></li>
-      <li><a href="waterbalance_version_history.html"><span>Version history</span></a></li>
       <li><a href="waterbalance_subroutines_called.html"><span>Subroutines called</span></a></li>
       <li class="current"><a href="waterbalance_variables.html"><span>Variables</span></a></li>
       <li><a href="waterbalance_called_by.html"><span>Called by</span></a></li>
@@ -146,21 +145,7 @@ function printCallRows(xmlhttp,locargs) {
 <h1>Subroutine waterbalance</h1>
 <HR><H2>VARIABLES</H2>
 <TABLE>
-<tr valign="top"><td class="indexkey"><A NAME="dummy">dummy</td><td class="indexvalue">real*8</td></A></td><td class="indexvalue"><PRE><font color='gray'>? &nbsp</font></PRE>
-</td><td class="indexvalue"><A HREF="waterbalance_source.html#50">50</A>, <A HREF="waterbalance_source.html#150">150</A>, <A HREF="waterbalance_source.html#151">151</A>, <A HREF="waterbalance_source.html#152">152</A>, <A HREF="waterbalance_source.html#160">160</A>, <A HREF="waterbalance_source.html#161">161</A>, <A HREF="waterbalance_source.html#162">162</A>, <A HREF="waterbalance_source.html#170">170</A>, <A HREF="waterbalance_source.html#172">172</A>, <A HREF="waterbalance_source.html#176">176</A>, <A HREF="waterbalance_source.html#177">177</A></td></tr>
-<tr valign="top"><td class="indexkey"><A NAME="isnand">isnand</td><td class="indexvalue">logical</td></A></td><td class="indexvalue"><PRE><font color='gray'>? &nbsp</font></PRE>
-</td><td class="indexvalue"><A HREF="waterbalance_source.html#51">51</A></td></tr>
-<tr valign="top"><td class="indexkey"><A NAME="isinfd">isinfd</td><td class="indexvalue">logical</td></A></td><td class="indexvalue"><PRE><font color='gray'>? &nbsp</font></PRE>
-</td><td class="indexvalue"><A HREF="waterbalance_source.html#52">52</A></td></tr>
-<tr valign="top"><td class="indexkey"><A NAME="dtsu">dtsu</td><td class="indexvalue">real*8</td></A></td><td class="indexvalue"><PRE><font color='gray'>? &nbsp</font></PRE>
-</td><td class="indexvalue"><A HREF="waterbalance_source.html#53">53</A>, <A HREF="waterbalance_source.html#205">205</A>, <A HREF="waterbalance_source.html#208">208</A>, <A HREF="waterbalance_source.html#211">211</A>, <A HREF="waterbalance_source.html#225">225</A>, <A HREF="waterbalance_source.html#226">226</A></td></tr>
-<tr valign="top"><td class="indexkey"><A NAME="wc_">wc_</td><td class="indexvalue">real*8</td></A></td><td class="indexvalue"><PRE><font color='gray'>? &nbsp</font></PRE>
-</td><td class="indexvalue"><A HREF="waterbalance_source.html#54">54</A>, <A HREF="waterbalance_source.html#107">107</A>, <A HREF="waterbalance_source.html#282">282</A>, <A HREF="waterbalance_source.html#283">283</A></td></tr>
-<tr valign="top"><td class="indexkey"><A NAME="wcnew">wcnew</td><td class="indexvalue">real*8</td></A></td><td class="indexvalue"><PRE><font color='gray'>? &nbsp</font></PRE>
-</td><td class="indexvalue"><A HREF="waterbalance_source.html#55">55</A>, <A HREF="waterbalance_source.html#278">278</A>, <A HREF="waterbalance_source.html#282">282</A>, <A HREF="waterbalance_source.html#283">283</A></td></tr>
-<tr valign="top"><td class="indexkey"><A NAME="i">i</td><td class="indexvalue">integer</td></A></td><td class="indexvalue"><PRE><font color='gray'>? &nbsp</font></PRE>
-</td><td class="indexvalue"><A HREF="waterbalance_source.html#56">56</A>, <A HREF="waterbalance_source.html#158">158</A>, <A HREF="waterbalance_source.html#159">159</A>, <A HREF="waterbalance_source.html#160">160</A>, <A HREF="waterbalance_source.html#161">161</A>, <A HREF="waterbalance_source.html#162">162</A></td></tr>
-<tr valign="top"><td class="indexkey"><A NAME="j">j</td><td class="indexvalue">integer</td></A></td><td class="indexvalue"><PRE><font color='gray'>? &nbsp</font></PRE>
-</td><td class="indexvalue"><A HREF="waterbalance_source.html#56">56</A>, <A HREF="waterbalance_source.html#73">73</A>, <A HREF="waterbalance_source.html#74">74</A>, <A HREF="waterbalance_source.html#77">77</A>, <A HREF="waterbalance_source.html#78">78</A>, <A HREF="waterbalance_source.html#79">79</A>, <A HREF="waterbalance_source.html#81">81</A>, <A HREF="waterbalance_source.html#82">82</A>, <A HREF="waterbalance_source.html#128">128</A>, <A HREF="waterbalance_source.html#129">129</A>, <A HREF="waterbalance_source.html#130">130</A>, <A HREF="waterbalance_source.html#131">131</A>, <A HREF="waterbalance_source.html#192">192</A>, <A HREF="waterbalance_source.html#193">193</A>, <A HREF="waterbalance_source.html#206">206</A>, <A HREF="waterbalance_source.html#207">207</A>, <A HREF="waterbalance_source.html#208">208</A>, <A HREF="waterbalance_source.html#210">210</A>, <A HREF="waterbalance_source.html#211">211</A>, <A HREF="waterbalance_source.html#212">212</A>, <A HREF="waterbalance_source.html#235">235</A>, <A HREF="waterbalance_source.html#238">238</A>, <A HREF="waterbalance_source.html#239">239</A>, <A HREF="waterbalance_source.html#240">240</A></td></tr>
+<tr valign="top"><td class="indexkey"><A NAME="jj">jj</td><td class="indexvalue">integer</td></A></td><td class="indexvalue"><PRE><font color='gray'>? * Definitions</font></PRE>
+</td><td class="indexvalue"><A HREF="waterbalance_source.html#47">47</A>, <A HREF="waterbalance_source.html#73">73</A>, <A HREF="waterbalance_source.html#74">74</A></td></tr>
 </TABLE>
 </BODY></HTML>

@@ -136,7 +136,6 @@ function printCallRows(xmlhttp,locargs) {
 <div class="tabs">
   <ul>
       <li><a href="sce_init.html"><span>Header</span></a></li>
-      <li><a href="sce_init_version_history.html"><span>Version history</span></a></li>
       <li><a href="sce_init_subroutines_called.html"><span>Subroutines called</span></a></li>
       <li><a href="sce_init_variables.html"><span>Variables</span></a></li>
       <li><a href="sce_init_called_by.html"><span>Called by</span></a></li>
@@ -145,113 +144,123 @@ function printCallRows(xmlhttp,locargs) {
 </div>
 <h1>Subroutine sce_init</h1>
 <PRE>
+<A NAME="182">182 : </A><font color="#007700"></font>
+<A NAME="183">183 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+<A NAME="184">184 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+<A NAME="185">185 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+<A NAME="186">186 : </A><font color="#007700"></font>
+<A NAME="187">187 : </A>      <font color='#aa2200'>subroutine</font> sce_init (<A HREF='sce_init.html#run_initialseed'>run_initialseed</A>)<font color="#007700"></font>
+<A NAME="188">188 : </A>      <font color='#aa2200'>use</font> vom_sce_mod<font color="#007700"></font>
+<A NAME="189">189 : </A>      <font color='#aa2200'>implicit</font> <font color='#aa2200'>none</font><font color="#007700"></font>
+<A NAME="190">190 : </A><font color="#007700"></font>
+<A NAME="191">191 : </A>      <font color='#aa2200'>INTEGER</font>, <font color='#aa2200'>INTENT</font>(<font color='#aa2200'>out</font>) :: <A HREF='sce_init.html#run_initialseed'>run_initialseed</A><font color="#007700"></font>
+<A NAME="192">192 : </A><font color="#007700"></font>
+<A NAME="193">193 : </A>      <font color='#aa2200'>INTEGER</font>             :: <A HREF='sce_init_variables.html#ii'>ii</A>, <A HREF='sce_init_variables.html#jj'>jj</A><font color="#007700"></font>
+<A NAME="194">194 : </A>      <font color='#aa2200'>CHARACTER</font>(3)        :: <A HREF='sce_init_variables.html#str'>str</A><font color="#007700"></font>
+<A NAME="195">195 : </A>      <font color='#aa2200'>CHARACTER</font>(24)       :: <A HREF='sce_init_variables.html#logdate'>logdate</A><font color="#007700"></font>
+<A NAME="196">196 : </A>      <font color='#aa2200'>CHARACTER</font>(<font color='#aa2200'>len</font>=135)  :: <A HREF='sce_init_variables.html#msg'>msg</A><font color="#007700"></font>
+<A NAME="197">197 : </A><font color="#007700"></font>
+<A NAME="198">198 : </A>!<font color="#007700">EXTERNAL compar</font>
+<A NAME="199">199 : </A>!<font color="#007700">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</font>
+<A NAME="200">200 : </A>!<font color="#007700"> Initialize the random number generator</font>
+<A NAME="201">201 : </A>!<font color="#007700"> (standard subroutine, based on the date and time)</font>
+<A NAME="202">202 : </A>      <font color='#aa2200'>if</font> (vom_command <font color='#cc00cc'>.ne.</font> 4) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="203">203 : </A>        <font color='#aa2200'>CALL</font> <font color='#aa2200'>RANDOM_SEED</font>()<font color="#007700"></font>
+<A NAME="204">204 : </A>      <font color='#aa2200'>endif</font><font color="#007700"></font>
+<A NAME="205">205 : </A>      <font color='#aa2200'>call</font> <font color='#aa2200'>fdate</font>(<A HREF='sce_init_variables.html#logdate'>logdate</A>)<font color="#007700"></font>
+<A NAME="206">206 : </A>!<font color="#007700">only run the next part the first time for allocation</font>
+<A NAME="207">207 : </A><font color='#aa2200'>if</font>( .<font color='#aa2200'>not</font>. <font color='#aa2200'>allocated</font>(<A HREF='sce_init_subroutines_called.html#optid'>optid</A>) ) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="208">208 : </A>      <font color='#aa2200'>call</font> <A HREF='sce_init_subroutines_called.html#read_shufflevar'>read_shufflevar</A>()<font color="#007700"></font>
+<A NAME="209">209 : </A><font color="#007700"></font>
+<A NAME="210">210 : </A><font color="#007700"></font>
+<A NAME="211">211 : </A>   !<font color="#007700">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</font>
+<A NAME="212">212 : </A>   !<font color="#007700"> WRITE SCREEN HEADER</font>
+<A NAME="213">213 : </A><font color="#007700"></font>
+<A NAME="214">214 : </A>      <font color='#aa2200'>write</font>(*,*) 'SHUFFLED <font color='#aa2200'>COMPLEX</font> EVOLUTION OPTIMISER'<font color="#007700"></font>
 <A NAME="215">215 : </A><font color="#007700"></font>
-<A NAME="216">216 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
-<A NAME="217">217 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
-<A NAME="218">218 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+<A NAME="216">216 : </A>      <font color='#aa2200'>write</font>(*,*) " "<font color="#007700"></font>
+<A NAME="217">217 : </A>      <font color='#aa2200'>write</font>(<A HREF='sce_init_variables.html#msg'>msg</A>,'("  Run <font color='#aa2200'>time</font>:   ",A)') <A HREF='sce_init_variables.html#logdate'>logdate</A><font color="#007700"></font>
+<A NAME="218">218 : </A>      <font color='#aa2200'>write</font>(*,*) <font color='#aa2200'>TRIM</font>(<A HREF='sce_init_variables.html#msg'>msg</A>)<font color="#007700"></font>
 <A NAME="219">219 : </A><font color="#007700"></font>
-<A NAME="220">220 : </A>      <font color='#aa2200'>subroutine</font> sce_init ()<font color="#007700"></font>
-<A NAME="221">221 : </A>      <font color='#aa2200'>use</font> sce_mod<font color="#007700"></font>
-<A NAME="222">222 : </A>      <font color='#aa2200'>implicit</font> <font color='#aa2200'>none</font><font color="#007700"></font>
+<A NAME="220">220 : </A>   !<font color="#007700">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</font>
+<A NAME="221">221 : </A>   !<font color="#007700"> READ PARAMETER FILE shufflevar</font>
+<A NAME="222">222 : </A><font color="#007700"></font>
 <A NAME="223">223 : </A><font color="#007700"></font>
-<A NAME="224">224 : </A>      <font color='#aa2200'>INTEGER</font> :: <A HREF='sce_init_variables.html#i_'>i_</A>, <A HREF='sce_init_variables.html#j_'>j_</A>, <A HREF='sce_init_variables.html#ios'>ios</A><font color="#007700"></font>
-<A NAME="225">225 : </A>      <font color='#aa2200'>INTEGER</font>, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='sce_init_variables.html#paropt'>paropt</A>(:)<font color="#007700"></font>
-<A NAME="226">226 : </A>      <font color='#aa2200'>CHARACTER</font>(3)   :: <A HREF='sce_init_variables.html#str'>str</A><font color="#007700"></font>
-<A NAME="227">227 : </A>      <font color='#aa2200'>CHARACTER</font>(60)  :: <A HREF='sce_init_variables.html#informat'>informat</A><font color="#007700"></font>
-<A NAME="228">228 : </A><font color="#007700"></font>
-<A NAME="229">229 : </A>!<font color="#007700">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</font>
-<A NAME="230">230 : </A>!<font color="#007700"> FIND AND OPEN PARAMETER FILE, shuffle.par</font>
-<A NAME="231">231 : </A>!<font color="#007700"> ESTABLISH NUMBER OF PARAMETERS npar</font>
-<A NAME="232">232 : </A><font color="#007700"></font>
-<A NAME="233">233 : </A>      <font color='#aa2200'>open</font>(kfile_shufflepar, <font color='#aa2200'>file</font>=sfile_shufflepar(1:<font color='#aa2200'>len_trim</font>(sfile_shufflepar)), <font color='#aa2200'>status</font>='old')<font color="#007700"></font>
-<A NAME="234">234 : </A>      <font color='#aa2200'>read</font>(kfile_shufflepar,*)<font color="#007700"></font>
-<A NAME="235">235 : </A>      <font color='#aa2200'>read</font>(kfile_shufflepar,*)<font color="#007700"></font>
-<A NAME="236">236 : </A>      npar = 0<font color="#007700"></font>
-<A NAME="237">237 : </A>      <font color='#aa2200'>do</font><font color="#007700"></font>
-<A NAME="238">238 : </A>        <font color='#aa2200'>read</font>(kfile_shufflepar,*,<font color='#aa2200'>iostat</font>=<A HREF='sce_init_variables.html#ios'>ios</A>) <A HREF='sce_init_variables.html#str'>str</A><font color="#007700"></font>
-<A NAME="239">239 : </A>        <font color='#aa2200'>if</font> (<A HREF='sce_init_variables.html#ios'>ios</A> <font color='#cc00cc'>.lt.</font> 0) <font color='#aa2200'>exit</font><font color="#007700"></font>
-<A NAME="240">240 : </A>        <font color='#aa2200'>if</font> (<A HREF='sce_init_variables.html#str'>str</A> <font color='#cc00cc'>.eq.</font> 'var') npar = npar + 1<font color="#007700"></font>
-<A NAME="241">241 : </A>      <font color='#aa2200'>enddo</font><font color="#007700"></font>
-<A NAME="242">242 : </A>      <font color='#aa2200'>rewind</font>(kfile_shufflepar)<font color="#007700"></font>
-<A NAME="243">243 : </A>      <font color='#aa2200'>allocate</font>(<A HREF='sce_init_subroutines_called.html#parname'>parname</A>(npar))<font color="#007700"></font>
-<A NAME="244">244 : </A>      <font color='#aa2200'>allocate</font>(<A HREF='sce_init_subroutines_called.html#parval'>parval</A>(npar))<font color="#007700"></font>
-<A NAME="245">245 : </A>      <font color='#aa2200'>allocate</font>(<A HREF='sce_init_subroutines_called.html#parmin'>parmin</A>(npar))<font color="#007700"></font>
-<A NAME="246">246 : </A>      <font color='#aa2200'>allocate</font>(<A HREF='sce_init_subroutines_called.html#parmax'>parmax</A>(npar))<font color="#007700"></font>
-<A NAME="247">247 : </A>      <font color='#aa2200'>allocate</font>(<A HREF='sce_init_variables.html#paropt'>paropt</A>(npar))<font color="#007700"></font>
-<A NAME="248">248 : </A><font color="#007700"></font>
-<A NAME="249">249 : </A>!<font color="#007700">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</font>
-<A NAME="250">250 : </A>!<font color="#007700">  LOAD INITIAL PARAMETER VALUES AND PARAMETER RANGES</font>
-<A NAME="251">251 : </A><font color="#007700"></font>
-<A NAME="252">252 : </A>      <font color='#aa2200'>read</font>(kfile_shufflepar,'(i1)') command<font color="#007700"></font>
-<A NAME="253">253 : </A>      <font color='#aa2200'>read</font>(kfile_shufflepar,*) ncomp<font color="#007700"></font>
-<A NAME="254">254 : </A>      <font color='#aa2200'>read</font>(kfile_shufflepar,*) ncompmin<font color="#007700"></font>
-<A NAME="255">255 : </A>      <font color='#aa2200'>read</font>(kfile_shufflepar,*) resolution<font color="#007700"></font>
-<A NAME="256">256 : </A>      <font color='#aa2200'>read</font>(kfile_shufflepar,*) patience<font color="#007700"></font>
-<A NAME="257">257 : </A>      <font color='#aa2200'>read</font>(kfile_shufflepar,*) alpha<font color="#007700"></font>
-<A NAME="258">258 : </A>      <font color='#aa2200'>read</font>(kfile_shufflepar,*) focus<font color="#007700"></font>
-<A NAME="259">259 : </A>      <font color='#aa2200'>read</font>(kfile_shufflepar,'(a60)') <A HREF='sce_init_variables.html#informat'>informat</A><font color="#007700"></font>
-<A NAME="260">260 : </A>      <font color='#aa2200'>do</font> <A HREF='sce_init_variables.html#i_'>i_</A> = 1, npar<font color="#007700"></font>
-<A NAME="261">261 : </A>        <font color='#aa2200'>read</font>(kfile_shufflepar,<A HREF='sce_init_variables.html#informat'>informat</A>) <A HREF='sce_init_subroutines_called.html#parname'>parname</A>(<A HREF='sce_init_variables.html#i_'>i_</A>), <A HREF='sce_init_subroutines_called.html#parval'>parval</A>(<A HREF='sce_init_variables.html#i_'>i_</A>), <A HREF='sce_init_subroutines_called.html#parmin'>parmin</A>(<A HREF='sce_init_variables.html#i_'>i_</A>), &<font color="#007700"></font>
-<A NAME="262">262 : </A>     &                                  <A HREF='sce_init_subroutines_called.html#parmax'>parmax</A>(<A HREF='sce_init_variables.html#i_'>i_</A>), <A HREF='sce_init_variables.html#paropt'>paropt</A>(<A HREF='sce_init_variables.html#i_'>i_</A>)<font color="#007700"></font>
-<A NAME="263">263 : </A>      <font color='#aa2200'>enddo</font><font color="#007700"></font>
-<A NAME="264">264 : </A>      <font color='#aa2200'>close</font>(kfile_shufflepar)<font color="#007700"></font>
+<A NAME="224">224 : </A>   !<font color="#007700">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</font>
+<A NAME="225">225 : </A>   !<font color="#007700"> CALCULATE NUMBER OF OPTIMISABLE PARAMETERS</font>
+<A NAME="226">226 : </A><font color="#007700"></font>
+<A NAME="227">227 : </A>      nopt = <font color='#aa2200'>SUM</font>(<A HREF='sce_init_subroutines_called.html#paropt'>paropt</A>(:))<font color="#007700"></font>
+<A NAME="228">228 : </A>      mopt = 2 * nopt + 1               !<font color="#007700"> SCE VARIABLE m</font>
+<A NAME="229">229 : </A>!<font color="#007700">     * number of complexes after Muttil(2004) or from shuffle.par</font>
+<A NAME="230">230 : </A>      i_ncomp_ = <font color='#aa2200'>MAX</font>(i_ncomp_, <font color='#aa2200'>CEILING</font>(1.d0 + 2.d0 ** nopt             &<font color="#007700"></font>
+<A NAME="231">231 : </A>     &         / (1.d0 + 2.d0 * nopt)))<font color="#007700"></font>
+<A NAME="232">232 : </A>      sopt = mopt * i_ncomp_            !<font color="#007700"> SCE VARIABLE s</font>
+<A NAME="233">233 : </A>      qopt = nopt + 1                   !<font color="#007700"> CCE VARIABLE q</font>
+<A NAME="234">234 : </A>      ncomp2 = i_ncomp_<font color="#007700"></font>
+<A NAME="235">235 : </A><font color="#007700"></font>
+<A NAME="236">236 : </A>   !<font color="#007700">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</font>
+<A NAME="237">237 : </A>   !<font color="#007700"> ALLOCATE GLOBAL FIELDS</font>
+<A NAME="238">238 : </A><font color="#007700"></font>
+<A NAME="239">239 : </A><font color="#007700"></font>
+<A NAME="240">240 : </A><font color="#007700"></font>
+<A NAME="241">241 : </A>      <font color='#aa2200'>allocate</font>(<A HREF='sce_init_subroutines_called.html#optid'>optid</A>(nopt))<font color="#007700"></font>
+<A NAME="242">242 : </A>      <font color='#aa2200'>allocate</font>(<A HREF='sce_init_subroutines_called.html#shufflevar'>shufflevar</A>(vom_npar,sopt))<font color="#007700"></font>
+<A NAME="243">243 : </A>      <font color='#aa2200'>allocate</font>(<A HREF='sce_init_subroutines_called.html#ofvec'>ofvec</A>(sopt))<font color="#007700"></font>
+<A NAME="244">244 : </A>      <font color='#aa2200'>allocate</font>(<A HREF='sce_init_subroutines_called.html#wgt'>wgt</A>(mopt))<font color="#007700"></font>
+<A NAME="245">245 : </A>      <font color='#aa2200'>allocate</font>(<A HREF='sce_init_subroutines_called.html#cv_'>cv_</A>(nopt))<font color="#007700"></font>
+<A NAME="246">246 : </A>      <font color='#aa2200'>allocate</font>(<A HREF='sce_init_subroutines_called.html#ranarr'>ranarr</A>(nopt))<font color="#007700"></font>
+<A NAME="247">247 : </A>      !<font color="#007700">allocate(ranarr_simplex(nopt))</font>
+<A NAME="248">248 : </A>      <font color='#aa2200'>allocate</font>(<A HREF='sce_init_subroutines_called.html#dataarray'>dataarray</A>(nopt*8+1,nopt+1))<font color="#007700"></font>
+<A NAME="249">249 : </A>      <font color='#aa2200'>allocate</font>(<A HREF='sce_init_subroutines_called.html#shufflevar2'>shufflevar2</A>(vom_npar))<font color="#007700"></font>
+<A NAME="250">250 : </A>      !<font color="#007700">allocate(parentsid(qopt))</font>
+<A NAME="251">251 : </A>      !<font color="#007700">allocate(objfunsub(qopt))</font>
+<A NAME="252">252 : </A>      !<font color="#007700">allocate(invarsub(vom_npar,qopt))</font>
+<A NAME="253">253 : </A>     !<font color="#007700"> allocate(selected(mopt))</font>
+<A NAME="254">254 : </A>     !<font color="#007700"> allocate(centroid(vom_npar))</font>
+<A NAME="255">255 : </A>     !<font color="#007700"> allocate(newpoint(vom_npar))</font>
+<A NAME="256">256 : </A>      <font color='#aa2200'>allocate</font>(<A HREF='sce_init_subroutines_called.html#posarray'>posarray</A>(2**nopt,nopt))<font color="#007700"></font>
+<A NAME="257">257 : </A>      <font color='#aa2200'>allocate</font>(<A HREF='sce_init_subroutines_called.html#initpop'>initpop</A>(nopt,5))<font color="#007700"></font>
+<A NAME="258">258 : </A>      <font color='#aa2200'>allocate</font>(<A HREF='sce_init_subroutines_called.html#sumvar'>sumvar</A>(nopt))<font color="#007700"></font>
+<A NAME="259">259 : </A><font color="#007700"></font>
+<A NAME="260">260 : </A><font color='#aa2200'>end</font> <font color='#aa2200'>if</font><font color="#007700"></font>
+<A NAME="261">261 : </A><font color="#007700"></font>
+<A NAME="262">262 : </A>!<font color="#007700">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</font>
+<A NAME="263">263 : </A>!<font color="#007700"> INITIALISE OUTPUT FORMAT STRING</font>
+<A NAME="264">264 : </A>!<font color="#007700"> INTRODUCED BY STAN TO HAVE ONE COLUMN PER PARAMETER AND ONE FOR OF</font>
 <A NAME="265">265 : </A><font color="#007700"></font>
-<A NAME="266">266 : </A>!<font color="#007700">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</font>
-<A NAME="267">267 : </A>!<font color="#007700">  CALCULATE NUMBER OF OPTIMISABLE PARAMETERS</font>
+<A NAME="266">266 : </A>      <font color='#aa2200'>write</font>(<A HREF='sce_init_variables.html#str'>str</A>,'(i2)') vom_npar + 1    !<font color="#007700"> internal write to convert from integer to string</font>
+<A NAME="267">267 : </A>      outformat = '('//<A HREF='sce_init_variables.html#str'>str</A>//'e24.15)'   !<font color="#007700"> includes a column for each parameter and a column for the value of OF</font>
 <A NAME="268">268 : </A><font color="#007700"></font>
-<A NAME="269">269 : </A>      nopt = <font color='#aa2200'>sum</font>(<A HREF='sce_init_variables.html#paropt'>paropt</A>(:))<font color="#007700"></font>
-<A NAME="270">270 : </A>      mopt = 2 * nopt + 1                         !<font color="#007700"> SCE VARIABLE m</font>
-<A NAME="271">271 : </A>      ncomp = <font color='#aa2200'>MAX</font>(ncomp, <font color='#aa2200'>Ceiling</font>(1.d0 + 2.d0 ** nopt / (1.d0 + 2.d0 * nopt)))  !<font color="#007700"> number of complexes after Muttil(2004) or from shuffle.par</font>
-<A NAME="272">272 : </A>      sopt = mopt * ncomp                         !<font color="#007700"> SCE VARIABLE s</font>
-<A NAME="273">273 : </A>      qopt = nopt + 1                             !<font color="#007700"> CCE VARIABLE q</font>
-<A NAME="274">274 : </A>      ncomp2 = ncomp<font color="#007700"></font>
-<A NAME="275">275 : </A>      <font color='#aa2200'>allocate</font>(<A HREF='sce_init_subroutines_called.html#optid'>optid</A>(nopt))<font color="#007700"></font>
-<A NAME="276">276 : </A>      <font color='#aa2200'>allocate</font>(<A HREF='sce_init_subroutines_called.html#shufflevar'>shufflevar</A>(npar,sopt))<font color="#007700"></font>
-<A NAME="277">277 : </A>      <font color='#aa2200'>allocate</font>(<A HREF='sce_init_subroutines_called.html#ofvec'>ofvec</A>(sopt))<font color="#007700"></font>
-<A NAME="278">278 : </A>      <font color='#aa2200'>allocate</font>(<A HREF='sce_init_subroutines_called.html#wgt'>wgt</A>(mopt))<font color="#007700"></font>
-<A NAME="279">279 : </A>      <font color='#aa2200'>allocate</font>(<A HREF='sce_init_subroutines_called.html#cv_'>cv_</A>(nopt))<font color="#007700"></font>
-<A NAME="280">280 : </A>      <font color='#aa2200'>allocate</font>(<A HREF='sce_init_subroutines_called.html#ranarr'>ranarr</A>(nopt))<font color="#007700"></font>
-<A NAME="281">281 : </A>      <font color='#aa2200'>allocate</font>(<A HREF='sce_init_subroutines_called.html#dataarray'>dataarray</A>(nopt*8+1,nopt+1))<font color="#007700"></font>
-<A NAME="282">282 : </A>      <font color='#aa2200'>allocate</font>(<A HREF='sce_init_subroutines_called.html#shufflevar2'>shufflevar2</A>(npar))<font color="#007700"></font>
-<A NAME="283">283 : </A>      <font color='#aa2200'>allocate</font>(<A HREF='sce_init_subroutines_called.html#parentsid'>parentsid</A>(qopt))<font color="#007700"></font>
-<A NAME="284">284 : </A>      <font color='#aa2200'>allocate</font>(<A HREF='sce_init_subroutines_called.html#objfunsub'>objfunsub</A>(qopt))<font color="#007700"></font>
-<A NAME="285">285 : </A>      <font color='#aa2200'>allocate</font>(<A HREF='sce_init_subroutines_called.html#invarsub'>invarsub</A>(npar,qopt))<font color="#007700"></font>
-<A NAME="286">286 : </A>      <font color='#aa2200'>allocate</font>(<A HREF='sce_init_subroutines_called.html#selected'>selected</A>(mopt))<font color="#007700"></font>
-<A NAME="287">287 : </A>      <font color='#aa2200'>allocate</font>(<A HREF='sce_init_subroutines_called.html#centroid'>centroid</A>(npar))<font color="#007700"></font>
-<A NAME="288">288 : </A>      <font color='#aa2200'>allocate</font>(<A HREF='sce_init_subroutines_called.html#newpoint'>newpoint</A>(npar))<font color="#007700"></font>
-<A NAME="289">289 : </A><font color="#007700"></font>
-<A NAME="290">290 : </A>!<font color="#007700">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</font>
-<A NAME="291">291 : </A>!<font color="#007700"> INITIALISE OUTPUT FORMAT STRING</font>
-<A NAME="292">292 : </A>!<font color="#007700"> INTRODUCED BY STAN TO HAVE ONE COLUMN PER PARAMETER AND ONE FOR OF</font>
-<A NAME="293">293 : </A><font color="#007700"></font>
-<A NAME="294">294 : </A>      <font color='#aa2200'>write</font>(<A HREF='sce_init_variables.html#str'>str</A>,'(i2)') npar + 1                  !<font color="#007700"> internal write to convert from integer to string</font>
-<A NAME="295">295 : </A>      outformat = '('//<A HREF='sce_init_variables.html#str'>str</A>//'e34.25)'             !<font color="#007700"> includes a column for each parameter and a column for the value of OF</font>
+<A NAME="269">269 : </A>!<font color="#007700">     * ADDED BY STAN TO WRITE shufflevar AND ofvec OF LAST LOOP TO FILE</font>
+<A NAME="270">270 : </A>      <font color='#aa2200'>write</font>(<A HREF='sce_init_variables.html#str'>str</A>,'(i3)') sopt            !<font color="#007700"> internal write to convert from number to string</font>
+<A NAME="271">271 : </A>      loopformat = '('//<A HREF='sce_init_variables.html#str'>str</A>//'e24.15)'  !<font color="#007700"> includes a column for each set</font>
+<A NAME="272">272 : </A><font color="#007700"></font>
+<A NAME="273">273 : </A>!<font color="#007700">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</font>
+<A NAME="274">274 : </A>!<font color="#007700"> INITIALISE optid: THE INDEX OF THOSE PARAMETERS THAT ARE OPTIMISABLE</font>
+<A NAME="275">275 : </A><font color="#007700"></font>
+<A NAME="276">276 : </A>      <A HREF='sce_init_variables.html#jj'>jj</A> = 0<font color="#007700"></font>
+<A NAME="277">277 : </A>      <font color='#aa2200'>do</font> <A HREF='sce_init_variables.html#ii'>ii</A> = 1, vom_npar<font color="#007700"></font>
+<A NAME="278">278 : </A>        <font color='#aa2200'>if</font> (<A HREF='sce_init_subroutines_called.html#paropt'>paropt</A>(<A HREF='sce_init_variables.html#ii'>ii</A>) <font color='#cc00cc'>.gt.</font> 0) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="279">279 : </A>          <A HREF='sce_init_variables.html#jj'>jj</A> = <A HREF='sce_init_variables.html#jj'>jj</A> + 1<font color="#007700"></font>
+<A NAME="280">280 : </A>          <A HREF='sce_init_subroutines_called.html#optid'>optid</A>(<A HREF='sce_init_variables.html#jj'>jj</A>) = <A HREF='sce_init_variables.html#ii'>ii</A><font color="#007700"></font>
+<A NAME="281">281 : </A>        <font color='#aa2200'>endif</font><font color="#007700"></font>
+<A NAME="282">282 : </A>      <font color='#aa2200'>enddo</font><font color="#007700"></font>
+<A NAME="283">283 : </A><font color="#007700"></font>
+<A NAME="284">284 : </A>!<font color="#007700">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</font>
+<A NAME="285">285 : </A>!<font color="#007700"> INITIALISE optid: THE INDEX OF THOSE PARAMETERS THAT ARE OPTIMISABLE</font>
+<A NAME="286">286 : </A>!<font color="#007700"> ASSIGN PROBABILITY WEIGHTS</font>
+<A NAME="287">287 : </A><font color="#007700"></font>
+<A NAME="288">288 : </A>      <font color='#aa2200'>do</font> <A HREF='sce_init_variables.html#ii'>ii</A> = 1, mopt<font color="#007700"></font>
+<A NAME="289">289 : </A>        <A HREF='sce_init_subroutines_called.html#wgt'>wgt</A>(<A HREF='sce_init_variables.html#ii'>ii</A>) = 2.d0 * (mopt + 1.d0 - <A HREF='sce_init_variables.html#ii'>ii</A>) / mopt / (mopt + 1.d0)<font color="#007700"></font>
+<A NAME="290">290 : </A>      <font color='#aa2200'>enddo</font><font color="#007700"></font>
+<A NAME="291">291 : </A><font color="#007700"></font>
+<A NAME="292">292 : </A>!<font color="#007700">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</font>
+<A NAME="293">293 : </A>!<font color="#007700"> INSERTED BY STAN TO ALLOW CONTINUATION OF OPTIMSATION FROM PREVIOUSLY SAVED STEP</font>
+<A NAME="294">294 : </A><font color="#007700"></font>
+<A NAME="295">295 : </A>      <font color='#aa2200'>call</font> <A HREF='sce_init_subroutines_called.html#open_output'>open_output</A> (<A HREF='sce_init_variables.html#logdate'>logdate</A>, <A HREF='sce_init.html#run_initialseed'>run_initialseed</A>)<font color="#007700"></font>
 <A NAME="296">296 : </A><font color="#007700"></font>
-<A NAME="297">297 : </A>!<font color="#007700">     * ADDED BY STAN TO WRITE shufflevar AND ofvec OF LAST LOOP TO FILE</font>
-<A NAME="298">298 : </A>      <font color='#aa2200'>write</font>(<A HREF='sce_init_variables.html#str'>str</A>,'(i3)') sopt                      !<font color="#007700"> internal write to convert from number to string</font>
-<A NAME="299">299 : </A>      loopformat = '('//<A HREF='sce_init_variables.html#str'>str</A>//'e34.25)'            !<font color="#007700"> includes a column for each set </font>
-<A NAME="300">300 : </A><font color="#007700"></font>
-<A NAME="301">301 : </A>!<font color="#007700">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</font>
-<A NAME="302">302 : </A>!<font color="#007700"> INITIALISE optid: THE INDEX OF THOSE PARAMETERS THAT ARE OPTIMISABLE</font>
-<A NAME="303">303 : </A><font color="#007700"></font>
-<A NAME="304">304 : </A>      <A HREF='sce_init_variables.html#j_'>j_</A> = 0<font color="#007700"></font>
-<A NAME="305">305 : </A>      <font color='#aa2200'>do</font> <A HREF='sce_init_variables.html#i_'>i_</A> = 1, npar<font color="#007700"></font>
-<A NAME="306">306 : </A>        <font color='#aa2200'>if</font> (<A HREF='sce_init_variables.html#paropt'>paropt</A>(<A HREF='sce_init_variables.html#i_'>i_</A>) <font color='#cc00cc'>.gt.</font> 0) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="307">307 : </A>          <A HREF='sce_init_variables.html#j_'>j_</A> = <A HREF='sce_init_variables.html#j_'>j_</A> + 1<font color="#007700"></font>
-<A NAME="308">308 : </A>          <A HREF='sce_init_subroutines_called.html#optid'>optid</A>(<A HREF='sce_init_variables.html#j_'>j_</A>) = <A HREF='sce_init_variables.html#i_'>i_</A><font color="#007700"></font>
-<A NAME="309">309 : </A>        <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="310">310 : </A>      <font color='#aa2200'>enddo</font><font color="#007700"></font>
-<A NAME="311">311 : </A><font color="#007700"></font>
-<A NAME="312">312 : </A>!<font color="#007700">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</font>
-<A NAME="313">313 : </A>!<font color="#007700"> INITIALISE optid: THE INDEX OF THOSE PARAMETERS THAT ARE OPTIMISABLE</font>
-<A NAME="314">314 : </A>!<font color="#007700"> ASSIGN PROBABILITY WEIGHTS</font>
-<A NAME="315">315 : </A><font color="#007700"></font>
-<A NAME="316">316 : </A>      <font color='#aa2200'>do</font> <A HREF='sce_init_variables.html#i_'>i_</A> = 1, mopt<font color="#007700"></font>
-<A NAME="317">317 : </A>        <A HREF='sce_init_subroutines_called.html#wgt'>wgt</A>(<A HREF='sce_init_variables.html#i_'>i_</A>) = 2.d0 * (mopt + 1.d0 - <A HREF='sce_init_variables.html#i_'>i_</A>) / mopt / (mopt + 1.d0)<font color="#007700"></font>
-<A NAME="318">318 : </A>      <font color='#aa2200'>enddo</font><font color="#007700"></font>
-<A NAME="319">319 : </A><font color="#007700"></font>
-<A NAME="320">320 : </A>      <font color='#aa2200'>return</font><font color="#007700"></font>
-<A NAME="321">321 : </A>      <font color='#aa2200'>end</font> <font color='#aa2200'>subroutine</font> sce_init<font color="#007700"></font>
+<A NAME="297">297 : </A>      <font color='#aa2200'>return</font><font color="#007700"></font>
+<A NAME="298">298 : </A>      <font color='#aa2200'>end</font> <font color='#aa2200'>subroutine</font> sce_init<font color="#007700"></font>
 
 </PRE>
 </BODY></HTML>

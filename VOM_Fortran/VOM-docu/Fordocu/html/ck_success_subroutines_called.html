@@ -136,8 +136,8 @@ function printCallRows(xmlhttp,locargs) {
 <div class="tabs">
   <ul>
       <li><a href="ck_success.html"><span>Header</span></a></li>
-      <li><a href="ck_success_version_history.html"><span>Version history</span></a></li>
       <li class="current"><a href="ck_success_subroutines_called.html"><span>Subroutines called</span></a></li>
+      <li><a href="ck_success_variables.html"><span>Variables</span></a></li>
       <li><a href="ck_success_called_by.html"><span>Called by</span></a></li>
       <li><a href="ck_success_source.html"><span>Source</span></a></li>
   </ul>
@@ -149,19 +149,19 @@ function printCallRows(xmlhttp,locargs) {
       <td class='indexkey'><script type='text/javascript'>document.write(getURL('optsensitivity','optsensitivity.html'));</script></td>
       <td class="indexvalue" width="40%"><PRE><script type='text/javascript'>var xmlhttp = openURL('optsensitivity.html');if (xmlhttp) {   document.write(getHeaderText(xmlhttp,'optsensitivity'));}</script></PRE>
 </td>
-      <td class="indexvalue" width="20%"><A HREF="ck_success_source.html#485">485</A></td>
+      <td class="indexvalue" width="20%"><A HREF="ck_success_source.html#609">609</A></td>
    </tr>
    <tr valign="top">
       <td class='indexkey'><script type='text/javascript'>document.write(getURL('sortcomp','sortcomp.html'));</script></td>
       <td class="indexvalue" width="40%"><PRE><script type='text/javascript'>var xmlhttp = openURL('sortcomp.html');if (xmlhttp) {   document.write(getHeaderText(xmlhttp,'sortcomp'));}</script></PRE>
 </td>
-      <td class="indexvalue" width="20%"><A HREF="ck_success_source.html#487">487</A>, <A HREF="ck_success_source.html#498">498</A></td>
+      <td class="indexvalue" width="20%"><A HREF="ck_success_source.html#615">615</A>, <A HREF="ck_success_source.html#625">625</A></td>
    </tr>
    <tr valign="top">
       <td class='indexkey'><script type='text/javascript'>document.write(getURL('writepars','writepars.html'));</script></td>
       <td class="indexvalue" width="40%"><PRE><script type='text/javascript'>var xmlhttp = openURL('writepars.html');if (xmlhttp) {   document.write(getHeaderText(xmlhttp,'writepars'));}</script></PRE>
 </td>
-      <td class="indexvalue" width="20%"><A HREF="ck_success_source.html#488">488</A>, <A HREF="ck_success_source.html#499">499</A></td>
+      <td class="indexvalue" width="20%"><A HREF="ck_success_source.html#616">616</A>, <A HREF="ck_success_source.html#626">626</A></td>
    </tr>
 </TABLE>
 <HR><H2>CALL DETAILS</H2>
@@ -175,17 +175,17 @@ if (xmlhttp) {
 xmlhttp = openURL('sortcomp.html')
 if (xmlhttp) {
    var remname = getURL('sortcomp','sortcomp.html', xmlhttp);
-   document.write('<P>Call to ' + remname +' on line <A HREF="ck_success_source.html#487">487</A>');
+   document.write('<P>Call to ' + remname +' on line <A HREF="ck_success_source.html#615">615</A>');
    document.write('<TABLE>')
    document.write('<tr valign="top"><td class="indexkey">ck_success</td><td class="indexkey">sortcomp</td><td class="indexkey">description</td></tr>');
-   var locargs = new Array('shufflevar(:,:)','shape(shufflevar(:,:))','ofvec(:)','size(ofvec(:))');
+   var locargs = new Array('shufflevar(:,:)','tmp2(:)','ofvec(:)','SIZE(ofvec(:))');
    printCallRows(xmlhttp,locargs);
    document.write('</TABLE></P>');
    var remname = getURL('sortcomp','sortcomp.html', xmlhttp);
-   document.write('<P>Call to ' + remname +' on line <A HREF="ck_success_source.html#498">498</A>');
+   document.write('<P>Call to ' + remname +' on line <A HREF="ck_success_source.html#625">625</A>');
    document.write('<TABLE>')
    document.write('<tr valign="top"><td class="indexkey">ck_success</td><td class="indexkey">sortcomp</td><td class="indexkey">description</td></tr>');
-   var locargs = new Array('shufflevar(:,:)','shape(shufflevar(:,:))','ofvec(:)','size(ofvec(:))');
+   var locargs = new Array('shufflevar(:,:)','tmp2(:)','ofvec(:)','SIZE(ofvec(:))');
    printCallRows(xmlhttp,locargs);
    document.write('</TABLE></P>');
 }

@@ -136,8 +136,8 @@ function printCallRows(xmlhttp,locargs) {
 <div class="tabs">
   <ul>
       <li><a href="vom_tissue_water_et.html"><span>Header</span></a></li>
-      <li><a href="vom_tissue_water_et_version_history.html"><span>Version history</span></a></li>
       <li class="current"><a href="vom_tissue_water_et_subroutines_called.html"><span>Subroutines called</span></a></li>
+      <li><a href="vom_tissue_water_et_variables.html"><span>Variables</span></a></li>
       <li><a href="vom_tissue_water_et_called_by.html"><span>Called by</span></a></li>
       <li><a href="vom_tissue_water_et_source.html"><span>Source</span></a></li>
   </ul>
@@ -149,29 +149,35 @@ function printCallRows(xmlhttp,locargs) {
       <td class='indexkey'><script type='text/javascript'>document.write(getURL('vom_mqss','vom_mqss.html'));</script></td>
       <td class="indexvalue" width="40%"><PRE><script type='text/javascript'>var xmlhttp = openURL('vom_mqss.html');if (xmlhttp) {   document.write(getHeaderText(xmlhttp,'vom_mqss'));}</script></PRE>
 </td>
-      <td class="indexvalue" width="20%"><A HREF="vom_tissue_water_et_source.html#1281">1281</A></td>
+      <td class="indexvalue" width="20%"><A HREF="vom_tissue_water_et_source.html#1649">1649</A></td>
    </tr>
 </TABLE>
 
 <HR><H2>POSSIBLE FUNCTIONS CALLED</H2>
 <TABLE>
    <tr valign="top">
-      <td class='indexkey'><script type='text/javascript'>document.write(getURL('month','vegmod_mp_month.html'));</script></td>
-      <td class="indexvalue" width="40%"><PRE><script type='text/javascript'>var xmlhttp = openURL('vegmod_mp_month.html');if (xmlhttp) {   document.write(getHeaderText(xmlhttp,'month'));}</script></PRE>
+      <td class='indexkey'><script type='text/javascript'>document.write(getURL('vd_h','vegmod_mp_vd_h.html'));</script></td>
+      <td class="indexvalue" width="40%"><PRE><script type='text/javascript'>var xmlhttp = openURL('vegmod_mp_vd_h.html');if (xmlhttp) {   document.write(getHeaderText(xmlhttp,'vd_h'));}</script></PRE>
 </td>
-      <td class="indexvalue" width="20%"><A HREF="vom_tissue_water_et_source.html#1274">1274</A></td>
+      <td class="indexvalue" width="20%"><A HREF="vom_tissue_water_et_source.html#1639">1639</A></td>
    </tr>
    <tr valign="top">
-      <td class='indexkey'><script type='text/javascript'>document.write(getURL('day','vegmod_mp_day.html'));</script></td>
-      <td class="indexvalue" width="40%"><PRE><script type='text/javascript'>var xmlhttp = openURL('vegmod_mp_day.html');if (xmlhttp) {   document.write(getHeaderText(xmlhttp,'day'));}</script></PRE>
+      <td class='indexkey'><script type='text/javascript'>document.write(getURL('fyear','vegmod_mp_fyear.html'));</script></td>
+      <td class="indexvalue" width="40%"><PRE><script type='text/javascript'>var xmlhttp = openURL('vegmod_mp_fyear.html');if (xmlhttp) {   document.write(getHeaderText(xmlhttp,'fyear'));}</script></PRE>
 </td>
-      <td class="indexvalue" width="20%"><A HREF="vom_tissue_water_et_source.html#1274">1274</A></td>
+      <td class="indexvalue" width="20%"><A HREF="vom_tissue_water_et_source.html#1641">1641</A></td>
    </tr>
    <tr valign="top">
-      <td class='indexkey'><script type='text/javascript'>document.write(getURL('year','vegmod_mp_year.html'));</script></td>
-      <td class="indexvalue" width="40%"><PRE><script type='text/javascript'>var xmlhttp = openURL('vegmod_mp_year.html');if (xmlhttp) {   document.write(getHeaderText(xmlhttp,'year'));}</script></PRE>
+      <td class='indexkey'><script type='text/javascript'>document.write(getURL('fmonth','vegmod_mp_fmonth.html'));</script></td>
+      <td class="indexvalue" width="40%"><PRE><script type='text/javascript'>var xmlhttp = openURL('vegmod_mp_fmonth.html');if (xmlhttp) {   document.write(getHeaderText(xmlhttp,'fmonth'));}</script></PRE>
 </td>
-      <td class="indexvalue" width="20%"><A HREF="vom_tissue_water_et_source.html#1274">1274</A></td>
+      <td class="indexvalue" width="20%"><A HREF="vom_tissue_water_et_source.html#1641">1641</A></td>
+   </tr>
+   <tr valign="top">
+      <td class='indexkey'><script type='text/javascript'>document.write(getURL('fday','vegmod_mp_fday.html'));</script></td>
+      <td class="indexvalue" width="40%"><PRE><script type='text/javascript'>var xmlhttp = openURL('vegmod_mp_fday.html');if (xmlhttp) {   document.write(getHeaderText(xmlhttp,'fday'));}</script></PRE>
+</td>
+      <td class="indexvalue" width="20%"><A HREF="vom_tissue_water_et_source.html#1641">1641</A></td>
    </tr>
 </TABLE>
 <HR><H2>CALL DETAILS</H2>
@@ -179,10 +185,10 @@ function printCallRows(xmlhttp,locargs) {
 xmlhttp = openURL('vom_mqss.html')
 if (xmlhttp) {
    var remname = getURL('vom_mqss','vom_mqss.html', xmlhttp);
-   document.write('<P>Call to ' + remname +' on line <A HREF="vom_tissue_water_et_source.html#1281">1281</A>');
+   document.write('<P>Call to ' + remname +' on line <A HREF="vom_tissue_water_et_source.html#1649">1649</A>');
    document.write('<TABLE>')
    document.write('<tr valign="top"><td class="indexkey">vom_tissue_water_et</td><td class="indexkey">vom_mqss</td><td class="indexkey">description</td></tr>');
-   var locargs = new Array('mqss_');
+   var locargs = new Array('mqsst_');
    printCallRows(xmlhttp,locargs);
    document.write('</TABLE></P>');
 }
