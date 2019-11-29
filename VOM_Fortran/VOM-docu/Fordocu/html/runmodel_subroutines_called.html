@@ -136,7 +136,6 @@ function printCallRows(xmlhttp,locargs) {
 <div class="tabs">
   <ul>
       <li><a href="runmodel.html"><span>Header</span></a></li>
-      <li><a href="runmodel_version_history.html"><span>Version history</span></a></li>
       <li class="current"><a href="runmodel_subroutines_called.html"><span>Subroutines called</span></a></li>
       <li><a href="runmodel_variables.html"><span>Variables</span></a></li>
       <li><a href="runmodel_called_by.html"><span>Called by</span></a></li>
@@ -150,7 +149,7 @@ function printCallRows(xmlhttp,locargs) {
       <td class='indexkey'><script type='text/javascript'>document.write(getURL('transpmodel','transpmodel.html'));</script></td>
       <td class="indexvalue" width="40%"><PRE><script type='text/javascript'>var xmlhttp = openURL('transpmodel.html');if (xmlhttp) {   document.write(getHeaderText(xmlhttp,'transpmodel'));}</script></PRE>
 </td>
-      <td class="indexvalue" width="20%"><A HREF="runmodel_source.html#888">888</A></td>
+      <td class="indexvalue" width="20%"><A HREF="runmodel_source.html#1096">1096</A></td>
    </tr>
 </TABLE>
 <HR><H2>CALL DETAILS</H2>
@@ -158,10 +157,10 @@ function printCallRows(xmlhttp,locargs) {
 xmlhttp = openURL('transpmodel.html')
 if (xmlhttp) {
    var remname = getURL('transpmodel','transpmodel.html', xmlhttp);
-   document.write('<P>Call to ' + remname +' on line <A HREF="runmodel_source.html#888">888</A>');
+   document.write('<P>Call to ' + remname +' on line <A HREF="runmodel_source.html#1096">1096</A>');
    document.write('<TABLE>')
    document.write('<tr valign="top"><td class="indexkey">runmodel</td><td class="indexkey">transpmodel</td><td class="indexkey">description</td></tr>');
-   var locargs = new Array('invar(:)','npar','nrun','objfun','1');
+   var locargs = new Array('invar(:)','vom_npar','objfun','1');
    printCallRows(xmlhttp,locargs);
    document.write('</TABLE></P>');
 }

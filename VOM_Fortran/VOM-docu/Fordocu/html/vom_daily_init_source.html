@@ -136,90 +136,114 @@ function printCallRows(xmlhttp,locargs) {
 <div class="tabs">
   <ul>
       <li><a href="vom_daily_init.html"><span>Header</span></a></li>
-      <li><a href="vom_daily_init_version_history.html"><span>Version history</span></a></li>
       <li><a href="vom_daily_init_subroutines_called.html"><span>Subroutines called</span></a></li>
+      <li><a href="vom_daily_init_variables.html"><span>Variables</span></a></li>
       <li><a href="vom_daily_init_called_by.html"><span>Called by</span></a></li>
       <li class="current"><a href="vom_daily_init_source.html"><span>Source</span></a></li>
   </ul>
 </div>
 <h1>Subroutine vom_daily_init</h1>
 <PRE>
-<A NAME="808">808 : </A><font color="#007700"></font>
-<A NAME="809">809 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
-<A NAME="810">810 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
-<A NAME="811">811 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
-<A NAME="812">812 : </A><font color="#007700"></font>
-<A NAME="813">813 : </A>      <font color='#aa2200'>subroutine</font> vom_daily_init ()<font color="#007700"></font>
-<A NAME="814">814 : </A>      <font color='#aa2200'>use</font> vegwatmod<font color="#007700"></font>
-<A NAME="815">815 : </A>      <font color='#aa2200'>use</font> vegmod<font color="#007700"></font>
-<A NAME="816">816 : </A>      <font color='#aa2200'>use</font> watmod<font color="#007700"></font>
-<A NAME="817">817 : </A>      <font color='#aa2200'>implicit</font> <font color='#aa2200'>none</font><font color="#007700"></font>
-<A NAME="818">818 : </A><font color="#007700"></font>
-<A NAME="819">819 : </A>      rsurfvec(:) = rsurfnewvec(:)<font color="#007700"></font>
-<A NAME="820">820 : </A>      rsurfg_(:)  = rsurfgnew(:)<font color="#007700"></font>
-<A NAME="821">821 : </A>      lambda_     = lambdafac * (<font color='#aa2200'>SUM</font>(<A HREF='vom_daily_init_subroutines_called.html#pcapnewvec'>pcapnewvec</A>(1:pos_)) / pos_) ** wsexp  !<font color="#007700"> (3.45) </font>
-<A NAME="822">822 : </A>      lambdag     = lambdagfac * <A HREF='vom_daily_init_subroutines_called.html#pcapnewvec'>pcapnewvec</A>(1) ** wsgexp  !<font color="#007700"> (3.44)</font>
-<A NAME="823">823 : </A>!<font color="#007700">     * vector with values varying by 1%</font>
-<A NAME="824">824 : </A>      jmax25_(:)  = jmax25_(2) * (/0.99,1.0,1.01/)<font color="#007700"></font>
-<A NAME="825">825 : </A>!<font color="#007700">     * making sure that the values don't become too low, otherwise</font>
-<A NAME="826">826 : </A>!<font color="#007700">       they could never pick up again</font>
-<A NAME="827">827 : </A>      jmax25_(:)  = <font color='#aa2200'>MAX</font>(jmax25_(:), 50.0d-6)<font color="#007700"></font>
-<A NAME="828">828 : </A>      jmax25g(:)  = jmax25g(2) * (/0.99,1.0,1.01/)<font color="#007700"></font>
-<A NAME="829">829 : </A>      jmax25g(:)  = <font color='#aa2200'>MAX</font>(jmax25g(:), 50.0d-6)<font color="#007700"></font>
-<A NAME="830">830 : </A>      <A HREF='vom_daily_init_subroutines_called.html#pcg_'>pcg_</A>(:)     = <A HREF='vom_daily_init_subroutines_called.html#pcg_'>pcg_</A>(2) + (/-0.02,0.0,0.02/)  !<font color="#007700"> vector with values varying by 1%</font>
-<A NAME="831">831 : </A>      <A HREF='vom_daily_init_subroutines_called.html#pcg_'>pcg_</A>(:)     = <font color='#aa2200'>MAX</font>(<A HREF='vom_daily_init_subroutines_called.html#pcg_'>pcg_</A>(:), 0.d0)<font color="#007700"></font>
-<A NAME="832">832 : </A>      <A HREF='vom_daily_init_subroutines_called.html#pcg_'>pcg_</A>(3)     = <font color='#aa2200'>MIN</font>(<font color='#aa2200'>MAX</font>(pcgmin, <A HREF='vom_daily_init_subroutines_called.html#pcg_'>pcg_</A>(3)), 1.d0 - pc_)<font color="#007700"></font>
-<A NAME="833">833 : </A>!<font color="#007700">     * (3.38) foliage turnover costs, assuming LAI/pc of 2.5</font>
-<A NAME="834">834 : </A>      tcg(:)      = tcf * <A HREF='vom_daily_init_subroutines_called.html#pcg_'>pcg_</A>(:) * 2.5d0<font color="#007700"></font>
-<A NAME="835">835 : </A>!<font color="#007700">     * (3.40), (Out[190])  root respiration [mol/s]</font>
-<A NAME="836">836 : </A>      rr_         = 2.55d-7 * <font color='#aa2200'>SUM</font>(rsurfvec(1:pos_))<font color="#007700"></font>
-<A NAME="837">837 : </A><font color="#007700"></font>
-<A NAME="838">838 : </A>      <font color='#aa2200'>if</font> (pos_ <font color='#cc00cc'>.gt.</font> nlayersnew) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="839">839 : </A>!<font color="#007700">       * (3.42, 2.45e-10 from (Out[165])) costs of water distribution and storage</font>
-<A NAME="840">840 : </A>        cpcc_ = cpccf * pc_ * rootdepth + mdstore * 2.45d-10<font color="#007700"></font>
-<A NAME="841">841 : </A>      <font color='#aa2200'>else</font><font color="#007700"></font>
-<A NAME="842">842 : </A>        cpcc_ = cpccf * pc_ * <font color='#aa2200'>SUM</font>(delzvec(1:pos_)) + mdstore * 2.45d-10<font color="#007700"></font>
-<A NAME="843">843 : </A>      <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="844">844 : </A><font color="#007700"></font>
-<A NAME="845">845 : </A>      <font color='#aa2200'>if</font> (nlayersnew <font color='#cc00cc'>.lt.</font> posg) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="846">846 : </A>        cpccg(:) = cpccf * <A HREF='vom_daily_init_subroutines_called.html#pcg_'>pcg_</A>(:) * rgdepth  !<font color="#007700"> (3.42) water transport costs</font>
-<A NAME="847">847 : </A>      <font color='#aa2200'>else</font><font color="#007700"></font>
-<A NAME="848">848 : </A>        cpccg(:) = cpccf * <A HREF='vom_daily_init_subroutines_called.html#pcg_'>pcg_</A>(:) * <font color='#aa2200'>SUM</font>(delzvec(1:posg))<font color="#007700"></font>
-<A NAME="849">849 : </A>      <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="850">850 : </A><font color="#007700"></font>
-<A NAME="851">851 : </A>!<font color="#007700">     * (3.40), (Out[190]) root respiration grasses [mol/s]</font>
-<A NAME="852">852 : </A>      rrg = 2.55d-7 * <font color='#aa2200'>SUM</font>(rsurfg_(1:posg))<font color="#007700"></font>
-<A NAME="853">853 : </A>!<font color="#007700">     * resetting the minimum steady-state tissue water content to</font>
-<A NAME="854">854 : </A>!<font color="#007700">       its maximum value</font>
-<A NAME="855">855 : </A>      mqssmin = mqx_<font color="#007700"></font>
-<A NAME="856">856 : </A><font color="#007700"></font>
-<A NAME="857">857 : </A>!<font color="#007700">     * used for daily recalculation</font>
-<A NAME="858">858 : </A>      <font color='#aa2200'>if</font> (optmode <font color='#cc00cc'>.eq.</font> 0) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="859">859 : </A>        <A HREF='vom_daily_init_subroutines_called.html#tmax'>tmax</A>(d___)    = -9999.d0<font color="#007700"></font>
-<A NAME="860">860 : </A>        <A HREF='vom_daily_init_subroutines_called.html#tmin'>tmin</A>(d___)    =  9999.d0<font color="#007700"></font>
-<A NAME="861">861 : </A>        <A HREF='vom_daily_init_subroutines_called.html#rainvec'>rainvec</A>(d___) =     0.d0<font color="#007700"></font>
-<A NAME="862">862 : </A>        <A HREF='vom_daily_init_subroutines_called.html#parvec'>parvec</A>(d___)  =     0.d0<font color="#007700"></font>
-<A NAME="863">863 : </A>        <A HREF='vom_daily_init_subroutines_called.html#srad'>srad</A>(d___)    =     0.d0<font color="#007700"></font>
-<A NAME="864">864 : </A>      <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="865">865 : </A><font color="#007700"></font>
-<A NAME="866">866 : </A>      <font color='#aa2200'>if</font> (optmode <font color='#cc00cc'>.eq.</font> 0) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="867">867 : </A>        ruptk_d  = 0.d0<font color="#007700"></font>
-<A NAME="868">868 : </A>        vd_d     = 0.d0<font color="#007700"></font>
-<A NAME="869">869 : </A>        jmax_d   = 0.d0<font color="#007700"></font>
-<A NAME="870">870 : </A>        jmaxg_d  = 0.d0<font color="#007700"></font>
-<A NAME="871">871 : </A>        gstom_d  = 0.d0<font color="#007700"></font>
-<A NAME="872">872 : </A>        gstomg_d = 0.d0<font color="#007700"></font>
-<A NAME="873">873 : </A>        etm_d    = 0.d0<font color="#007700"></font>
-<A NAME="874">874 : </A>        etmg_d   = 0.d0<font color="#007700"></font>
-<A NAME="875">875 : </A>        esoil_d  = 0.d0<font color="#007700"></font>
-<A NAME="876">876 : </A>        spgfcf_d = 0.d0<font color="#007700"></font>
-<A NAME="877">877 : </A>        infx_d   = 0.d0<font color="#007700"></font>
-<A NAME="878">878 : </A>        rl_d     = 0.d0<font color="#007700"></font>
-<A NAME="879">879 : </A>        rlg_d    = 0.d0<font color="#007700"></font>
-<A NAME="880">880 : </A>      <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="881">881 : </A><font color="#007700"></font>
-<A NAME="882">882 : </A>      <font color='#aa2200'>return</font><font color="#007700"></font>
-<A NAME="883">883 : </A>      <font color='#aa2200'>end</font> <font color='#aa2200'>subroutine</font> vom_daily_init<font color="#007700"></font>
+<A NAME="1127">1127 : </A><font color="#007700"></font>
+<A NAME="1128">1128 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+<A NAME="1129">1129 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+<A NAME="1130">1130 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+<A NAME="1131">1131 : </A><font color="#007700"></font>
+<A NAME="1132">1132 : </A>      <font color='#aa2200'>subroutine</font> vom_daily_init ()<font color="#007700"></font>
+<A NAME="1133">1133 : </A>      <font color='#aa2200'>use</font> vom_vegwat_mod<font color="#007700"></font>
+<A NAME="1134">1134 : </A>      <font color='#aa2200'>implicit</font> <font color='#aa2200'>none</font><font color="#007700"></font>
+<A NAME="1135">1135 : </A><font color="#007700"></font>
+<A NAME="1136">1136 : </A>      <font color='#aa2200'>INTEGER</font> :: <A HREF='vom_daily_init_variables.html#ii'>ii</A><font color="#007700"></font>
+<A NAME="1137">1137 : </A><font color="#007700"></font>
+<A NAME="1138">1138 : </A>      rsurft_(:)   = rsurftnew(:)<font color="#007700"></font>
+<A NAME="1139">1139 : </A>      rsurfg_(:)   = rsurfgnew(:)<font color="#007700"></font>
+<A NAME="1140">1140 : </A>      lambdat_d    = o_lambdatf * (<font color='#aa2200'>SUM</font>(<A HREF='vom_daily_init_subroutines_called.html#pcapnew'>pcapnew</A>(1:pos_slt)) / pos_slt) ** o_wstexp  !<font color="#007700"> (3.45)</font>
+<A NAME="1141">1141 : </A>      lambdag_d    = o_lambdagf * <A HREF='vom_daily_init_subroutines_called.html#pcapnew'>pcapnew</A>(1) ** o_wsgexp  !<font color="#007700"> (3.44)</font>
+<A NAME="1142">1142 : </A>!<font color="#007700">     * vector with values varying by 1%</font>
+<A NAME="1143">1143 : </A>      jmax25t_d(:) = jmax25t_d(2) * (/1.0d0-i_incrjmax,1.0d0,1.0d0+i_incrjmax/)<font color="#007700"></font>
+<A NAME="1144">1144 : </A>!<font color="#007700">     * making sure that the values don't become too low, otherwise</font>
+<A NAME="1145">1145 : </A>!<font color="#007700">       they could never pick up again</font>
+<A NAME="1146">1146 : </A>      jmax25t_d(:) = <font color='#aa2200'>MAX</font>(jmax25t_d(:), 50.0d-6)<font color="#007700"></font>
+<A NAME="1147">1147 : </A>      jmax25g_d(:) = jmax25g_d(2) * (/1.0d0-i_incrjmax,1.0d0,1.0d0+i_incrjmax/)<font color="#007700"></font>
+<A NAME="1148">1148 : </A>      jmax25g_d(:) = <font color='#aa2200'>MAX</font>(jmax25g_d(:), 50.0d-6)<font color="#007700"></font>
+<A NAME="1149">1149 : </A><font color="#007700"></font>
+<A NAME="1150">1150 : </A>!<font color="#007700">     * adjust lai-values trees</font>
+<A NAME="1151">1151 : </A>      lai_lt(:) = lai_lt(2) * (/1.0d0-i_incrlait,1.0d0,1.0d0+i_incrlait/)<font color="#007700"></font>
+<A NAME="1152">1152 : </A>      lai_lt(:) = <font color='#aa2200'>MAX</font>( lai_lt(:), 0.1d0 ) !<font color="#007700">minimum value, else lai doesn't pick up anymore</font>
+<A NAME="1153">1153 : </A><font color="#007700"></font>
+<A NAME="1154">1154 : </A>!<font color="#007700">     * adjust lai-values grasses</font>
+<A NAME="1155">1155 : </A>      lai_lg(:) = lai_lg(2) * (/1.0d0-i_incrlaig,1.0d0,1.0d0+i_incrlaig/) <font color="#007700"></font>
+<A NAME="1156">1156 : </A>      lai_lg(:) = <font color='#aa2200'>MAX</font>( lai_lg(:), 0.1d0 ) !<font color="#007700">minimum value, else lai doesn't pick up anymore</font>
+<A NAME="1157">1157 : </A><font color="#007700"></font>
+<A NAME="1158">1158 : </A>      <font color='#aa2200'>if</font>( i_read_pc == 1) <font color='#aa2200'>then</font>   <font color="#007700"></font>
+<A NAME="1159">1159 : </A>         <A HREF='vom_daily_init_subroutines_called.html#pcg_d'>pcg_d</A>(:) = perc_cov_veg(nday)  <font color="#007700"></font>
+<A NAME="1160">1160 : </A><font color="#007700"></font>
+<A NAME="1161">1161 : </A>         !<font color="#007700">adjust value if perennial + seasonal &gt; 1</font>
+<A NAME="1162">1162 : </A>         <font color='#aa2200'>if</font>( (<A HREF='vom_daily_init_subroutines_called.html#pcg_d'>pcg_d</A>(1) + o_cai) <font color='#cc00cc'>.gt.</font> 1.0) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="1163">1163 : </A>            <A HREF='vom_daily_init_subroutines_called.html#pcg_d'>pcg_d</A>(:) = 1.d0 - o_cai<font color="#007700"></font>
+<A NAME="1164">1164 : </A>         <font color='#aa2200'>end</font> <font color='#aa2200'>if</font><font color="#007700"></font>
+<A NAME="1165">1165 : </A><font color="#007700"></font>
+<A NAME="1166">1166 : </A>      <font color='#aa2200'>else</font><font color="#007700"></font>
+<A NAME="1167">1167 : </A>         <A HREF='vom_daily_init_subroutines_called.html#pcg_d'>pcg_d</A>(:)     = <A HREF='vom_daily_init_subroutines_called.html#pcg_d'>pcg_d</A>(2) + (/-i_incrcovg,0.0d0,i_incrcovg/)  !<font color="#007700"> perc. change grass cover</font>
+<A NAME="1168">1168 : </A>         <A HREF='vom_daily_init_subroutines_called.html#pcg_d'>pcg_d</A>(:)     = <font color='#aa2200'>MAX</font>(<A HREF='vom_daily_init_subroutines_called.html#pcg_d'>pcg_d</A>(:), 0.d0)<font color="#007700"></font>
+<A NAME="1169">1169 : </A>         <A HREF='vom_daily_init_subroutines_called.html#pcg_d'>pcg_d</A>(3)     = <font color='#aa2200'>MIN</font>(<font color='#aa2200'>MAX</font>(c_pcgmin, <A HREF='vom_daily_init_subroutines_called.html#pcg_d'>pcg_d</A>(3)), 1.d0 - o_cai)<font color="#007700"></font>
+<A NAME="1170">1170 : </A>      <font color='#aa2200'>end</font> <font color='#aa2200'>if</font><font color="#007700"></font>
+<A NAME="1171">1171 : </A><font color="#007700"></font>
+<A NAME="1172">1172 : </A><font color="#007700"></font>
+<A NAME="1173">1173 : </A>!<font color="#007700">     * Foliage turnover costs</font>
+<A NAME="1174">1174 : </A>      <font color='#aa2200'>select</font> <font color='#aa2200'>case</font>(i_lai_function)<font color="#007700"></font>
+<A NAME="1175">1175 : </A>      <font color='#aa2200'>case</font>(1)<font color="#007700"></font>
+<A NAME="1176">1176 : </A>!<font color="#007700">        * (3.38) foliage turnover costs, assuming LAI/pc of 2.5</font>
+<A NAME="1177">1177 : </A>         <font color='#aa2200'>do</font> <A HREF='vom_daily_init_variables.html#ii'>ii</A> = 1,3<font color="#007700"></font>
+<A NAME="1178">1178 : </A>            tcg_d(<A HREF='vom_daily_init_variables.html#ii'>ii</A>,:)     = i_tcf * <A HREF='vom_daily_init_subroutines_called.html#pcg_d'>pcg_d</A>(:) * 2.5d0 !<font color="#007700">grasses</font>
+<A NAME="1179">1179 : </A>         <font color='#aa2200'>end</font> <font color='#aa2200'>do</font><font color="#007700"></font>
+<A NAME="1180">1180 : </A>         q_tct_d(:)     = i_tcf * o_cai * 2.5d0    !<font color="#007700">trees</font>
+<A NAME="1181">1181 : </A>      <font color='#aa2200'>case</font>(2)<font color="#007700"></font>
+<A NAME="1182">1182 : </A>!<font color="#007700">        * foliage turnover costs, varying lai</font>
+<A NAME="1183">1183 : </A>         <font color='#aa2200'>do</font> <A HREF='vom_daily_init_variables.html#ii'>ii</A> = 1,3<font color="#007700"></font>
+<A NAME="1184">1184 : </A>            tcg_d(<A HREF='vom_daily_init_variables.html#ii'>ii</A>, :) = i_tcf * <A HREF='vom_daily_init_subroutines_called.html#pcg_d'>pcg_d</A>(:) * lai_lg(<A HREF='vom_daily_init_variables.html#ii'>ii</A>) !<font color="#007700">grasses </font>
+<A NAME="1185">1185 : </A>         <font color='#aa2200'>end</font> <font color='#aa2200'>do</font><font color="#007700"></font>
+<A NAME="1186">1186 : </A>         q_tct_d(:) = i_tcf * o_cai * lai_lt(:)     !<font color="#007700">trees</font>
+<A NAME="1187">1187 : </A>      <font color='#aa2200'>end</font> <font color='#aa2200'>select</font><font color="#007700"></font>
+<A NAME="1188">1188 : </A><font color="#007700"></font>
+<A NAME="1189">1189 : </A><font color="#007700"></font>
+<A NAME="1190">1190 : </A>!<font color="#007700">     * (3.40), (Out[190])  root respiration [mol/s]</font>
+<A NAME="1191">1191 : </A>      rrt_d        = 2.55d-7 * <font color='#aa2200'>SUM</font>(rsurft_(1:pos_slt))<font color="#007700"></font>
+<A NAME="1192">1192 : </A><font color="#007700"></font>
+<A NAME="1193">1193 : </A><font color="#007700"></font>
+<A NAME="1194">1194 : </A>!<font color="#007700">     * (3.42, 2.45e-10 from (Out[165])) costs of water distribution and storage</font>
+<A NAME="1195">1195 : </A>      q_cpcct_d = i_cpccf * o_cai * o_rtdepth + o_mdstore * 2.45d-10<font color="#007700"></font>
+<A NAME="1196">1196 : </A>      cpccg_d(:) = i_cpccf * <A HREF='vom_daily_init_subroutines_called.html#pcg_d'>pcg_d</A>(:) * o_rgdepth  !<font color="#007700"> (3.42) water transport costs</font>
+<A NAME="1197">1197 : </A><font color="#007700"></font>
+<A NAME="1198">1198 : </A><font color="#007700"></font>
+<A NAME="1199">1199 : </A>!<font color="#007700">     * (3.40), (Out[190]) root respiration grasses [mol/s]</font>
+<A NAME="1200">1200 : </A>      rrg_d = 2.55d-7 * <font color='#aa2200'>SUM</font>(rsurfg_(1:pos_slg))<font color="#007700"></font>
+<A NAME="1201">1201 : </A>!<font color="#007700">     * resetting the minimum steady-state tissue water content to</font>
+<A NAME="1202">1202 : </A>!<font color="#007700">       its maximum value</font>
+<A NAME="1203">1203 : </A>      mqsstmin = q_mqx<font color="#007700"></font>
+<A NAME="1204">1204 : </A><font color="#007700"></font>
+<A NAME="1205">1205 : </A>!<font color="#007700">     * used for daily recalculation</font>
+<A NAME="1206">1206 : </A>      <font color='#aa2200'>if</font> (optmode <font color='#cc00cc'>.eq.</font> 0) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="1207">1207 : </A>        <A HREF='vom_daily_init_subroutines_called.html#tairmax_d'>tairmax_d</A>(nday) = -9999.d0<font color="#007700"></font>
+<A NAME="1208">1208 : </A>        <A HREF='vom_daily_init_subroutines_called.html#tairmin_d'>tairmin_d</A>(nday) =  9999.d0<font color="#007700"></font>
+<A NAME="1209">1209 : </A>        <A HREF='vom_daily_init_subroutines_called.html#rain_d'>rain_d</A>(nday)    =     0.d0<font color="#007700"></font>
+<A NAME="1210">1210 : </A>        <A HREF='vom_daily_init_subroutines_called.html#par_d'>par_d</A>(nday)     =     0.d0<font color="#007700"></font>
+<A NAME="1211">1211 : </A>        <A HREF='vom_daily_init_subroutines_called.html#srad_d'>srad_d</A>(nday)    =     0.d0<font color="#007700"></font>
+<A NAME="1212">1212 : </A>      <font color='#aa2200'>endif</font><font color="#007700"></font>
+<A NAME="1213">1213 : </A><font color="#007700"></font>
+<A NAME="1214">1214 : </A>      <font color='#aa2200'>if</font> (optmode <font color='#cc00cc'>.eq.</font> 0) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="1215">1215 : </A>        vd_d     = 0.d0<font color="#007700"></font>
+<A NAME="1216">1216 : </A>        etmt_d   = 0.d0<font color="#007700"></font>
+<A NAME="1217">1217 : </A>        etmg_d   = 0.d0<font color="#007700"></font>
+<A NAME="1218">1218 : </A>        esoil_d  = 0.d0<font color="#007700"></font>
+<A NAME="1219">1219 : </A>        spgfcf_d = 0.d0<font color="#007700"></font>
+<A NAME="1220">1220 : </A>        infx_d   = 0.d0<font color="#007700"></font>
+<A NAME="1221">1221 : </A>        rlt_d    = 0.d0<font color="#007700"></font>
+<A NAME="1222">1222 : </A>        rlg_d    = 0.d0<font color="#007700"></font>
+<A NAME="1223">1223 : </A>      <font color='#aa2200'>endif</font><font color="#007700"></font>
+<A NAME="1224">1224 : </A><font color="#007700"></font>
+<A NAME="1225">1225 : </A>      <font color='#aa2200'>return</font><font color="#007700"></font>
+<A NAME="1226">1226 : </A>      <font color='#aa2200'>end</font> <font color='#aa2200'>subroutine</font> vom_daily_init<font color="#007700"></font>
 
 </PRE>
 </BODY></HTML>

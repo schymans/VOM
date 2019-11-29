@@ -136,48 +136,36 @@ function printCallRows(xmlhttp,locargs) {
 <div class="tabs">
   <ul>
       <li class="current"><a href="transpmodel.html"><span>Header</span></a></li>
-      <li><a href="transpmodel_version_history.html"><span>Version history</span></a></li>
       <li><a href="transpmodel_subroutines_called.html"><span>Subroutines called</span></a></li>
       <li><a href="transpmodel_variables.html"><span>Variables</span></a></li>
       <li><a href="transpmodel_called_by.html"><span>Called by</span></a></li>
       <li><a href="transpmodel_source.html"><span>Source</span></a></li>
   </ul>
 </div>
-<h1>Subroutine transpmodel</h1>transpmodel is defined in file <script type='text/javascript'>document.write(getURL('transpmodel.f90','file:////home/sschyman/modelling/VOM/code/VOM_BGC_working_copy/trunk/VOM_Fortran/VOM-code/transpmodel.f90',1));</script>.<br><br>
+<h1>Subroutine transpmodel</h1>transpmodel is defined in file <script type='text/javascript'>document.write(getURL('transpmodel.f90','file:////home/stan/modelling/VOM/code/VOM_git8/VOM_Fortran/VOM-code/transpmodel.f90',1));</script>.<br><br>
 <STRONG>HEADER</STRONG><br>
 <TABLE><tr valign="top"><TD><A>
-Subroutine transpmodel( invar, dim_invar, nrun, netass, option1)
+Subroutine transpmodel( invar, dim_invar, tp_netass, option1)
 </A></TD></TR></TABLE>
-
-<P><STRONG>COMMENTS</STRONG>
-<TABLE>
-<tr valign="top"><td class='indexkey'>description</td><td class="indexvalue"><!-- <headerText><name>transpmodel</name><description>* Transpiration model and layered water balance<br>*----------------------------------------------------------------------<br>* Author: Stan Schymanski, CWR, University of Western Australia<br>* 03/2006<br>* now at: Max Planck Institute for Biogeochemistry<br>* Email: sschym@bgc-jena.mpg.de<br>* 02/2008<br>* Version: big leaf, trees and grass, layered unsaturated zone<br>* optimised root profile, pcg and Jmax25<br>*----------------------------------------------------------------------<br>*<br>* Numbers in the commented parentheses refer to the equation numeration<br>* in Schymanski (2007): PhD thesis, University of W.A. <br>* and in the document 'equations.pdf' that comes with the documentation.<br>*<br>*----------------------------------------------------------------------<br>* Copyright (C) 2008 Stan Schymanski<br>*<br>* This program is free software: you can redistribute it and/or modify<br>* it under the terms of the GNU General Public License as published by<br>* the Free Software Foundation, either version 3 of the License, or<br>* (at your option) any later version.<br>*<br>* This program is distributed in the hope that it will be useful,<br>* but WITHOUT ANY WARRANTY; without even the implied warranty of<br>* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the<br>* GNU General Public License for more details.<br>*<br>* You should have received a copy of the GNU General Public License<br>* along with this program. If not, see http://www.gnu.org/licenses.</description></headerText> -->
-<PRE>***********************************************************************<br>*  Transpiration model and layered water balance<br>*----------------------------------------------------------------------<br>*  Author: Stan Schymanski, CWR, University of Western Australia<br>*  03/2006<br>*  now at: Max Planck Institute for Biogeochemistry<br>*  Email: sschym@bgc-jena.mpg.de<br>*  02/2008<br>*  Version: big leaf, trees and grass, layered unsaturated zone<br>*  optimised root profile, pcg and Jmax25<br>*----------------------------------------------------------------------<br>*<br>* Numbers in the commented parentheses refer to the equation numeration<br>* in Schymanski (2007): PhD thesis, University of W.A. <br>* and in the document 'equations.pdf' that comes with the documentation.<br>*<br>*----------------------------------------------------------------------<br>*  Copyright (C) 2008  Stan Schymanski<br>*<br>*    This program is free software: you can redistribute it and/or modify<br>*    it under the terms of the GNU General Public License as published by<br>*    the Free Software Foundation, either version 3 of the License, or<br>*    (at your option) any later version.<br>*<br>*    This program is distributed in the hope that it will be useful,<br>*    but WITHOUT ANY WARRANTY; without even the implied warranty of<br>*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the<br>*    GNU General Public License for more details.<br>*<br>*    You should have received a copy of the GNU General Public License<br>*    along with this program.  If not, see http://www.gnu.org/licenses.<br>*<br>***********************************************************************</PRE>
-</td></tr>
-</TABLE>
 
 <P><STRONG>ARGUMENTS</STRONG>
 <TABLE>
 <!-- <headerVar><index>0</index><name>invar</name><description>? * Declarations</description></headerVar> -->
 <tr valign="top"><td class="indexkey"><A NAME="invar">invar</td><td class="indexvalue">real*8</td><td class="indexvalue">(dim_invar)</td><td class="indexvalue">intent(in)</td></A></td><td class="indexvalue"><PRE><font color='gray'>? * Declarations</font></PRE>
-</td><td class="indexvalue"><A HREF="transpmodel_source.html#1">1</A>, <A HREF="transpmodel_source.html#44">44</A>, <A HREF="transpmodel_source.html#70">70</A>, <A HREF="transpmodel_source.html#71">71</A>, <A HREF="transpmodel_source.html#72">72</A>, <A HREF="transpmodel_source.html#73">73</A>, <A HREF="transpmodel_source.html#74">74</A>, <A HREF="transpmodel_source.html#75">75</A></td></tr>
+</td><td class="indexvalue"><A HREF="transpmodel_source.html#35">35</A>, <A HREF="transpmodel_source.html#43">43</A>, <A HREF="transpmodel_source.html#51">51</A></td></tr>
 <!-- <headerVar><index>1</index><name>dim_invar</name><description>? * Declarations</description></headerVar> -->
 <tr valign="top"><td class="indexkey"><A NAME="dim_invar">dim_invar</td><td class="indexvalue">integer</td><td class="indexvalue">&nbsp</td><td class="indexvalue">intent(in)</td></A></td><td class="indexvalue"><PRE><font color='gray'>? * Declarations</font></PRE>
-</td><td class="indexvalue"><A HREF="transpmodel_source.html#1">1</A>, <A HREF="transpmodel_source.html#40">40</A>, <A HREF="transpmodel_source.html#44">44</A>, <A HREF="transpmodel_source.html#51">51</A></td></tr>
-<!-- <headerVar><index>2</index><name>nrun</name><description>? Number of runs performed so far</description></headerVar> -->
-<tr valign="top"><td class="indexkey"><A NAME="nrun">nrun</td><td class="indexvalue">integer</td><td class="indexvalue">&nbsp</td><td class="indexvalue">intent(in)</td></A></td><td class="indexvalue"><PRE><font color='gray'>? Number of runs performed so far</font></PRE>
-</td><td class="indexvalue"><A HREF="transpmodel_source.html#1">1</A>, <A HREF="transpmodel_source.html#41">41</A></td></tr>
-<!-- <headerVar><index>3</index><name>netass</name><description></description></headerVar> -->
-<tr valign="top"><td class="indexkey"><A NAME="netass">netass</td><td class="indexvalue">real*8</td><td class="indexvalue">&nbsp</td><td class="indexvalue">intent(inout)</td></A></td><td class="indexvalue"><PRE><font color='gray'>? &nbsp</font></PRE>
-</td><td class="indexvalue"><A HREF="transpmodel_source.html#1">1</A>, <A HREF="transpmodel_source.html#42">42</A>, <A HREF="transpmodel_source.html#56">56</A>, <A HREF="transpmodel_source.html#164">164</A>, <A HREF="transpmodel_source.html#184">184</A>, <A HREF="transpmodel_source.html#220">220</A>, <A HREF="transpmodel_source.html#223">223</A>, <A HREF="transpmodel_source.html#247">247</A></td></tr>
-<!-- <headerVar><index>4</index><name>option1</name><description></description></headerVar> -->
+</td><td class="indexvalue"><A HREF="transpmodel_source.html#35">35</A>, <A HREF="transpmodel_source.html#40">40</A>, <A HREF="transpmodel_source.html#43">43</A>, <A HREF="transpmodel_source.html#51">51</A></td></tr>
+<!-- <headerVar><index>2</index><name>tp_netass</name><description></description></headerVar> -->
+<tr valign="top"><td class="indexkey"><A NAME="tp_netass">tp_netass</td><td class="indexvalue">real*8</td><td class="indexvalue">&nbsp</td><td class="indexvalue">intent(inout)</td></A></td><td class="indexvalue"><PRE><font color='gray'>? &nbsp</font></PRE>
+</td><td class="indexvalue"><A HREF="transpmodel_source.html#35">35</A>, <A HREF="transpmodel_source.html#41">41</A>, <A HREF="transpmodel_source.html#48">48</A>, <A HREF="transpmodel_source.html#97">97</A>, <A HREF="transpmodel_source.html#118">118</A>, <A HREF="transpmodel_source.html#170">170</A>, <A HREF="transpmodel_source.html#176">176</A></td></tr>
+<!-- <headerVar><index>3</index><name>option1</name><description></description></headerVar> -->
 <tr valign="top"><td class="indexkey"><A NAME="option1">option1</td><td class="indexvalue">integer</td><td class="indexvalue">&nbsp</td><td class="indexvalue">intent(in)</td></A></td><td class="indexvalue"><PRE><font color='gray'>? &nbsp</font></PRE>
-</td><td class="indexvalue"><A HREF="transpmodel_source.html#1">1</A>, <A HREF="transpmodel_source.html#43">43</A>, <A HREF="transpmodel_source.html#58">58</A>, <A HREF="transpmodel_source.html#64">64</A></td></tr>
+</td><td class="indexvalue"><A HREF="transpmodel_source.html#35">35</A>, <A HREF="transpmodel_source.html#42">42</A>, <A HREF="transpmodel_source.html#51">51</A>, <A HREF="transpmodel_source.html#134">134</A>, <A HREF="transpmodel_source.html#146">146</A>, <A HREF="transpmodel_source.html#170">170</A>, <A HREF="transpmodel_source.html#176">176</A></td></tr>
 </TABLE>
 
 <P><STRONG>USE STATEMENTS</STRONG>
 <TABLE>
-<tr valign="top"><td class="indexkey"><script type='text/javascript'>document.write(getURL('vegmod','vegmod.html'));</script></td><td class="indexvalue"></td>
-<tr valign="top"><td class="indexkey"><script type='text/javascript'>document.write(getURL('vegwatmod','vegwatmod.html'));</script></td><td class="indexvalue"></td>
+<tr valign="top"><td class="indexkey"><script type='text/javascript'>document.write(getURL('vom_vegwat_mod','vom_vegwat_mod.html'));</script></td><td class="indexvalue"></td>
 </TABLE>
 </BODY></HTML>

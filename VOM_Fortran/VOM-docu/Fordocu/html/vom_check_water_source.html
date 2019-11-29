@@ -136,7 +136,6 @@ function printCallRows(xmlhttp,locargs) {
 <div class="tabs">
   <ul>
       <li><a href="vom_check_water.html"><span>Header</span></a></li>
-      <li><a href="vom_check_water_version_history.html"><span>Version history</span></a></li>
       <li><a href="vom_check_water_variables.html"><span>Variables</span></a></li>
       <li><a href="vom_check_water_called_by.html"><span>Called by</span></a></li>
       <li class="current"><a href="vom_check_water_source.html"><span>Source</span></a></li>
@@ -144,41 +143,43 @@ function printCallRows(xmlhttp,locargs) {
 </div>
 <h1>Subroutine vom_check_water</h1>
 <PRE>
-<A NAME="1451">1451 : </A><font color="#007700"></font>
-<A NAME="1452">1452 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
-<A NAME="1453">1453 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
-<A NAME="1454">1454 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
-<A NAME="1455">1455 : </A>!<font color="#007700">*----- check water balance --------------------------------------------</font>
-<A NAME="1456">1456 : </A><font color="#007700"></font>
-<A NAME="1457">1457 : </A>      <font color='#aa2200'>subroutine</font> vom_check_water (<A HREF='vom_check_water.html#finish'>finish</A>)<font color="#007700"></font>
-<A NAME="1458">1458 : </A>      <font color='#aa2200'>use</font> vegwatmod<font color="#007700"></font>
-<A NAME="1459">1459 : </A>      <font color='#aa2200'>use</font> vegmod<font color="#007700"></font>
-<A NAME="1460">1460 : </A>      <font color='#aa2200'>use</font> watmod<font color="#007700"></font>
-<A NAME="1461">1461 : </A>      <font color='#aa2200'>implicit</font> <font color='#aa2200'>none</font><font color="#007700"></font>
-<A NAME="1462">1462 : </A><font color="#007700"></font>
-<A NAME="1463">1463 : </A>      <font color='#aa2200'>INTEGER</font>, <font color='#aa2200'>INTENT</font>(<font color='#aa2200'>inout</font>) :: <A HREF='vom_check_water.html#finish'>finish</A><font color="#007700"></font>
-<A NAME="1464">1464 : </A><font color="#007700"></font>
-<A NAME="1465">1465 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vom_check_water_variables.html#error1'>error1</A><font color="#007700"></font>
-<A NAME="1466">1466 : </A><font color="#007700"></font>
-<A NAME="1467">1467 : </A>      iocum = iocum + hio<font color="#007700"></font>
-<A NAME="1468">1468 : </A>      wsnew_ = <font color='#aa2200'>SUM</font>(cH2Ol_s(:)) <font color="#007700"></font>
-<A NAME="1469">1469 : </A>      error = wsold + iocum - wsnew_<font color="#007700"></font>
-<A NAME="1470">1470 : </A>!<font color="#007700">     * gives an error message if accumulated error exceeds 1 mm</font>
-<A NAME="1471">1471 : </A>      <font color='#aa2200'>if</font> (<font color='#aa2200'>abs</font>(error) <font color='#cc00cc'>.gt.</font> 1.d-3) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="1472">1472 : </A>        <font color='#aa2200'>write</font>(*,*) 'Error <font color='#aa2200'>in</font> water balance [mm]:', error, 'io=', io_,  &<font color="#007700"></font>
-<A NAME="1473">1473 : </A>     &    'wsold=', wsold, 'wsnew=', wsnew_<font color="#007700"></font>
-<A NAME="1474">1474 : </A>        <A HREF='vom_check_water.html#finish'>finish</A> = 1<font color="#007700"></font>
-<A NAME="1475">1475 : </A>      <font color='#aa2200'>elseif</font> (md_ <font color='#cc00cc'>.gt.</font> 0.d0) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="1476">1476 : </A>        <A HREF='vom_check_water_variables.html#error1'>error1</A> = mqold + (hruptk_ - hetm_) * 1.d6 - mqnew<font color="#007700"></font>
-<A NAME="1477">1477 : </A>        <font color='#aa2200'>if</font> (<font color='#aa2200'>abs</font>(<A HREF='vom_check_water_variables.html#error1'>error1</A> / mqnew) <font color='#cc00cc'>.gt.</font> 1.d-6) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="1478">1478 : </A>          <font color='#aa2200'>write</font>(*,*) 'Error <font color='#aa2200'>in</font> tree water balance [%]:', <A HREF='vom_check_water_variables.html#error1'>error1</A> * 100.d0, &<font color="#007700"></font>
-<A NAME="1479">1479 : </A>     &      'mqold=', mqold, 'mqnew=', mqnew, 'hruptk=', hruptk_, 'hetm=', hetm_<font color="#007700"></font>
-<A NAME="1480">1480 : </A>          <A HREF='vom_check_water.html#finish'>finish</A> = 1<font color="#007700"></font>
-<A NAME="1481">1481 : </A>        <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="1482">1482 : </A>      <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="1483">1483 : </A><font color="#007700"></font>
-<A NAME="1484">1484 : </A>      <font color='#aa2200'>return</font><font color="#007700"></font>
-<A NAME="1485">1485 : </A>      <font color='#aa2200'>end</font> <font color='#aa2200'>subroutine</font> vom_check_water<font color="#007700"></font>
+<A NAME="1812">1812 : </A><font color="#007700"></font>
+<A NAME="1813">1813 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+<A NAME="1814">1814 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+<A NAME="1815">1815 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+<A NAME="1816">1816 : </A>!<font color="#007700">*----- check water balance --------------------------------------------</font>
+<A NAME="1817">1817 : </A><font color="#007700"></font>
+<A NAME="1818">1818 : </A>      <font color='#aa2200'>subroutine</font> vom_check_water ()<font color="#007700"></font>
+<A NAME="1819">1819 : </A>      <font color='#aa2200'>use</font> vom_vegwat_mod<font color="#007700"></font>
+<A NAME="1820">1820 : </A>      <font color='#aa2200'>implicit</font> <font color='#aa2200'>none</font><font color="#007700"></font>
+<A NAME="1821">1821 : </A><font color="#007700"></font>
+<A NAME="1822">1822 : </A>      <font color='#aa2200'>REAL</font>*8             :: <A HREF='vom_check_water_variables.html#error1'>error1</A><font color="#007700"></font>
+<A NAME="1823">1823 : </A>      <font color='#aa2200'>CHARACTER</font>(<font color='#aa2200'>len</font>=135) :: <A HREF='vom_check_water_variables.html#msg'>msg</A><font color="#007700"></font>
+<A NAME="1824">1824 : </A><font color="#007700"></font>
+<A NAME="1825">1825 : </A>      ioacum = ioacum + io_h<font color="#007700"></font>
+<A NAME="1826">1826 : </A>      wsnew  = <font color='#aa2200'>SUM</font>(cH2Ol_s(:))<font color="#007700"></font>
+<A NAME="1827">1827 : </A>      error  = wsold + ioacum - wsnew<font color="#007700"></font>
+<A NAME="1828">1828 : </A><font color="#007700"></font>
+<A NAME="1829">1829 : </A>!<font color="#007700">     * gives an error message if accumulated error exceeds 1 mm</font>
+<A NAME="1830">1830 : </A><font color="#007700"></font>
+<A NAME="1831">1831 : </A>      <font color='#aa2200'>if</font> (<font color='#aa2200'>abs</font>(error) <font color='#cc00cc'>.gt.</font> 1.d-3) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="1832">1832 : </A>        <font color='#aa2200'>write</font>(<A HREF='vom_check_water_variables.html#msg'>msg</A>,*) 'Error <font color='#aa2200'>in</font> water balance [mm]:', error, 'io=',     &<font color="#007700"></font>
+<A NAME="1833">1833 : </A>     &    io__, 'wsold=', wsold, 'wsnew=', wsnew<font color="#007700"></font>
+<A NAME="1834">1834 : </A>        <font color='#aa2200'>write</font>(*,*) <font color='#aa2200'>TRIM</font>(<A HREF='vom_check_water_variables.html#msg'>msg</A>)<font color="#007700"></font>
+<A NAME="1835">1835 : </A>        finish = 1<font color="#007700"></font>
+<A NAME="1836">1836 : </A>      <font color='#aa2200'>elseif</font> (q_md <font color='#cc00cc'>.gt.</font> 0.d0) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="1837">1837 : </A>        <A HREF='vom_check_water_variables.html#error1'>error1</A> = mqtold + (sumruptkt_h - etmt_h) * 1.d6 - mqtnew<font color="#007700"></font>
+<A NAME="1838">1838 : </A>        <font color='#aa2200'>if</font> (<font color='#aa2200'>abs</font>(<A HREF='vom_check_water_variables.html#error1'>error1</A> / mqtnew) <font color='#cc00cc'>.gt.</font> 1.d-6) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="1839">1839 : </A>          <font color='#aa2200'>write</font>(<A HREF='vom_check_water_variables.html#msg'>msg</A>,*) 'Error <font color='#aa2200'>in</font> tree water balance [%]:',             &<font color="#007700"></font>
+<A NAME="1840">1840 : </A>     &      <A HREF='vom_check_water_variables.html#error1'>error1</A> * 100.d0, 'mqtold=', mqtold, 'mqtnew=', mqtnew,     &<font color="#007700"></font>
+<A NAME="1841">1841 : </A>     &      'hruptk=', sumruptkt_h, 'hetm=', etmt_h<font color="#007700"></font>
+<A NAME="1842">1842 : </A>          <font color='#aa2200'>write</font>(*,*) <font color='#aa2200'>TRIM</font>(<A HREF='vom_check_water_variables.html#msg'>msg</A>)<font color="#007700"></font>
+<A NAME="1843">1843 : </A>          finish = 1<font color="#007700"></font>
+<A NAME="1844">1844 : </A>        <font color='#aa2200'>endif</font><font color="#007700"></font>
+<A NAME="1845">1845 : </A>      <font color='#aa2200'>endif</font><font color="#007700"></font>
+<A NAME="1846">1846 : </A><font color="#007700"></font>
+<A NAME="1847">1847 : </A>      <font color='#aa2200'>return</font><font color="#007700"></font>
+<A NAME="1848">1848 : </A>      <font color='#aa2200'>end</font> <font color='#aa2200'>subroutine</font> vom_check_water<font color="#007700"></font>
 
 </PRE>
 </BODY></HTML>

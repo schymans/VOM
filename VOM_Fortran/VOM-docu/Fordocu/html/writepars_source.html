@@ -136,7 +136,6 @@ function printCallRows(xmlhttp,locargs) {
 <div class="tabs">
   <ul>
       <li><a href="writepars.html"><span>Header</span></a></li>
-      <li><a href="writepars_version_history.html"><span>Version history</span></a></li>
       <li><a href="writepars_subroutines_called.html"><span>Subroutines called</span></a></li>
       <li><a href="writepars_variables.html"><span>Variables</span></a></li>
       <li><a href="writepars_called_by.html"><span>Called by</span></a></li>
@@ -145,43 +144,37 @@ function printCallRows(xmlhttp,locargs) {
 </div>
 <h1>Subroutine writepars</h1>
 <PRE>
-<A NAME="974">974 : </A><font color="#007700"></font>
-<A NAME="975">975 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
-<A NAME="976">976 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
-<A NAME="977">977 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
-<A NAME="978">978 : </A><font color="#007700"></font>
-<A NAME="979">979 : </A>      <font color='#aa2200'>subroutine</font> writepars ()<font color="#007700"></font>
-<A NAME="980">980 : </A>      <font color='#aa2200'>use</font> sce_mod<font color="#007700"></font>
-<A NAME="981">981 : </A>      <font color='#aa2200'>implicit</font> <font color='#aa2200'>none</font><font color="#007700"></font>
-<A NAME="982">982 : </A><font color="#007700"></font>
-<A NAME="983">983 : </A>      <font color='#aa2200'>INTEGER</font> :: <A HREF='writepars_variables.html#i_'>i_</A><font color="#007700"></font>
-<A NAME="984">984 : </A><font color="#007700"></font>
-<A NAME="985">985 : </A>      <font color='#aa2200'>write</font>(*,'(/"<font color='#aa2200'>PARAMETER</font>|     VALUE   |    <font color='#aa2200'>MINVAL</font>   |    <font color='#aa2200'>MAXVAL</font>   |  CV (%)     ")')<font color="#007700"></font>
-<A NAME="986">986 : </A>      <font color='#aa2200'>write</font>(kfile_progress,'(/"<font color='#aa2200'>PARAMETER</font>|     VALUE   |    <font color='#aa2200'>MINVAL</font>   |    <font color='#aa2200'>MAXVAL</font>   |  CV (%)     ")')<font color="#007700"></font>
-<A NAME="987">987 : </A>      <font color='#aa2200'>do</font> <A HREF='writepars_variables.html#i_'>i_</A> = 1, nopt<font color="#007700"></font>
-<A NAME="988">988 : </A>        <font color='#aa2200'>write</font>(*,'(a9,5e14.6)') <A HREF='writepars_subroutines_called.html#parname'>parname</A>(<A HREF='writepars_subroutines_called.html#optid'>optid</A>(<A HREF='writepars_variables.html#i_'>i_</A>)), <A HREF='writepars_subroutines_called.html#shufflevar'>shufflevar</A>(<A HREF='writepars_subroutines_called.html#optid'>optid</A>(<A HREF='writepars_variables.html#i_'>i_</A>),1), <A HREF='writepars_subroutines_called.html#parmin'>parmin</A>(<A HREF='writepars_subroutines_called.html#optid'>optid</A>(<A HREF='writepars_variables.html#i_'>i_</A>)), &<font color="#007700"></font>
-<A NAME="989">989 : </A>        & <A HREF='writepars_subroutines_called.html#parmax'>parmax</A>(<A HREF='writepars_subroutines_called.html#optid'>optid</A>(<A HREF='writepars_variables.html#i_'>i_</A>)), <A HREF='writepars_subroutines_called.html#cv_'>cv_</A>(<A HREF='writepars_variables.html#i_'>i_</A>)<font color="#007700"></font>
-<A NAME="990">990 : </A>        <font color='#aa2200'>write</font>(kfile_progress,'(a9,5e14.6)') <A HREF='writepars_subroutines_called.html#parname'>parname</A>(<A HREF='writepars_subroutines_called.html#optid'>optid</A>(<A HREF='writepars_variables.html#i_'>i_</A>)), <A HREF='writepars_subroutines_called.html#shufflevar'>shufflevar</A>(<A HREF='writepars_subroutines_called.html#optid'>optid</A>(<A HREF='writepars_variables.html#i_'>i_</A>),1), &<font color="#007700"></font>
-<A NAME="991">991 : </A>        & <A HREF='writepars_subroutines_called.html#parmin'>parmin</A>(<A HREF='writepars_subroutines_called.html#optid'>optid</A>(<A HREF='writepars_variables.html#i_'>i_</A>)), <A HREF='writepars_subroutines_called.html#parmax'>parmax</A>(<A HREF='writepars_subroutines_called.html#optid'>optid</A>(<A HREF='writepars_variables.html#i_'>i_</A>)), <A HREF='writepars_subroutines_called.html#cv_'>cv_</A>(<A HREF='writepars_variables.html#i_'>i_</A>)<font color="#007700"></font>
-<A NAME="992">992 : </A>      <font color='#aa2200'>enddo</font><font color="#007700"></font>
-<A NAME="993">993 : </A>      <font color='#aa2200'>write</font>(kfile_progress,'(//)')<font color="#007700"></font>
-<A NAME="994">994 : </A>      <font color='#aa2200'>print</font> *<font color="#007700"></font>
-<A NAME="995">995 : </A>      <font color='#aa2200'>print</font> *<font color="#007700"></font>
-<A NAME="996">996 : </A>      <font color='#aa2200'>if</font> (success <font color='#cc00cc'>.eq.</font> 1) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="997">997 : </A>        <font color='#aa2200'>open</font>(kfile_finalbest, <font color='#aa2200'>file</font>=sfile_finalbest(1:<font color='#aa2200'>len_trim</font>(sfile_finalbest)))<font color="#007700"></font>
-<A NAME="998">998 : </A>        <font color='#aa2200'>write</font>(kfile_finalbest,outformat) <A HREF='writepars_subroutines_called.html#shufflevar'>shufflevar</A>(:,1), bestobj<font color="#007700"></font>
-<A NAME="999">999 : </A>        <font color='#aa2200'>close</font>(kfile_finalbest)<font color="#007700"></font>
-<A NAME="1000">1000 : </A>      <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="1001">1001 : </A><font color="#007700"></font>
-<A NAME="1002">1002 : </A>      <font color='#aa2200'>if</font> (success <font color='#cc00cc'>.eq.</font> 2) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="1003">1003 : </A>        <font color='#aa2200'>open</font>(kfile_finalbest, <font color='#aa2200'>file</font>=sfile_finalbest(1:<font color='#aa2200'>len_trim</font>(sfile_finalbest)))<font color="#007700"></font>
-<A NAME="1004">1004 : </A>        <font color='#aa2200'>write</font>(kfile_finalbest, &<font color="#007700"></font>
-<A NAME="1005">1005 : </A>        & '("   0.0E+00  0.0E+00  0.0E+00  0.0E+00  0.0E+00  0.0E+00  0.0E+00")')<font color="#007700"></font>
-<A NAME="1006">1006 : </A>        <font color='#aa2200'>close</font>(kfile_finalbest)<font color="#007700"></font>
-<A NAME="1007">1007 : </A>      <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="1008">1008 : </A><font color="#007700"></font>
-<A NAME="1009">1009 : </A>      <font color='#aa2200'>return</font><font color="#007700"></font>
-<A NAME="1010">1010 : </A>      <font color='#aa2200'>end</font> <font color='#aa2200'>subroutine</font> writepars<font color="#007700"></font>
+<A NAME="1194">1194 : </A><font color="#007700"></font>
+<A NAME="1195">1195 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+<A NAME="1196">1196 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+<A NAME="1197">1197 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+<A NAME="1198">1198 : </A><font color="#007700"></font>
+<A NAME="1199">1199 : </A>      <font color='#aa2200'>subroutine</font> writepars ()<font color="#007700"></font>
+<A NAME="1200">1200 : </A>      <font color='#aa2200'>use</font> vom_sce_mod<font color="#007700"></font>
+<A NAME="1201">1201 : </A>      <font color='#aa2200'>implicit</font> <font color='#aa2200'>none</font><font color="#007700"></font>
+<A NAME="1202">1202 : </A><font color="#007700"></font>
+<A NAME="1203">1203 : </A>      <font color='#aa2200'>INTEGER</font>            :: <A HREF='writepars_variables.html#ii'>ii</A><font color="#007700"></font>
+<A NAME="1204">1204 : </A>      <font color='#aa2200'>CHARACTER</font>(<font color='#aa2200'>len</font>=135) :: <A HREF='writepars_variables.html#msg'>msg</A><font color="#007700"></font>
+<A NAME="1205">1205 : </A><font color="#007700"></font>
+<A NAME="1206">1206 : </A>      <font color='#aa2200'>write</font>(kfile_progress,*) " "<font color="#007700"></font>
+<A NAME="1207">1207 : </A>      <font color='#aa2200'>write</font>(<A HREF='writepars_variables.html#msg'>msg</A>,'("<font color='#aa2200'>PARAMETER</font>|     VALUE   |    <font color='#aa2200'>MINVAL</font>   |    <font color='#aa2200'>MAXVAL</font>   |  CV (%)     ")')<font color="#007700"></font>
+<A NAME="1208">1208 : </A>      <font color='#aa2200'>write</font>(kfile_progress,*) <font color='#aa2200'>TRIM</font>(<A HREF='writepars_variables.html#msg'>msg</A>)<font color="#007700"></font>
+<A NAME="1209">1209 : </A>      <font color='#aa2200'>do</font> <A HREF='writepars_variables.html#ii'>ii</A> = 1, nopt<font color="#007700"></font>
+<A NAME="1210">1210 : </A>        <font color='#aa2200'>write</font>(<A HREF='writepars_variables.html#msg'>msg</A>,'(a9,5e14.6)') <A HREF='writepars_subroutines_called.html#parname'>parname</A>(<A HREF='writepars_subroutines_called.html#optid'>optid</A>(<A HREF='writepars_variables.html#ii'>ii</A>)), <A HREF='writepars_subroutines_called.html#shufflevar'>shufflevar</A>(<A HREF='writepars_subroutines_called.html#optid'>optid</A>(<A HREF='writepars_variables.html#ii'>ii</A>),1), <A HREF='writepars_subroutines_called.html#parmin'>parmin</A>(<A HREF='writepars_subroutines_called.html#optid'>optid</A>(<A HREF='writepars_variables.html#ii'>ii</A>)), <A HREF='writepars_subroutines_called.html#parmax'>parmax</A>(<A HREF='writepars_subroutines_called.html#optid'>optid</A>(<A HREF='writepars_variables.html#ii'>ii</A>)), <A HREF='writepars_subroutines_called.html#cv_'>cv_</A>(<A HREF='writepars_variables.html#ii'>ii</A>)<font color="#007700"></font>
+<A NAME="1211">1211 : </A>        <font color='#aa2200'>write</font>(kfile_progress,*) <font color='#aa2200'>TRIM</font>(<A HREF='writepars_variables.html#msg'>msg</A>)<font color="#007700"></font>
+<A NAME="1212">1212 : </A>      <font color='#aa2200'>enddo</font><font color="#007700"></font>
+<A NAME="1213">1213 : </A>      <font color='#aa2200'>write</font>(kfile_progress,*) ' '<font color="#007700"></font>
+<A NAME="1214">1214 : </A><font color="#007700"></font>
+<A NAME="1215">1215 : </A>      <font color='#aa2200'>if</font> (success <font color='#cc00cc'>.eq.</font> 1) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="1216">1216 : </A>        <font color='#aa2200'>call</font> <A HREF='writepars_subroutines_called.html#write_lastbest'>write_lastbest</A>(<A HREF='writepars_subroutines_called.html#shufflevar'>shufflevar</A>(:,1), vom_npar, bestobj, 1)<font color="#007700"></font>
+<A NAME="1217">1217 : </A>      <font color='#aa2200'>endif</font><font color="#007700"></font>
+<A NAME="1218">1218 : </A><font color="#007700"></font>
+<A NAME="1219">1219 : </A>      <font color='#aa2200'>if</font> (success <font color='#cc00cc'>.eq.</font> 2) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="1220">1220 : </A>        <font color='#aa2200'>call</font> <A HREF='writepars_subroutines_called.html#write_lastbest'>write_lastbest</A>(<A HREF='writepars_subroutines_called.html#shufflevar'>shufflevar</A>(:,1)*0.d0, vom_npar, 0.d0, 1)<font color="#007700"></font>
+<A NAME="1221">1221 : </A>      <font color='#aa2200'>endif</font><font color="#007700"></font>
+<A NAME="1222">1222 : </A><font color="#007700"></font>
+<A NAME="1223">1223 : </A>      <font color='#aa2200'>return</font><font color="#007700"></font>
+<A NAME="1224">1224 : </A>      <font color='#aa2200'>end</font> <font color='#aa2200'>subroutine</font> writepars<font color="#007700"></font>
 
 </PRE>
 </BODY></HTML>

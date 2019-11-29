@@ -136,7 +136,6 @@ function printCallRows(xmlhttp,locargs) {
 <div class="tabs">
   <ul>
       <li><a href="waterbalance.html"><span>Header</span></a></li>
-      <li><a href="waterbalance_version_history.html"><span>Version history</span></a></li>
       <li><a href="waterbalance_subroutines_called.html"><span>Subroutines called</span></a></li>
       <li><a href="waterbalance_variables.html"><span>Variables</span></a></li>
       <li><a href="waterbalance_called_by.html"><span>Called by</span></a></li>
@@ -145,295 +144,104 @@ function printCallRows(xmlhttp,locargs) {
 </div>
 <h1>Subroutine waterbalance</h1>
 <PRE>
-<A NAME="1">  1 : </A>      <font color='#aa2200'>subroutine</font> waterbalance(<A HREF='waterbalance.html#init'>init</A>)<font color="#007700"></font>
-<A NAME="2">  2 : </A>!<font color="#007700">***********************************************************************</font>
-<A NAME="3">  3 : </A>!<font color="#007700">*  Layered water balance</font>
-<A NAME="4">  4 : </A>!<font color="#007700">*----------------------------------------------------------------------</font>
-<A NAME="5">  5 : </A>!<font color="#007700">*  Author: Stan Schymanski, Max Planck Institute for Biogeochemistry</font>
-<A NAME="6">  6 : </A>!<font color="#007700">*  Email: sschym@bgc-jena.mpg.de</font>
-<A NAME="7">  7 : </A>!<font color="#007700">*  06/2008</font>
-<A NAME="8">  8 : </A>!<font color="#007700">*  Version: REW with layered unsaturated zone, no routing</font>
-<A NAME="9">  9 : </A>!<font color="#007700">*----------------------------------------------------------------------</font>
-<A NAME="10"> 10 : </A>!<font color="#007700">*</font>
-<A NAME="11"> 11 : </A>!<font color="#007700">* Numbers in the commented parentheses refer to the equation numeration</font>
-<A NAME="12"> 12 : </A>!<font color="#007700">* in the document 'equations.pdf' that comes with the documentation.</font>
-<A NAME="13"> 13 : </A>!<font color="#007700">*</font>
-<A NAME="14"> 14 : </A>!<font color="#007700">*----------------------------------------------------------------------</font>
-<A NAME="15"> 15 : </A>!<font color="#007700">*</font>
-<A NAME="16"> 16 : </A>!<font color="#007700">* This subroutine ('waterbalance') uses the variables defined in  </font>
-<A NAME="17"> 17 : </A>!<font color="#007700">* modules.f90, some of which have to be allocated prior to calling  </font>
-<A NAME="18"> 18 : </A>!<font color="#007700">* 'waterbalance'.</font>
-<A NAME="19"> 19 : </A>!<font color="#007700">* When calling the 'waterbalance', the 'init' variable must be given </font>
-<A NAME="20"> 20 : </A>!<font color="#007700">* (1 to generate initial conditions, otherwise 0).</font>
-<A NAME="21"> 21 : </A>!<font color="#007700">* This subroutine calculates the water balance for a time step &lt;=dtmax.</font>
-<A NAME="22"> 22 : </A>!<font color="#007700">* The calling program must transfer the new variables ('new' in their names)</font>
-<A NAME="23"> 23 : </A>!<font color="#007700">* to the old variables for the next time step, before calling 'waterbalance'</font>
-<A NAME="24"> 24 : </A>!<font color="#007700">* again. Example: call waterbalance(init) , time=time+dt, ys=ysnew...</font>
-<A NAME="25"> 25 : </A>!<font color="#007700">*</font>
-<A NAME="26"> 26 : </A>!<font color="#007700">*----------------------------------------------------------------------</font>
-<A NAME="27"> 27 : </A>!<font color="#007700">*  Copyright (C) 2008  Stan Schymanski</font>
-<A NAME="28"> 28 : </A>!<font color="#007700">*</font>
-<A NAME="29"> 29 : </A>!<font color="#007700">*    This program is free software: you can redistribute it and/or modify</font>
-<A NAME="30"> 30 : </A>!<font color="#007700">*    it under the terms of the GNU General Public License as published by</font>
-<A NAME="31"> 31 : </A>!<font color="#007700">*    the Free Software Foundation, either version 3 of the License, or</font>
-<A NAME="32"> 32 : </A>!<font color="#007700">*    (at your option) any later version.</font>
-<A NAME="33"> 33 : </A>!<font color="#007700">*</font>
-<A NAME="34"> 34 : </A>!<font color="#007700">*    This program is distributed in the hope that it will be useful,</font>
-<A NAME="35"> 35 : </A>!<font color="#007700">*    but WITHOUT ANY WARRANTY; without even the implied warranty of</font>
-<A NAME="36"> 36 : </A>!<font color="#007700">*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</font>
-<A NAME="37"> 37 : </A>!<font color="#007700">*    GNU General Public License for more details.</font>
-<A NAME="38"> 38 : </A>!<font color="#007700">*</font>
-<A NAME="39"> 39 : </A>!<font color="#007700">*    You should have received a copy of the GNU General Public License</font>
-<A NAME="40"> 40 : </A>!<font color="#007700">*    along with this program. If not, see http://www.gnu.org/licenses.</font>
-<A NAME="41"> 41 : </A>!<font color="#007700">*</font>
-<A NAME="42"> 42 : </A>!<font color="#007700">***********************************************************************</font>
-<A NAME="43"> 43 : </A><font color="#007700"></font>
-<A NAME="44"> 44 : </A>      <font color='#aa2200'>use</font> watmod<font color="#007700"></font>
-<A NAME="45"> 45 : </A>      <font color='#aa2200'>use</font> vegwatmod<font color="#007700"></font>
-<A NAME="46"> 46 : </A>      <font color='#aa2200'>implicit</font> <font color='#aa2200'>none</font><font color="#007700"></font>
-<A NAME="47"> 47 : </A><font color="#007700"></font>
-<A NAME="48"> 48 : </A>      <font color='#aa2200'>INTEGER</font>, <font color='#aa2200'>INTENT</font>(<font color='#aa2200'>in</font>) :: <A HREF='waterbalance.html#init'>init</A><font color="#007700"></font>
-<A NAME="49"> 49 : </A><font color="#007700"></font>
-<A NAME="50"> 50 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='waterbalance_variables.html#dummy'>dummy</A><font color="#007700"></font>
-<A NAME="51"> 51 : </A>      <font color='#aa2200'>LOGICAL</font> :: <A HREF='waterbalance_variables.html#isnand'>isnand</A><font color="#007700"></font>
-<A NAME="52"> 52 : </A>      <font color='#aa2200'>LOGICAL</font> :: <A HREF='waterbalance_variables.html#isinfd'>isinfd</A><font color="#007700"></font>
-<A NAME="53"> 53 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='waterbalance_variables.html#dtsu'>dtsu</A><font color="#007700"></font>
-<A NAME="54"> 54 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='waterbalance_variables.html#wc_'>wc_</A><font color="#007700"></font>
-<A NAME="55"> 55 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='waterbalance_variables.html#wcnew'>wcnew</A><font color="#007700"></font>
-<A NAME="56"> 56 : </A>      <font color='#aa2200'>INTEGER</font> :: <A HREF='waterbalance_variables.html#i'>i</A>, <A HREF='waterbalance_variables.html#j'>j</A><font color="#007700"></font>
-<A NAME="57"> 57 : </A><font color="#007700"></font>
-<A NAME="58"> 58 : </A>!<font color="#007700">     * INITIALISATION</font>
-<A NAME="59"> 59 : </A><font color="#007700"></font>
-<A NAME="60"> 60 : </A>!<font color="#007700">     * Run initial run</font>
-<A NAME="61"> 61 : </A>      <font color='#aa2200'>if</font> (<A HREF='waterbalance.html#init'>init</A> <font color='#cc00cc'>.eq.</font> 1) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="62"> 62 : </A>        dtsu_count = 0<font color="#007700"></font>
-<A NAME="63"> 63 : </A>        dtmax_count = 0<font color="#007700"></font>
-<A NAME="64"> 64 : </A>        ys_ = cz<font color="#007700"></font>
-<A NAME="65"> 65 : </A>        nlayers_ = 0<font color="#007700"></font>
-<A NAME="66"> 66 : </A>!<font color="#007700">       * Adapt the number of unsaturated layers such that ys = zr</font>
-<A NAME="67"> 67 : </A>        <font color='#aa2200'>do</font> <font color='#aa2200'>while</font> (ys_ <font color='#cc00cc'>.gt.</font> zr_)<font color="#007700"></font>
-<A NAME="68"> 68 : </A>          nlayers_ = nlayers_ + 1<font color="#007700"></font>
-<A NAME="69"> 69 : </A>          ys_ = ys_ - <A HREF='waterbalance_subroutines_called.html#delzvec'>delzvec</A>(nlayers_)<font color="#007700"></font>
-<A NAME="70"> 70 : </A>        <font color='#aa2200'>enddo</font><font color="#007700"></font>
-<A NAME="71"> 71 : </A>        <A HREF='waterbalance_subroutines_called.html#pcapvec'>pcapvec</A>(nlayers_+1:M___) = 0.d0<font color="#007700"></font>
-<A NAME="72"> 72 : </A>!<font color="#007700">       * Equilibrium pressure head</font>
-<A NAME="73"> 73 : </A>        <font color='#aa2200'>do</font> <A HREF='waterbalance_variables.html#j'>j</A> = nlayers_, 1, -1<font color="#007700"></font>
-<A NAME="74"> 74 : </A>          <A HREF='waterbalance_subroutines_called.html#pcapvec'>pcapvec</A>(<A HREF='waterbalance_variables.html#j'>j</A>) = 0.5d0 * <A HREF='waterbalance_subroutines_called.html#delzvec'>delzvec</A>(<A HREF='waterbalance_variables.html#j'>j</A>+1) + 0.5d0 * <A HREF='waterbalance_subroutines_called.html#delzvec'>delzvec</A>(<A HREF='waterbalance_variables.html#j'>j</A>) + <A HREF='waterbalance_subroutines_called.html#pcapvec'>pcapvec</A>(<A HREF='waterbalance_variables.html#j'>j</A>+1)<font color="#007700"></font>
+<A NAME="1">  1 : </A>!<font color="#007700">***********************************************************************</font>
+<A NAME="2">  2 : </A>!<font color="#007700">*  Layered water balance</font>
+<A NAME="3">  3 : </A>!<font color="#007700">*----------------------------------------------------------------------</font>
+<A NAME="4">  4 : </A>!<font color="#007700">*  Author: Stan Schymanski, Max Planck Institute for Biogeochemistry</font>
+<A NAME="5">  5 : </A>!<font color="#007700">*  Email: sschym@bgc-jena.mpg.de</font>
+<A NAME="6">  6 : </A>!<font color="#007700">*  06/2008</font>
+<A NAME="7">  7 : </A>!<font color="#007700">*  Version: REW with layered unsaturated zone, no routing</font>
+<A NAME="8">  8 : </A>!<font color="#007700">*----------------------------------------------------------------------</font>
+<A NAME="9">  9 : </A>!<font color="#007700">*</font>
+<A NAME="10"> 10 : </A>!<font color="#007700">* Numbers in the commented parentheses refer to the equation numeration</font>
+<A NAME="11"> 11 : </A>!<font color="#007700">* in the document 'equations.pdf' that comes with the documentation.</font>
+<A NAME="12"> 12 : </A>!<font color="#007700">*</font>
+<A NAME="13"> 13 : </A>!<font color="#007700">*----------------------------------------------------------------------</font>
+<A NAME="14"> 14 : </A>!<font color="#007700">*</font>
+<A NAME="15"> 15 : </A>!<font color="#007700">* This subroutine ('waterbalance') uses the variables defined in</font>
+<A NAME="16"> 16 : </A>!<font color="#007700">* modules.f90, some of which have to be allocated prior to calling</font>
+<A NAME="17"> 17 : </A>!<font color="#007700">* 'waterbalance'.</font>
+<A NAME="18"> 18 : </A>!<font color="#007700">* When calling the 'waterbalance', the 'init' variable must be given</font>
+<A NAME="19"> 19 : </A>!<font color="#007700">* (1 to generate initial conditions, otherwise 0).</font>
+<A NAME="20"> 20 : </A>!<font color="#007700">* This subroutine calculates the water balance for a time step &lt;=dtmax.</font>
+<A NAME="21"> 21 : </A>!<font color="#007700">* The calling program must transfer the new variables ('new' in their names)</font>
+<A NAME="22"> 22 : </A>!<font color="#007700">* to the old variables for the next time step, before calling 'waterbalance'</font>
+<A NAME="23"> 23 : </A>!<font color="#007700">* again. Example: call waterbalance(init) , time=time+dt, zw=zwnew...</font>
+<A NAME="24"> 24 : </A>!<font color="#007700">*</font>
+<A NAME="25"> 25 : </A>!<font color="#007700">*----------------------------------------------------------------------</font>
+<A NAME="26"> 26 : </A>!<font color="#007700">*  Copyright (C) 2008  Stan Schymanski</font>
+<A NAME="27"> 27 : </A>!<font color="#007700">*</font>
+<A NAME="28"> 28 : </A>!<font color="#007700">*    This program is free software: you can redistribute it and/or modify</font>
+<A NAME="29"> 29 : </A>!<font color="#007700">*    it under the terms of the GNU General Public License as published by</font>
+<A NAME="30"> 30 : </A>!<font color="#007700">*    the Free Software Foundation, either version 3 of the License, or</font>
+<A NAME="31"> 31 : </A>!<font color="#007700">*    (at your option) any later version.</font>
+<A NAME="32"> 32 : </A>!<font color="#007700">*</font>
+<A NAME="33"> 33 : </A>!<font color="#007700">*    This program is distributed in the hope that it will be useful,</font>
+<A NAME="34"> 34 : </A>!<font color="#007700">*    but WITHOUT ANY WARRANTY; without even the implied warranty of</font>
+<A NAME="35"> 35 : </A>!<font color="#007700">*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</font>
+<A NAME="36"> 36 : </A>!<font color="#007700">*    GNU General Public License for more details.</font>
+<A NAME="37"> 37 : </A>!<font color="#007700">*</font>
+<A NAME="38"> 38 : </A>!<font color="#007700">*    You should have received a copy of the GNU General Public License</font>
+<A NAME="39"> 39 : </A>!<font color="#007700">*    along with this program. If not, see http://www.gnu.org/licenses.</font>
+<A NAME="40"> 40 : </A>!<font color="#007700">*</font>
+<A NAME="41"> 41 : </A>!<font color="#007700">***********************************************************************</font>
+<A NAME="42"> 42 : </A><font color="#007700"></font>
+<A NAME="43"> 43 : </A>      <font color='#aa2200'>subroutine</font> waterbalance()<font color="#007700"></font>
+<A NAME="44"> 44 : </A>      <font color='#aa2200'>use</font> vom_vegwat_mod<font color="#007700"></font>
+<A NAME="45"> 45 : </A>      <font color='#aa2200'>implicit</font> <font color='#aa2200'>none</font><font color="#007700"></font>
+<A NAME="46"> 46 : </A><font color="#007700"></font>
+<A NAME="47"> 47 : </A>      <font color='#aa2200'>INTEGER</font> :: <A HREF='waterbalance_variables.html#jj'>jj</A><font color="#007700"></font>
+<A NAME="48"> 48 : </A><font color="#007700"></font>
+<A NAME="49"> 49 : </A>!<font color="#007700">     * CURRENT SOIL WATER CONTENT</font>
+<A NAME="50"> 50 : </A><font color="#007700"></font>
+<A NAME="51"> 51 : </A>      cH2Ol_s(:) = (-su__(:) * s_thetar(:) + su__(:) * s_thetas(:)     &<font color="#007700"></font>
+<A NAME="52"> 52 : </A>     &           + s_thetar(:)) * s_delz(:)<font color="#007700"></font>
+<A NAME="53"> 53 : </A>      wc_ = <font color='#aa2200'>SUM</font>(cH2Ol_s)<font color="#007700"></font>
+<A NAME="54"> 54 : </A><font color="#007700"></font>
+<A NAME="55"> 55 : </A>!<font color="#007700">     * FLUXES (inf, infx, qbl, esoil__, spgfcf__)</font>
+<A NAME="56"> 56 : </A><font color="#007700"></font>
+<A NAME="57"> 57 : </A>      <font color='#aa2200'>call</font> <A HREF='waterbalance_subroutines_called.html#waterbalance_fluxes'>waterbalance_fluxes</A>()<font color="#007700"></font>
+<A NAME="58"> 58 : </A><font color="#007700"></font>
+<A NAME="59"> 59 : </A>!<font color="#007700">     * changes in water storage (waterbalance)</font>
+<A NAME="60"> 60 : </A><font color="#007700"></font>
+<A NAME="61"> 61 : </A>      <font color='#aa2200'>if</font>( i_no_veg <font color='#cc00cc'>.eq.</font> 0) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="62"> 62 : </A>         io__     = inf__ - esoil__ - spgfcf__ - <font color='#aa2200'>SUM</font>(<A HREF='waterbalance_subroutines_called.html#ruptkt__'>ruptkt__</A>(:)) - <font color='#aa2200'>SUM</font>(<A HREF='waterbalance_subroutines_called.html#ruptkg__'>ruptkg__</A>(:))  !<font color="#007700"> (3.19)</font>
+<A NAME="63"> 63 : </A>      <font color='#aa2200'>else</font><font color="#007700"></font>
+<A NAME="64"> 64 : </A>         io__     = inf__ - esoil__ - spgfcf__  !<font color="#007700"> (no vegetation, WB still needs to close)</font>
+<A NAME="65"> 65 : </A>      <font color='#aa2200'>end</font> <font color='#aa2200'>if</font><font color="#007700"></font>
+<A NAME="66"> 66 : </A><font color="#007700"></font>
+<A NAME="67"> 67 : </A>      <A HREF='waterbalance_subroutines_called.html#iovec'>iovec</A>(:) = 0.d0<font color="#007700"></font>
+<A NAME="68"> 68 : </A>      <A HREF='waterbalance_subroutines_called.html#iovec'>iovec</A>(1) = <A HREF='waterbalance_subroutines_called.html#qbl'>qbl</A>(1) + inf__ - esoil__ - <A HREF='waterbalance_subroutines_called.html#ruptkt__'>ruptkt__</A>(1) - <A HREF='waterbalance_subroutines_called.html#ruptkg__'>ruptkg__</A>(1)<font color="#007700"></font>
+<A NAME="69"> 69 : </A>      <font color='#aa2200'>if</font> (wlayer_ <font color='#cc00cc'>.eq.</font> 1) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="70"> 70 : </A>        <A HREF='waterbalance_subroutines_called.html#iovec'>iovec</A>(1) = <A HREF='waterbalance_subroutines_called.html#iovec'>iovec</A>(1) - spgfcf__<font color="#007700"></font>
+<A NAME="71"> 71 : </A>      <font color='#aa2200'>endif</font><font color="#007700"></font>
+<A NAME="72"> 72 : </A>      <font color='#aa2200'>if</font> (wlayer_ <font color='#cc00cc'>.gt.</font> 2) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="73"> 73 : </A>        <font color='#aa2200'>do</font> <A HREF='waterbalance_variables.html#jj'>jj</A> = 2, wlayer_ - 1<font color="#007700"></font>
+<A NAME="74"> 74 : </A>          <A HREF='waterbalance_subroutines_called.html#iovec'>iovec</A>(<A HREF='waterbalance_variables.html#jj'>jj</A>) = <A HREF='waterbalance_subroutines_called.html#qbl'>qbl</A>(<A HREF='waterbalance_variables.html#jj'>jj</A>) - <A HREF='waterbalance_subroutines_called.html#qbl'>qbl</A>(<A HREF='waterbalance_variables.html#jj'>jj</A>-1) - <A HREF='waterbalance_subroutines_called.html#ruptkt__'>ruptkt__</A>(<A HREF='waterbalance_variables.html#jj'>jj</A>) - <A HREF='waterbalance_subroutines_called.html#ruptkg__'>ruptkg__</A>(<A HREF='waterbalance_variables.html#jj'>jj</A>)<font color="#007700"></font>
 <A NAME="75"> 75 : </A>        <font color='#aa2200'>enddo</font><font color="#007700"></font>
-<A NAME="76"> 76 : </A>!<font color="#007700">       * equilibrium su above a saturated layer (after eq_sueq1 in Watbal3)</font>
-<A NAME="77"> 77 : </A>        <font color='#aa2200'>do</font> <A HREF='waterbalance_variables.html#j'>j</A> = 1, M___ - 1<font color="#007700"></font>
-<A NAME="78"> 78 : </A>          <A HREF='waterbalance_subroutines_called.html#sueqvec'>sueqvec</A>(<A HREF='waterbalance_variables.html#j'>j</A>) = (1.d0 / ((0.5d0 * (<A HREF='waterbalance_subroutines_called.html#delzvec'>delzvec</A>(<A HREF='waterbalance_variables.html#j'>j</A>+1) +  <A HREF='waterbalance_subroutines_called.html#delzvec'>delzvec</A>(<A HREF='waterbalance_variables.html#j'>j</A>))  &<font color="#007700"></font>
-<A NAME="79"> 79 : </A>     &               * <A HREF='waterbalance_subroutines_called.html#avgvec'>avgvec</A>(<A HREF='waterbalance_variables.html#j'>j</A>)) ** <A HREF='waterbalance_subroutines_called.html#nvgvec'>nvgvec</A>(<A HREF='waterbalance_variables.html#j'>j</A>) + 1.d0)) ** <A HREF='waterbalance_subroutines_called.html#mvgvec'>mvgvec</A>(<A HREF='waterbalance_variables.html#j'>j</A>)<font color="#007700"></font>
-<A NAME="80"> 80 : </A>        <font color='#aa2200'>enddo</font><font color="#007700"></font>
-<A NAME="81"> 81 : </A>        <A HREF='waterbalance_subroutines_called.html#sueqvec'>sueqvec</A>(M___) = (1.d0 / ((0.5d0 * <A HREF='waterbalance_subroutines_called.html#delzvec'>delzvec</A>(<A HREF='waterbalance_variables.html#j'>j</A>) * <A HREF='waterbalance_subroutines_called.html#avgvec'>avgvec</A>(<A HREF='waterbalance_variables.html#j'>j</A>))      &<font color="#007700"></font>
-<A NAME="82"> 82 : </A>     &                ** <A HREF='waterbalance_subroutines_called.html#nvgvec'>nvgvec</A>(<A HREF='waterbalance_variables.html#j'>j</A>) + 1.d0)) ** <A HREF='waterbalance_subroutines_called.html#mvgvec'>mvgvec</A>(<A HREF='waterbalance_variables.html#j'>j</A>)<font color="#007700"></font>
-<A NAME="83"> 83 : </A>        <A HREF='waterbalance_subroutines_called.html#suvec_'>suvec_</A>(:) = (1.d0 / ((<A HREF='waterbalance_subroutines_called.html#pcapvec'>pcapvec</A>(:) * <A HREF='waterbalance_subroutines_called.html#avgvec'>avgvec</A>(:)) ** <A HREF='waterbalance_subroutines_called.html#nvgvec'>nvgvec</A>(:)     &<font color="#007700"></font>
-<A NAME="84"> 84 : </A>     &            + 1.d0)) ** <A HREF='waterbalance_subroutines_called.html#mvgvec'>mvgvec</A>(:)<font color="#007700"></font>
-<A NAME="85"> 85 : </A>!<font color="#007700">       * unsat. hydrol. cond. as a function of su</font>
-<A NAME="86"> 86 : </A>        <A HREF='waterbalance_subroutines_called.html#kunsatvec'>kunsatvec</A>(:) = ((-<A HREF='waterbalance_subroutines_called.html#suvec_'>suvec_</A>(:) ** (1.d0 / <A HREF='waterbalance_subroutines_called.html#mvgvec'>mvgvec</A>(:)) + 1.d0)      &<font color="#007700"></font>
-<A NAME="87"> 87 : </A>     &               ** <A HREF='waterbalance_subroutines_called.html#mvgvec'>mvgvec</A>(:) - 1.d0) ** 2.d0 * <A HREF='waterbalance_subroutines_called.html#ksatvec'>ksatvec</A>(:)         &<font color="#007700"></font>
-<A NAME="88"> 88 : </A>     &               * <font color='#aa2200'>SQRT</font>(<A HREF='waterbalance_subroutines_called.html#suvec_'>suvec_</A>(:))<font color="#007700"></font>
-<A NAME="89"> 89 : </A>        cH2Ol_s(:) = (-<A HREF='waterbalance_subroutines_called.html#suvec_'>suvec_</A>(:) * thetarvec(:) + <A HREF='waterbalance_subroutines_called.html#suvec_'>suvec_</A>(:)            &<font color="#007700"></font>
-<A NAME="90"> 90 : </A>     &             * thetasvec(:) + thetarvec(:)) * <A HREF='waterbalance_subroutines_called.html#delzvec'>delzvec</A>(:)<font color="#007700"></font>
-<A NAME="91"> 91 : </A><font color="#007700"></font>
-<A NAME="92"> 92 : </A>        ysnew        = ys_<font color="#007700"></font>
-<A NAME="93"> 93 : </A>        nlayersnew   = nlayers_<font color="#007700"></font>
-<A NAME="94"> 94 : </A>        <A HREF='waterbalance_subroutines_called.html#pcapnewvec'>pcapnewvec</A>   = <A HREF='waterbalance_subroutines_called.html#pcapvec'>pcapvec</A><font color="#007700"></font>
-<A NAME="95"> 95 : </A>        <A HREF='waterbalance_subroutines_called.html#sunewvec'>sunewvec</A>     = <A HREF='waterbalance_subroutines_called.html#suvec_'>suvec_</A><font color="#007700"></font>
-<A NAME="96"> 96 : </A>        kunsatnewvec = <A HREF='waterbalance_subroutines_called.html#kunsatvec'>kunsatvec</A><font color="#007700"></font>
-<A NAME="97"> 97 : </A>!<font color="#007700">        omgu_        = 1.d0                  ! In this version, the hill slope is vertical, thus there is no saturated surface fraction</font>
-<A NAME="98"> 98 : </A>!<font color="#007700">        omgunew      = omgu_</font>
-<A NAME="99"> 99 : </A><font color="#007700"></font>
-<A NAME="100">100 : </A>        <font color='#aa2200'>return</font><font color="#007700"></font>
-<A NAME="101">101 : </A>      <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="102">102 : </A><font color="#007700"></font>
-<A NAME="103">103 : </A>!<font color="#007700">     * CURRENT SOIL WATER CONTENT</font>
-<A NAME="104">104 : </A><font color="#007700"></font>
-<A NAME="105">105 : </A>      cH2Ol_s(:) = (-<A HREF='waterbalance_subroutines_called.html#suvec_'>suvec_</A>(:) * thetarvec(:) + <A HREF='waterbalance_subroutines_called.html#suvec_'>suvec_</A>(:)             &<font color="#007700"></font>
-<A NAME="106">106 : </A>     &           * thetasvec(:) + thetarvec(:)) * <A HREF='waterbalance_subroutines_called.html#delzvec'>delzvec</A>(:)<font color="#007700"></font>
-<A NAME="107">107 : </A>      <A HREF='waterbalance_variables.html#wc_'>wc_</A> = <font color='#aa2200'>SUM</font>(cH2Ol_s)<font color="#007700"></font>
-<A NAME="108">108 : </A><font color="#007700"></font>
-<A NAME="109">109 : </A>!<font color="#007700">     * FLUXES</font>
-<A NAME="110">110 : </A><font color="#007700"></font>
-<A NAME="111">111 : </A>      <font color='#aa2200'>if</font> (rain_ <font color='#cc00cc'>.gt.</font> 0.d0) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="112">112 : </A>        <font color='#aa2200'>if</font> (nlayers_ <font color='#cc00cc'>.ge.</font> 1) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="113">113 : </A>          inf_ = <font color='#aa2200'>MIN</font>((<A HREF='waterbalance_subroutines_called.html#ksatvec'>ksatvec</A>(1) + <A HREF='waterbalance_subroutines_called.html#kunsatvec'>kunsatvec</A>(1)) / 2.d0 *(1.d0        &<font color="#007700"></font>
-<A NAME="114">114 : </A>     &         + (2.d0 * <A HREF='waterbalance_subroutines_called.html#pcapvec'>pcapvec</A>(1)) / <A HREF='waterbalance_subroutines_called.html#delzvec'>delzvec</A>(1)), rain_)  !<font color="#007700"> (3.6), (Out[60])</font>
-<A NAME="115">115 : </A>        <font color='#aa2200'>else</font><font color="#007700"></font>
-<A NAME="116">116 : </A>          inf_ = 0.d0<font color="#007700"></font>
-<A NAME="117">117 : </A>        <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="118">118 : </A>        infx__ = rain_ - inf_<font color="#007700"></font>
-<A NAME="119">119 : </A>      <font color='#aa2200'>else</font> <font color="#007700"></font>
-<A NAME="120">120 : </A>        inf_ = 0.d0<font color="#007700"></font>
-<A NAME="121">121 : </A>        infx__ = 0.d0<font color="#007700"></font>
-<A NAME="122">122 : </A>      <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="123">123 : </A><font color="#007700"></font>
-<A NAME="124">124 : </A>      <A HREF='waterbalance_subroutines_called.html#qblvec'>qblvec</A>(:) = 0.d0<font color="#007700"></font>
-<A NAME="125">125 : </A>      <font color='#aa2200'>if</font> (nlayers_ <font color='#cc00cc'>.gt.</font> 1) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="126">126 : </A>!<font color="#007700">       * Runoff occurs only from the layer 'nlayers_',</font>
-<A NAME="127">127 : </A>!<font color="#007700">         therefore no downward flow into the layers below is allowed.</font>
-<A NAME="128">128 : </A>        <font color='#aa2200'>do</font> <A HREF='waterbalance_variables.html#j'>j</A> = 1, nlayers_ - 1<font color="#007700"></font>
-<A NAME="129">129 : </A>          <A HREF='waterbalance_subroutines_called.html#qblvec'>qblvec</A>(<A HREF='waterbalance_variables.html#j'>j</A>) = -0.5d0 * (2.d0 * (<A HREF='waterbalance_subroutines_called.html#pcapvec'>pcapvec</A>(<A HREF='waterbalance_variables.html#j'>j</A>+1) - <A HREF='waterbalance_subroutines_called.html#pcapvec'>pcapvec</A>(<A HREF='waterbalance_variables.html#j'>j</A>))     &<font color="#007700"></font>
-<A NAME="130">130 : </A>     &              / (<A HREF='waterbalance_subroutines_called.html#delzvec'>delzvec</A>(<A HREF='waterbalance_variables.html#j'>j</A>+1) + <A HREF='waterbalance_subroutines_called.html#delzvec'>delzvec</A>(<A HREF='waterbalance_variables.html#j'>j</A>)) + 1.d0)              &<font color="#007700"></font>
-<A NAME="131">131 : </A>     &              * (<A HREF='waterbalance_subroutines_called.html#kunsatvec'>kunsatvec</A>(<A HREF='waterbalance_variables.html#j'>j</A>+1) + <A HREF='waterbalance_subroutines_called.html#kunsatvec'>kunsatvec</A>(<A HREF='waterbalance_variables.html#j'>j</A>))<font color="#007700"></font>
-<A NAME="132">132 : </A>        <font color='#aa2200'>enddo</font><font color="#007700"></font>
-<A NAME="133">133 : </A>      <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="134">134 : </A><font color="#007700"></font>
-<A NAME="135">135 : </A>      esoil__  = 0.0002d0 * (1.d0 - 0.8d0 * (pc_ + <A HREF='waterbalance_subroutines_called.html#pcg_'>pcg_</A>(2))) * par_ * <A HREF='waterbalance_subroutines_called.html#suvec_'>suvec_</A>(1)<font color="#007700"></font>
-<A NAME="136">136 : </A>!<font color="#007700">     * Seepage face flow as a function of ys_ following eq_spgfcf in Watbal3.</font>
-<A NAME="137">137 : </A>      spgfcf__ = 0.d0<font color="#007700"></font>
-<A NAME="138">138 : </A>      <font color='#aa2200'>if</font> (ys_ <font color='#cc00cc'>.gt.</font> zr_) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="139">139 : </A>        spgfcf__ = <font color='#aa2200'>MAX</font>(0.d0, 0.5d0 * (<font color='#aa2200'>sqrt</font>(cz - zr_) - <font color='#aa2200'>sqrt</font>(cz - ys_))  &<font color="#007700"></font>
-<A NAME="140">140 : </A>     &           * (ys_ - zr_) * <A HREF='waterbalance_subroutines_called.html#ksatvec'>ksatvec</A>(nlayers_) / (<font color='#aa2200'>sqrt</font>(cz - zr_)    &<font color="#007700"></font>
-<A NAME="141">141 : </A>     &           * cgs * <font color='#aa2200'>Cos</font>(go_)))<font color="#007700"></font>
-<A NAME="142">142 : </A>      <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="143">143 : </A><font color="#007700"></font>
-<A NAME="144">144 : </A>!<font color="#007700">     * MAKING SURE THAT NO SUBLAYER 'OVERFLOWS'</font>
-<A NAME="145">145 : </A><font color="#007700"></font>
-<A NAME="146">146 : </A>      <font color='#aa2200'>if</font> (<font color='#aa2200'>MAXVAL</font>(<A HREF='waterbalance_subroutines_called.html#suvec_'>suvec_</A>(1:nlayers_)) <font color='#cc00cc'>.ge.</font> 1.d0) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="147">147 : </A><font color="#007700"></font>
-<A NAME="148">148 : </A>        <font color='#aa2200'>if</font> (nlayers_ <font color='#cc00cc'>.gt.</font> 1) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="149">149 : </A>          <font color='#aa2200'>if</font> (<A HREF='waterbalance_subroutines_called.html#suvec_'>suvec_</A>(1) <font color='#cc00cc'>.ge.</font> 0.99d0) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="150">150 : </A>            <A HREF='waterbalance_variables.html#dummy'>dummy</A> = esoil__ - inf_ + <A HREF='waterbalance_subroutines_called.html#ruptkvec'>ruptkvec</A>(1) + <A HREF='waterbalance_subroutines_called.html#ruptkg'>ruptkg</A>(1)<font color="#007700"></font>
-<A NAME="151">151 : </A>            <font color='#aa2200'>if</font> (<A HREF='waterbalance_subroutines_called.html#qblvec'>qblvec</A>(1) - <A HREF='waterbalance_variables.html#dummy'>dummy</A> <font color='#cc00cc'>.gt.</font> 0.d0) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="152">152 : </A>              <A HREF='waterbalance_subroutines_called.html#qblvec'>qblvec</A>(1) = <A HREF='waterbalance_variables.html#dummy'>dummy</A> - 1.d-16              !<font color="#007700"> (Out[156])+ruptkg(1)</font>
-<A NAME="153">153 : </A>            <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="154">154 : </A>          <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="155">155 : </A>        <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="156">156 : </A><font color="#007700"></font>
-<A NAME="157">157 : </A>        <font color='#aa2200'>if</font> (nlayers_ <font color='#cc00cc'>.gt.</font> 2) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="158">158 : </A>          <font color='#aa2200'>do</font> <A HREF='waterbalance_variables.html#i'>i</A> = 2, nlayers_ - 1<font color="#007700"></font>
-<A NAME="159">159 : </A>            <font color='#aa2200'>if</font> (<A HREF='waterbalance_subroutines_called.html#suvec_'>suvec_</A>(<A HREF='waterbalance_variables.html#i'>i</A>) <font color='#cc00cc'>.ge.</font> 0.99d0) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="160">160 : </A>              <A HREF='waterbalance_variables.html#dummy'>dummy</A> = <A HREF='waterbalance_subroutines_called.html#qblvec'>qblvec</A>(<A HREF='waterbalance_variables.html#i'>i</A>-1) + <A HREF='waterbalance_subroutines_called.html#ruptkvec'>ruptkvec</A>(<A HREF='waterbalance_variables.html#i'>i</A>) + <A HREF='waterbalance_subroutines_called.html#ruptkg'>ruptkg</A>(<A HREF='waterbalance_variables.html#i'>i</A>)     !<font color="#007700"> 1.d-16 makes sure that 0 does not get transformed to tiny positive</font>
-<A NAME="161">161 : </A>              <font color='#aa2200'>if</font> (<A HREF='waterbalance_subroutines_called.html#qblvec'>qblvec</A>(<A HREF='waterbalance_variables.html#i'>i</A>) - <A HREF='waterbalance_variables.html#dummy'>dummy</A> <font color='#cc00cc'>.gt.</font> 0.d0) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="162">162 : </A>                <A HREF='waterbalance_subroutines_called.html#qblvec'>qblvec</A>(<A HREF='waterbalance_variables.html#i'>i</A>) = <A HREF='waterbalance_variables.html#dummy'>dummy</A> - 1.d-16          !<font color="#007700"> (Out[158])+ruptkg(i)</font>
-<A NAME="163">163 : </A>              <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="164">164 : </A>            <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="165">165 : </A>          <font color='#aa2200'>enddo</font><font color="#007700"></font>
-<A NAME="166">166 : </A>        <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="167">167 : </A><font color="#007700"></font>
-<A NAME="168">168 : </A>        <font color='#aa2200'>if</font> (nlayers_ <font color='#cc00cc'>.gt.</font> 1) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="169">169 : </A>          <font color='#aa2200'>if</font> (<A HREF='waterbalance_subroutines_called.html#suvec_'>suvec_</A>(nlayers_) <font color='#cc00cc'>.ge.</font> 1.d0) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="170">170 : </A>            <A HREF='waterbalance_variables.html#dummy'>dummy</A> = -<A HREF='waterbalance_subroutines_called.html#qblvec'>qblvec</A>(nlayers_-1) - <A HREF='waterbalance_subroutines_called.html#ruptkvec'>ruptkvec</A>(nlayers_) - <A HREF='waterbalance_subroutines_called.html#ruptkg'>ruptkg</A>(nlayers_) <font color="#007700"></font>
-<A NAME="171">171 : </A>!<font color="#007700">           * make sure that any surplus water runs off</font>
-<A NAME="172">172 : </A>            spgfcf__ = <font color='#aa2200'>max</font>(spgfcf__, <A HREF='waterbalance_variables.html#dummy'>dummy</A> + 1.d-16)<font color="#007700"></font>
-<A NAME="173">173 : </A>          <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="174">174 : </A>        <font color='#aa2200'>else</font><font color="#007700"></font>
-<A NAME="175">175 : </A>          <font color='#aa2200'>if</font> (<A HREF='waterbalance_subroutines_called.html#suvec_'>suvec_</A>(nlayers_) <font color='#cc00cc'>.ge.</font> 1.d0) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="176">176 : </A>            <A HREF='waterbalance_variables.html#dummy'>dummy</A> = inf_ - esoil__ - <A HREF='waterbalance_subroutines_called.html#ruptkvec'>ruptkvec</A>(1) - <A HREF='waterbalance_subroutines_called.html#ruptkg'>ruptkg</A>(1)<font color="#007700"></font>
-<A NAME="177">177 : </A>            spgfcf__ = <font color='#aa2200'>max</font>(spgfcf__, <A HREF='waterbalance_variables.html#dummy'>dummy</A> + 1.d-16)<font color="#007700"></font>
-<A NAME="178">178 : </A>          <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="179">179 : </A>        <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="180">180 : </A><font color="#007700"></font>
-<A NAME="181">181 : </A>      <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="182">182 : </A><font color="#007700"></font>
-<A NAME="183">183 : </A>!<font color="#007700">     * CHANGES IN SOIL MOISTURE IN THE UNSATURATED ZONE</font>
-<A NAME="184">184 : </A><font color="#007700"></font>
-<A NAME="185">185 : </A>      io_      = inf_ - esoil__ - spgfcf__ - <font color='#aa2200'>SUM</font>(<A HREF='waterbalance_subroutines_called.html#ruptkvec'>ruptkvec</A>(:)) - <font color='#aa2200'>SUM</font>(<A HREF='waterbalance_subroutines_called.html#ruptkg'>ruptkg</A>(:))  !<font color="#007700"> (3.19)</font>
-<A NAME="186">186 : </A>      <A HREF='waterbalance_subroutines_called.html#iovec'>iovec</A>(:) = 0.d0<font color="#007700"></font>
-<A NAME="187">187 : </A>      <A HREF='waterbalance_subroutines_called.html#iovec'>iovec</A>(1) = <A HREF='waterbalance_subroutines_called.html#qblvec'>qblvec</A>(1) + inf_ - esoil__ - <A HREF='waterbalance_subroutines_called.html#ruptkvec'>ruptkvec</A>(1) - <A HREF='waterbalance_subroutines_called.html#ruptkg'>ruptkg</A>(1)<font color="#007700"></font>
-<A NAME="188">188 : </A>      <font color='#aa2200'>if</font> (nlayers_ <font color='#cc00cc'>.eq.</font> 1) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="189">189 : </A>        <A HREF='waterbalance_subroutines_called.html#iovec'>iovec</A>(1) = <A HREF='waterbalance_subroutines_called.html#iovec'>iovec</A>(1) - spgfcf__<font color="#007700"></font>
-<A NAME="190">190 : </A>      <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="191">191 : </A>      <font color='#aa2200'>if</font> (nlayers_ <font color='#cc00cc'>.gt.</font> 2) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="192">192 : </A>        <font color='#aa2200'>do</font> <A HREF='waterbalance_variables.html#j'>j</A> = 2, nlayers_ - 1     <font color="#007700"></font>
-<A NAME="193">193 : </A>          <A HREF='waterbalance_subroutines_called.html#iovec'>iovec</A>(<A HREF='waterbalance_variables.html#j'>j</A>) = <A HREF='waterbalance_subroutines_called.html#qblvec'>qblvec</A>(<A HREF='waterbalance_variables.html#j'>j</A>) - <A HREF='waterbalance_subroutines_called.html#qblvec'>qblvec</A>(<A HREF='waterbalance_variables.html#j'>j</A>-1) - <A HREF='waterbalance_subroutines_called.html#ruptkvec'>ruptkvec</A>(<A HREF='waterbalance_variables.html#j'>j</A>) - <A HREF='waterbalance_subroutines_called.html#ruptkg'>ruptkg</A>(<A HREF='waterbalance_variables.html#j'>j</A>)<font color="#007700"></font>
-<A NAME="194">194 : </A>        <font color='#aa2200'>enddo</font><font color="#007700"></font>
-<A NAME="195">195 : </A>      <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="196">196 : </A>      <font color='#aa2200'>if</font> (nlayers_ <font color='#cc00cc'>.gt.</font> 1) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="197">197 : </A>        <A HREF='waterbalance_subroutines_called.html#iovec'>iovec</A>(nlayers_) = <A HREF='waterbalance_subroutines_called.html#qblvec'>qblvec</A>(nlayers_) - <A HREF='waterbalance_subroutines_called.html#qblvec'>qblvec</A>(nlayers_-1)        &<font color="#007700"></font>
-<A NAME="198">198 : </A>     &                  - <A HREF='waterbalance_subroutines_called.html#ruptkvec'>ruptkvec</A>(nlayers_) - <A HREF='waterbalance_subroutines_called.html#ruptkg'>ruptkg</A>(nlayers_) - spgfcf__<font color="#007700"></font>
-<A NAME="199">199 : </A>      <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="200">200 : </A><font color="#007700"></font>
-<A NAME="201">201 : </A>      <A HREF='waterbalance_subroutines_called.html#dsuvec'>dsuvec</A>(:) = -<A HREF='waterbalance_subroutines_called.html#iovec'>iovec</A>(:) / ((thetarvec(:) - thetasvec(:)) * <A HREF='waterbalance_subroutines_called.html#delzvec'>delzvec</A>(:))<font color="#007700"></font>
-<A NAME="202">202 : </A><font color="#007700"></font>
-<A NAME="203">203 : </A>!<font color="#007700">     * CALCULATION OF MAXIMAL TIME STEP SIZE</font>
-<A NAME="204">204 : </A><font color="#007700"></font>
-<A NAME="205">205 : </A>      <A HREF='waterbalance_variables.html#dtsu'>dtsu</A> = 999999.d0<font color="#007700"></font>
-<A NAME="206">206 : </A>      <font color='#aa2200'>do</font> <A HREF='waterbalance_variables.html#j'>j</A> = 1, nlayers_<font color="#007700"></font>
-<A NAME="207">207 : </A>        <font color='#aa2200'>if</font> (<A HREF='waterbalance_subroutines_called.html#dsuvec'>dsuvec</A>(<A HREF='waterbalance_variables.html#j'>j</A>) <font color='#cc00cc'>.lt.</font> 0.d0) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="208">208 : </A>          <A HREF='waterbalance_variables.html#dtsu'>dtsu</A> = <font color='#aa2200'>MIN</font>(<A HREF='waterbalance_variables.html#dtsu'>dtsu</A>, -0.1d0 * <A HREF='waterbalance_subroutines_called.html#suvec_'>suvec_</A>(<A HREF='waterbalance_variables.html#j'>j</A>) / <A HREF='waterbalance_subroutines_called.html#dsuvec'>dsuvec</A>(<A HREF='waterbalance_variables.html#j'>j</A>))<font color="#007700"></font>
-<A NAME="209">209 : </A>        <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="210">210 : </A>        <font color='#aa2200'>if</font> (<A HREF='waterbalance_subroutines_called.html#dsuvec'>dsuvec</A>(<A HREF='waterbalance_variables.html#j'>j</A>) <font color='#cc00cc'>.gt.</font> 0.d0) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="211">211 : </A>          <A HREF='waterbalance_variables.html#dtsu'>dtsu</A> = <font color='#aa2200'>MIN</font>(<A HREF='waterbalance_variables.html#dtsu'>dtsu</A>, 0.1d0 * <A HREF='waterbalance_subroutines_called.html#suvec_'>suvec_</A>(<A HREF='waterbalance_variables.html#j'>j</A>) / <A HREF='waterbalance_subroutines_called.html#dsuvec'>dsuvec</A>(<A HREF='waterbalance_variables.html#j'>j</A>),              &<font color="#007700"></font>
-<A NAME="212">212 : </A>     &              (1.d0 - <A HREF='waterbalance_subroutines_called.html#suvec_'>suvec_</A>(<A HREF='waterbalance_variables.html#j'>j</A>)) / <A HREF='waterbalance_subroutines_called.html#dsuvec'>dsuvec</A>(<A HREF='waterbalance_variables.html#j'>j</A>))<font color="#007700"></font>
-<A NAME="213">213 : </A>        <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="214">214 : </A>      <font color='#aa2200'>enddo</font><font color="#007700"></font>
-<A NAME="215">215 : </A><font color="#007700"></font>
-<A NAME="216">216 : </A>!<font color="#007700">!$!* for debugging in pgf90:</font>
-<A NAME="217">217 : </A>!<font color="#007700">!$    if (isnand(dsuvec(i))) then</font>
-<A NAME="218">218 : </A>!<font color="#007700">!$     print *, "Its a NaN"</font>
-<A NAME="219">219 : </A>!<font color="#007700">!$    elseif (isinfd(dsuvec(i))) then</font>
-<A NAME="220">220 : </A>!<font color="#007700">!$     print *, "Its a Inf" </font>
-<A NAME="221">221 : </A>!<font color="#007700">!$    endif</font>
-<A NAME="222">222 : </A><font color="#007700"></font>
-<A NAME="223">223 : </A>!<font color="#007700">     * LENGTH OF TIME STEP</font>
-<A NAME="224">224 : </A><font color="#007700"></font>
-<A NAME="225">225 : </A>      dt_ = <font color='#aa2200'>MAX</font>(0.d0, <font color='#aa2200'>MIN</font>(<A HREF='waterbalance_variables.html#dtsu'>dtsu</A>, dtmax))<font color="#007700"></font>
-<A NAME="226">226 : </A>      <font color='#aa2200'>if</font>(dt_<font color='#cc00cc'>.eq.</font><A HREF='waterbalance_variables.html#dtsu'>dtsu</A>) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="227">227 : </A>        dtsu_count = dtsu_count + 1<font color="#007700"></font>
-<A NAME="228">228 : </A>      <font color='#aa2200'>elseif</font>(dt_<font color='#aa2200'><font color='#cc00cc'>.eq.</font></font>dtmax) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="229">229 : </A>        dtmax_count = dtmax_count + 1<font color="#007700"></font>
-<A NAME="230">230 : </A>      <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="231">231 : </A><font color="#007700"></font>
-<A NAME="232">232 : </A>!<font color="#007700">*----- Calculating state variables at next time step-------------------</font>
-<A NAME="233">233 : </A><font color="#007700"></font>
-<A NAME="234">234 : </A>      <A HREF='waterbalance_subroutines_called.html#sunewvec'>sunewvec</A>(:) = <A HREF='waterbalance_subroutines_called.html#suvec_'>suvec_</A>(:) + dt_ * <A HREF='waterbalance_subroutines_called.html#dsuvec'>dsuvec</A>(:)<font color="#007700"></font>
-<A NAME="235">235 : </A>      <A HREF='waterbalance_variables.html#j'>j</A> = M___<font color="#007700"></font>
-<A NAME="236">236 : </A>      nlayersnew = M___<font color="#007700"></font>
-<A NAME="237">237 : </A>!<font color="#007700">     * Find the lowest unsaturated layer and set the one below it as nlayersnew</font>
-<A NAME="238">238 : </A>      <font color='#aa2200'>do</font> <font color='#aa2200'>while</font> (<A HREF='waterbalance_subroutines_called.html#sunewvec'>sunewvec</A>(<A HREF='waterbalance_variables.html#j'>j</A>) <font color='#cc00cc'>.gt.</font> 0.999999d0 .<font color='#aa2200'>and</font>. <A HREF='waterbalance_variables.html#j'>j</A> <font color='#cc00cc'>.gt.</font> 1)<font color="#007700"></font>
-<A NAME="239">239 : </A>        <A HREF='waterbalance_variables.html#j'>j</A> = <A HREF='waterbalance_variables.html#j'>j</A> - 1<font color="#007700"></font>
-<A NAME="240">240 : </A>        nlayersnew = <A HREF='waterbalance_variables.html#j'>j</A>  <font color="#007700"></font>
-<A NAME="241">241 : </A>      <font color='#aa2200'>enddo</font><font color="#007700"></font>
-<A NAME="242">242 : </A>!<font color="#007700">     * If there is not enough moisture in the layer above the saturated</font>
-<A NAME="243">243 : </A>!<font color="#007700">       layers, the water table is in the top saturated layer.</font>
-<A NAME="244">244 : </A>      <font color='#aa2200'>if</font> (<A HREF='waterbalance_subroutines_called.html#sunewvec'>sunewvec</A>(nlayersnew) <font color='#cc00cc'>.lt.</font> <A HREF='waterbalance_subroutines_called.html#sueqvec'>sueqvec</A>(nlayersnew)) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="245">245 : </A>        nlayersnew = nlayersnew + 1<font color="#007700"></font>
-<A NAME="246">246 : </A>      <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="247">247 : </A>      <A HREF='waterbalance_subroutines_called.html#sunewvec'>sunewvec</A>(nlayersnew + 1:M___) = 1.d0<font color="#007700"></font>
-<A NAME="248">248 : </A>      <A HREF='waterbalance_subroutines_called.html#pcapnewvec'>pcapnewvec</A>(:) = 1.d0 / <A HREF='waterbalance_subroutines_called.html#avgvec'>avgvec</A>(:) * (<A HREF='waterbalance_subroutines_called.html#sunewvec'>sunewvec</A>(:) ** (-1.d0        &<font color="#007700"></font>
-<A NAME="249">249 : </A>     &              / <A HREF='waterbalance_subroutines_called.html#mvgvec'>mvgvec</A>(:)) - 1.d0) ** (1.d0 / <A HREF='waterbalance_subroutines_called.html#nvgvec'>nvgvec</A>(:))<font color="#007700"></font>
-<A NAME="250">250 : </A><font color="#007700"></font>
-<A NAME="251">251 : </A>      kunsatnewvec(:) = <A HREF='waterbalance_subroutines_called.html#ksatvec'>ksatvec</A>(:) * ((-<A HREF='waterbalance_subroutines_called.html#sunewvec'>sunewvec</A>(:) ** (1.d0           &<font color="#007700"></font>
-<A NAME="252">252 : </A>     &                / <A HREF='waterbalance_subroutines_called.html#mvgvec'>mvgvec</A>(:)) + 1.d0) ** <A HREF='waterbalance_subroutines_called.html#mvgvec'>mvgvec</A>(:) - 1.d0)        &<font color="#007700"></font>
-<A NAME="253">253 : </A>     &                ** 2.d0 * <font color='#aa2200'>SQRT</font>(<A HREF='waterbalance_subroutines_called.html#sunewvec'>sunewvec</A>(:))<font color="#007700"></font>
-<A NAME="254">254 : </A>!<font color="#007700">    Position of the water table after eq_wt1 in watbal3:</font>
-<A NAME="255">255 : </A>      <font color='#aa2200'>if</font> (nlayersnew <font color='#cc00cc'>.lt.</font> M___) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="256">256 : </A>        ysnew = <font color='#aa2200'>SUM</font>(<A HREF='waterbalance_subroutines_called.html#delzvec'>delzvec</A>(nlayersnew:M___)) - 2.d0                   &<font color="#007700"></font>
-<A NAME="257">257 : </A>     &        * <A HREF='waterbalance_subroutines_called.html#delzvec'>delzvec</A>(nlayersnew) * <A HREF='waterbalance_subroutines_called.html#pcapnewvec'>pcapnewvec</A>(nlayersnew)           &<font color="#007700"></font>
-<A NAME="258">258 : </A>     &        / (<A HREF='waterbalance_subroutines_called.html#delzvec'>delzvec</A>(nlayersnew+1) + <A HREF='waterbalance_subroutines_called.html#delzvec'>delzvec</A>(nlayersnew))<font color="#007700"></font>
-<A NAME="259">259 : </A>      <font color='#aa2200'>else</font><font color="#007700"></font>
-<A NAME="260">260 : </A>        ysnew = <A HREF='waterbalance_subroutines_called.html#delzvec'>delzvec</A>(nlayersnew) - 2.d0 * <A HREF='waterbalance_subroutines_called.html#delzvec'>delzvec</A>(nlayersnew)       &<font color="#007700"></font>
-<A NAME="261">261 : </A>     &        * <A HREF='waterbalance_subroutines_called.html#pcapnewvec'>pcapnewvec</A>(nlayersnew) / <A HREF='waterbalance_subroutines_called.html#delzvec'>delzvec</A>(nlayersnew)<font color="#007700"></font>
-<A NAME="262">262 : </A>      <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="263">263 : </A><font color="#007700"></font>
-<A NAME="264">264 : </A>      cH2Ol_s(:) = (-<A HREF='waterbalance_subroutines_called.html#sunewvec'>sunewvec</A>(:) * thetarvec(:) + <A HREF='waterbalance_subroutines_called.html#sunewvec'>sunewvec</A>(:)          &<font color="#007700"></font>
-<A NAME="265">265 : </A>     &           * thetasvec(:) + thetarvec(:)) * <A HREF='waterbalance_subroutines_called.html#delzvec'>delzvec</A>(:)<font color="#007700"></font>
-<A NAME="266">266 : </A><font color="#007700"></font>
-<A NAME="267">267 : </A>!<font color="#007700">!$  ! For debugging in pgf90: </font>
-<A NAME="268">268 : </A>!<font color="#007700">!$   do i=1,nlayers</font>
-<A NAME="269">269 : </A>!<font color="#007700">!$    if (isnand(sunewvec(i))) then</font>
-<A NAME="270">270 : </A>!<font color="#007700">!$     print *, "Its a NaN"</font>
-<A NAME="271">271 : </A>!<font color="#007700">!$    elseif (isinfd(sunewvec(i))) then</font>
-<A NAME="272">272 : </A>!<font color="#007700">!$     print *, "Its a Inf" </font>
-<A NAME="273">273 : </A>!<font color="#007700">!$    endif</font>
-<A NAME="274">274 : </A>!<font color="#007700">!$    enddo</font>
-<A NAME="275">275 : </A><font color="#007700"></font>
-<A NAME="276">276 : </A>!<font color="#007700">     * CHECK WATER BALANCE</font>
-<A NAME="277">277 : </A><font color="#007700"></font>
-<A NAME="278">278 : </A>      <A HREF='waterbalance_variables.html#wcnew'>wcnew</A> = <font color='#aa2200'>SUM</font>(cH2Ol_s(:))<font color="#007700"></font>
-<A NAME="279">279 : </A><font color="#007700"></font>
-<A NAME="280">280 : </A>!<font color="#007700">!$ print*,"errorstep=",(wc+dt*io-wcnew)</font>
-<A NAME="281">281 : </A><font color="#007700"></font>
-<A NAME="282">282 : </A>      <font color='#aa2200'>if</font> (<font color='#aa2200'>ABS</font>(<A HREF='waterbalance_variables.html#wc_'>wc_</A> + dt_ * io_ - <A HREF='waterbalance_variables.html#wcnew'>wcnew</A>) <font color='#cc00cc'>.gt.</font> 1.d-6) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="283">283 : </A>        <font color='#aa2200'>print</font> *, "error=", (<A HREF='waterbalance_variables.html#wc_'>wc_</A> + dt_ * io_ - <A HREF='waterbalance_variables.html#wcnew'>wcnew</A>), " ys=", ysnew<font color="#007700"></font>
-<A NAME="284">284 : </A>        <font color='#aa2200'>print</font> *, "<font color='#aa2200'>sum</font>(<A HREF='waterbalance_subroutines_called.html#iovec'>iovec</A>) = ", <font color='#aa2200'>SUM</font>(<A HREF='waterbalance_subroutines_called.html#iovec'>iovec</A>(:)), "; io = ", io_<font color="#007700"></font>
-<A NAME="285">285 : </A>        <font color='#aa2200'>print</font> *, "day = ", d___, "; hour = ", h__<font color="#007700"></font>
-<A NAME="286">286 : </A>      <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="287">287 : </A><font color="#007700"></font>
-<A NAME="288">288 : </A>      <font color='#aa2200'>return</font><font color="#007700"></font>
-<A NAME="289">289 : </A>      <font color='#aa2200'>end</font> <font color='#aa2200'>subroutine</font> waterbalance<font color="#007700"></font>
+<A NAME="76"> 76 : </A>      <font color='#aa2200'>endif</font><font color="#007700"></font>
+<A NAME="77"> 77 : </A>      <font color='#aa2200'>if</font> (wlayer_ <font color='#cc00cc'>.gt.</font> 1) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="78"> 78 : </A>        <A HREF='waterbalance_subroutines_called.html#iovec'>iovec</A>(wlayer_) = <A HREF='waterbalance_subroutines_called.html#qbl'>qbl</A>(wlayer_) - <A HREF='waterbalance_subroutines_called.html#qbl'>qbl</A>(wlayer_-1)                 &<font color="#007700"></font>
+<A NAME="79"> 79 : </A>     &                 - <A HREF='waterbalance_subroutines_called.html#ruptkt__'>ruptkt__</A>(wlayer_) - <A HREF='waterbalance_subroutines_called.html#ruptkg__'>ruptkg__</A>(wlayer_) - spgfcf__<font color="#007700"></font>
+<A NAME="80"> 80 : </A>      <font color='#aa2200'>endif</font><font color="#007700"></font>
+<A NAME="81"> 81 : </A><font color="#007700"></font>
+<A NAME="82"> 82 : </A>!<font color="#007700">     * change in saturation degree</font>
+<A NAME="83"> 83 : </A><font color="#007700"></font>
+<A NAME="84"> 84 : </A>      dsu(:) = -<A HREF='waterbalance_subroutines_called.html#iovec'>iovec</A>(:) / ((s_thetar(:) - s_thetas(:)) * s_delz(:))<font color="#007700"></font>
+<A NAME="85"> 85 : </A><font color="#007700"></font>
+<A NAME="86"> 86 : </A>!<font color="#007700">     * calculation of maximal time step size</font>
+<A NAME="87"> 87 : </A><font color="#007700"></font>
+<A NAME="88"> 88 : </A>      <font color='#aa2200'>call</font> <A HREF='waterbalance_subroutines_called.html#waterbalance_timestep'>waterbalance_timestep</A>()<font color="#007700"></font>
+<A NAME="89"> 89 : </A><font color="#007700"></font>
+<A NAME="90"> 90 : </A>!<font color="#007700">     Calculating state variables at next time step</font>
+<A NAME="91"> 91 : </A>!<font color="#007700">     (sunew, wlayernew, pcapnew, kunsatnew, zwnew)</font>
+<A NAME="92"> 92 : </A><font color="#007700"></font>
+<A NAME="93"> 93 : </A>      <font color='#aa2200'>call</font> <A HREF='waterbalance_subroutines_called.html#waterbalance_update_state'>waterbalance_update_state</A>()<font color="#007700"></font>
+<A NAME="94"> 94 : </A><font color="#007700"></font>
+<A NAME="95"> 95 : </A>      <font color='#aa2200'>call</font> <A HREF='waterbalance_subroutines_called.html#waterbalance_diag'>waterbalance_diag</A>()<font color="#007700"></font>
+<A NAME="96"> 96 : </A><font color="#007700"></font>
+<A NAME="97"> 97 : </A>      <font color='#aa2200'>return</font><font color="#007700"></font>
+<A NAME="98"> 98 : </A>      <font color='#aa2200'>end</font> <font color='#aa2200'>subroutine</font> waterbalance<font color="#007700"></font>
 
 </PRE>
 </BODY></HTML>

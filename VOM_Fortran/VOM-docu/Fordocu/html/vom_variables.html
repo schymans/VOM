@@ -136,7 +136,6 @@ function printCallRows(xmlhttp,locargs) {
 <div class="tabs">
   <ul>
       <li><a href="vom.html"><span>Header</span></a></li>
-      <li><a href="vom_version_history.html"><span>Version history</span></a></li>
       <li><a href="vom_subroutines_called.html"><span>Subroutines called</span></a></li>
       <li class="current"><a href="vom_variables.html"><span>Variables</span></a></li>
       <li><a href="vom_source.html"><span>Source</span></a></li>
@@ -145,21 +144,31 @@ function printCallRows(xmlhttp,locargs) {
 <h1>Program vom</h1>
 <HR><H2>VARIABLES</H2>
 <TABLE>
-<tr valign="top"><td class="indexkey"><A NAME="command">command</td><td class="indexvalue">integer</td><td class="indexvalue">&nbsp</td></A></td><td class="indexvalue"><PRE>CHARACTER(60) :: outformat</PRE>
-</td><td class="indexvalue"><A HREF="vom_source.html#35">35</A>, <A HREF="vom_source.html#52">52</A>, <A HREF="vom_source.html#55">55</A>, <A HREF="vom_source.html#69">69</A>, <A HREF="vom_source.html#84">84</A>, <A HREF="vom_source.html#85">85</A>, <A HREF="vom_source.html#105">105</A></td></tr>
-<tr valign="top"><td class="indexkey"><A NAME="iostatus">iostatus</td><td class="indexvalue">integer</td><td class="indexvalue">&nbsp</td></A></td><td class="indexvalue"><PRE><font color='gray'>? &nbsp</font></PRE>
-</td><td class="indexvalue"><A HREF="vom_source.html#36">36</A>, <A HREF="vom_source.html#82">82</A>, <A HREF="vom_source.html#84">84</A>, <A HREF="vom_source.html#86">86</A>, <A HREF="vom_source.html#118">118</A>, <A HREF="vom_source.html#119">119</A></td></tr>
-<tr valign="top"><td class="indexkey"><A NAME="stat">stat</td><td class="indexvalue">integer</td><td class="indexvalue">&nbsp</td></A></td><td class="indexvalue"><PRE><font color='gray'>? &nbsp</font></PRE>
-</td><td class="indexvalue"><A HREF="vom_source.html#36">36</A>, <A HREF="vom_source.html#57">57</A>, <A HREF="vom_source.html#59">59</A></td></tr>
-<tr valign="top"><td class="indexkey"><A NAME="str">str</td><td class="indexvalue">character(len=3)</td><td class="indexvalue">&nbsp</td></A></td><td class="indexvalue"><PRE><font color='gray'>? &nbsp</font></PRE>
-</td><td class="indexvalue"><A HREF="vom_source.html#37">37</A>, <A HREF="vom_source.html#118">118</A>, <A HREF="vom_source.html#120">120</A></td></tr>
-<tr valign="top"><td class="indexkey"><A NAME="invar">invar</td><td class="indexvalue">real*8</td><td class="indexvalue">(6)</td></A></td><td class="indexvalue"><PRE><font color='gray'>? * Declarations</font></PRE>
-</td><td class="indexvalue"><A HREF="vom_source.html#38">38</A>, <A HREF="vom_source.html#61">61</A>, <A HREF="vom_source.html#69">69</A>, <A HREF="vom_source.html#100">100</A>, <A HREF="vom_source.html#105">105</A></td></tr>
-<tr valign="top"><td class="indexkey"><A NAME="netass">netass</td><td class="indexvalue">real*8</td><td class="indexvalue">&nbsp</td></A></td><td class="indexvalue"><PRE><font color='gray'>? &nbsp</font></PRE>
-</td><td class="indexvalue"><A HREF="vom_source.html#39">39</A>, <A HREF="vom_source.html#64">64</A>, <A HREF="vom_source.html#69">69</A>, <A HREF="vom_source.html#72">72</A>, <A HREF="vom_source.html#100">100</A>, <A HREF="vom_source.html#103">103</A>, <A HREF="vom_source.html#105">105</A>, <A HREF="vom_source.html#108">108</A></td></tr>
-<tr valign="top"><td class="indexkey"><A NAME="nrun">nrun</td><td class="indexvalue">integer</td><td class="indexvalue">&nbsp</td></A></td><td class="indexvalue"><PRE><font color='gray'>? Number of runs performed so far</font></PRE>
-</td><td class="indexvalue"><A HREF="vom_source.html#40">40</A>, <A HREF="vom_source.html#65">65</A>, <A HREF="vom_source.html#69">69</A>, <A HREF="vom_source.html#95">95</A>, <A HREF="vom_source.html#105">105</A></td></tr>
-<tr valign="top"><td class="indexkey"><A NAME="npar">npar</td><td class="indexvalue">integer</td><td class="indexvalue">&nbsp</td></A></td><td class="indexvalue"><PRE><font color='gray'>? Number of model parameters carried through</font></PRE>
-</td><td class="indexvalue"><A HREF="vom_source.html#41">41</A>, <A HREF="vom_source.html#115">115</A>, <A HREF="vom_source.html#120">120</A>, <A HREF="vom_source.html#125">125</A></td></tr>
+<tr valign="top"><td class="indexkey"><A NAME="vom_invar">vom_invar</td><td class="indexvalue">real*8</td><td class="indexvalue">(:)</td></A></td><td class="indexvalue"><PRE><font color='gray'>? &nbsp</font></PRE>
+</td><td class="indexvalue"><A HREF="vom_source.html#35">35</A>, <A HREF="vom_source.html#59">59</A>, <A HREF="vom_source.html#160">160</A>, <A HREF="vom_source.html#164">164</A>, <A HREF="vom_source.html#180">180</A>, <A HREF="vom_source.html#184">184</A>, <A HREF="vom_source.html#198">198</A></td></tr>
+<tr valign="top"><td class="indexkey"><A NAME="vom_objfun">vom_objfun</td><td class="indexvalue">real*8</td><td class="indexvalue">&nbsp</td></A></td><td class="indexvalue"><PRE><font color='gray'>? &nbsp</font></PRE>
+</td><td class="indexvalue"><A HREF="vom_source.html#36">36</A>, <A HREF="vom_source.html#164">164</A>, <A HREF="vom_source.html#184">184</A>, <A HREF="vom_source.html#186">186</A></td></tr>
+<tr valign="top"><td class="indexkey"><A NAME="beststat">beststat</td><td class="indexvalue">integer</td><td class="indexvalue">&nbsp</td></A></td><td class="indexvalue"><PRE><font color='gray'>? &nbsp</font></PRE>
+</td><td class="indexvalue"><A HREF="vom_source.html#38">38</A>, <A HREF="vom_source.html#50">50</A></td></tr>
+<tr valign="top"><td class="indexkey"><A NAME="iostat">iostat</td><td class="indexvalue">integer</td><td class="indexvalue">&nbsp</td></A></td><td class="indexvalue"><PRE><font color='gray'>? input-output status</font></PRE>
+</td><td class="indexvalue"><A HREF="vom_source.html#39">39</A>, <A HREF="vom_source.html#70">70</A>, <A HREF="vom_source.html#71">71</A>, <A HREF="vom_source.html#73">73</A>, <A HREF="vom_source.html#74">74</A>, <A HREF="vom_source.html#76">76</A>, <A HREF="vom_source.html#77">77</A>, <A HREF="vom_source.html#79">79</A>, <A HREF="vom_source.html#80">80</A>, <A HREF="vom_source.html#82">82</A>, <A HREF="vom_source.html#83">83</A>, <A HREF="vom_source.html#85">85</A>, <A HREF="vom_source.html#86">86</A>, <A HREF="vom_source.html#97">97</A>, <A HREF="vom_source.html#99">99</A>, <A HREF="vom_source.html#112">112</A>, <A HREF="vom_source.html#113">113</A>, <A HREF="vom_source.html#127">127</A>, <A HREF="vom_source.html#130">130</A>, <A HREF="vom_source.html#154">154</A>, <A HREF="vom_source.html#155">155</A>, <A HREF="vom_source.html#174">174</A>, <A HREF="vom_source.html#175">175</A></td></tr>
+<tr valign="top"><td class="indexkey"><A NAME="exist">exist</td><td class="indexvalue">logical</td><td class="indexvalue">&nbsp</td></A></td><td class="indexvalue"><PRE><font color='gray'>? &nbsp</font></PRE>
+</td><td class="indexvalue"><A HREF="vom_source.html#40">40</A></td></tr>
+<tr valign="top"><td class="indexkey"><A NAME="run_sce">run_sce</td><td class="indexvalue">logical</td><td class="indexvalue">&nbsp</td></A></td><td class="indexvalue"><PRE><font color='gray'>? &nbsp</font></PRE>
+</td><td class="indexvalue"><A HREF="vom_source.html#41">41</A>, <A HREF="vom_source.html#122">122</A>, <A HREF="vom_source.html#123">123</A>, <A HREF="vom_source.html#131">131</A>, <A HREF="vom_source.html#138">138</A></td></tr>
+<tr valign="top"><td class="indexkey"><A NAME="starttime">starttime</td><td class="indexvalue">real</td><td class="indexvalue">&nbsp</td></A></td><td class="indexvalue"><PRE><font color='gray'>? &nbsp</font></PRE>
+</td><td class="indexvalue"><A HREF="vom_source.html#42">42</A>, <A HREF="vom_source.html#51">51</A>, <A HREF="vom_source.html#135">135</A></td></tr>
+<tr valign="top"><td class="indexkey"><A NAME="currtime">currtime</td><td class="indexvalue">real</td><td class="indexvalue">&nbsp</td></A></td><td class="indexvalue"><PRE><font color='gray'>? &nbsp</font></PRE>
+</td><td class="indexvalue"><A HREF="vom_source.html#43">43</A>, <A HREF="vom_source.html#134">134</A>, <A HREF="vom_source.html#135">135</A></td></tr>
+<tr valign="top"><td class="indexkey"><A NAME="runtime">runtime</td><td class="indexvalue">real</td><td class="indexvalue">&nbsp</td></A></td><td class="indexvalue"><PRE><font color='gray'>? &nbsp</font></PRE>
+</td><td class="indexvalue"><A HREF="vom_source.html#44">44</A>, <A HREF="vom_source.html#135">135</A>, <A HREF="vom_source.html#137">137</A></td></tr>
+<tr valign="top"><td class="indexkey"><A NAME="outputpath_tmp">outputpath_tmp</td><td class="indexvalue">character*100</td><td class="indexvalue">&nbsp</td></A></td><td class="indexvalue"><PRE>Temporary outputpath </PRE>
+</td><td class="indexvalue"><A HREF="vom_source.html#45">45</A>, <A HREF="vom_source.html#53">53</A></td></tr>
+<tr valign="top"><td class="indexkey"><A NAME="inputpath_tmp">inputpath_tmp</td><td class="indexvalue">character*100</td><td class="indexvalue">&nbsp</td></A></td><td class="indexvalue"><PRE>Temporary inputpath</PRE>
+</td><td class="indexvalue"><A HREF="vom_source.html#46">46</A>, <A HREF="vom_source.html#53">53</A></td></tr>
+<tr valign="top"><td class="indexkey"><A NAME="change_in">change_in</td><td class="indexvalue">logical</td><td class="indexvalue">&nbsp</td></A></td><td class="indexvalue"><PRE>Change input true/false</PRE>
+</td><td class="indexvalue"><A HREF="vom_source.html#47">47</A>, <A HREF="vom_source.html#53">53</A></td></tr>
+<tr valign="top"><td class="indexkey"><A NAME="change_out">change_out</td><td class="indexvalue">logical</td><td class="indexvalue">&nbsp</td></A></td><td class="indexvalue"><PRE>Change output true/false</PRE>
+</td><td class="indexvalue"><A HREF="vom_source.html#48">48</A>, <A HREF="vom_source.html#53">53</A></td></tr>
 </TABLE>
 </BODY></HTML>

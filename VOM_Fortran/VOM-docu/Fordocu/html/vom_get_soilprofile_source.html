@@ -136,7 +136,6 @@ function printCallRows(xmlhttp,locargs) {
 <div class="tabs">
   <ul>
       <li><a href="vom_get_soilprofile.html"><span>Header</span></a></li>
-      <li><a href="vom_get_soilprofile_version_history.html"><span>Version history</span></a></li>
       <li><a href="vom_get_soilprofile_subroutines_called.html"><span>Subroutines called</span></a></li>
       <li><a href="vom_get_soilprofile_variables.html"><span>Variables</span></a></li>
       <li><a href="vom_get_soilprofile_called_by.html"><span>Called by</span></a></li>
@@ -145,46 +144,78 @@ function printCallRows(xmlhttp,locargs) {
 </div>
 <h1>Subroutine vom_get_soilprofile</h1>
 <PRE>
-<A NAME="488">488 : </A><font color="#007700"></font>
-<A NAME="489">489 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
-<A NAME="490">490 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
-<A NAME="491">491 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
-<A NAME="492">492 : </A>!<font color="#007700">*-----PARAMETER READING FROM SOILPROFILE.PAR---------------------------</font>
-<A NAME="493">493 : </A><font color="#007700"></font>
-<A NAME="494">494 : </A>      <font color='#aa2200'>subroutine</font> vom_get_soilprofile ()<font color="#007700"></font>
-<A NAME="495">495 : </A>      <font color='#aa2200'>use</font> watmod<font color="#007700"></font>
-<A NAME="496">496 : </A>      <font color='#aa2200'>use</font> vegwatmod<font color="#007700"></font>
-<A NAME="497">497 : </A>      <font color='#aa2200'>implicit</font> <font color='#aa2200'>none</font><font color="#007700"></font>
-<A NAME="498">498 : </A><font color="#007700"></font>
-<A NAME="499">499 : </A>      <font color='#aa2200'>INTEGER</font> :: <A HREF='vom_get_soilprofile_variables.html#stat'>stat</A>, <A HREF='vom_get_soilprofile_variables.html#j'>j</A><font color="#007700"></font>
-<A NAME="500">500 : </A><font color="#007700"></font>
-<A NAME="501">501 : </A>!<font color="#007700">     * The file soilprofile.par can contain information about thickness</font>
-<A NAME="502">502 : </A>!<font color="#007700">       and soil properties in each soil layer, with the layer number in</font>
-<A NAME="503">503 : </A>!<font color="#007700">       the first column.</font>
-<A NAME="504">504 : </A><font color="#007700"></font>
-<A NAME="505">505 : </A>      <font color='#aa2200'>open</font>(kfile_soilprofile, <font color='#aa2200'>status</font>='old', <font color='#aa2200'>iostat</font>=<A HREF='vom_get_soilprofile_variables.html#stat'>stat</A>,               &<font color="#007700"></font>
-<A NAME="506">506 : </A>     &     <font color='#aa2200'>file</font>=sfile_soilprofile(1:<font color='#aa2200'>len_trim</font>(sfile_soilprofile)))<font color="#007700"></font>
-<A NAME="507">507 : </A>      <font color='#aa2200'>if</font> (<A HREF='vom_get_soilprofile_variables.html#stat'>stat</A> <font color='#cc00cc'>.eq.</font> 0) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="508">508 : </A>        <font color='#aa2200'>do</font> <A HREF='vom_get_soilprofile_variables.html#j'>j</A> = 1, M___<font color="#007700"></font>
-<A NAME="509">509 : </A>          <font color='#aa2200'>read</font>(kfile_soilprofile,*) M___, <A HREF='vom_get_soilprofile_subroutines_called.html#delzvec'>delzvec</A>(<A HREF='vom_get_soilprofile_variables.html#j'>j</A>), <A HREF='vom_get_soilprofile_subroutines_called.html#ksatvec'>ksatvec</A>(<A HREF='vom_get_soilprofile_variables.html#j'>j</A>),      &<font color="#007700"></font>
-<A NAME="510">510 : </A>     &      <A HREF='vom_get_soilprofile_subroutines_called.html#nvgvec'>nvgvec</A>(<A HREF='vom_get_soilprofile_variables.html#j'>j</A>), <A HREF='vom_get_soilprofile_subroutines_called.html#avgvec'>avgvec</A>(<A HREF='vom_get_soilprofile_variables.html#j'>j</A>), <A HREF='vom_get_soilprofile_subroutines_called.html#thetasvec'>thetasvec</A>(<A HREF='vom_get_soilprofile_variables.html#j'>j</A>), <A HREF='vom_get_soilprofile_subroutines_called.html#thetarvec'>thetarvec</A>(<A HREF='vom_get_soilprofile_variables.html#j'>j</A>)<font color="#007700"></font>
-<A NAME="511">511 : </A>          <A HREF='vom_get_soilprofile_subroutines_called.html#epslnvec'>epslnvec</A>(<A HREF='vom_get_soilprofile_variables.html#j'>j</A>) = <A HREF='vom_get_soilprofile_subroutines_called.html#thetasvec'>thetasvec</A>(<A HREF='vom_get_soilprofile_variables.html#j'>j</A>) - <A HREF='vom_get_soilprofile_subroutines_called.html#thetarvec'>thetarvec</A>(<A HREF='vom_get_soilprofile_variables.html#j'>j</A>)  !<font color="#007700"> porosity</font>
-<A NAME="512">512 : </A>          <A HREF='vom_get_soilprofile_subroutines_called.html#mvgvec'>mvgvec</A>(<A HREF='vom_get_soilprofile_variables.html#j'>j</A>) = 1.d0 - (1.d0 / <A HREF='vom_get_soilprofile_subroutines_called.html#nvgvec'>nvgvec</A>(<A HREF='vom_get_soilprofile_variables.html#j'>j</A>))  !<font color="#007700"> van Genuchten soil parameter m</font>
-<A NAME="513">513 : </A>        <font color='#aa2200'>enddo</font><font color="#007700"></font>
-<A NAME="514">514 : </A>      <font color='#aa2200'>else</font><font color="#007700"></font>
-<A NAME="515">515 : </A>        <A HREF='vom_get_soilprofile_subroutines_called.html#delzvec'>delzvec</A>(:)   = delz_<font color="#007700"></font>
-<A NAME="516">516 : </A>        <A HREF='vom_get_soilprofile_subroutines_called.html#ksatvec'>ksatvec</A>(:)   = ksat_<font color="#007700"></font>
-<A NAME="517">517 : </A>        <A HREF='vom_get_soilprofile_subroutines_called.html#nvgvec'>nvgvec</A>(:)    = nvg_<font color="#007700"></font>
-<A NAME="518">518 : </A>        <A HREF='vom_get_soilprofile_subroutines_called.html#avgvec'>avgvec</A>(:)    = avg_<font color="#007700"></font>
-<A NAME="519">519 : </A>        <A HREF='vom_get_soilprofile_subroutines_called.html#thetasvec'>thetasvec</A>(:) = thetas_<font color="#007700"></font>
-<A NAME="520">520 : </A>        <A HREF='vom_get_soilprofile_subroutines_called.html#thetarvec'>thetarvec</A>(:) = thetar_<font color="#007700"></font>
-<A NAME="521">521 : </A>        <A HREF='vom_get_soilprofile_subroutines_called.html#epslnvec'>epslnvec</A>(:)  = epsln_<font color="#007700"></font>
-<A NAME="522">522 : </A>        <A HREF='vom_get_soilprofile_subroutines_called.html#mvgvec'>mvgvec</A>(:)    = mvg_<font color="#007700"></font>
-<A NAME="523">523 : </A>      <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="524">524 : </A>      <font color='#aa2200'>close</font>(kfile_soilprofile)<font color="#007700"></font>
-<A NAME="525">525 : </A><font color="#007700"></font>
-<A NAME="526">526 : </A>      <font color='#aa2200'>return</font><font color="#007700"></font>
-<A NAME="527">527 : </A>      <font color='#aa2200'>end</font> <font color='#aa2200'>subroutine</font> vom_get_soilprofile<font color="#007700"></font>
+<A NAME="683">683 : </A><font color="#007700"></font>
+<A NAME="684">684 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+<A NAME="685">685 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+<A NAME="686">686 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+<A NAME="687">687 : </A>!<font color="#007700">*-----PARAMETER READING FROM SOILPROFILE.PAR---------------------------</font>
+<A NAME="688">688 : </A><font color="#007700"></font>
+<A NAME="689">689 : </A>      <font color='#aa2200'>subroutine</font> vom_get_soilprofile ()<font color="#007700"></font>
+<A NAME="690">690 : </A>      <font color='#aa2200'>use</font> vom_vegwat_mod<font color="#007700"></font>
+<A NAME="691">691 : </A>      <font color='#aa2200'>implicit</font> <font color='#aa2200'>none</font><font color="#007700"></font>
+<A NAME="692">692 : </A><font color="#007700"></font>
+<A NAME="693">693 : </A>      <font color='#aa2200'>INTEGER</font> :: <A HREF='vom_get_soilprofile_variables.html#iostat'>iostat</A>, <A HREF='vom_get_soilprofile_variables.html#i'>i</A>, <A HREF='vom_get_soilprofile_variables.html#j'>j</A>, <A HREF='vom_get_soilprofile_variables.html#indlayer'>indlayer</A><font color="#007700"></font>
+<A NAME="694">694 : </A>      <font color='#aa2200'>LOGICAL</font> :: <A HREF='vom_get_soilprofile_variables.html#foundlayer'>foundlayer</A><font color="#007700"></font>
+<A NAME="695">695 : </A><font color="#007700"></font>
+<A NAME="696">696 : </A>!<font color="#007700">     * The file soilprofile.par can contain information about thickness</font>
+<A NAME="697">697 : </A>!<font color="#007700">       and soil properties in each soil layer, with the layer number in</font>
+<A NAME="698">698 : </A>!<font color="#007700">       the first column.</font>
+<A NAME="699">699 : </A><font color="#007700"></font>
+<A NAME="700">700 : </A>      <font color='#aa2200'>open</font>(kfile_soilprofile, <font color='#aa2200'>FILE</font>=<font color='#aa2200'>trim</font>(<font color='#aa2200'>adjustl</font>(i_inputpath))// &<font color="#007700"></font>
+<A NAME="701">701 : </A>           <font color='#aa2200'>trim</font>(<font color='#aa2200'>adjustl</font>(sfile_soilprofile)),                  &<font color="#007700"></font>
+<A NAME="702">702 : </A>     &                        <font color='#aa2200'>STATUS</font>='old', <A HREF='vom_get_soilprofile_variables.html#iostat'>IOSTAT</A>=<A HREF='vom_get_soilprofile_variables.html#iostat'>iostat</A>)<font color="#007700"></font>
+<A NAME="703">703 : </A>      <font color='#aa2200'>if</font> (<A HREF='vom_get_soilprofile_variables.html#iostat'>iostat</A> <font color='#cc00cc'>.eq.</font> 0) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="704">704 : </A>        <font color='#aa2200'>do</font> <A HREF='vom_get_soilprofile_variables.html#j'>j</A> = 1, s_maxlayer<font color="#007700"></font>
+<A NAME="705">705 : </A>          <font color='#aa2200'>read</font>(kfile_soilprofile,*) s_maxlayer, <A HREF='vom_get_soilprofile_subroutines_called.html#s_delz'>s_delz</A>(<A HREF='vom_get_soilprofile_variables.html#j'>j</A>), <A HREF='vom_get_soilprofile_subroutines_called.html#s_ksat'>s_ksat</A>(<A HREF='vom_get_soilprofile_variables.html#j'>j</A>),  &<font color="#007700"></font>
+<A NAME="706">706 : </A>     &      <A HREF='vom_get_soilprofile_subroutines_called.html#s_nvg'>s_nvg</A>(<A HREF='vom_get_soilprofile_variables.html#j'>j</A>), <A HREF='vom_get_soilprofile_subroutines_called.html#s_avg'>s_avg</A>(<A HREF='vom_get_soilprofile_variables.html#j'>j</A>), <A HREF='vom_get_soilprofile_subroutines_called.html#s_thetas'>s_thetas</A>(<A HREF='vom_get_soilprofile_variables.html#j'>j</A>), <A HREF='vom_get_soilprofile_subroutines_called.html#s_thetar'>s_thetar</A>(<A HREF='vom_get_soilprofile_variables.html#j'>j</A>)<font color="#007700"></font>
+<A NAME="707">707 : </A>        <font color='#aa2200'>enddo</font><font color="#007700"></font>
+<A NAME="708">708 : </A><font color="#007700"></font>
+<A NAME="709">709 : </A>!<font color="#007700">        Check if i_cz aligns with s_delz</font>
+<A NAME="710">710 : </A>!<font color="#007700">        Raise a warning and correct if this is not the case</font>
+<A NAME="711">711 : </A>         <font color='#aa2200'>if</font> ( <font color='#aa2200'>abs</font>( <font color='#aa2200'>nint</font>(i_cz / i_delz) - (i_cz / i_delz) )  <font color='#cc00cc'>.gt.</font> 1.0d-6) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="712">712 : </A>           <font color='#aa2200'>write</font>(*,*) "ERROR: i_cz does<font color='#aa2200'> not </font>align with soil layers"<font color="#007700"></font>
+<A NAME="713">713 : </A>           <font color='#aa2200'>write</font>(*,*) " Please correct <font color='#aa2200'>in</font> soilprofile.par <font color='#aa2200'>and</font> restart"<font color="#007700"></font>
+<A NAME="714">714 : </A>           <font color='#aa2200'>stop</font><font color="#007700"></font>
+<A NAME="715">715 : </A>         <font color='#aa2200'>end</font> <font color='#aa2200'>if</font><font color="#007700"></font>
+<A NAME="716">716 : </A><font color="#007700"></font>
+<A NAME="717">717 : </A>!<font color="#007700">        Check if i_zr aligns with s_delz</font>
+<A NAME="718">718 : </A>!<font color="#007700">        Raise a warning and correct if this is not the case</font>
+<A NAME="719">719 : </A><font color="#007700"></font>
+<A NAME="720">720 : </A>!<font color="#007700">       Find the layer of i_zr</font>
+<A NAME="721">721 : </A>        <A HREF='vom_get_soilprofile_variables.html#foundlayer'>foundlayer</A> = <font color='#cc00cc'>.FALSE.</font><font color="#007700"></font>
+<A NAME="722">722 : </A>        <font color='#aa2200'>do</font> <A HREF='vom_get_soilprofile_variables.html#j'>j</A> = 1, s_maxlayer<font color="#007700"></font>
+<A NAME="723">723 : </A>           <font color='#aa2200'>if</font>( (<font color='#aa2200'>abs</font>(<font color='#aa2200'>sum</font>(<A HREF='vom_get_soilprofile_subroutines_called.html#s_delz'>s_delz</A>(1:<A HREF='vom_get_soilprofile_variables.html#j'>j</A>)) - (i_cz - i_zr) ) <font color='#cc00cc'>.lt.</font> 1.0d-6) .<font color='#aa2200'>and</font>. &<font color="#007700"></font>
+<A NAME="724">724 : </A>               (<A HREF='vom_get_soilprofile_variables.html#foundlayer'>foundlayer</A> .<font color='#aa2200'>eqv</font>. <font color='#cc00cc'>.FALSE.</font>)  ) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="725">725 : </A>               <A HREF='vom_get_soilprofile_variables.html#indlayer'>indlayer</A> = <A HREF='vom_get_soilprofile_variables.html#j'>j</A><font color="#007700"></font>
+<A NAME="726">726 : </A>               <A HREF='vom_get_soilprofile_variables.html#foundlayer'>foundlayer</A> = <font color='#cc00cc'>.TRUE.</font><font color="#007700"></font>
+<A NAME="727">727 : </A>           <font color='#aa2200'>end</font> <font color='#aa2200'>if</font><font color="#007700"></font>
+<A NAME="728">728 : </A>        <font color='#aa2200'>enddo</font><font color="#007700"></font>
+<A NAME="729">729 : </A><font color="#007700"></font>
+<A NAME="730">730 : </A>!<font color="#007700">       correting i_zr</font>
+<A NAME="731">731 : </A>        <font color='#aa2200'>if</font>( <font color='#aa2200'>abs</font>(<font color='#aa2200'>sum</font>(<A HREF='vom_get_soilprofile_subroutines_called.html#s_delz'>s_delz</A>(1:<A HREF='vom_get_soilprofile_variables.html#indlayer'>indlayer</A>)) - (i_cz - i_zr) ) <font color='#cc00cc'>.gt.</font> 1.0d-6 ) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="732">732 : </A>           <font color='#aa2200'>write</font>(*,*) "ERROR: i_zr does<font color='#aa2200'> not </font>align with soil layers"<font color="#007700"></font>
+<A NAME="733">733 : </A>           <font color='#aa2200'>write</font>(*,*) " Please correct <font color='#aa2200'>in</font> soilprofile.par <font color='#aa2200'>and</font> restart"<font color="#007700"></font>
+<A NAME="734">734 : </A>         <font color='#aa2200'>stop</font><font color="#007700"></font>
+<A NAME="735">735 : </A>        <font color='#aa2200'>end</font> <font color='#aa2200'>if</font><font color="#007700"></font>
+<A NAME="736">736 : </A><font color="#007700"></font>
+<A NAME="737">737 : </A>        c_mvg(:) = 1.d0 - (1.d0 / <A HREF='vom_get_soilprofile_subroutines_called.html#s_nvg'>s_nvg</A>(:))  !<font color="#007700"> van Genuchten soil parameter m</font>
+<A NAME="738">738 : </A>      <font color='#aa2200'>else</font><font color="#007700"></font>
+<A NAME="739">739 : </A>        <A HREF='vom_get_soilprofile_subroutines_called.html#s_delz'>s_delz</A>(:)   = i_delz<font color="#007700"></font>
+<A NAME="740">740 : </A>        <A HREF='vom_get_soilprofile_subroutines_called.html#s_ksat'>s_ksat</A>(:)   = i_ksat<font color="#007700"></font>
+<A NAME="741">741 : </A>        <A HREF='vom_get_soilprofile_subroutines_called.html#s_nvg'>s_nvg</A>(:)    = i_nvg<font color="#007700"></font>
+<A NAME="742">742 : </A>        <A HREF='vom_get_soilprofile_subroutines_called.html#s_avg'>s_avg</A>(:)    = i_avg<font color="#007700"></font>
+<A NAME="743">743 : </A>        <A HREF='vom_get_soilprofile_subroutines_called.html#s_thetas'>s_thetas</A>(:) = i_thetas<font color="#007700"></font>
+<A NAME="744">744 : </A>        <A HREF='vom_get_soilprofile_subroutines_called.html#s_thetar'>s_thetar</A>(:) = i_thetar<font color="#007700"></font>
+<A NAME="745">745 : </A>        c_mvg(:)    = i_mvg<font color="#007700"></font>
+<A NAME="746">746 : </A>      <font color='#aa2200'>endif</font><font color="#007700"></font>
+<A NAME="747">747 : </A>      <font color='#aa2200'>close</font>(kfile_soilprofile)<font color="#007700"></font>
+<A NAME="748">748 : </A><font color="#007700"></font>
+<A NAME="749">749 : </A>      <font color='#aa2200'>do</font> <A HREF='vom_get_soilprofile_variables.html#i'>i</A> = 1, s_maxlayer<font color="#007700"></font>
+<A NAME="750">750 : </A>        <A HREF='vom_get_soilprofile_subroutines_called.html#c_hhydrst'>c_hhydrst</A>(<A HREF='vom_get_soilprofile_variables.html#i'>i</A>) = (<A HREF='vom_get_soilprofile_variables.html#i'>i</A> - 0.5d0) * <A HREF='vom_get_soilprofile_subroutines_called.html#s_delz'>s_delz</A>(<A HREF='vom_get_soilprofile_variables.html#i'>i</A>)  !<font color="#007700"> (Out[238]) hydrostatic head for (3.34)</font>
+<A NAME="751">751 : </A>      <font color='#aa2200'>enddo</font><font color="#007700"></font>
+<A NAME="752">752 : </A><font color="#007700"></font>
+<A NAME="753">753 : </A>      <font color='#aa2200'>return</font><font color="#007700"></font>
+<A NAME="754">754 : </A>      <font color='#aa2200'>end</font> <font color='#aa2200'>subroutine</font> vom_get_soilprofile<font color="#007700"></font>
 
 </PRE>
 </BODY></HTML>

@@ -136,7 +136,6 @@ function printCallRows(xmlhttp,locargs) {
 <div class="tabs">
   <ul>
       <li><a href="vom_write_dayyear.html"><span>Header</span></a></li>
-      <li><a href="vom_write_dayyear_version_history.html"><span>Version history</span></a></li>
       <li><a href="vom_write_dayyear_subroutines_called.html"><span>Subroutines called</span></a></li>
       <li><a href="vom_write_dayyear_variables.html"><span>Variables</span></a></li>
       <li><a href="vom_write_dayyear_called_by.html"><span>Called by</span></a></li>
@@ -145,56 +144,61 @@ function printCallRows(xmlhttp,locargs) {
 </div>
 <h1>Subroutine vom_write_dayyear</h1>
 <PRE>
-<A NAME="1486">1486 : </A><font color="#007700"></font>
-<A NAME="1487">1487 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
-<A NAME="1488">1488 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
-<A NAME="1489">1489 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
-<A NAME="1490">1490 : </A><font color="#007700"></font>
-<A NAME="1491">1491 : </A>      <font color='#aa2200'>subroutine</font> vom_write_dayyear ()<font color="#007700"></font>
-<A NAME="1492">1492 : </A>      <font color='#aa2200'>use</font> vegwatmod<font color="#007700"></font>
-<A NAME="1493">1493 : </A>      <font color='#aa2200'>use</font> vegmod<font color="#007700"></font>
-<A NAME="1494">1494 : </A>      <font color='#aa2200'>use</font> watmod<font color="#007700"></font>
-<A NAME="1495">1495 : </A>      <font color='#aa2200'>implicit</font> <font color='#aa2200'>none</font><font color="#007700"></font>
-<A NAME="1496">1496 : </A><font color="#007700"></font>
-<A NAME="1497">1497 : </A>      <font color='#aa2200'>CHARACTER</font>(60) :: <A HREF='vom_write_dayyear_variables.html#dailyformat'>dailyformat</A><font color="#007700"></font>
-<A NAME="1498">1498 : </A>      <font color='#aa2200'>CHARACTER</font>(3)  :: <A HREF='vom_write_dayyear_variables.html#str'>str</A><font color="#007700"></font>
-<A NAME="1499">1499 : </A><font color="#007700"></font>
-<A NAME="1500">1500 : </A>!<font color="#007700">     * internal write to convert from number to string</font>
-<A NAME="1501">1501 : </A>      <font color='#aa2200'>write</font>(<A HREF='vom_write_dayyear_variables.html#str'>str</A>,'(i3)') nlayers_<font color="#007700"></font>
-<A NAME="1502">1502 : </A>!<font color="#007700">     * includes a column for each sublayer</font>
-<A NAME="1503">1503 : </A>      <A HREF='vom_write_dayyear_variables.html#dailyformat'>dailyformat</A> = '(i6,i6,i4,i7,'//<A HREF='vom_write_dayyear_variables.html#str'>str</A>//'e14.6)'<font color="#007700"></font>
-<A NAME="1504">1504 : </A><font color="#007700"></font>
-<A NAME="1505">1505 : </A>      <font color='#aa2200'>write</font>(kfile_resultsdaily,'(i6,i7,i7,i7,i7,25e15.5)') <A HREF='vom_write_dayyear_subroutines_called.html#year'>year</A>(d___), &<font color="#007700"></font>
-<A NAME="1506">1506 : </A>     &  <A HREF='vom_write_dayyear_subroutines_called.html#month'>month</A>(d___), <A HREF='vom_write_dayyear_subroutines_called.html#day'>day</A>(d___), d___, h__, <A HREF='vom_write_dayyear_subroutines_called.html#rainvec'>rainvec</A>(d___), <A HREF='vom_write_dayyear_subroutines_called.html#tmax'>tmax</A>(d___),  &<font color="#007700"></font>
-<A NAME="1507">1507 : </A>     &  <A HREF='vom_write_dayyear_subroutines_called.html#tmin'>tmin</A>(d___), <A HREF='vom_write_dayyear_subroutines_called.html#parvec'>parvec</A>(d___), vd_d / 24.d0, esoil_d, <A HREF='vom_write_dayyear_subroutines_called.html#jmax25_'>jmax25_</A>(2),   &<font color="#007700"></font>
-<A NAME="1508">1508 : </A>     &  <A HREF='vom_write_dayyear_subroutines_called.html#jmax25g'>jmax25g</A>(2), pc_ + <A HREF='vom_write_dayyear_subroutines_called.html#pcg_'>pcg_</A>(2), rl_d + rlg_d, lambda_, lambdag,     &<font color="#007700"></font>
-<A NAME="1509">1509 : </A>     &  rr_ * 3600.d0 * 24.d0, rrg * 3600.d0 * 24.d0, <A HREF='vom_write_dayyear_subroutines_called.html#ass_d'>ass_d</A>(2),        &<font color="#007700"></font>
-<A NAME="1510">1510 : </A>     &  <A HREF='vom_write_dayyear_subroutines_called.html#assg_d'>assg_d</A>(2,2), <font color='#aa2200'>SUM</font>(suvec_(1:nlayers_)) / nlayers_, ys_, wsnew_,  &<font color="#007700"></font>
-<A NAME="1511">1511 : </A>     &  spgfcf_d, infx_d, etm_d, etmg_d, suvec_(1), topt_<font color="#007700"></font>
-<A NAME="1512">1512 : </A>      <font color='#aa2200'>write</font>(kfile_rsurfdaily,<A HREF='vom_write_dayyear_variables.html#dailyformat'>dailyformat</A>) <A HREF='vom_write_dayyear_subroutines_called.html#year'>year</A>(d___), <A HREF='vom_write_dayyear_subroutines_called.html#month'>month</A>(d___),     &<font color="#007700"></font>
-<A NAME="1513">1513 : </A>     &  <A HREF='vom_write_dayyear_subroutines_called.html#day'>day</A>(d___), d___, rsurfvec(1:nlayers_)<font color="#007700"></font>
-<A NAME="1514">1514 : </A><font color="#007700"></font>
-<A NAME="1515">1515 : </A>      <font color='#aa2200'>if</font> (<A HREF='vom_write_dayyear_subroutines_called.html#year'>year</A>(d___) <font color='#cc00cc'>.ne.</font> yr_) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="1516">1516 : </A>!<font color="#007700">     * for calculation of vdyr a -1 is added to d___ for using dayyear of correct year</font>
-<A NAME="1517">1517 : </A>        <font color='#aa2200'>write</font>(kfile_yearly,'(i6,19e16.6)') yr_, rainyr, epanyr, paryr, &<font color="#007700"></font>
-<A NAME="1518">1518 : </A>     &  radyr, vdyr / (<A HREF='vom_write_dayyear_subroutines_called.html#dayyear'>dayyear</A>(d___ - 1)), evapyr, etyr, etmg_y,    &<font color="#007700"></font>
-<A NAME="1519">1519 : </A>   &  assg_y, rlg_y, rrg_y, cpccg_y, tcg_y,                          &<font color="#007700"></font>
-<A NAME="1520">1520 : </A>   &  etmt_y, asst_y, rlt_y, rrt_y, cpcct_y, tct_y<font color="#007700"></font>
-<A NAME="1521">1521 : </A>      <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="1522">1522 : </A><font color="#007700"></font>
-<A NAME="1523">1523 : </A>!<font color="#007700"> WRITING THE ACCUMULATED DATA FROM THE LAST YEAR TO FILE:</font>
-<A NAME="1524">1524 : </A><font color="#007700"></font>
-<A NAME="1525">1525 : </A>      <font color='#aa2200'>if</font> (d___ <font color='#cc00cc'>.eq.</font> N__) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="1526">1526 : </A>!<font color="#007700">   * one more call of subroutine to write last day to yearly</font>
-<A NAME="1527">1527 : </A>    <font color='#aa2200'>call</font> <A HREF='vom_write_dayyear_subroutines_called.html#vom_add_yearly'>vom_add_yearly</A>()<font color="#007700"></font>
-<A NAME="1528">1528 : </A>      <font color='#aa2200'>write</font>(kfile_yearly,'(i6,19e16.6)') yr_, rainyr, epanyr, paryr, &<font color="#007700"></font>
-<A NAME="1529">1529 : </A>     &  radyr, vdyr / (<A HREF='vom_write_dayyear_subroutines_called.html#dayyear'>dayyear</A>(d___)), evapyr, etyr, etmg_y,               &<font color="#007700"></font>
-<A NAME="1530">1530 : </A>   &  assg_y, rlg_y, rrg_y, cpccg_y, tcg_y,                          &<font color="#007700"></font>
-<A NAME="1531">1531 : </A>   &  etmt_y, asst_y, rlt_y, rrt_y, cpcct_y, tct_y<font color="#007700"></font>
-<A NAME="1532">1532 : </A>      <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="1533">1533 : </A><font color="#007700"></font>
-<A NAME="1534">1534 : </A>      <font color='#aa2200'>return</font><font color="#007700"></font>
-<A NAME="1535">1535 : </A>      <font color='#aa2200'>end</font> <font color='#aa2200'>subroutine</font> vom_write_dayyear<font color="#007700"></font>
+<A NAME="1849">1849 : </A><font color="#007700"></font>
+<A NAME="1850">1850 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+<A NAME="1851">1851 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+<A NAME="1852">1852 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+<A NAME="1853">1853 : </A><font color="#007700"></font>
+<A NAME="1854">1854 : </A><font color="#007700"></font>
+<A NAME="1855">1855 : </A>      <font color='#aa2200'>subroutine</font> vom_write_dayyear ( <A HREF='vom_write_dayyear.html#tp_netassg'>tp_netassg</A>, <A HREF='vom_write_dayyear.html#tp_netasst'>tp_netasst</A> )<font color="#007700"></font>
+<A NAME="1856">1856 : </A>      <font color='#aa2200'>use</font> vom_vegwat_mod<font color="#007700"></font>
+<A NAME="1857">1857 : </A>      <font color='#aa2200'>implicit</font> <font color='#aa2200'>none</font><font color="#007700"></font>
+<A NAME="1858">1858 : </A><font color="#007700"></font>
+<A NAME="1859">1859 : </A>      <font color='#aa2200'>REAL</font>*8,  <font color='#aa2200'>INTENT</font>(<font color='#aa2200'>in</font>) :: <A HREF='vom_write_dayyear.html#tp_netassg'>tp_netassg</A><font color="#007700"></font>
+<A NAME="1860">1860 : </A>      <font color='#aa2200'>REAL</font>*8,  <font color='#aa2200'>INTENT</font>(<font color='#aa2200'>in</font>) :: <A HREF='vom_write_dayyear.html#tp_netasst'>tp_netasst</A><font color="#007700"></font>
+<A NAME="1861">1861 : </A>      <font color='#aa2200'>CHARACTER</font>(60) :: <A HREF='vom_write_dayyear_variables.html#dailyformat'>dailyformat</A><font color="#007700"></font>
+<A NAME="1862">1862 : </A>      <font color='#aa2200'>CHARACTER</font>(3)  :: <A HREF='vom_write_dayyear_variables.html#str'>str</A><font color="#007700"></font>
+<A NAME="1863">1863 : </A><font color="#007700"></font>
+<A NAME="1864">1864 : </A>!<font color="#007700">     * internal write to convert from number to string</font>
+<A NAME="1865">1865 : </A>      <font color='#aa2200'>write</font>(<A HREF='vom_write_dayyear_variables.html#str'>str</A>,'(I3)') wlayer_<font color="#007700"></font>
+<A NAME="1866">1866 : </A>!<font color="#007700">     * includes a column for each sublayer</font>
+<A NAME="1867">1867 : </A>      <A HREF='vom_write_dayyear_variables.html#dailyformat'>dailyformat</A> = '(I6,I6,I4,I7,'//<A HREF='vom_write_dayyear_variables.html#str'>str</A>//'E14.6)'<font color="#007700"></font>
+<A NAME="1868">1868 : </A><font color="#007700"></font>
+<A NAME="1869">1869 : </A>      <font color='#aa2200'>write</font>(kfile_resultsdaily,'(I6,I7,I7,I7,I7,34E15.5)')             &<font color="#007700"></font>
+<A NAME="1870">1870 : </A>     &  <A HREF='vom_write_dayyear_subroutines_called.html#fyear'>fyear</A>(nday), <A HREF='vom_write_dayyear_subroutines_called.html#fmonth'>fmonth</A>(nday), <A HREF='vom_write_dayyear_subroutines_called.html#fday'>fday</A>(nday), nday, nhour-1,          &<font color="#007700"></font>
+<A NAME="1871">1871 : </A>     &  <A HREF='vom_write_dayyear_subroutines_called.html#rain_d'>rain_d</A>(nday), <A HREF='vom_write_dayyear_subroutines_called.html#tairmax_d'>tairmax_d</A>(nday), <A HREF='vom_write_dayyear_subroutines_called.html#tairmin_d'>tairmin_d</A>(nday), <A HREF='vom_write_dayyear_subroutines_called.html#par_d'>par_d</A>(nday),   &<font color="#007700"></font>
+<A NAME="1872">1872 : </A>     &  vd_d / 24.d0, esoil_d, <A HREF='vom_write_dayyear_subroutines_called.html#jmax25t_d'>jmax25t_d</A>(2), <A HREF='vom_write_dayyear_subroutines_called.html#jmax25g_d'>jmax25g_d</A>(2),             &<font color="#007700"></font>
+<A NAME="1873">1873 : </A>     &  o_cai + <A HREF='vom_write_dayyear_subroutines_called.html#pcg_d'>pcg_d</A>(2), rlt_d , rlg_d, lambdat_d, lambdag_d,         &<font color="#007700"></font>
+<A NAME="1874">1874 : </A>     &  rrt_d * 3600.d0 * 24.d0, rrg_d * 3600.d0 * 24.d0, <A HREF='vom_write_dayyear_subroutines_called.html#asst_d'>asst_d</A>(2,2), &<font color="#007700"></font>
+<A NAME="1875">1875 : </A>     &  <A HREF='vom_write_dayyear_subroutines_called.html#assg_d'>assg_d</A>(2,2,2), <font color='#aa2200'>SUM</font>(su__(1:wlayer_)) / wlayer_, zw_, wsnew,     &<font color="#007700"></font>
+<A NAME="1876">1876 : </A>     &  spgfcf_d, infx_d, etmt_d, etmg_d, su__(1), topt_,              &<font color="#007700"></font>
+<A NAME="1877">1877 : </A>     & tcg_d(2,2), q_tct_d(2), cpccg_d(2), q_cpcct_d,                  &<font color="#007700"></font>
+<A NAME="1878">1878 : </A>     & lai_lt(2), lai_lg(2), <A HREF='vom_write_dayyear.html#tp_netassg'>tp_netassg</A>, <A HREF='vom_write_dayyear.html#tp_netasst'>tp_netasst</A>         <font color="#007700"></font>
+<A NAME="1879">1879 : </A><font color="#007700"></font>
+<A NAME="1880">1880 : </A>        <font color='#aa2200'>write</font>(kfile_rsurfdaily,<A HREF='vom_write_dayyear_variables.html#dailyformat'>dailyformat</A>) <A HREF='vom_write_dayyear_subroutines_called.html#fyear'>fyear</A>(nday), <A HREF='vom_write_dayyear_subroutines_called.html#fmonth'>fmonth</A>(nday), &<font color="#007700"></font>
+<A NAME="1881">1881 : </A>     &    <A HREF='vom_write_dayyear_subroutines_called.html#fday'>fday</A>(nday), nday, rsurft_(1:wlayer_)<font color="#007700"></font>
+<A NAME="1882">1882 : </A><font color="#007700"></font>
+<A NAME="1883">1883 : </A>      <font color='#aa2200'>if</font> (<A HREF='vom_write_dayyear_subroutines_called.html#fyear'>fyear</A>(nday) <font color='#cc00cc'>.ne.</font> nyear) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="1884">1884 : </A>!<font color="#007700">       * for calculation of vd_y a -1 is added to nday for using dayyear of correct year</font>
+<A NAME="1885">1885 : </A>        <font color='#aa2200'>write</font>(kfile_resultsyearly,'(i6,18e16.6)') nyear, rain_y,       &<font color="#007700"></font>
+<A NAME="1886">1886 : </A>     &    par_y, srad_y, vd_y / (<A HREF='vom_write_dayyear_subroutines_called.html#dayyear'>dayyear</A>(nday-1)), esoil_y, etm_y,     &<font color="#007700"></font>
+<A NAME="1887">1887 : </A>     &    etmg_y, assg_y, rlg_y, rrg_y, cpccg_y, tcg_y,                &<font color="#007700"></font>
+<A NAME="1888">1888 : </A>     &    etmt_y, asst_y, rlt_y, rrt_y, cpcct_y, tct_y<font color="#007700"></font>
+<A NAME="1889">1889 : </A>      <font color='#aa2200'>endif</font><font color="#007700"></font>
+<A NAME="1890">1890 : </A><font color="#007700"></font>
+<A NAME="1891">1891 : </A>!<font color="#007700">     * WRITING THE ACCUMULATED DATA FROM THE LAST YEAR TO FILE:</font>
+<A NAME="1892">1892 : </A><font color="#007700"></font>
+<A NAME="1893">1893 : </A>      <font color='#aa2200'>if</font> (nday <font color='#cc00cc'>.eq.</font> c_maxday) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="1894">1894 : </A>!<font color="#007700">       * call subroutine there to get yearly data for the output</font>
+<A NAME="1895">1895 : </A>        <font color='#aa2200'>call</font> <A HREF='vom_write_dayyear_subroutines_called.html#vom_add_yearly'>vom_add_yearly</A>()<font color="#007700"></font>
+<A NAME="1896">1896 : </A>        <font color='#aa2200'>write</font>(kfile_resultsyearly,'(i6,18e16.6)') nyear, rain_y,       &<font color="#007700"></font>
+<A NAME="1897">1897 : </A>     &    par_y, srad_y, vd_y / (<A HREF='vom_write_dayyear_subroutines_called.html#dayyear'>dayyear</A>(nday)), esoil_y, etm_y,       &<font color="#007700"></font>
+<A NAME="1898">1898 : </A>     &    etmg_y, assg_y, rlg_y, rrg_y, cpccg_y, tcg_y,                &<font color="#007700"></font>
+<A NAME="1899">1899 : </A>     &    etmt_y, asst_y, rlt_y, rrt_y, cpcct_y, tct_y<font color="#007700"></font>
+<A NAME="1900">1900 : </A>      <font color='#aa2200'>endif</font><font color="#007700"></font>
+<A NAME="1901">1901 : </A><font color="#007700"></font>
+<A NAME="1902">1902 : </A>      <font color='#aa2200'>return</font><font color="#007700"></font>
+<A NAME="1903">1903 : </A>      <font color='#aa2200'>end</font> <font color='#aa2200'>subroutine</font> vom_write_dayyear<font color="#007700"></font>
 
 </PRE>
 </BODY></HTML>

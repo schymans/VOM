@@ -136,7 +136,6 @@ function printCallRows(xmlhttp,locargs) {
 <div class="tabs">
   <ul>
       <li><a href="writeloop.html"><span>Header</span></a></li>
-      <li><a href="writeloop_version_history.html"><span>Version history</span></a></li>
       <li><a href="writeloop_variables.html"><span>Variables</span></a></li>
       <li><a href="writeloop_called_by.html"><span>Called by</span></a></li>
       <li class="current"><a href="writeloop_source.html"><span>Source</span></a></li>
@@ -144,31 +143,37 @@ function printCallRows(xmlhttp,locargs) {
 </div>
 <h1>Subroutine writeloop</h1>
 <PRE>
-<A NAME="949">949 : </A><font color="#007700"></font>
-<A NAME="950">950 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
-<A NAME="951">951 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
-<A NAME="952">952 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
-<A NAME="953">953 : </A><font color="#007700"></font>
-<A NAME="954">954 : </A>!<font color="#007700">     * WRITE shufflevar AND ofvec OF LAST LOOP TO FILE AND TERMINATE</font>
-<A NAME="955">955 : </A>      <font color='#aa2200'>subroutine</font> writeloop ()<font color="#007700"></font>
-<A NAME="956">956 : </A>      <font color='#aa2200'>use</font> sce_mod<font color="#007700"></font>
-<A NAME="957">957 : </A>      <font color='#aa2200'>implicit</font> <font color='#aa2200'>none</font><font color="#007700"></font>
-<A NAME="958">958 : </A><font color="#007700"></font>
-<A NAME="959">959 : </A>      <font color='#aa2200'>INTEGER</font> :: <A HREF='writeloop_variables.html#i_'>i_</A><font color="#007700"></font>
-<A NAME="960">960 : </A><font color="#007700"></font>
-<A NAME="961">961 : </A>      <font color='#aa2200'>open</font>(kfile_lastloop, <font color='#aa2200'>file</font>=sfile_lastloop(1:<font color='#aa2200'>len_trim</font>(sfile_lastloop)))<font color="#007700"></font>
-<A NAME="962">962 : </A>      <font color='#aa2200'>write</font>(kfile_lastloop,'(i3)') ncomp2<font color="#007700"></font>
-<A NAME="963">963 : </A>      <font color='#aa2200'>write</font>(kfile_lastloop,'(i4)') nloop<font color="#007700"></font>
-<A NAME="964">964 : </A>      <font color='#aa2200'>write</font>(kfile_lastloop,'(i10)') nrun<font color="#007700"></font>
-<A NAME="965">965 : </A>      <font color='#aa2200'>write</font>(kfile_lastloop,'(i10)') nsincebest<font color="#007700"></font>
-<A NAME="966">966 : </A>      <font color='#aa2200'>write</font>(kfile_lastloop,loopformat) ofvec(:)<font color="#007700"></font>
-<A NAME="967">967 : </A>      <font color='#aa2200'>do</font> <A HREF='writeloop_variables.html#i_'>i_</A> = 1, npar<font color="#007700"></font>
-<A NAME="968">968 : </A>        <font color='#aa2200'>write</font>(kfile_lastloop,loopformat) shufflevar(<A HREF='writeloop_variables.html#i_'>i_</A>,:)<font color="#007700"></font>
-<A NAME="969">969 : </A>      <font color='#aa2200'>enddo</font><font color="#007700"></font>
-<A NAME="970">970 : </A>      <font color='#aa2200'>close</font>(kfile_lastloop)<font color="#007700"></font>
-<A NAME="971">971 : </A><font color="#007700"></font>
-<A NAME="972">972 : </A>      <font color='#aa2200'>return</font><font color="#007700"></font>
-<A NAME="973">973 : </A>      <font color='#aa2200'>end</font> <font color='#aa2200'>subroutine</font> writeloop<font color="#007700"></font>
+<A NAME="1163">1163 : </A><font color="#007700"></font>
+<A NAME="1164">1164 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+<A NAME="1165">1165 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+<A NAME="1166">1166 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+<A NAME="1167">1167 : </A>!<font color="#007700">     * WRITE shufflevar AND ofvec OF LAST LOOP TO FILE AND TERMINATE</font>
+<A NAME="1168">1168 : </A><font color="#007700"></font>
+<A NAME="1169">1169 : </A>      <font color='#aa2200'>subroutine</font> writeloop ()<font color="#007700"></font>
+<A NAME="1170">1170 : </A>      <font color='#aa2200'>use</font> vom_sce_mod<font color="#007700"></font>
+<A NAME="1171">1171 : </A>      <font color='#aa2200'>implicit</font> <font color='#aa2200'>none</font><font color="#007700"></font>
+<A NAME="1172">1172 : </A><font color="#007700"></font>
+<A NAME="1173">1173 : </A>      <font color='#aa2200'>INTEGER</font>             :: <A HREF='writeloop_variables.html#ii'>ii</A><font color="#007700"></font>
+<A NAME="1174">1174 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='writeloop_variables.html#tmp_8'>tmp_8</A>(:)<font color="#007700"></font>
+<A NAME="1175">1175 : </A><font color="#007700"></font>
+<A NAME="1176">1176 : </A>        <font color='#aa2200'>open</font>(kfile_lastloop, <font color='#aa2200'>FILE</font>=<font color='#aa2200'>trim</font>(<font color='#aa2200'>adjustl</font>(i_outputpath)) // &<font color="#007700"></font>
+<A NAME="1177">1177 : </A>             <font color='#aa2200'>trim</font>(<font color='#aa2200'>adjustl</font>(sfile_lastloop)))<font color="#007700"></font>
+<A NAME="1178">1178 : </A>          <font color='#aa2200'>write</font>(kfile_lastloop,'(i3)')  ncomp2<font color="#007700"></font>
+<A NAME="1179">1179 : </A>          <font color='#aa2200'>write</font>(kfile_lastloop,'(i4)')  nloop<font color="#007700"></font>
+<A NAME="1180">1180 : </A>          <font color='#aa2200'>write</font>(kfile_lastloop,'(i10)') nrun<font color="#007700"></font>
+<A NAME="1181">1181 : </A>          <font color='#aa2200'>write</font>(kfile_lastloop,'(i10)') nsincebest<font color="#007700"></font>
+<A NAME="1182">1182 : </A>          <font color='#aa2200'>write</font>(kfile_lastloop,loopformat) ofvec(:)<font color="#007700"></font>
+<A NAME="1183">1183 : </A>          <font color='#aa2200'>allocate</font>(<A HREF='writeloop_variables.html#tmp_8'>tmp_8</A>(sopt))<font color="#007700"></font>
+<A NAME="1184">1184 : </A>          <font color='#aa2200'>do</font> <A HREF='writeloop_variables.html#ii'>ii</A> = 1, vom_npar<font color="#007700"></font>
+<A NAME="1185">1185 : </A>!<font color="#007700">           * use temporary variable to prevent warning in ifort</font>
+<A NAME="1186">1186 : </A>            <A HREF='writeloop_variables.html#tmp_8'>tmp_8</A>(:) = shufflevar(<A HREF='writeloop_variables.html#ii'>ii</A>,:)<font color="#007700"></font>
+<A NAME="1187">1187 : </A>            <font color='#aa2200'>write</font>(kfile_lastloop,loopformat) <A HREF='writeloop_variables.html#tmp_8'>tmp_8</A>(:)<font color="#007700"></font>
+<A NAME="1188">1188 : </A>          <font color='#aa2200'>enddo</font><font color="#007700"></font>
+<A NAME="1189">1189 : </A>          <font color='#aa2200'>deallocate</font>(<A HREF='writeloop_variables.html#tmp_8'>tmp_8</A>)<font color="#007700"></font>
+<A NAME="1190">1190 : </A>        <font color='#aa2200'>close</font>(kfile_lastloop)<font color="#007700"></font>
+<A NAME="1191">1191 : </A><font color="#007700"></font>
+<A NAME="1192">1192 : </A>      <font color='#aa2200'>return</font><font color="#007700"></font>
+<A NAME="1193">1193 : </A>      <font color='#aa2200'>end</font> <font color='#aa2200'>subroutine</font> writeloop<font color="#007700"></font>
 
 </PRE>
 </BODY></HTML>

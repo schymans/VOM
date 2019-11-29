@@ -136,7 +136,6 @@ function printCallRows(xmlhttp,locargs) {
 <div class="tabs">
   <ul>
       <li><a href="vom_add_hourly.html"><span>Header</span></a></li>
-      <li><a href="vom_add_hourly_version_history.html"><span>Version history</span></a></li>
       <li><a href="vom_add_hourly_subroutines_called.html"><span>Subroutines called</span></a></li>
       <li><a href="vom_add_hourly_variables.html"><span>Variables</span></a></li>
       <li><a href="vom_add_hourly_called_by.html"><span>Called by</span></a></li>
@@ -145,48 +144,53 @@ function printCallRows(xmlhttp,locargs) {
 </div>
 <h1>Subroutine vom_add_hourly</h1>
 <PRE>
-<A NAME="1341">1341 : </A><font color="#007700"></font>
-<A NAME="1342">1342 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
-<A NAME="1343">1343 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
-<A NAME="1344">1344 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
-<A NAME="1345">1345 : </A><font color="#007700"></font>
-<A NAME="1346">1346 : </A>      <font color='#aa2200'>subroutine</font> vom_add_hourly ()<font color="#007700"></font>
-<A NAME="1347">1347 : </A>      <font color='#aa2200'>use</font> vegwatmod<font color="#007700"></font>
-<A NAME="1348">1348 : </A>      <font color='#aa2200'>use</font> vegmod<font color="#007700"></font>
-<A NAME="1349">1349 : </A>      <font color='#aa2200'>use</font> watmod<font color="#007700"></font>
-<A NAME="1350">1350 : </A>      <font color='#aa2200'>implicit</font> <font color='#aa2200'>none</font><font color="#007700"></font>
-<A NAME="1351">1351 : </A><font color="#007700"></font>
-<A NAME="1352">1352 : </A>      <font color='#aa2200'>REAL</font>*8 :: <A HREF='vom_add_hourly_variables.html#ass__'>ass__</A>(3)<font color="#007700"></font>
-<A NAME="1353">1353 : </A>      <font color='#aa2200'>REAL</font>*8 :: <A HREF='vom_add_hourly_variables.html#assg__'>assg__</A>(3,3)<font color="#007700"></font>
-<A NAME="1354">1354 : </A><font color="#007700"></font>
-<A NAME="1355">1355 : </A>      <A HREF='vom_add_hourly_variables.html#ass__'>ass__</A>(:) = (4.d0 * ca_ * gstom__ + 8.d0 * gammastar * gstom__    &<font color="#007700"></font>
-<A NAME="1356">1356 : </A>     &         + jact_(:) - 4.d0 * rl__(:) - <font color='#aa2200'>SQRT</font>((-4.d0 * ca_ * gstom__ &<font color="#007700"></font>
-<A NAME="1357">1357 : </A>     &         + 8.d0 * gammastar * gstom__ + jact_(:) - 4.d0          &<font color="#007700"></font>
-<A NAME="1358">1358 : </A>     &         * rl__(:)) ** 2.d0 + 16.d0 * gammastar * gstom__        &<font color="#007700"></font>
-<A NAME="1359">1359 : </A>     &         * (8.d0 * ca_ * gstom__ + jact_(:) + 8.d0 * rl__(:)))) / 8.d0  !<font color="#007700"> (3.22) ; (Out[319])</font>
-<A NAME="1360">1360 : </A>      hass_(:) = hass_(:) + <A HREF='vom_add_hourly_variables.html#ass__'>ass__</A>(:) * dt_<font color="#007700"></font>
-<A NAME="1361">1361 : </A>      <A HREF='vom_add_hourly_variables.html#assg__'>assg__</A>(:,:) = (4.d0 * ca_ * gstomg__(:,:) + 8.d0 * gammastar     &<font color="#007700"></font>
-<A NAME="1362">1362 : </A>     &            * gstomg__(:,:) + jactg(:,:) - 4.d0 * rlg__(:,:)     &<font color="#007700"></font>
-<A NAME="1363">1363 : </A>     &            - <font color='#aa2200'>SQRT</font>((-4.d0 * ca_ * gstomg__(:,:) + 8.d0 * gammastar &<font color="#007700"></font>
-<A NAME="1364">1364 : </A>     &            * gstomg__(:,:) + jactg(:,:) - 4.d0 * rlg__(:,:))    &<font color="#007700"></font>
-<A NAME="1365">1365 : </A>     &            ** 2.d0 + 16.d0 * gammastar * gstomg__(:,:) * (8.d0  &<font color="#007700"></font>
-<A NAME="1366">1366 : </A>     &            * ca_ * gstomg__(:,:) + jactg(:,:) + 8.d0 * rlg__(:,:)))) / 8.d0  !<font color="#007700"> (3.22); (Out[319])</font>
-<A NAME="1367">1367 : </A>      hassg(:,:) = hassg(:,:) + <A HREF='vom_add_hourly_variables.html#assg__'>assg__</A>(:,:) * dt_<font color="#007700"></font>
-<A NAME="1368">1368 : </A>      hruptkvec(:) = hruptkvec(:) + ruptkvec(:) * dt_<font color="#007700"></font>
-<A NAME="1369">1369 : </A>      hruptkg(:) = hruptkg(:) + ruptkg(:) * dt_<font color="#007700"></font>
-<A NAME="1370">1370 : </A>      <font color='#aa2200'>if</font> (optmode <font color='#cc00cc'>.eq.</font> 0) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="1371">1371 : </A>        hspgfcf = hspgfcf + dt_ * spgfcf__<font color="#007700"></font>
-<A NAME="1372">1372 : </A>        hinfx   = hinfx   + dt_ * infx__<font color="#007700"></font>
-<A NAME="1373">1373 : </A>        hio     = hio     + dt_ * io_<font color="#007700"></font>
-<A NAME="1374">1374 : </A>        hesoil  = hesoil  + dt_ * esoil__<font color="#007700"></font>
-<A NAME="1375">1375 : </A>        hetm_   = hetm_   + dt_ * etm__<font color="#007700"></font>
-<A NAME="1376">1376 : </A>        hetmg   = hetmg   + dt_ * <A HREF='vom_add_hourly_subroutines_called.html#etmg__'>etmg__</A>(2,2) <font color="#007700"></font>
-<A NAME="1377">1377 : </A>        hruptk_ = hruptk_ + dt_ * <font color='#aa2200'>SUM</font>(ruptkvec(:))<font color="#007700"></font>
-<A NAME="1378">1378 : </A>        hinf_   = hinf_   + dt_ * inf_<font color="#007700"></font>
-<A NAME="1379">1379 : </A>      <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="1380">1380 : </A><font color="#007700"></font>
-<A NAME="1381">1381 : </A>      <font color='#aa2200'>return</font><font color="#007700"></font>
-<A NAME="1382">1382 : </A>      <font color='#aa2200'>end</font> <font color='#aa2200'>subroutine</font> vom_add_hourly<font color="#007700"></font>
+<A NAME="1707">1707 : </A><font color="#007700"></font>
+<A NAME="1708">1708 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+<A NAME="1709">1709 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+<A NAME="1710">1710 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+<A NAME="1711">1711 : </A><font color="#007700"></font>
+<A NAME="1712">1712 : </A>      <font color='#aa2200'>subroutine</font> vom_add_hourly ()<font color="#007700"></font>
+<A NAME="1713">1713 : </A>      <font color='#aa2200'>use</font> vom_vegwat_mod<font color="#007700"></font>
+<A NAME="1714">1714 : </A>      <font color='#aa2200'>implicit</font> <font color='#aa2200'>none</font><font color="#007700"></font>
+<A NAME="1715">1715 : </A><font color="#007700"></font>
+<A NAME="1716">1716 : </A>      <font color='#aa2200'>REAL</font>*8 :: <A HREF='vom_add_hourly_variables.html#asst__'>asst__</A>(3,3)<font color="#007700"></font>
+<A NAME="1717">1717 : </A>      <font color='#aa2200'>REAL</font>*8 :: <A HREF='vom_add_hourly_variables.html#assg__'>assg__</A>(3,3,3)<font color="#007700"></font>
+<A NAME="1718">1718 : </A>      <font color='#aa2200'>INTEGER</font>:: <A HREF='vom_add_hourly_variables.html#ii'>ii</A><font color="#007700"></font>
+<A NAME="1719">1719 : </A><font color="#007700"></font>
+<A NAME="1720">1720 : </A>    <font color='#aa2200'>do</font> <A HREF='vom_add_hourly_variables.html#ii'>ii</A> = 1,3 !<font color="#007700">loop for LAI values</font>
+<A NAME="1721">1721 : </A>      <A HREF='vom_add_hourly_variables.html#asst__'>asst__</A>(:,<A HREF='vom_add_hourly_variables.html#ii'>ii</A>) = (4.d0 * ca_h(th_) * gstomt + 8.d0 * gammastar        &<font color="#007700"></font>
+<A NAME="1722">1722 : </A>        &          * gstomt + jactt(:,<A HREF='vom_add_hourly_variables.html#ii'>ii</A>) - 4.d0 * rlt_h(:,<A HREF='vom_add_hourly_variables.html#ii'>ii</A>) - <font color='#aa2200'>SQRT</font>((-4.d0    &<font color="#007700"></font>
+<A NAME="1723">1723 : </A>        &          * ca_h(th_) * gstomt + 8.d0 * gammastar * gstomt       &<font color="#007700"></font>
+<A NAME="1724">1724 : </A>        &          + jactt(:,<A HREF='vom_add_hourly_variables.html#ii'>ii</A>) - 4.d0 * rlt_h(:,<A HREF='vom_add_hourly_variables.html#ii'>ii</A>)) ** 2.d0 + 16.d0          &<font color="#007700"></font>
+<A NAME="1725">1725 : </A>        &          * gammastar * gstomt * (8.d0 * ca_h(th_) * gstomt      &<font color="#007700"></font>
+<A NAME="1726">1726 : </A>        &          + jactt(:,<A HREF='vom_add_hourly_variables.html#ii'>ii</A>) + 8.d0 * rlt_h(:,<A HREF='vom_add_hourly_variables.html#ii'>ii</A>)))) / 8.d0  !<font color="#007700"> (3.22) ; (Out[319])</font>
+<A NAME="1727">1727 : </A>    <font color='#aa2200'>end</font> <font color='#aa2200'>do</font><font color="#007700"></font>
+<A NAME="1728">1728 : </A>        asst_h(:,:) = asst_h(:,:) + <A HREF='vom_add_hourly_variables.html#asst__'>asst__</A>(:,:) * dt_<font color="#007700"></font>
+<A NAME="1729">1729 : </A><font color="#007700"></font>
+<A NAME="1730">1730 : </A>    <font color='#aa2200'>do</font> <A HREF='vom_add_hourly_variables.html#ii'>ii</A> = 1,3 !<font color="#007700">loop for LAI values</font>
+<A NAME="1731">1731 : </A>        <A HREF='vom_add_hourly_variables.html#assg__'>assg__</A>(:,:,<A HREF='vom_add_hourly_variables.html#ii'>ii</A>) = (4.d0 * ca_h(th_) * gstomg(:,:,<A HREF='vom_add_hourly_variables.html#ii'>ii</A>) + 8.d0 * gammastar &<font color="#007700"></font>
+<A NAME="1732">1732 : </A>        &         * gstomg(:,:,<A HREF='vom_add_hourly_variables.html#ii'>ii</A>) + jactg(:,:,<A HREF='vom_add_hourly_variables.html#ii'>ii</A>) - 4.d0 * rlg_h(:,:,<A HREF='vom_add_hourly_variables.html#ii'>ii</A>)       &<font color="#007700"></font>
+<A NAME="1733">1733 : </A>        &         - <font color='#aa2200'>SQRT</font>((-4.d0 * ca_h(th_) * gstomg(:,:,<A HREF='vom_add_hourly_variables.html#ii'>ii</A>) + 8.d0       &<font color="#007700"></font>
+<A NAME="1734">1734 : </A>        &         * gammastar * gstomg(:,:,<A HREF='vom_add_hourly_variables.html#ii'>ii</A>) + jactg(:,:,<A HREF='vom_add_hourly_variables.html#ii'>ii</A>) - 4.d0        &<font color="#007700"></font>
+<A NAME="1735">1735 : </A>        &         * rlg_h(:,:,<A HREF='vom_add_hourly_variables.html#ii'>ii</A>)) ** 2.d0 + 16.d0 * gammastar            &<font color="#007700"></font>
+<A NAME="1736">1736 : </A>        &         * gstomg(:,:,<A HREF='vom_add_hourly_variables.html#ii'>ii</A>) * (8.d0 * ca_h(th_) * gstomg(:,:,<A HREF='vom_add_hourly_variables.html#ii'>ii</A>)      &<font color="#007700"></font>
+<A NAME="1737">1737 : </A>        &         + jactg(:,:,<A HREF='vom_add_hourly_variables.html#ii'>ii</A>) + 8.d0 * rlg_h(:,:,<A HREF='vom_add_hourly_variables.html#ii'>ii</A>)))) / 8.d0  !<font color="#007700"> (3.22); (Out[319])</font>
+<A NAME="1738">1738 : </A>    <font color='#aa2200'>end</font> <font color='#aa2200'>do</font><font color="#007700"></font>
+<A NAME="1739">1739 : </A>      assg_h(:,:,:) = assg_h(:,:,:) + <A HREF='vom_add_hourly_variables.html#assg__'>assg__</A>(:,:,:) * dt_<font color="#007700"></font>
+<A NAME="1740">1740 : </A>      ruptkt_h(:) = ruptkt_h(:) + ruptkt__(:) * dt_<font color="#007700"></font>
+<A NAME="1741">1741 : </A>      ruptkg_h(:) = ruptkg_h(:) + ruptkg__(:) * dt_<font color="#007700"></font>
+<A NAME="1742">1742 : </A>      <font color='#aa2200'>if</font> (optmode <font color='#cc00cc'>.eq.</font> 0) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="1743">1743 : </A>        spgfcf_h    = spgfcf_h    + dt_ * spgfcf__<font color="#007700"></font>
+<A NAME="1744">1744 : </A>        infx_h      = infx_h      + dt_ * infx__<font color="#007700"></font>
+<A NAME="1745">1745 : </A>        io_h        = io_h        + dt_ * io__<font color="#007700"></font>
+<A NAME="1746">1746 : </A>        esoil_h     = esoil_h     + dt_ * esoil__<font color="#007700"></font>
+<A NAME="1747">1747 : </A>        etmt_h      = etmt_h      + dt_ * etmt__<font color="#007700"></font>
+<A NAME="1748">1748 : </A>        etmg_h      = etmg_h      + dt_ * <A HREF='vom_add_hourly_subroutines_called.html#etmg__'>etmg__</A>(2,2,2)<font color="#007700"></font>
+<A NAME="1749">1749 : </A>        sumruptkt_h = sumruptkt_h + dt_ * <font color='#aa2200'>SUM</font>(ruptkt__(:))<font color="#007700"></font>
+<A NAME="1750">1750 : </A>      <font color='#aa2200'>endif</font><font color="#007700"></font>
+<A NAME="1751">1751 : </A><font color="#007700"></font>
+<A NAME="1752">1752 : </A>      <font color='#aa2200'>return</font><font color="#007700"></font>
+<A NAME="1753">1753 : </A>      <font color='#aa2200'>end</font> <font color='#aa2200'>subroutine</font> vom_add_hourly<font color="#007700"></font>
 
 </PRE>
 </BODY></HTML>

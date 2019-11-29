@@ -136,7 +136,6 @@ function printCallRows(xmlhttp,locargs) {
 <div class="tabs">
   <ul>
       <li><a href="vom_mqss.html"><span>Header</span></a></li>
-      <li><a href="vom_mqss_version_history.html"><span>Version history</span></a></li>
       <li><a href="vom_mqss_variables.html"><span>Variables</span></a></li>
       <li><a href="vom_mqss_called_by.html"><span>Called by</span></a></li>
       <li class="current"><a href="vom_mqss_source.html"><span>Source</span></a></li>
@@ -144,44 +143,44 @@ function printCallRows(xmlhttp,locargs) {
 </div>
 <h1>Subroutine vom_mqss</h1>
 <PRE>
-<A NAME="1213">1213 : </A><font color="#007700"></font>
-<A NAME="1214">1214 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
-<A NAME="1215">1215 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
-<A NAME="1216">1216 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
-<A NAME="1217">1217 : </A>!<font color="#007700">*-----steady-state tissue water (mqss) --------------------------------</font>
-<A NAME="1218">1218 : </A><font color="#007700"></font>
-<A NAME="1219">1219 : </A>      <font color='#aa2200'>subroutine</font> vom_mqss (<A HREF='vom_mqss.html#mqss_out'>mqss_out</A>)<font color="#007700"></font>
-<A NAME="1220">1220 : </A>      <font color='#aa2200'>use</font> vegwatmod<font color="#007700"></font>
-<A NAME="1221">1221 : </A>      <font color='#aa2200'>use</font> vegmod<font color="#007700"></font>
-<A NAME="1222">1222 : </A>      <font color='#aa2200'>implicit</font> <font color='#aa2200'>none</font><font color="#007700"></font>
-<A NAME="1223">1223 : </A><font color="#007700"></font>
-<A NAME="1224">1224 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>INTENT</font>(<font color='#aa2200'>out</font>) :: <A HREF='vom_mqss.html#mqss_out'>mqss_out</A><font color="#007700"></font>
-<A NAME="1225">1225 : </A><font color="#007700"></font>
-<A NAME="1226">1226 : </A>      <font color='#aa2200'>REAL</font>*8 :: <A HREF='vom_mqss_variables.html#sum1'>sum1</A>, <A HREF='vom_mqss_variables.html#sum2'>sum2</A>, <A HREF='vom_mqss_variables.html#mul1'>mul1</A>, <A HREF='vom_mqss_variables.html#mul2'>mul2</A><font color="#007700"></font>
-<A NAME="1227">1227 : </A><font color="#007700"></font>
-<A NAME="1228">1228 : </A>!<font color="#007700">     * (Out[257]) steady-state Mq</font>
-<A NAME="1229">1229 : </A><font color="#007700"></font>
-<A NAME="1230">1230 : </A>!<font color="#007700">      mqss_out = MAX(0.9d0 * mqx_,(mqx_ * (mpbar * (md_ * md_ + 752.d0 &</font>
-<A NAME="1231">1231 : </A>!<font color="#007700">     &         * md_ * mqx_ + mqx_ * mqx_) * SUM((rsurfvec(1:postemp_) &</font>
-<A NAME="1232">1232 : </A>!<font color="#007700">     &         / (rrootm + rsoilvec(1:postemp_)))) - (md_ + mqx_) * (md_ &</font>
-<A NAME="1233">1233 : </A>!<font color="#007700">     &         + mqx_) * (etm__ - SUM(((-phydrostaticvec(1:postemp_)   &</font>
-<A NAME="1234">1234 : </A>!<font color="#007700">     &         - pcapvec(1:postemp_)) * rsurfvec(1:postemp_))          &</font>
-<A NAME="1235">1235 : </A>!<font color="#007700">     &         / (rrootm + rsoilvec(1:postemp_)))))) / (mpbar * (md_   &</font>
-<A NAME="1236">1236 : </A>!<font color="#007700">     &         * md_ + 752.d0 * md_ * mqx_ + mqx_ * mqx_)              &</font>
-<A NAME="1237">1237 : </A>!<font color="#007700">     &         * SUM((rsurfvec(1:postemp_) / (rrootm + rsoilvec(1:postemp_))))))</font>
-<A NAME="1238">1238 : </A><font color="#007700"></font>
-<A NAME="1239">1239 : </A>      <A HREF='vom_mqss_variables.html#sum1'>sum1</A> = <font color='#aa2200'>Sum</font>(rsurfvec(1:postemp_) / (rrootm + rsoilvec(1:postemp_)))<font color="#007700"></font>
-<A NAME="1240">1240 : </A>      <A HREF='vom_mqss_variables.html#mul1'>mul1</A> = mpbar * (md_ * md_ + 752.d0 * md_ * mqx_ + mqx_ * mqx_) * <A HREF='vom_mqss_variables.html#sum1'>sum1</A><font color="#007700"></font>
-<A NAME="1241">1241 : </A><font color="#007700"></font>
-<A NAME="1242">1242 : </A>      <A HREF='vom_mqss_variables.html#sum2'>sum2</A> = <font color='#aa2200'>Sum</font>(((-phydrostaticvec(1:postemp_) - pcapvec(1:postemp_)) &<font color="#007700"></font>
-<A NAME="1243">1243 : </A>     &     * rsurfvec(1:postemp_)) / (rrootm + rsoilvec(1:postemp_)))<font color="#007700"></font>
-<A NAME="1244">1244 : </A>      <A HREF='vom_mqss_variables.html#mul2'>mul2</A> = (md_ + mqx_) * (md_ + mqx_) * (etm__ - <A HREF='vom_mqss_variables.html#sum2'>sum2</A>)<font color="#007700"></font>
-<A NAME="1245">1245 : </A><font color="#007700"></font>
-<A NAME="1246">1246 : </A>      <A HREF='vom_mqss.html#mqss_out'>mqss_out</A> = mqx_ * (<A HREF='vom_mqss_variables.html#mul1'>mul1</A> - <A HREF='vom_mqss_variables.html#mul2'>mul2</A>) / <A HREF='vom_mqss_variables.html#mul1'>mul1</A><font color="#007700"></font>
-<A NAME="1247">1247 : </A>      <A HREF='vom_mqss.html#mqss_out'>mqss_out</A> = <font color='#aa2200'>Max</font>(0.9d0 * mqx_, <A HREF='vom_mqss.html#mqss_out'>mqss_out</A>)<font color="#007700"></font>
-<A NAME="1248">1248 : </A><font color="#007700"></font>
-<A NAME="1249">1249 : </A>      <font color='#aa2200'>return</font><font color="#007700"></font>
-<A NAME="1250">1250 : </A>      <font color='#aa2200'>end</font> <font color='#aa2200'>subroutine</font> vom_mqss<font color="#007700"></font>
+<A NAME="1581">1581 : </A><font color="#007700"></font>
+<A NAME="1582">1582 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+<A NAME="1583">1583 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+<A NAME="1584">1584 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+<A NAME="1585">1585 : </A>!<font color="#007700">*-----steady-state tissue water (mqss) --------------------------------</font>
+<A NAME="1586">1586 : </A><font color="#007700"></font>
+<A NAME="1587">1587 : </A>      <font color='#aa2200'>subroutine</font> vom_mqss (<A HREF='vom_mqss.html#mqss_out'>mqss_out</A>)<font color="#007700"></font>
+<A NAME="1588">1588 : </A>      <font color='#aa2200'>use</font> vom_vegwat_mod<font color="#007700"></font>
+<A NAME="1589">1589 : </A>      <font color='#aa2200'>implicit</font> <font color='#aa2200'>none</font><font color="#007700"></font>
+<A NAME="1590">1590 : </A><font color="#007700"></font>
+<A NAME="1591">1591 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>INTENT</font>(<font color='#aa2200'>out</font>) :: <A HREF='vom_mqss.html#mqss_out'>mqss_out</A><font color="#007700"></font>
+<A NAME="1592">1592 : </A><font color="#007700"></font>
+<A NAME="1593">1593 : </A>      <font color='#aa2200'>REAL</font>*8 :: <A HREF='vom_mqss_variables.html#sum1'>sum1</A>, <A HREF='vom_mqss_variables.html#sum2'>sum2</A>, <A HREF='vom_mqss_variables.html#mul1'>mul1</A>, <A HREF='vom_mqss_variables.html#mul2'>mul2</A><font color="#007700"></font>
+<A NAME="1594">1594 : </A><font color="#007700"></font>
+<A NAME="1595">1595 : </A>!<font color="#007700">     * (Out[257]) steady-state Mq</font>
+<A NAME="1596">1596 : </A><font color="#007700"></font>
+<A NAME="1597">1597 : </A>!<font color="#007700">     mqss_out = MAX(0.9d0 * q_mqx,(q_mqx * (p_mpbar * (q_md * q_md    &</font>
+<A NAME="1598">1598 : </A>!<font color="#007700">    &         + 752.d0 * q_md * q_mqx + q_mqx * q_mqx)                &</font>
+<A NAME="1599">1599 : </A>!<font color="#007700">    &         * SUM((rsurft_(1:pos_ult) / (i_rrootm + rsoil(1:pos_ult)))) &</font>
+<A NAME="1600">1600 : </A>!<font color="#007700">    &         - (q_md + q_mqx) * (q_md + q_mqx) * (etmt__             &</font>
+<A NAME="1601">1601 : </A>!<font color="#007700">    &         - SUM(((-c_hhydrst(1:pos_ult) - pcap_(1:pos_ult))       &</font>
+<A NAME="1602">1602 : </A>!<font color="#007700">    &         * rsurft_(1:pos_ult)) / (i_rrootm + rsoil(1:pos_ult)))))) &</font>
+<A NAME="1603">1603 : </A>!<font color="#007700">    &         / (p_mpbar * (q_md * q_md + 752.d0 * q_md * q_mqx       &</font>
+<A NAME="1604">1604 : </A>!<font color="#007700">    &         + q_mqx * q_mqx) * SUM((rsurft_(1:pos_ult) / (i_rrootm  &</font>
+<A NAME="1605">1605 : </A>!<font color="#007700">    &         + rsoil(1:pos_ult))))))</font>
+<A NAME="1606">1606 : </A><font color="#007700"></font>
+<A NAME="1607">1607 : </A>      <A HREF='vom_mqss_variables.html#sum1'>sum1</A> = <font color='#aa2200'>SUM</font>(rsurft_(1:pos_ult) / (i_rrootm + rsoil(1:pos_ult)))<font color="#007700"></font>
+<A NAME="1608">1608 : </A>      <A HREF='vom_mqss_variables.html#mul1'>mul1</A> = p_mpbar * (q_md * q_md + 752.d0 * q_md * q_mqx + q_mqx * q_mqx) * <A HREF='vom_mqss_variables.html#sum1'>sum1</A><font color="#007700"></font>
+<A NAME="1609">1609 : </A><font color="#007700"></font>
+<A NAME="1610">1610 : </A>      <A HREF='vom_mqss_variables.html#sum2'>sum2</A> = <font color='#aa2200'>SUM</font>(((-c_hhydrst(1:pos_ult) - pcap_(1:pos_ult))           &<font color="#007700"></font>
+<A NAME="1611">1611 : </A>     &     * rsurft_(1:pos_ult)) / (i_rrootm + rsoil(1:pos_ult)))<font color="#007700"></font>
+<A NAME="1612">1612 : </A>      <A HREF='vom_mqss_variables.html#mul2'>mul2</A> = (q_md + q_mqx) * (q_md + q_mqx) * (etmt__ - <A HREF='vom_mqss_variables.html#sum2'>sum2</A>)<font color="#007700"></font>
+<A NAME="1613">1613 : </A><font color="#007700"></font>
+<A NAME="1614">1614 : </A>      <A HREF='vom_mqss.html#mqss_out'>mqss_out</A> = q_mqx * (<A HREF='vom_mqss_variables.html#mul1'>mul1</A> - <A HREF='vom_mqss_variables.html#mul2'>mul2</A>) / <A HREF='vom_mqss_variables.html#mul1'>mul1</A><font color="#007700"></font>
+<A NAME="1615">1615 : </A>      <A HREF='vom_mqss.html#mqss_out'>mqss_out</A> = <font color='#aa2200'>MAX</font>(0.9d0 * q_mqx, <A HREF='vom_mqss.html#mqss_out'>mqss_out</A>)<font color="#007700"></font>
+<A NAME="1616">1616 : </A><font color="#007700"></font>
+<A NAME="1617">1617 : </A>      <font color='#aa2200'>return</font><font color="#007700"></font>
+<A NAME="1618">1618 : </A>      <font color='#aa2200'>end</font> <font color='#aa2200'>subroutine</font> vom_mqss<font color="#007700"></font>
 
 </PRE>
 </BODY></HTML>

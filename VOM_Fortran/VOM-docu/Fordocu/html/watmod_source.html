@@ -136,93 +136,100 @@ function printCallRows(xmlhttp,locargs) {
 <div class="tabs">
   <ul>
       <li><a href="watmod.html"><span>Header</span></a></li>
-      <li><a href="watmod_version_history.html"><span>Version history</span></a></li>
       <li><a href="watmod_variables.html"><span>Variables</span></a></li>
       <li class="current"><a href="watmod_source.html"><span>Source</span></a></li>
   </ul>
 </div>
 <h1>Module watmod</h1>
 <PRE>
-<A NAME="261">261 : </A>      <font color="#007700"></font>
-<A NAME="262">262 : </A>      <font color='#aa2200'>module</font> watmod<font color="#007700"></font>
-<A NAME="263">263 : </A>!<font color="#007700">***********************************************************************</font>
-<A NAME="264">264 : </A>!<font color="#007700">*  Module defining variables and parameters for the water balance </font>
-<A NAME="265">265 : </A>!<font color="#007700">*  model (watbal).</font>
-<A NAME="266">266 : </A>!<font color="#007700">*----------------------------------------------------------------------</font>
-<A NAME="267">267 : </A>!<font color="#007700">*  Author: Stan Schymanski, Max Planck Institute for Biogeochemistry</font>
-<A NAME="268">268 : </A>!<font color="#007700">*  Email: sschym@bgc-jena.mpg.de</font>
-<A NAME="269">269 : </A>!<font color="#007700">*  06/2008</font>
-<A NAME="270">270 : </A>!<font color="#007700">*----------------------------------------------------------------------</font>
-<A NAME="271">271 : </A><font color="#007700"></font>
-<A NAME="272">272 : </A>!<font color="#007700">***********************************************************************</font>
-<A NAME="273">273 : </A>!<font color="#007700">*    Parameters for Water balance model</font>
-<A NAME="274">274 : </A>!<font color="#007700">***********************************************************************</font>
-<A NAME="275">275 : </A><font color="#007700"></font>
-<A NAME="276">276 : </A>      <font color='#aa2200'>INTEGER</font> :: <A HREF='watmod_variables.html#nlayersnew'>nlayersnew</A>   !<font color="#007700"> Number of layers in unsaturated zone for next time step</font>
-<A NAME="277">277 : </A><font color="#007700"></font>
-<A NAME="278">278 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='watmod_variables.html#cz'>cz</A>           !<font color="#007700"> Average soil elevation in m</font>
-<A NAME="279">279 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='watmod_variables.html#cgs'>cgs</A>          !<font color="#007700"> Capital Gamma S (length scale for seepage outflow) (m)</font>
-<A NAME="280">280 : </A><font color="#007700"></font>
-<A NAME="281">281 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='watmod_variables.html#ksat_'>ksat_</A>        !<font color="#007700"> Saturated hydraulic conductivity</font>
-<A NAME="282">282 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='watmod_variables.html#epsln_'>epsln_</A>       !<font color="#007700"> Soil porosity</font>
-<A NAME="283">283 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='watmod_variables.html#nvg_'>nvg_</A>         !<font color="#007700"> Van Genuchten soil parameter n</font>
-<A NAME="284">284 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='watmod_variables.html#mvg_'>mvg_</A>         !<font color="#007700"> Van Genuchten soil parameter m</font>
-<A NAME="285">285 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='watmod_variables.html#avg_'>avg_</A>         !<font color="#007700"> Van Genuchten soil parameter a</font>
-<A NAME="286">286 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='watmod_variables.html#zs_'>zs_</A>          !<font color="#007700"> Reference elevation point (set to 0)</font>
-<A NAME="287">287 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='watmod_variables.html#zr_'>zr_</A>          !<font color="#007700"> Average channel elevation</font>
-<A NAME="288">288 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='watmod_variables.html#go_'>go_</A>          !<font color="#007700"> Slope close to channel in radians </font>
-<A NAME="289">289 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='watmod_variables.html#thetas_'>thetas_</A>      !<font color="#007700"> Saturated soil water content</font>
-<A NAME="290">290 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='watmod_variables.html#thetar_'>thetar_</A>      !<font color="#007700"> Residual soil water content</font>
-<A NAME="291">291 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='watmod_variables.html#wsold'>wsold</A>        !<font color="#007700"> Previous total soil water storage</font>
-<A NAME="292">292 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='watmod_variables.html#delz_'>delz_</A>        !<font color="#007700"> Thickness of each soil layer (m)</font>
-<A NAME="293">293 : </A><font color="#007700"></font>
-<A NAME="294">294 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='watmod_variables.html#ksatvec'>ksatvec</A>(:)         !<font color="#007700"> Saturated hydraulic conductivit</font>
-<A NAME="295">295 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='watmod_variables.html#epslnvec'>epslnvec</A>(:)        !<font color="#007700"> Soil porosity</font>
-<A NAME="296">296 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='watmod_variables.html#nvgvec'>nvgvec</A>(:)          !<font color="#007700"> Van Genuchten soil parameter n</font>
-<A NAME="297">297 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='watmod_variables.html#mvgvec'>mvgvec</A>(:)          !<font color="#007700"> Van Genuchten soil parameter m</font>
-<A NAME="298">298 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='watmod_variables.html#avgvec'>avgvec</A>(:)          !<font color="#007700"> Van Genuchten soil parameter a</font>
-<A NAME="299">299 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='watmod_variables.html#thetasvec'>thetasvec</A>(:)       !<font color="#007700"> Saturated soil water content</font>
-<A NAME="300">300 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='watmod_variables.html#thetarvec'>thetarvec</A>(:)       !<font color="#007700"> Residual soil water content</font>
-<A NAME="301">301 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='watmod_variables.html#sueqvec'>sueqvec</A>(:)         !<font color="#007700"> Soil saturation degree above water table in hydrostatic equilibrium</font>
-<A NAME="302">302 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='watmod_variables.html#ch2ol_s'>cH2Ol_s</A>(:)         !<font color="#007700"> Soil water content in each layer (could also be called thetavec(:)) </font>
-<A NAME="303">303 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='watmod_variables.html#iovec'>iovec</A>(:)           !<font color="#007700"> Mass balance for each soil layer</font>
-<A NAME="304">304 : </A><font color="#007700"></font>
-<A NAME="305">305 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='watmod_variables.html#suvec_'>suvec_</A>(:)          !<font color="#007700"> Soil saturation degree in each layer</font>
-<A NAME="306">306 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='watmod_variables.html#sunewvec'>sunewvec</A>(:)        !<font color="#007700"> Soil saturation degree in each layer at next time step</font>
-<A NAME="307">307 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='watmod_variables.html#kunsatvec'>kunsatvec</A>(:)       !<font color="#007700"> Unsaturated hydraulic conductivity in each soil layer</font>
-<A NAME="308">308 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='watmod_variables.html#delzvec'>delzvec</A>(:)         !<font color="#007700"> Thickness of each soil layer</font>
-<A NAME="309">309 : </A><font color="#007700"></font>
-<A NAME="310">310 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='watmod_variables.html#qblvec'>qblvec</A>(:)          !<font color="#007700"> Water flux across bottom boundary of each layer (positive upwards)</font>
-<A NAME="311">311 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='watmod_variables.html#dsuvec'>dsuvec</A>(:)          !<font color="#007700"> Rate of change in soil saturation degree in each layer</font>
-<A NAME="312">312 : </A> !<font color="#007700">     REAL*8, ALLOCATABLE :: delznewvec(:)     </font>
-<A NAME="313">313 : </A> !<font color="#007700">     REAL*8, ALLOCATABLE :: wsnewvec(:)        ! Soil water content in each layer at next time step</font>
-<A NAME="314">314 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='watmod_variables.html#pcapnewvec'>pcapnewvec</A>(:)      !<font color="#007700"> Matric pressure head in each layer at next time step</font>
-<A NAME="315">315 : </A><font color="#007700"></font>
-<A NAME="316">316 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='watmod_variables.html#kunsatnewvec'>kunsatnewvec</A>(:)    !<font color="#007700"> Unsaturated hydraulic conductivity in each layer at next time step</font>
-<A NAME="317">317 : </A><font color="#007700"></font>
-<A NAME="318">318 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='watmod_variables.html#ys_'>ys_</A>          !<font color="#007700"> Elevation of water table</font>
-<A NAME="319">319 : </A>!<font color="#007700">      REAL*8  :: yu__</font>
-<A NAME="320">320 : </A>!<font color="#007700">      REAL*8  :: omgu_</font>
-<A NAME="321">321 : </A>!<font color="#007700">      REAL*8  :: omgo_</font>
-<A NAME="322">322 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='watmod_variables.html#esoil__'>esoil__</A>      !<font color="#007700"> Bare soil evaporation rate</font>
-<A NAME="323">323 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='watmod_variables.html#ysnew'>ysnew</A>        !<font color="#007700"> Elevation of water table at next time step</font>
-<A NAME="324">324 : </A>!<font color="#007700">      REAL*8  :: yunew_</font>
-<A NAME="325">325 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='watmod_variables.html#wsnew_'>wsnew_</A>       !<font color="#007700"> Total soil water store at next time step</font>
-<A NAME="326">326 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='watmod_variables.html#io_'>io_</A>          !<font color="#007700"> Mass balance of soil water</font>
-<A NAME="327">327 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='watmod_variables.html#iocum'>iocum</A>        !<font color="#007700"> Cumulative mass balance of soil water</font>
-<A NAME="328">328 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='watmod_variables.html#spgfcf__'>spgfcf__</A>     !<font color="#007700"> Seepage face flow rate</font>
-<A NAME="329">329 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='watmod_variables.html#hspgfcf'>hspgfcf</A>      !<font color="#007700"> Hourly seepage face flow</font>
-<A NAME="330">330 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='watmod_variables.html#infx__'>infx__</A>       !<font color="#007700"> Infiltration excess runoff rate</font>
-<A NAME="331">331 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='watmod_variables.html#hinfx'>hinfx</A>        !<font color="#007700"> Hourly infiltration excess runoff</font>
-<A NAME="332">332 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='watmod_variables.html#hio'>hio</A>          !<font color="#007700"> Hourly mass balance of soil water</font>
-<A NAME="333">333 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='watmod_variables.html#hesoil'>hesoil</A>       !<font color="#007700"> Hourly soil evaporation</font>
-<A NAME="334">334 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='watmod_variables.html#hetm_'>hetm_</A>        !<font color="#007700"> Hourly transpiration</font>
-<A NAME="335">335 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='watmod_variables.html#inf_'>inf_</A>         !<font color="#007700"> Infiltration rate</font>
-<A NAME="336">336 : </A> !<font color="#007700">     REAL*8  :: omgunew</font>
-<A NAME="337">337 : </A> !<font color="#007700">     REAL*8  :: omgonew</font>
-<A NAME="338">338 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='watmod_variables.html#hinf_'>hinf_</A>        !<font color="#007700"> Hourly infiltration rate</font>
-<A NAME="339">339 : </A><font color="#007700"></font>
-<A NAME="340">340 : </A>      <font color='#aa2200'>end</font> <font color='#aa2200'>module</font> watmod<font color="#007700"></font>
+<A NAME="386">386 : </A><font color="#007700"></font>
+<A NAME="387">387 : </A>!<font color="#007700">     ******************************************************************</font>
+<A NAME="388">388 : </A>!<font color="#007700">     * Module defining variables and parameters for the water balance </font>
+<A NAME="389">389 : </A>!<font color="#007700">     * model (watbal).</font>
+<A NAME="390">390 : </A>!<font color="#007700">     ******************************************************************</font>
+<A NAME="391">391 : </A><font color="#007700"></font>
+<A NAME="392">392 : </A>      <font color='#aa2200'>module</font> watmod<font color="#007700"></font>
+<A NAME="393">393 : </A>      <font color='#aa2200'>implicit</font> <font color='#aa2200'>none</font><font color="#007700"></font>
+<A NAME="394">394 : </A><font color="#007700"></font>
+<A NAME="395">395 : </A>      <font color='#aa2200'>INTEGER</font> :: <A HREF='watmod_variables.html#wlayer_'>wlayer_</A>                !<font color="#007700"> Number of soil layers in unsaturated zone</font>
+<A NAME="396">396 : </A>      <font color='#aa2200'>INTEGER</font> :: <A HREF='watmod_variables.html#wlayernew'>wlayernew</A>              !<font color="#007700"> Number of layers in unsaturated zone for next time step</font>
+<A NAME="397">397 : </A><font color="#007700"></font>
+<A NAME="398">398 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='watmod_variables.html#dt_'>dt_</A>                     !<font color="#007700"> Length of time step (s)</font>
+<A NAME="399">399 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='watmod_variables.html#dtmax'>dtmax</A>                   !<font color="#007700"> Maximum time step (s)</font>
+<A NAME="400">400 : </A>      <font color='#aa2200'>INTEGER</font> :: <A HREF='watmod_variables.html#dtsu_count'>dtsu_count</A>, <A HREF='watmod_variables.html#dtmax_count'>dtmax_count</A> !<font color="#007700"> For speed analysis, count of how often dtsu or dtmax is time limiting</font>
+<A NAME="401">401 : </A><font color="#007700"></font>
+<A NAME="402">402 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='watmod_variables.html#esoil__'>esoil__</A>                !<font color="#007700"> Bare soil evaporation rate</font>
+<A NAME="403">403 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='watmod_variables.html#esoil_h'>esoil_h</A>                !<font color="#007700"> Hourly soil evaporation</font>
+<A NAME="404">404 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='watmod_variables.html#esoil_d'>esoil_d</A>                !<font color="#007700"> Daily soil evaporation rate</font>
+<A NAME="405">405 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='watmod_variables.html#esoil_y'>esoil_y</A>                !<font color="#007700"> Annual soil evaporation rate</font>
+<A NAME="406">406 : </A><font color="#007700"></font>
+<A NAME="407">407 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='watmod_variables.html#spgfcf__'>spgfcf__</A>               !<font color="#007700"> Seepage face flow rate</font>
+<A NAME="408">408 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='watmod_variables.html#spgfcf_h'>spgfcf_h</A>               !<font color="#007700"> Hourly seepage face flow</font>
+<A NAME="409">409 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='watmod_variables.html#spgfcf_d'>spgfcf_d</A>               !<font color="#007700"> Daily seepage face flow</font>
+<A NAME="410">410 : </A><font color="#007700"></font>
+<A NAME="411">411 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='watmod_variables.html#inf__'>inf__</A>                  !<font color="#007700"> Infiltration rate</font>
+<A NAME="412">412 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='watmod_variables.html#infx__'>infx__</A>                 !<font color="#007700"> Infiltration excess runoff rate</font>
+<A NAME="413">413 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='watmod_variables.html#infx_h'>infx_h</A>                 !<font color="#007700"> Hourly infiltration excess runoff</font>
+<A NAME="414">414 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='watmod_variables.html#infx_d'>infx_d</A>                 !<font color="#007700"> Daily infiltration excess runoff</font>
+<A NAME="415">415 : </A><font color="#007700"></font>
+<A NAME="416">416 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='watmod_variables.html#zw_'>zw_</A>                    !<font color="#007700"> Elevation of water table</font>
+<A NAME="417">417 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='watmod_variables.html#zwnew'>zwnew</A>                  !<font color="#007700"> Elevation of water table at next time step</font>
+<A NAME="418">418 : </A><font color="#007700"></font>
+<A NAME="419">419 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='watmod_variables.html#wc_'>wc_</A><font color="#007700"></font>
+<A NAME="420">420 : </A><font color="#007700"></font>
+<A NAME="421">421 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='watmod_variables.html#ch2ol_s'>cH2Ol_s</A>(:) !<font color="#007700"> Soil water content in each layer (could also be called theta(:))</font>
+<A NAME="422">422 : </A><font color="#007700"></font>
+<A NAME="423">423 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='watmod_variables.html#qbl'>qbl</A>(:)     !<font color="#007700"> Water flux across bottom boundary of each layer (positive upwards)</font>
+<A NAME="424">424 : </A><font color="#007700"></font>
+<A NAME="425">425 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='watmod_variables.html#pcap_'>pcap_</A>(:)   !<font color="#007700"> Soil matric head (m)</font>
+<A NAME="426">426 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='watmod_variables.html#pcapnew'>pcapnew</A>(:) !<font color="#007700"> Matric pressure head in each layer at next time step</font>
+<A NAME="427">427 : </A><font color="#007700"></font>
+<A NAME="428">428 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='watmod_variables.html#iovec'>iovec</A>(:)   !<font color="#007700"> Mass balance for each soil layer</font>
+<A NAME="429">429 : </A>      <font color='#aa2200'>REAL</font>*8              :: <A HREF='watmod_variables.html#io__'>io__</A>       !<font color="#007700"> Input minus output of water in soil domain</font>
+<A NAME="430">430 : </A>      <font color='#aa2200'>REAL</font>*8              :: <A HREF='watmod_variables.html#io_h'>io_h</A>       !<font color="#007700"> Hourly input minus output of water in soil domain</font>
+<A NAME="431">431 : </A>      <font color='#aa2200'>REAL</font>*8              :: <A HREF='watmod_variables.html#ioacum'>ioacum</A>     !<font color="#007700"> Cumulative mass balance of soil water</font>
+<A NAME="432">432 : </A><font color="#007700"></font>
+<A NAME="433">433 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='watmod_variables.html#su__'>su__</A>(:)    !<font color="#007700"> Soil saturation degree in each layer</font>
+<A NAME="434">434 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='watmod_variables.html#sunew'>sunew</A>(:)   !<font color="#007700"> Soil saturation degree in each layer at next time step</font>
+<A NAME="435">435 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='watmod_variables.html#sueq'>sueq</A>(:)    !<font color="#007700"> Soil saturation degree above water table in hydrostatic equilibrium</font>
+<A NAME="436">436 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='watmod_variables.html#dsu'>dsu</A>(:)     !<font color="#007700"> Rate of change in soil saturation degree in each layer</font>
+<A NAME="437">437 : </A><font color="#007700"></font>
+<A NAME="438">438 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='watmod_variables.html#kunsat_'>kunsat_</A>(:)    !<font color="#007700"> Unsaturated hydraulic conductivity in each soil layer</font>
+<A NAME="439">439 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='watmod_variables.html#kunsatnew'>kunsatnew</A>(:)  !<font color="#007700"> Unsaturated hydraulic conductivity in each layer at next time step</font>
+<A NAME="440">440 : </A><font color="#007700"></font>
+<A NAME="441">441 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='watmod_variables.html#s_ksat'>s_ksat</A>(:)    !<font color="#007700"> Saturated hydraulic conductivity</font>
+<A NAME="442">442 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='watmod_variables.html#s_thetas'>s_thetas</A>(:)  !<font color="#007700"> Saturated soil water content</font>
+<A NAME="443">443 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='watmod_variables.html#s_thetar'>s_thetar</A>(:)  !<font color="#007700"> Residual soil water content</font>
+<A NAME="444">444 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='watmod_variables.html#s_nvg'>s_nvg</A>(:)     !<font color="#007700"> Van Genuchten soil parameter n</font>
+<A NAME="445">445 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='watmod_variables.html#s_avg'>s_avg</A>(:)     !<font color="#007700"> Van Genuchten soil parameter a</font>
+<A NAME="446">446 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='watmod_variables.html#c_mvg'>c_mvg</A>(:)     !<font color="#007700"> Van Genuchten soil parameter m</font>
+<A NAME="447">447 : </A><font color="#007700"></font>
+<A NAME="448">448 : </A>!<font color="#007700">     ****************************</font>
+<A NAME="449">449 : </A>!<font color="#007700">     * input parameters input.par</font>
+<A NAME="450">450 : </A>!<font color="#007700">     ****************************</font>
+<A NAME="451">451 : </A><font color="#007700"></font>
+<A NAME="452">452 : </A>!<font color="#007700">     * Catchment parameters</font>
+<A NAME="453">453 : </A><font color="#007700"></font>
+<A NAME="454">454 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='watmod_variables.html#i_cgs'>i_cgs</A>                  !<font color="#007700"> Capital Gamma S (length scale for seepage outflow) (m)</font>
+<A NAME="455">455 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='watmod_variables.html#i_zr'>i_zr</A>                   !<font color="#007700"> Average channel elevation</font>
+<A NAME="456">456 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='watmod_variables.html#i_go'>i_go</A>                   !<font color="#007700"> Slope close to channel in radians</font>
+<A NAME="457">457 : </A><font color="#007700"></font>
+<A NAME="458">458 : </A>!<font color="#007700">     * Soil parameters</font>
+<A NAME="459">459 : </A><font color="#007700"></font>
+<A NAME="460">460 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='watmod_variables.html#i_ksat'>i_ksat</A>                 !<font color="#007700"> Saturated hydraulic conductivity</font>
+<A NAME="461">461 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='watmod_variables.html#i_thetar'>i_thetar</A>               !<font color="#007700"> Residual soil water content</font>
+<A NAME="462">462 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='watmod_variables.html#i_thetas'>i_thetas</A>               !<font color="#007700"> Saturated soil water content</font>
+<A NAME="463">463 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='watmod_variables.html#i_nvg'>i_nvg</A>                  !<font color="#007700"> Van Genuchten soil parameter n</font>
+<A NAME="464">464 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='watmod_variables.html#i_avg'>i_avg</A>                  !<font color="#007700"> Van Genuchten soil parameter a</font>
+<A NAME="465">465 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='watmod_variables.html#i_mvg'>i_mvg</A>                  !<font color="#007700"> Van Genuchten soil parameter m</font>
+<A NAME="466">466 : </A><font color="#007700"></font>
+<A NAME="467">467 : </A>      !<font color="#007700">$OMP threadprivate(wlayer_, wlayernew, dt_, dtmax, dtsu_count, dtmax_count, esoil__, esoil_h, &</font>
+<A NAME="468">468 : </A>      !<font color="#007700">$OMP i_cgs, i_zr, i_go, i_ksat, i_thetar, i_thetas, i_nvg, i_avg, &</font>
+<A NAME="469">469 : </A>      !<font color="#007700">$OMP esoil_d, esoil_y, spgfcf__, spgfcf_h, spgfcf_d, inf__, infx__, infx_h, infx_d, &</font>
+<A NAME="470">470 : </A>      !<font color="#007700">$OMP pcap_, su__, sunew, kunsat_, qbl, dsu, pcapnew, kunsatnew, sueq, cH2Ol_s, iovec,   &</font>
+<A NAME="471">471 : </A>      !<font color="#007700">$OMP zw_, zwnew, wc_, io__, io_h, ioacum)</font>
+<A NAME="472">472 : </A><font color="#007700"></font>
+<A NAME="473">473 : </A>      <font color='#aa2200'>end</font> <font color='#aa2200'>module</font> watmod<font color="#007700"></font>
 
 </PRE>
 </BODY></HTML>

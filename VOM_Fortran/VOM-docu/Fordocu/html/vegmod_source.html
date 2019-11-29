@@ -136,212 +136,282 @@ function printCallRows(xmlhttp,locargs) {
 <div class="tabs">
   <ul>
       <li><a href="vegmod.html"><span>Header</span></a></li>
-      <li><a href="vegmod_version_history.html"><span>Version history</span></a></li>
       <li><a href="vegmod_variables.html"><span>Variables</span></a></li>
       <li class="current"><a href="vegmod_source.html"><span>Source</span></a></li>
   </ul>
 </div>
 <h1>Module vegmod</h1>
 <PRE>
-<A NAME="62"> 62 : </A>      <font color="#007700"></font>
-<A NAME="63"> 63 : </A>      <font color="#007700"></font>
-<A NAME="64"> 64 : </A>           <font color="#007700"></font>
-<A NAME="65"> 65 : </A>      <font color='#aa2200'>module</font> vegmod<font color="#007700"></font>
-<A NAME="66"> 66 : </A>!<font color="#007700">***********************************************************************</font>
-<A NAME="67"> 67 : </A>!<font color="#007700">*  Module defining variables and parameters for the vegetation model</font>
-<A NAME="68"> 68 : </A>!<font color="#007700">*  (transpmodel).</font>
-<A NAME="69"> 69 : </A>!<font color="#007700">*----------------------------------------------------------------------</font>
-<A NAME="70"> 70 : </A><font color="#007700"></font>
-<A NAME="71"> 71 : </A>      <font color='#aa2200'>implicit</font> <font color='#aa2200'>none</font><font color="#007700"></font>
-<A NAME="72"> 72 : </A><font color="#007700"></font>
-<A NAME="73"> 73 : </A>      <font color='#aa2200'>INTEGER</font> :: <A HREF='vegmod_variables.html#optmode'>optmode</A><font color="#007700"></font>
-<A NAME="74"> 74 : </A><font color="#007700"></font>
-<A NAME="75"> 75 : </A>!<font color="#007700">TODO: replace the following variable names</font>
-<A NAME="76"> 76 : </A>!<font color="#007700"> M___ by layer</font>
-<A NAME="77"> 77 : </A>!<font color="#007700"></font>
-<A NAME="78"> 78 : </A><font color="#007700"></font>
-<A NAME="79"> 79 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#oa'>oa</A>     !<font color="#007700"> O2 mole fraction</font>
-<A NAME="80"> 80 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#ca_'>ca_</A>    !<font color="#007700"> CO2 mole fraction</font>
-<A NAME="81"> 81 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#alpha'>alpha</A>      !<font color="#007700"> Initial slope of electron transport curve</font>
-<A NAME="82"> 82 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#rlratio'>rlratio</A>    !<font color="#007700"> Ratio of leaf respiration to photosynthetic capacity</font>
-<A NAME="83"> 83 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#k25'>k25</A>        !<font color="#007700"> Temperature response parameter</font>
-<A NAME="84"> 84 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#kopt'>kopt</A>       !<font color="#007700"> Temperature response parameter</font>
-<A NAME="85"> 85 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#ha_'>ha_</A>        !<font color="#007700"> Temperature response parameter</font>
-<A NAME="86"> 86 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#hd'>hd</A>         !<font color="#007700"> Temperature response parameter</font>
-<A NAME="87"> 87 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#tstart'>tstart</A>     !<font color="#007700"> Start parameter for topt to calculate jmax(temp in K)</font>
-<A NAME="88"> 88 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#toptfac'>toptfac</A>    !<font color="#007700"> Parameter to calculate adaptation of topt (range 0-1 for no to full adaptation)</font>
-<A NAME="89"> 89 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#cpccf'>cpccf</A>      !<font color="#007700"> Water transport costs per m root depth and m^2 cover</font>
-<A NAME="90"> 90 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#tcf'>tcf</A>        !<font color="#007700"> Turnover cost factor for foliage (tc=tcf*LAI)</font>
-<A NAME="91"> 91 : </A><font color="#007700"></font>
-<A NAME="92"> 92 : </A>      <font color='#aa2200'>INTEGER</font> :: <A HREF='vegmod_variables.html#parsaved'>parsaved</A> = 0       !<font color="#007700"> Indicator whether input parameter values have been read and saved</font>
-<A NAME="93"> 93 : </A>      <font color='#aa2200'>INTEGER</font> :: <A HREF='vegmod_variables.html#ny_'>ny_</A>                !<font color="#007700"> Number of years to process</font>
-<A NAME="94"> 94 : </A>      <font color='#aa2200'>INTEGER</font> :: <A HREF='vegmod_variables.html#nyt'>nyt</A>                !<font color="#007700"> Number of years after which to perform initial test of netass </font>
-<A NAME="95"> 95 : </A>      <font color='#aa2200'>INTEGER</font> :: <A HREF='vegmod_variables.html#firstyear'>firstyear</A>          !<font color="#007700"> First year for the generation of hourly output in computation mode</font>
-<A NAME="96"> 96 : </A>      <font color='#aa2200'>INTEGER</font> :: <A HREF='vegmod_variables.html#lastyear'>lastyear</A>           !<font color="#007700"> Last year for the generation of hourly output in computation mode</font>
-<A NAME="97"> 97 : </A><font color="#007700"></font>
-<A NAME="98"> 98 : </A><font color="#007700"></font>
-<A NAME="99"> 99 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>PARAMETER</font> :: <A HREF='vegmod_variables.html#a__'>a__</A>    = 1.6d0             !<font color="#007700"> Ratio of diffusivities of water vapour to CO2 in air</font>
-<A NAME="100">100 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>PARAMETER</font> :: <A HREF='vegmod_variables.html#pi'>pi</A>     = 3.14159d0         !<font color="#007700"> Pi-constant</font>
-<A NAME="101">101 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>PARAMETER</font> :: <A HREF='vegmod_variables.html#mpbar'>mpbar</A>  = 10.2d0            !<font color="#007700"> Conversion factor from MPa to bar</font>
-<A NAME="102">102 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>PARAMETER</font> :: <A HREF='vegmod_variables.html#g___'>g___</A>   = 9.81d0            !<font color="#007700"> Gravitational acceleration</font>
-<A NAME="103">103 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>PARAMETER</font> :: <A HREF='vegmod_variables.html#rho'>rho</A>    = 1000.d0           !<font color="#007700"> Density of water</font>
-<A NAME="104">104 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>PARAMETER</font> :: <A HREF='vegmod_variables.html#degree'>degree</A> = 0.0174533d0       !<font color="#007700"> Conversion from degree to radians</font>
-<A NAME="105">105 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>PARAMETER</font> :: <A HREF='vegmod_variables.html#e__'>E__</A>    = 2.7182818d0       !<font color="#007700"> Eurler's number</font>
-<A NAME="106">106 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>PARAMETER</font> :: <A HREF='vegmod_variables.html#r__'>R__</A>    = 8.314d0           !<font color="#007700"> Molar gas konstant</font>
-<A NAME="107">107 : </A><font color="#007700"></font>
-<A NAME="108">108 : </A>      <font color='#aa2200'>INTEGER</font> :: <A HREF='vegmod_variables.html#n__'>N__</A>          !<font color="#007700"> Number of days to process</font>
-<A NAME="109">109 : </A>      <font color='#aa2200'>INTEGER</font> :: <A HREF='vegmod_variables.html#nh_'>Nh_</A>          !<font color="#007700"> Number of hours to process</font>
-<A NAME="110">110 : </A>      <font color='#aa2200'>INTEGER</font> :: <A HREF='vegmod_variables.html#yr_'>yr_</A>          !<font color="#007700"> Year</font>
-<A NAME="111">111 : </A>      <font color='#aa2200'>INTEGER</font> :: <A HREF='vegmod_variables.html#dtest'>dtest</A>        !<font color="#007700"> Number of days for initial check if netass&gt;0</font>
-<A NAME="112">112 : </A>      <font color='#aa2200'>INTEGER</font> :: <A HREF='vegmod_variables.html#pos_'>pos_</A>         !<font color="#007700"> Lowest soil layer containing tree roots</font>
-<A NAME="113">113 : </A>      <font color='#aa2200'>INTEGER</font> :: <A HREF='vegmod_variables.html#posg'>posg</A>         !<font color="#007700"> Lowest soil layer containing grass roots</font>
-<A NAME="114">114 : </A>      <font color='#aa2200'>INTEGER</font> :: <A HREF='vegmod_variables.html#postemp_'>postemp_</A>     !<font color="#007700"> Lowest soil layer containing tree roots within unsaturated zone</font>
-<A NAME="115">115 : </A>      <font color='#aa2200'>INTEGER</font> :: <A HREF='vegmod_variables.html#postempg'>postempg</A>     !<font color="#007700"> Lowest soil layer containing grass roots within unsaturated zone</font>
-<A NAME="116">116 : </A>      <font color='#aa2200'>INTEGER</font> :: <A HREF='vegmod_variables.html#pos1'>pos1</A>(1)      !<font color="#007700"> Pointer to variable values that achieved maximum assimilation</font>
-<A NAME="117">117 : </A>      <font color='#aa2200'>INTEGER</font> :: <A HREF='vegmod_variables.html#pos2'>pos2</A>(2)      !<font color="#007700"> pointer to variable values that achieved maximum net assimilation</font>
-<A NAME="118">118 : </A><font color="#007700"></font>
-<A NAME="119">119 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font>  :: <A HREF='vegmod_variables.html#srad'>srad</A>(:)           !<font color="#007700"> Daily shortwave radiation</font>
-<A NAME="120">120 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font>  :: <A HREF='vegmod_variables.html#tmin'>tmin</A>(:)           !<font color="#007700"> Daily minimum temperature (K)</font>
-<A NAME="121">121 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font>  :: <A HREF='vegmod_variables.html#tmax'>tmax</A>(:)           !<font color="#007700"> Daily maximum temperature (K)</font>
-<A NAME="122">122 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font>  :: <A HREF='vegmod_variables.html#rainvec'>rainvec</A>(:)        !<font color="#007700"> Daily rainfall</font>
-<A NAME="123">123 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font>  :: <A HREF='vegmod_variables.html#netassvec'>netassvec</A>(:)      !<font color="#007700"> Daily net assimilation by trees</font>
-<A NAME="124">124 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font>  :: <A HREF='vegmod_variables.html#epan'>epan</A>(:)           !<font color="#007700"> Daily pan evaporation</font>
-<A NAME="125">125 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font>  :: <A HREF='vegmod_variables.html#vpvec'>vpvec</A>(:)          !<font color="#007700"> Daily vapour pressure (Pa)</font>
-<A NAME="126">126 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font>  :: <A HREF='vegmod_variables.html#netassvecg'>netassvecg</A>(:)     !<font color="#007700"> Daily net assimilation by grasses</font>
-<A NAME="127">127 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font>  :: <A HREF='vegmod_variables.html#press'>press</A>(:)          !<font color="#007700"> Daily air pressure (Pa)</font>
-<A NAME="128">128 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font>  :: <A HREF='vegmod_variables.html#cavec'>cavec</A>(:)          !<font color="#007700"> Daily atmospheric CO2 mole fraction</font>
+<A NAME="116">116 : </A><font color="#007700"></font>
+<A NAME="117">117 : </A>!<font color="#007700">     ******************************************************************</font>
+<A NAME="118">118 : </A>!<font color="#007700">     * Module defining variables and parameters for the vegetation</font>
+<A NAME="119">119 : </A>!<font color="#007700">     * model (transpmodel).</font>
+<A NAME="120">120 : </A>!<font color="#007700">     ******************************************************************</font>
+<A NAME="121">121 : </A><font color="#007700"></font>
+<A NAME="122">122 : </A>      <font color='#aa2200'>module</font> vegmod<font color="#007700"></font>
+<A NAME="123">123 : </A>      <font color='#aa2200'>implicit</font> <font color='#aa2200'>none</font><font color="#007700"></font>
+<A NAME="124">124 : </A><font color="#007700"></font>
+<A NAME="125">125 : </A>      <font color='#aa2200'>INTEGER</font> :: <A HREF='vegmod_variables.html#optmode'>optmode</A>                !<font color="#007700"> Indicator of optimisation mode</font>
+<A NAME="126">126 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#time'>time</A>                   !<font color="#007700"> Seconds of hour</font>
+<A NAME="127">127 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#error'>error</A>                  !<font color="#007700"> Cumulative error in water balance</font>
+<A NAME="128">128 : </A>      <font color='#aa2200'>INTEGER</font> :: <A HREF='vegmod_variables.html#finish'>finish</A>                 !<font color="#007700"> flag to finish all loops</font>
 <A NAME="129">129 : </A><font color="#007700"></font>
-<A NAME="130">130 : </A>      <font color='#aa2200'>INTEGER</font>, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='vegmod_variables.html#year'>year</A>(:)           !<font color="#007700"> Year for each day</font>
-<A NAME="131">131 : </A>      <font color='#aa2200'>INTEGER</font>, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='vegmod_variables.html#month'>month</A>(:)          !<font color="#007700"> Month for each day</font>
-<A NAME="132">132 : </A>      <font color='#aa2200'>INTEGER</font>, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='vegmod_variables.html#day'>day</A>(:)            !<font color="#007700"> Day of month</font>
-<A NAME="133">133 : </A>      <font color='#aa2200'>INTEGER</font>, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='vegmod_variables.html#dayyear'>dayyear</A>(:)        !<font color="#007700"> Day of year</font>
-<A NAME="134">134 : </A><font color="#007700"></font>
-<A NAME="135">135 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font>  :: <A HREF='vegmod_variables.html#parvec'>parvec</A>(:)         !<font color="#007700"> Daily photosynthetically active radiation</font>
-<A NAME="136">136 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font>  :: <A HREF='vegmod_variables.html#parh'>parh</A>(:)           !<font color="#007700"> Hourly photosynthetically active radiation</font>
-<A NAME="137">137 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font>  :: <A HREF='vegmod_variables.html#vdh'>vdh</A>(:)            !<font color="#007700"> Hourly vapour deficit (VPD/air pressure)</font>
-<A NAME="138">138 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font>  :: <A HREF='vegmod_variables.html#tairh'>tairh</A>(:)          !<font color="#007700"> Hourly air temperature (K)</font>
-<A NAME="139">139 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font>  :: <A HREF='vegmod_variables.html#gammastarvec'>gammastarvec</A>(:)   !<font color="#007700"> Hourly value for CO2 compensation point</font>
-<A NAME="140">140 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font>  :: <A HREF='vegmod_variables.html#rainh'>rainh</A>(:)          !<font color="#007700"> Hourly rainfall</font>
-<A NAME="141">141 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font>  :: <A HREF='vegmod_variables.html#cah'>cah</A>(:)            !<font color="#007700"> Hourly atmospheric CO2 mole fraction</font>
-<A NAME="142">142 : </A>      <font color="#007700"></font>
-<A NAME="143">143 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='vegmod_variables.html#hruptkvec'>hruptkvec</A>(:)       !<font color="#007700"> Hourly root water uptake by trees in each layer</font>
-<A NAME="144">144 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='vegmod_variables.html#ruptkvec_d'>ruptkvec_d</A>(:)      !<font color="#007700"> Daily root water uptake by trees in each layer</font>
-<A NAME="145">145 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='vegmod_variables.html#hruptkg'>hruptkg</A>(:)         !<font color="#007700"> Hourly root water uptake by grasses in each layer</font>
-<A NAME="146">146 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='vegmod_variables.html#ruptkg_d'>ruptkg_d</A>(:)        !<font color="#007700"> Daily root water uptake by grasses in each layer</font>
-<A NAME="147">147 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='vegmod_variables.html#reff'>reff</A>(:)            !<font color="#007700"> Relative root water uptake efficiency for trees in each layer</font>
-<A NAME="148">148 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='vegmod_variables.html#reffg'>reffg</A>(:)           !<font color="#007700"> Relative root water uptake efficiency for grasses in each layer</font>
-<A NAME="149">149 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='vegmod_variables.html#rsurfvec'>rsurfvec</A>(:)        !<font color="#007700"> Root surface area of trees in each layer</font>
-<A NAME="150">150 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='vegmod_variables.html#rsurfnewvec'>rsurfnewvec</A>(:)     !<font color="#007700"> Adjusted root surface area of trees in each layer for next day</font>
-<A NAME="151">151 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='vegmod_variables.html#rsurfg_'>rsurfg_</A>(:)         !<font color="#007700"> Root surface area of grasses in each layer</font>
-<A NAME="152">152 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='vegmod_variables.html#rsurfgnew'>rsurfgnew</A>(:)       !<font color="#007700"> Adjusted root surface area of grasses in each layer for next day</font>
-<A NAME="153">153 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='vegmod_variables.html#prootmvec'>prootmvec</A>(:)       !<font color="#007700"> Root hydraulic head in each layer</font>
-<A NAME="154">154 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='vegmod_variables.html#phydrostaticvec'>phydrostaticvec</A>(:) !<font color="#007700"> Hydrostatic head in each layer relative to soil surface</font>
-<A NAME="155">155 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='vegmod_variables.html#rsoilvec'>rsoilvec</A>(:)        !<font color="#007700"> Resistance to water flow towards roots in each soil layer</font>
-<A NAME="156">156 : </A><font color="#007700"></font>
-<A NAME="157">157 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#error'>error</A>        !<font color="#007700"> Cumulative error in water balance</font>
-<A NAME="158">158 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#jact_'>jact_</A>(3)     !<font color="#007700"> Electron transport rates for different values of Jmax (jact_(2) is actual value)</font>
-<A NAME="159">159 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#lambda_'>lambda_</A>      !<font color="#007700"> Target dE/dA for calculating gstom__</font>
-<A NAME="160">160 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#gstom__'>gstom__</A>      !<font color="#007700"> Tree stomatal conductance </font>
-<A NAME="161">161 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#rl__'>rl__</A>(3)      !<font color="#007700"> Tree leaf respiration for different values of Jmax (rl__(2) is actual value)</font>
-<A NAME="162">162 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#vd__'>vd__</A>         !<font color="#007700"> Atmospheric vapour deficit (VPD/air pressure)</font>
-<A NAME="163">163 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#transp_'>transp_</A>      !<font color="#007700"> Tree transpiration rate</font>
-<A NAME="164">164 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#hass_'>hass_</A>(3)     !<font color="#007700"> Tree hourly assimilation rate for different values of Jmax (hass_(2) is actual value)</font>
-<A NAME="165">165 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#cpcc_'>cpcc_</A>        !<font color="#007700"> Tree water transport costs as a function of projected cover and rooting depth (mol/m2/s)</font>
-<A NAME="166">166 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#rr_'>rr_</A>          !<font color="#007700"> Tree root respiration rate (mol/m2/s)</font>
-<A NAME="167">167 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#lambdafac'>lambdafac</A>    !<font color="#007700"> Factor for calculating lambda_</font>
-<A NAME="168">168 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#gammastar'>gammastar</A>    !<font color="#007700"> CO2 compensation point</font>
-<A NAME="169">169 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#jmax__'>jmax__</A>(3)    !<font color="#007700"> Tree photosynthetic electron transport capacity</font>
-<A NAME="170">170 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#jmax25_'>jmax25_</A>(3)   !<font color="#007700"> Tree photosynthetic electron transport capacity at 25oC</font>
-<A NAME="171">171 : </A>!<font color="#007700">d      REAL*8  :: netassyr</font>
-<A NAME="172">172 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#rainyr'>rainyr</A>       !<font color="#007700"> Annual rainfall</font>
-<A NAME="173">173 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#epanyr'>epanyr</A>       !<font color="#007700"> Annual pan evaporation</font>
-<A NAME="174">174 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#paryr'>paryr</A>        !<font color="#007700"> Annual photosynthetically active radiation</font>
-<A NAME="175">175 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#radyr'>radyr</A>        !<font color="#007700"> Annual shortwave radiation</font>
-<A NAME="176">176 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#vdyr'>vdyr</A>         !<font color="#007700"> Mean annual atmospheric vapour deficit</font>
-<A NAME="177">177 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#etyr'>etyr</A>         !<font color="#007700"> Annual total transpiration</font>
-<A NAME="178">178 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#evapyr'>evapyr</A>       !<font color="#007700"> Annual soil evaporation rate</font>
-<A NAME="179">179 : </A>!<font color="#007700">d      REAL*8  :: gppyr</font>
-<A NAME="180">180 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#etmg_y'>etmg_y</A>       !<font color="#007700"> Annual grass transpiration</font>
-<A NAME="181">181 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#assg_y'>assg_y</A>       !<font color="#007700"> Annual grass assimilation</font>
-<A NAME="182">182 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#rlg_y'>rlg_y</A>        !<font color="#007700"> Annual grass leaf respiration</font>
-<A NAME="183">183 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#rrg_y'>rrg_y</A>        !<font color="#007700"> Annual grass root respiration</font>
-<A NAME="184">184 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#cpccg_y'>cpccg_y</A>      !<font color="#007700"> Annual grass water transport costs</font>
-<A NAME="185">185 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#tcg_y'>tcg_y</A>        !<font color="#007700"> Annual grass foliage turnover costs</font>
-<A NAME="186">186 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#etmt_y'>etmt_y</A>       !<font color="#007700"> Annual tree transpiration</font>
-<A NAME="187">187 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#asst_y'>asst_y</A>       !<font color="#007700"> Annual tree assimilation</font>
-<A NAME="188">188 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#rlt_y'>rlt_y</A>        !<font color="#007700"> Annual tree leaf respiration</font>
-<A NAME="189">189 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#rrt_y'>rrt_y</A>        !<font color="#007700"> Annual tree root respiration</font>
-<A NAME="190">190 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#cpcct_y'>cpcct_y</A>      !<font color="#007700"> Annual tree water transport costs</font>
-<A NAME="191">191 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#tct_y'>tct_y</A>        !<font color="#007700"> Annual tree foliage turnover costs</font>
-<A NAME="192">192 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#daylength'>daylength</A>    !<font color="#007700"> Day length (hours)</font>
-<A NAME="193">193 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#tair'>tair</A>         !<font color="#007700"> Air temperature (K)</font>
-<A NAME="194">194 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#vp_'>vp_</A>          !<font color="#007700"> Atmospheric vapour deficit (VPD/air pressure)</font>
-<A NAME="195">195 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#topt_'>topt_</A>        !<font color="#007700"> Optimal temperature in temperature response curve</font>
-<A NAME="196">196 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#rootdepth'>rootdepth</A>    !<font color="#007700"> Tree rooting depth (m)</font>
-<A NAME="197">197 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#mq_'>mq_</A>          !<font color="#007700"> Tree water content</font>
-<A NAME="198">198 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#mqssmin'>mqssmin</A>      !<font color="#007700"> Tree water content at turgor loss point</font>
-<A NAME="199">199 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#dmq'>dmq</A>          !<font color="#007700"> Rate of change in tree water content</font>
-<A NAME="200">200 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#mqnew'>mqnew</A>        !<font color="#007700"> Tree water content in next time step</font>
-<A NAME="201">201 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#mqss_'>mqss_</A>        !<font color="#007700"> Tree water content at steady state</font>
-<A NAME="202">202 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#mqold'>mqold</A>        !<font color="#007700"> Previous tree water content</font>
-<A NAME="203">203 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#hruptk_'>hruptk_</A>      !<font color="#007700"> Hourly tree root water uptake</font>
-<A NAME="204">204 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#tc_'>tc_</A>          !<font color="#007700"> Tree foliage turnover costs</font>
-<A NAME="205">205 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#mqssnew'>mqssnew</A>      !<font color="#007700"> Tree water content in next time step</font>
-<A NAME="206">206 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#lambdagfac'>lambdagfac</A>   !<font color="#007700"> Factor for calculating lambdag</font>
-<A NAME="207">207 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#wsgexp'>wsgexp</A>       !<font color="#007700"> Exponent for calculating lambdag</font>
-<A NAME="208">208 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#cpccg'>cpccg</A>(3)     !<font color="#007700"> Grass water transport costs</font>
-<A NAME="209">209 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#tcg'>tcg</A>(3)       !<font color="#007700"> Grass foliage turnover costs</font>
-<A NAME="210">210 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#jmax25g'>jmax25g</A>(3)   !<font color="#007700"> Grass photosynthetic electron transport capacity at 25oC</font>
-<A NAME="211">211 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#wsexp'>wsexp</A>        !<font color="#007700"> Exponent for calculating lambda_</font>
-<A NAME="212">212 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#rgdepth'>rgdepth</A>      !<font color="#007700"> Grass rooting depth</font>
-<A NAME="213">213 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#lambdag'>lambdag</A>      !<font color="#007700"> Target dE/dA for calculating gstomg__</font>
-<A NAME="214">214 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#rrg'>rrg</A>          !<font color="#007700"> Grass root respiration</font>
-<A NAME="215">215 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#jmaxg__'>jmaxg__</A>(3)   !<font color="#007700"> Grass electron transport capacity</font>
-<A NAME="216">216 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#rlg__'>rlg__</A>(3,3)   !<font color="#007700"> Grass leaf respiration</font>
-<A NAME="217">217 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#jactg'>jactg</A>(3,3)   !<font color="#007700"> Grass electron transport rate</font>
-<A NAME="218">218 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#gstomg__'>gstomg__</A>(3,3)!<font color="#007700"> Grass stomatal conductance</font>
-<A NAME="219">219 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#etmg__'>etmg__</A>(3,3)  !<font color="#007700"> Grass transpiration rate (m/s)</font>
-<A NAME="220">220 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#transpg'>transpg</A>(3,3) !<font color="#007700"> Grass transpiration rate (mol/m2/s)</font>
-<A NAME="221">221 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#hassg'>hassg</A>(3,3)   !<font color="#007700"> Hourly grass assimilation</font>
-<A NAME="222">222 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#hetmg'>hetmg</A>        !<font color="#007700"> Hourly grass transpiration</font>
-<A NAME="223">223 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#assg_d'>assg_d</A>(3,3)  !<font color="#007700"> Daily grass assimilation</font>
-<A NAME="224">224 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#jmaxg_d'>jmaxg_d</A>      !<font color="#007700"> Daily grass electron transport capacity</font>
-<A NAME="225">225 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#gstomg_d'>gstomg_d</A>     !<font color="#007700"> Daily average stomatal conductance</font>
-<A NAME="226">226 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#etmg_d'>etmg_d</A>       !<font color="#007700"> Daily grass transpiration</font>
-<A NAME="227">227 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#rlg_d'>rlg_d</A>        !<font color="#007700"> Daily grass leaf respiration</font>
-<A NAME="228">228 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#netassg_d'>netassg_d</A>(3,3)     !<font color="#007700"> Daily grass net carbon profit</font>
-<A NAME="229">229 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#rootlim'>rootlim</A>(3,3)       !<font color="#007700"> Indicator whether root surface are was limiting root water uptake</font>
-<A NAME="230">230 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#changef'>changef</A>            !<font color="#007700"> Change factor for adjusting root surface area</font>
-<A NAME="231">231 : </A><font color="#007700"></font>
-<A NAME="232">232 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#md_'>md_</A>          !<font color="#007700"> Tree dry mass per unit ground area</font>
-<A NAME="233">233 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#mqx_'>mqx_</A>         !<font color="#007700"> Tree maximum water content per ground area</font>
-<A NAME="234">234 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#rsurfmin'>rsurfmin</A>     !<font color="#007700"> Minimum root area per m^3 to be maintained</font>
-<A NAME="235">235 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#rsurfinit'>rsurfinit</A>    !<font color="#007700"> Initial root surface area per m^3</font>
-<A NAME="236">236 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#rootrad'>rootrad</A>      !<font color="#007700"> Average fine root radius</font>
-<A NAME="237">237 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#rrootm'>rrootm</A>       !<font color="#007700"> Root water uptake resistivity in soil</font>
-<A NAME="238">238 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#pcgmin'>pcgmin</A>       !<font color="#007700"> Minimum grass pc; initial point for growth</font>
-<A NAME="239">239 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#prootmg'>prootmg</A>      !<font color="#007700"> Constant root balance pressure of 1.5 MPa in grasses</font>
-<A NAME="240">240 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#mdf'>mdf</A>          !<font color="#007700"> Total dry mass of living tissues of trees per unit pc (g/m^2)</font>
-<A NAME="241">241 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#mqxf'>mqxf</A>         !<font color="#007700"> Total water storage capacity in living tissues of trees per unit md</font>
-<A NAME="242">242 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#mdstore'>mdstore</A>      !<font color="#007700"> Wood water storage parameter of trees</font>
-<A NAME="243">243 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#growthmax'>growthmax</A>    !<font color="#007700"> Parameter determining maximum daily growth increment of root surface area</font>
-<A NAME="244">244 : </A><font color="#007700"></font>
-<A NAME="245">245 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#ruptk_d'>ruptk_d</A>      !<font color="#007700"> Daily tree root water uptake</font>
-<A NAME="246">246 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#jmax_d'>jmax_d</A>       !<font color="#007700"> Mean daily tree electron transport capacity</font>
-<A NAME="247">247 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#rl_d'>rl_d</A>         !<font color="#007700"> Daily tree leaf respiration</font>
-<A NAME="248">248 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#gstom_d'>gstom_d</A>      !<font color="#007700"> Mean daily tree stomatal conductance</font>
-<A NAME="249">249 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#ass_d'>ass_d</A>(3)     !<font color="#007700"> Daily tree assimilation</font>
-<A NAME="250">250 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#spgfcf_d'>spgfcf_d</A>     !<font color="#007700"> Daily seepage face flow</font>
-<A NAME="251">251 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#infx_d'>infx_d</A>       !<font color="#007700"> Daily infiltration excess runoff</font>
-<A NAME="252">252 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#etm_d'>etm_d</A>        !<font color="#007700"> Daily transpiration rate</font>
-<A NAME="253">253 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#esoil_d'>esoil_d</A>      !<font color="#007700"> Daily soil evaporation rate</font>
-<A NAME="254">254 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#vd_d'>vd_d</A>         !<font color="#007700"> Mean daily atmospheric vapour deficit</font>
-<A NAME="255">255 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#time'>time</A>         !<font color="#007700"> Seconds of hour</font>
-<A NAME="256">256 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#dtmq'>dtmq</A>         !<font color="#007700"> Maximum timestep allowed by tree water content change</font>
-<A NAME="257">257 : </A>      <font color="#007700"></font>
-<A NAME="258">258 : </A>      <font color="#007700"></font>
-<A NAME="259">259 : </A>      <font color="#007700"></font>
-<A NAME="260">260 : </A>      <font color='#aa2200'>end</font> <font color='#aa2200'>module</font> vegmod<font color="#007700"></font>
+<A NAME="130">130 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='vegmod_variables.html#output_mat'>output_mat</A>(:,:)<font color="#007700"></font>
+<A NAME="131">131 : </A><font color="#007700"></font>
+<A NAME="132">132 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>PARAMETER</font> :: <A HREF='vegmod_variables.html#p_a'>p_a</A>     = 1.6d0        !<font color="#007700"> Ratio of diffusivities of water vapour to CO2 in air</font>
+<A NAME="133">133 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>PARAMETER</font> :: <A HREF='vegmod_variables.html#p_pi'>p_pi</A>    = 3.14159d0    !<font color="#007700"> Pi-constant</font>
+<A NAME="134">134 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>PARAMETER</font> :: <A HREF='vegmod_variables.html#p_mpbar'>p_mpbar</A> = 10.2d0       !<font color="#007700"> Conversion factor from MPa to bar</font>
+<A NAME="135">135 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>PARAMETER</font> :: <A HREF='vegmod_variables.html#p_e'>p_E</A>     = 2.7182818d0  !<font color="#007700"> Eurler's number</font>
+<A NAME="136">136 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>PARAMETER</font> :: <A HREF='vegmod_variables.html#p_r_'>p_R_</A>    = 8.314d0      !<font color="#007700"> Molar gas konstant</font>
+<A NAME="137">137 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>PARAMETER</font> :: <A HREF='vegmod_variables.html#l_e_'>l_E_</A>    = 2.45d0       !<font color="#007700"> Latent heat of vaporization (MJ/kg)</font>
+<A NAME="138">138 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>PARAMETER</font> :: <A HREF='vegmod_variables.html#srad2par_h'>srad2par_h</A> = 2.0699d0  !<font color="#007700"> Conversion from srad to par hourly (mol/MJ)</font>
+<A NAME="139">139 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>PARAMETER</font> :: <A HREF='vegmod_variables.html#srad2par_d'>srad2par_d</A> = 2.0804d0  !<font color="#007700"> Conversion from srad to par daily (mol/MJ)</font>
+<A NAME="140">140 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>PARAMETER</font> :: <A HREF='vegmod_variables.html#rho_wat'>rho_wat</A> = 1000.0d0     !<font color="#007700"> Density of water (kg/m3)</font>
+<A NAME="141">141 : </A><font color="#007700"></font>
+<A NAME="142">142 : </A>      <font color='#aa2200'>INTEGER</font> :: <A HREF='vegmod_variables.html#nyear'>nyear</A>                  !<font color="#007700"> Year</font>
+<A NAME="143">143 : </A>      <font color='#aa2200'>INTEGER</font> :: <A HREF='vegmod_variables.html#nday'>nday</A>                   !<font color="#007700"> Day since start of run</font>
+<A NAME="144">144 : </A>      <font color='#aa2200'>INTEGER</font> :: <A HREF='vegmod_variables.html#nhour'>nhour</A>                  !<font color="#007700"> Hour of day</font>
+<A NAME="145">145 : </A>      <font color='#aa2200'>INTEGER</font> :: <A HREF='vegmod_variables.html#th_'>th_</A>                    !<font color="#007700"> Hour since start of run</font>
+<A NAME="146">146 : </A>      <font color='#aa2200'>INTEGER</font> :: <A HREF='vegmod_variables.html#c_testday'>c_testday</A>              !<font color="#007700"> Number of days for initial check if netass&gt;0</font>
+<A NAME="147">147 : </A><font color="#007700"></font>
+<A NAME="148">148 : </A>      <font color='#aa2200'>INTEGER</font>, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='vegmod_variables.html#fyear'>fyear</A>(:)    !<font color="#007700"> Year for each day</font>
+<A NAME="149">149 : </A>      <font color='#aa2200'>INTEGER</font>, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='vegmod_variables.html#fmonth'>fmonth</A>(:)   !<font color="#007700"> Month for each day</font>
+<A NAME="150">150 : </A>      <font color='#aa2200'>INTEGER</font>, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='vegmod_variables.html#fday'>fday</A>(:)     !<font color="#007700"> Day of month</font>
+<A NAME="151">151 : </A>      <font color='#aa2200'>INTEGER</font>, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='vegmod_variables.html#dayyear'>dayyear</A>(:)  !<font color="#007700"> Day of year</font>
+<A NAME="152">152 : </A><font color="#007700"></font>
+<A NAME="153">153 : </A>!<font color="#007700">     * climate</font>
+<A NAME="154">154 : </A><font color="#007700"></font>
+<A NAME="155">155 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='vegmod_variables.html#tair_h'>tair_h</A>(:)    !<font color="#007700"> Hourly air temperature (K)</font>
+<A NAME="156">156 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='vegmod_variables.html#tairmin_d'>tairmin_d</A>(:) !<font color="#007700"> Daily minimum temperature (K)</font>
+<A NAME="157">157 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='vegmod_variables.html#tairmax_d'>tairmax_d</A>(:) !<font color="#007700"> Daily maximum temperature (K)</font>
+<A NAME="158">158 : </A><font color="#007700"></font>
+<A NAME="159">159 : </A>      <font color='#aa2200'>REAL</font>*8              :: <A HREF='vegmod_variables.html#topt_'>topt_</A>      !<font color="#007700"> Optimal temperature in temperature response curve</font>
+<A NAME="160">160 : </A><font color="#007700"></font>
+<A NAME="161">161 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='vegmod_variables.html#press_d'>press_d</A>(:) !<font color="#007700"> Daily air pressure (Pa)</font>
+<A NAME="162">162 : </A><font color="#007700"></font>
+<A NAME="163">163 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='vegmod_variables.html#par_h'>par_h</A>(:)   !<font color="#007700"> Hourly photosynthetically active radiation (mol/m2/s)</font>
+<A NAME="164">164 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='vegmod_variables.html#par_d'>par_d</A>(:)   !<font color="#007700"> Daily photosynthetically active radiation</font>
+<A NAME="165">165 : </A>      <font color='#aa2200'>REAL</font>*8              :: <A HREF='vegmod_variables.html#par_y'>par_y</A>      !<font color="#007700"> Annual photosynthetically active radiation</font>
+<A NAME="166">166 : </A><font color="#007700"></font>
+<A NAME="167">167 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='vegmod_variables.html#srad_d'>srad_d</A>(:)  !<font color="#007700"> Daily shortwave radiation</font>
+<A NAME="168">168 : </A>      <font color='#aa2200'>REAL</font>*8              :: <A HREF='vegmod_variables.html#srad_y'>srad_y</A>     !<font color="#007700"> Annual shortwave radiation</font>
+<A NAME="169">169 : </A><font color="#007700"></font>
+<A NAME="170">170 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='vegmod_variables.html#ca_h'>ca_h</A>(:)    !<font color="#007700"> Hourly atmospheric CO2 mole fraction</font>
+<A NAME="171">171 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='vegmod_variables.html#ca_d'>ca_d</A>(:)    !<font color="#007700"> Daily atmospheric CO2 mole fraction</font>
+<A NAME="172">172 : </A><font color="#007700"></font>
+<A NAME="173">173 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='vegmod_variables.html#vp_d'>vp_d</A>(:)    !<font color="#007700"> Daily absolute vapour pressure (Pa)</font>
+<A NAME="174">174 : </A><font color="#007700"></font>
+<A NAME="175">175 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='vegmod_variables.html#vd_h'>vd_h</A>(:)    !<font color="#007700"> Hourly atmospheric vapour deficit (VPD/air pressure)</font>
+<A NAME="176">176 : </A>      <font color='#aa2200'>REAL</font>*8              :: <A HREF='vegmod_variables.html#vd_d'>vd_d</A>       !<font color="#007700"> Mean daily atmospheric vapour deficit</font>
+<A NAME="177">177 : </A>      <font color='#aa2200'>REAL</font>*8              :: <A HREF='vegmod_variables.html#vd_y'>vd_y</A>       !<font color="#007700"> Mean annual atmospheric vapour deficit</font>
+<A NAME="178">178 : </A><font color="#007700"></font>
+<A NAME="179">179 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='vegmod_variables.html#rain_h'>rain_h</A>(:)  !<font color="#007700"> Hourly rainfall rate (m/s)</font>
+<A NAME="180">180 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='vegmod_variables.html#rain_d'>rain_d</A>(:)  !<font color="#007700"> Daily rainfall</font>
+<A NAME="181">181 : </A>      <font color='#aa2200'>REAL</font>*8              :: <A HREF='vegmod_variables.html#rain_y'>rain_y</A>     !<font color="#007700"> Annual rainfall</font>
+<A NAME="182">182 : </A><font color="#007700"></font>
+<A NAME="183">183 : </A>!<font color="#007700">     * soil</font>
+<A NAME="184">184 : </A><font color="#007700"></font>
+<A NAME="185">185 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='vegmod_variables.html#c_hhydrst'>c_hhydrst</A>(:)  !<font color="#007700"> Hydrostatic head in each layer relative to soil surface</font>
+<A NAME="186">186 : </A><font color="#007700"></font>
+<A NAME="187">187 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#gammastar'>gammastar</A>              !<font color="#007700"> CO2 compensation point</font>
+<A NAME="188">188 : </A><font color="#007700"></font>
+<A NAME="189">189 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#wsnew'>wsnew</A>                  !<font color="#007700"> Total soil water store at next time step</font>
+<A NAME="190">190 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#wsold'>wsold</A>                  !<font color="#007700"> Previous total soil water storage</font>
+<A NAME="191">191 : </A><font color="#007700"></font>
+<A NAME="192">192 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#o_cai'>o_cai</A>                  !<font color="#007700"> Projected cover perennial vegetation (0-1)</font>
+<A NAME="193">193 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#pcg_d'>pcg_d</A>(3)               !<font color="#007700"> Projected cover seasonal vegetation (pcg_d(2) is actual value)</font>
+<A NAME="194">194 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#c_pcgmin'>c_pcgmin</A>               !<font color="#007700"> Minimum grass pc; initial point for growth</font>
+<A NAME="195">195 : </A><font color="#007700"></font>
+<A NAME="196">196 : </A>!<font color="#007700">     * leaf</font>
+<A NAME="197">197 : </A><font color="#007700"></font>
+<A NAME="198">198 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#o_wstexp'>o_wstexp</A>               !<font color="#007700"> Exponent for calculating lambdat_d</font>
+<A NAME="199">199 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#o_wsgexp'>o_wsgexp</A>               !<font color="#007700"> Exponent for calculating lambdag</font>
+<A NAME="200">200 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#o_lambdatf'>o_lambdatf</A>             !<font color="#007700"> Factor for calculating lambdat_d</font>
+<A NAME="201">201 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#o_lambdagf'>o_lambdagf</A>             !<font color="#007700"> Factor for calculating lambdag_d</font>
+<A NAME="202">202 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#lambdat_d'>lambdat_d</A>              !<font color="#007700"> Target dE/dA for calculating gstomt</font>
+<A NAME="203">203 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#lambdag_d'>lambdag_d</A>              !<font color="#007700"> Target dE/dA for calculating gstomg</font>
+<A NAME="204">204 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#gstomt'>gstomt</A>                 !<font color="#007700"> Tree stomatal conductance</font>
+<A NAME="205">205 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#gstomg'>gstomg</A>(3,3,3)          !<font color="#007700"> Grass stomatal conductance</font>
+<A NAME="206">206 : </A><font color="#007700"></font>
+<A NAME="207">207 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#rlt_h'>rlt_h</A>(3,3)             !<font color="#007700"> Tree leaf respiration for different values of Jmax (rlt_h(2) is actual value)</font>
+<A NAME="208">208 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#rlt_d'>rlt_d</A>                  !<font color="#007700"> Daily tree leaf respiration</font>
+<A NAME="209">209 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#rlt_y'>rlt_y</A>                  !<font color="#007700"> Annual tree leaf respiration</font>
+<A NAME="210">210 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#rlg_h'>rlg_h</A>(3,3,3)           !<font color="#007700"> Grass leaf respiration</font>
+<A NAME="211">211 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#rlg_d'>rlg_d</A>                  !<font color="#007700"> Daily grass leaf respiration</font>
+<A NAME="212">212 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#rlg_y'>rlg_y</A>                  !<font color="#007700"> Annual grass leaf respiration</font>
+<A NAME="213">213 : </A><font color="#007700"></font>
+<A NAME="214">214 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#transpt'>transpt</A>                !<font color="#007700"> Tree transpiration rate</font>
+<A NAME="215">215 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#transpg'>transpg</A>(3,3,3)         !<font color="#007700"> Grass transpiration rate (mol/m2/s)</font>
+<A NAME="216">216 : </A><font color="#007700"></font>
+<A NAME="217">217 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#q_tct_d'>q_tct_d</A>(3)             !<font color="#007700"> Tree foliage turnover costs</font>
+<A NAME="218">218 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#tct_y'>tct_y</A>                  !<font color="#007700"> Annual tree foliage turnover costs</font>
+<A NAME="219">219 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#tcg_d'>tcg_d</A>(3, 3)            !<font color="#007700"> Grass foliage turnover costs</font>
+<A NAME="220">220 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#tcg_y'>tcg_y</A>                  !<font color="#007700"> Annual grass foliage turnover costs</font>
+<A NAME="221">221 : </A><font color="#007700"></font>
+<A NAME="222">222 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#jactt'>jactt</A>(3,3)               !<font color="#007700"> Electron transport rates for different values of Jmax (jactt(2) is actual value)</font>
+<A NAME="223">223 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#jactg'>jactg</A>(3,3,3)             !<font color="#007700"> Grass electron transport rate</font>
+<A NAME="224">224 : </A><font color="#007700"></font>
+<A NAME="225">225 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#jmaxt_h'>jmaxt_h</A>(3)             !<font color="#007700"> Tree photosynthetic electron transport capacity</font>
+<A NAME="226">226 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#jmaxg_h'>jmaxg_h</A>(3)             !<font color="#007700"> Grass electron transport capacity</font>
+<A NAME="227">227 : </A><font color="#007700"></font>
+<A NAME="228">228 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#jmax25t_d'>jmax25t_d</A>(3)           !<font color="#007700"> Tree photosynthetic electron transport capacity at 25oC</font>
+<A NAME="229">229 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#jmax25g_d'>jmax25g_d</A>(3)           !<font color="#007700"> Grass photosynthetic electron transport capacity at 25oC</font>
+<A NAME="230">230 : </A><font color="#007700"></font>
+<A NAME="231">231 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#lai_lt'>lai_lt</A>(3)              !<font color="#007700"> Local leaf area index trees</font>
+<A NAME="232">232 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#lai_lg'>lai_lg</A>(3)              !<font color="#007700"> Local leaf area index grasses</font>
+<A NAME="233">233 : </A><font color="#007700"></font>
+<A NAME="234">234 : </A>!<font color="#007700">     * plant water</font>
+<A NAME="235">235 : </A><font color="#007700"></font>
+<A NAME="236">236 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#asst_h'>asst_h</A>(3,3)            !<font color="#007700"> Tree hourly assimilation rate for different values of Jmax (asst_h(2) is actual value)</font>
+<A NAME="237">237 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#asst_d'>asst_d</A>(3,3)            !<font color="#007700"> Daily tree assimilation</font>
+<A NAME="238">238 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#asst_y'>asst_y</A>                 !<font color="#007700"> Annual tree assimilation</font>
+<A NAME="239">239 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#assg_h'>assg_h</A>(3,3,3)          !<font color="#007700"> Hourly grass assimilation</font>
+<A NAME="240">240 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#assg_d'>assg_d</A>(3,3,3)          !<font color="#007700"> Daily grass assimilation</font>
+<A NAME="241">241 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#assg_y'>assg_y</A>                 !<font color="#007700"> Annual grass assimilation</font>
+<A NAME="242">242 : </A><font color="#007700"></font>
+<A NAME="243">243 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#q_cpcct_d'>q_cpcct_d</A>              !<font color="#007700"> Tree water transport costs as a function of projected cover and rooting depth (mol/m2/s)</font>
+<A NAME="244">244 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#cpcct_y'>cpcct_y</A>                !<font color="#007700"> Annual tree water transport costs</font>
+<A NAME="245">245 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#cpccg_d'>cpccg_d</A>(3)             !<font color="#007700"> Grass water transport costs</font>
+<A NAME="246">246 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#cpccg_y'>cpccg_y</A>                !<font color="#007700"> Annual grass water transport costs</font>
+<A NAME="247">247 : </A><font color="#007700"></font>
+<A NAME="248">248 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#etmt__'>etmt__</A>                 !<font color="#007700"> Transpiration rate (m/s)</font>
+<A NAME="249">249 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#etmt_h'>etmt_h</A>                 !<font color="#007700"> Hourly transpiration</font>
+<A NAME="250">250 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#etmt_d'>etmt_d</A>                 !<font color="#007700"> Daily transpiration rate</font>
+<A NAME="251">251 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#etmt_y'>etmt_y</A>                 !<font color="#007700"> Annual tree transpiration</font>
+<A NAME="252">252 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#etmg__'>etmg__</A>(3,3,3)          !<font color="#007700"> Grass transpiration rate (m/s)</font>
+<A NAME="253">253 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#etmg_h'>etmg_h</A>                 !<font color="#007700"> Hourly grass transpiration</font>
+<A NAME="254">254 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#etmg_d'>etmg_d</A>                 !<font color="#007700"> Daily grass transpiration</font>
+<A NAME="255">255 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#etmg_y'>etmg_y</A>                 !<font color="#007700"> Annual grass transpiration</font>
+<A NAME="256">256 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#etm_y'>etm_y</A>                  !<font color="#007700"> Annual total transpiration</font>
+<A NAME="257">257 : </A><font color="#007700"></font>
+<A NAME="258">258 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#mqt_'>mqt_</A>                   !<font color="#007700"> Tree water content</font>
+<A NAME="259">259 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#mqtnew'>mqtnew</A>                 !<font color="#007700"> Tree water content in next time step</font>
+<A NAME="260">260 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#mqtold'>mqtold</A>                 !<font color="#007700"> Previous tree water content</font>
+<A NAME="261">261 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#dmqt'>dmqt</A>                   !<font color="#007700"> Rate of change in tree water content</font>
+<A NAME="262">262 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#q_mqx'>q_mqx</A>                  !<font color="#007700"> Tree maximum water content per ground area</font>
+<A NAME="263">263 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#mqsst_'>mqsst_</A>                 !<font color="#007700"> Tree water content at steady state</font>
+<A NAME="264">264 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#mqsstmin'>mqsstmin</A>               !<font color="#007700"> Tree water content at turgor loss point</font>
+<A NAME="265">265 : </A><font color="#007700"></font>
+<A NAME="266">266 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#q_md'>q_md</A>                     !<font color="#007700"> Tree dry mass per unit ground area</font>
+<A NAME="267">267 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#o_mdstore'>o_mdstore</A>                !<font color="#007700"> Wood water storage parameter of trees</font>
+<A NAME="268">268 : </A><font color="#007700"></font>
+<A NAME="269">269 : </A>!<font color="#007700">     * roots</font>
+<A NAME="270">270 : </A><font color="#007700"></font>
+<A NAME="271">271 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#o_rtdepth'>o_rtdepth</A>               !<font color="#007700"> Tree rooting depth (m)</font>
+<A NAME="272">272 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#o_rgdepth'>o_rgdepth</A>               !<font color="#007700"> Grass rooting depth</font>
+<A NAME="273">273 : </A><font color="#007700"></font>
+<A NAME="274">274 : </A>      <font color='#aa2200'>INTEGER</font>             :: <A HREF='vegmod_variables.html#pos_slt'>pos_slt</A>    !<font color="#007700"> Lowest soil layer containing tree roots</font>
+<A NAME="275">275 : </A>      <font color='#aa2200'>INTEGER</font>             :: <A HREF='vegmod_variables.html#pos_slg'>pos_slg</A>    !<font color="#007700"> Lowest soil layer containing grass roots</font>
+<A NAME="276">276 : </A>      <font color='#aa2200'>INTEGER</font>             :: <A HREF='vegmod_variables.html#pos_ult'>pos_ult</A>    !<font color="#007700"> Lowest soil layer containing tree roots within unsaturated zone</font>
+<A NAME="277">277 : </A>      <font color='#aa2200'>INTEGER</font>             :: <A HREF='vegmod_variables.html#pos_ulg'>pos_ulg</A>    !<font color="#007700"> Lowest soil layer containing grass roots within unsaturated zone</font>
+<A NAME="278">278 : </A><font color="#007700"></font>
+<A NAME="279">279 : </A>      <font color='#aa2200'>REAL</font>*8              :: <A HREF='vegmod_variables.html#changef'>changef</A>    !<font color="#007700"> Change factor for adjusting root surface area</font>
+<A NAME="280">280 : </A><font color="#007700"></font>
+<A NAME="281">281 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='vegmod_variables.html#rsurft_'>rsurft_</A>(:)    !<font color="#007700"> Root surface area of trees in each layer</font>
+<A NAME="282">282 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='vegmod_variables.html#rsurftnew'>rsurftnew</A>(:)  !<font color="#007700"> Adjusted root surface area of trees in each layer for next day</font>
+<A NAME="283">283 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='vegmod_variables.html#rsurfg_'>rsurfg_</A>(:)    !<font color="#007700"> Root surface area of grasses in each layer</font>
+<A NAME="284">284 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='vegmod_variables.html#rsurfgnew'>rsurfgnew</A>(:)  !<font color="#007700"> Adjusted root surface area of grasses in each layer for next day</font>
+<A NAME="285">285 : </A><font color="#007700"></font>
+<A NAME="286">286 : </A>      <font color='#aa2200'>REAL</font>*8              :: <A HREF='vegmod_variables.html#rootlim'>rootlim</A>(3,3,3)  !<font color="#007700"> Indicator whether root surface are was limiting root water uptake</font>
+<A NAME="287">287 : </A><font color="#007700"></font>
+<A NAME="288">288 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='vegmod_variables.html#rsoil'>rsoil</A>(:)   !<font color="#007700"> Resistance to water flow towards roots in each soil layer</font>
+<A NAME="289">289 : </A><font color="#007700"></font>
+<A NAME="290">290 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='vegmod_variables.html#refft'>refft</A>(:)   !<font color="#007700"> Relative root water uptake efficiency for trees in each layer</font>
+<A NAME="291">291 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='vegmod_variables.html#reffg'>reffg</A>(:)   !<font color="#007700"> Relative root water uptake efficiency for grasses in each layer</font>
+<A NAME="292">292 : </A>      <font color='#aa2200'>INTEGER</font>             :: <A HREF='vegmod_variables.html#posmna'>posmna</A>(3)  !<font color="#007700"> Pointer to variable values that achieved maximum net assimilation</font>
+<A NAME="293">293 : </A><font color="#007700"></font>
+<A NAME="294">294 : </A>      <font color='#aa2200'>REAL</font>*8              :: <A HREF='vegmod_variables.html#rrt_d'>rrt_d</A>      !<font color="#007700"> Tree root respiration rate (mol/m2/s)</font>
+<A NAME="295">295 : </A>      <font color='#aa2200'>REAL</font>*8              :: <A HREF='vegmod_variables.html#rrt_y'>rrt_y</A>      !<font color="#007700"> Annual tree root respiration</font>
+<A NAME="296">296 : </A>      <font color='#aa2200'>REAL</font>*8              :: <A HREF='vegmod_variables.html#rrg_d'>rrg_d</A>      !<font color="#007700"> Grass root respiration</font>
+<A NAME="297">297 : </A>      <font color='#aa2200'>REAL</font>*8              :: <A HREF='vegmod_variables.html#rrg_y'>rrg_y</A>      !<font color="#007700"> Annual grass root respiration</font>
+<A NAME="298">298 : </A><font color="#007700"></font>
+<A NAME="299">299 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='vegmod_variables.html#prootm'>prootm</A>(:)  !<font color="#007700"> Root hydraulic head in each layer</font>
+<A NAME="300">300 : </A><font color="#007700"></font>
+<A NAME="301">301 : </A>      <font color='#aa2200'>REAL</font>*8              :: <A HREF='vegmod_variables.html#sumruptkt_h'>sumruptkt_h</A>  !<font color="#007700"> Hourly total tree root water uptake</font>
+<A NAME="302">302 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='vegmod_variables.html#ruptkt__'>ruptkt__</A>(:)  !<font color="#007700"> Root water uptake rate perennial veg (m/s)</font>
+<A NAME="303">303 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='vegmod_variables.html#ruptkt_h'>ruptkt_h</A>(:)  !<font color="#007700"> Hourly root water uptake by trees in each layer</font>
+<A NAME="304">304 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='vegmod_variables.html#ruptkt_d'>ruptkt_d</A>(:)  !<font color="#007700"> Daily root water uptake by trees in each layer</font>
+<A NAME="305">305 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='vegmod_variables.html#ruptkg__'>ruptkg__</A>(:)  !<font color="#007700"> Root water uptake rate seasonal veg (m/s)</font>
+<A NAME="306">306 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='vegmod_variables.html#ruptkg_h'>ruptkg_h</A>(:)  !<font color="#007700"> Hourly root water uptake by grasses in each layer</font>
+<A NAME="307">307 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='vegmod_variables.html#ruptkg_d'>ruptkg_d</A>(:)  !<font color="#007700"> Daily root water uptake by grasses in each layer</font>
+<A NAME="308">308 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>ALLOCATABLE</font> :: <A HREF='vegmod_variables.html#perc_cov_veg'>perc_cov_veg</A>(:)  !<font color="#007700"> Daily coverage of vegetation</font>
+<A NAME="309">309 : </A><font color="#007700"></font>
+<A NAME="310">310 : </A><font color="#007700"></font>
+<A NAME="311">311 : </A>!<font color="#007700">     ****************************</font>
+<A NAME="312">312 : </A>!<font color="#007700">     * input parameters input.par</font>
+<A NAME="313">313 : </A>!<font color="#007700">     ****************************</font>
+<A NAME="314">314 : </A><font color="#007700"></font>
+<A NAME="315">315 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#i_alpha'>i_alpha</A>                !<font color="#007700"> Initial slope of electron transport curve</font>
+<A NAME="316">316 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#i_cpccf'>i_cpccf</A>                !<font color="#007700"> Water transport costs per m root depth and m^2 cover</font>
+<A NAME="317">317 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#i_tcf'>i_tcf</A>                  !<font color="#007700"> Turnover cost factor for foliage (tc=i_tcf*LAI)</font>
+<A NAME="318">318 : </A>      <font color='#aa2200'>INTEGER</font> :: <A HREF='vegmod_variables.html#i_maxyear'>i_maxyear</A>              !<font color="#007700"> Number of years to process</font>
+<A NAME="319">319 : </A>      <font color='#aa2200'>INTEGER</font> :: <A HREF='vegmod_variables.html#i_testyear'>i_testyear</A>             !<font color="#007700"> Number of years after which to perform initial test of netass</font>
+<A NAME="320">320 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#i_ha'>i_ha</A>                   !<font color="#007700"> Temperature response parameter</font>
+<A NAME="321">321 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#i_hd'>i_hd</A>                   !<font color="#007700"> Temperature response parameter</font>
+<A NAME="322">322 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#i_toptf'>i_toptf</A>                !<font color="#007700"> Parameter to calculate adaptation of topt (range 0-1 for no to full adaptation)</font>
+<A NAME="323">323 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#i_toptstart'>i_toptstart</A>            !<font color="#007700"> Start parameter for topt to calculate jmax(temp in K)</font>
+<A NAME="324">324 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#i_rlratio'>i_rlratio</A>              !<font color="#007700"> Ratio of leaf respiration to photosynthetic capacity</font>
+<A NAME="325">325 : </A><font color="#007700"></font>
+<A NAME="326">326 : </A>!<font color="#007700">     * Catchment parameters</font>
+<A NAME="327">327 : </A><font color="#007700"></font>
+<A NAME="328">328 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#i_lat'>i_lat</A>                 !<font color="#007700"> geogr. latitude</font>
+<A NAME="329">329 : </A><font color="#007700"></font>
+<A NAME="330">330 : </A>!<font color="#007700">     * Soil parameters</font>
+<A NAME="331">331 : </A><font color="#007700"></font>
+<A NAME="332">332 : </A>!<font color="#007700">     * Vertical Resolution</font>
+<A NAME="333">333 : </A><font color="#007700"></font>
+<A NAME="334">334 : </A>!<font color="#007700">     * Vegetation Parameters</font>
+<A NAME="335">335 : </A><font color="#007700"></font>
+<A NAME="336">336 : </A><font color="#007700"></font>
+<A NAME="337">337 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#i_mdtf'>i_mdtf</A>                 !<font color="#007700"> Total dry mass of living tissues of trees per unit pc (g/m^2)</font>
+<A NAME="338">338 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#i_mqxtf'>i_mqxtf</A>                !<font color="#007700"> Total water storage capacity in living tissues of trees per unit md</font>
+<A NAME="339">339 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#i_rrootm'>i_rrootm</A>               !<font color="#007700"> Root water uptake resistivity in soil</font>
+<A NAME="340">340 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#i_rsurfmin'>i_rsurfmin</A>             !<font color="#007700"> Minimum root area per m^3 to be maintained</font>
+<A NAME="341">341 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#i_rsurf_'>i_rsurf_</A>               !<font color="#007700"> Initial root surface area per m^3</font>
+<A NAME="342">342 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#i_rootrad'>i_rootrad</A>              !<font color="#007700"> Average fine root radius</font>
+<A NAME="343">343 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#i_prootmg'>i_prootmg</A>              !<font color="#007700"> Constant root balance pressure of 1.5 MPa in grasses</font>
+<A NAME="344">344 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#i_growthmax'>i_growthmax</A>            !<font color="#007700"> Parameter determining maximum daily growth increment of root surface area</font>
+<A NAME="345">345 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#i_incrcovg'>i_incrcovg</A>             !<font color="#007700"> parameter determining maximum increment percentage of grass cover</font>
+<A NAME="346">346 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#i_incrjmax'>i_incrjmax</A>             !<font color="#007700"> parameter determining maximum increment percentage of jmax25</font>
+<A NAME="347">347 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#i_incrlait'>i_incrlait</A>             !<font color="#007700"> parameter determining maximum increment percentage of lai trees</font>
+<A NAME="348">348 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#i_incrlaig'>i_incrlaig</A>             !<font color="#007700"> parameter determining maximum increment percentage of lai grasses</font>
+<A NAME="349">349 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#i_extcoeffg'>i_extcoeffg</A>            !<font color="#007700"> extinction coefficient beer's law grasses</font>
+<A NAME="350">350 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#i_extcoefft'>i_extcoefft</A>            !<font color="#007700"> extinction coefficient beer's law trees</font>
+<A NAME="351">351 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#i_trans_vegcov'>i_trans_vegcov</A>         !<font color="#007700"> fraction of radiative energy reaching soil under full cover (0-1)</font>
+<A NAME="352">352 : </A><font color="#007700"></font>
+<A NAME="353">353 : </A>      <font color='#aa2200'>INTEGER</font> :: <A HREF='vegmod_variables.html#i_firstyear'>i_firstyear</A>            !<font color="#007700"> First year for the generation of hourly output in computation mode</font>
+<A NAME="354">354 : </A>      <font color='#aa2200'>INTEGER</font> :: <A HREF='vegmod_variables.html#i_lastyear'>i_lastyear</A>             !<font color="#007700"> Last year for the generation of hourly output in computation mode</font>
+<A NAME="355">355 : </A><font color="#007700"></font>
+<A NAME="356">356 : </A>      <font color='#aa2200'>INTEGER</font> :: <A HREF='vegmod_variables.html#i_write_h'>i_write_h</A>              !<font color="#007700"> Flag to write out hourly input values after conversation from daily values</font>
+<A NAME="357">357 : </A>      <font color='#aa2200'>INTEGER</font> :: <A HREF='vegmod_variables.html#i_read_pc'>i_read_pc</A>              !<font color="#007700"> Flag to write out hourly input values after conversation from daily values</font>
+<A NAME="358">358 : </A>      <font color='#aa2200'>INTEGER</font> :: <A HREF='vegmod_variables.html#i_lai_function'>i_lai_function</A>         !<font color="#007700"> Switch to use 1) linear or 2) exponential LAI estimate, as function of cover</font>
+<A NAME="359">359 : </A>      <font color='#aa2200'>INTEGER</font> :: <A HREF='vegmod_variables.html#i_no_veg'>i_no_veg</A>               !<font color="#007700"> Flag to switch vegetation off (1=no vegetation)</font>
+<A NAME="360">360 : </A><font color="#007700"></font>
+<A NAME="361">361 : </A><font color="#007700"></font>
+<A NAME="362">362 : </A>!<font color="#007700">     * Derived parameters</font>
+<A NAME="363">363 : </A><font color="#007700"></font>
+<A NAME="364">364 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='vegmod_variables.html#c_epsln'>c_epsln</A>                !<font color="#007700"> Soil porosity</font>
+<A NAME="365">365 : </A><font color="#007700"></font>
+<A NAME="366">366 : </A>      <font color='#aa2200'>INTEGER</font> :: <A HREF='vegmod_variables.html#c_maxhour'>c_maxhour</A>              !<font color="#007700"> Number of hours to process</font>
+<A NAME="367">367 : </A>      <font color='#aa2200'>INTEGER</font> :: <A HREF='vegmod_variables.html#c_maxday'>c_maxday</A>               !<font color="#007700"> Number of days to process</font>
+<A NAME="368">368 : </A><font color="#007700"></font>
+<A NAME="369">369 : </A>      !<font color="#007700">$OMP threadprivate( time, error, finish, nyear, nday, nhour, th_, c_testday,   & </font>
+<A NAME="370">370 : </A>      !<font color="#007700">$OMP topt_, par_y, srad_y,   &</font>
+<A NAME="371">371 : </A>      !<font color="#007700">$OMP vd_d, vd_y, rain_y, gammastar, wsnew, wsold, o_cai, pcg_d, c_pcgmin, &</font>
+<A NAME="372">372 : </A>      !<font color="#007700">$OMP o_wstexp, o_wsgexp, o_lambdatf, o_lambdagf, lambdat_d, lambdag_d, gstomt, gstomg, &</font>
+<A NAME="373">373 : </A>      !<font color="#007700">$OMP rlt_h, rlt_d, rlt_y, rlg_h, rlg_d, rlg_y, transpt, transpg, q_tct_d, tct_y, tcg_d, &</font>
+<A NAME="374">374 : </A>      !<font color="#007700">$OMP tcg_y, jactt, jactg, jmaxt_h, jmaxg_h, jmax25t_d, jmax25g_d, &</font>
+<A NAME="375">375 : </A>      !<font color="#007700">$OMP asst_h, asst_d, asst_y, assg_h, assg_d, assg_y, &</font>
+<A NAME="376">376 : </A>      !<font color="#007700">$OMP q_cpcct_d, cpcct_y, cpccg_d, cpccg_y, etmt__, etmt_h, etmt_d, etmt_y, etmg__, etmg_h, &</font>
+<A NAME="377">377 : </A>      !<font color="#007700">$OMP etmg_d, etmg_y, etm_y, mqt_, mqtnew, mqtold, dmqt, q_mqx, mqsst_, mqsstmin, q_md, &</font>
+<A NAME="378">378 : </A>      !<font color="#007700">$OMP o_mdstore, o_rtdepth, o_rgdepth, pos_slt, pos_slg, pos_ult, pos_ulg, changef, &</font>
+<A NAME="379">379 : </A>      !<font color="#007700">$OMP rootlim, posmna, &</font>
+<A NAME="380">380 : </A>      !<font color="#007700">$OMP ruptkt__, rsurft_, rsurftnew, prootm, ruptkt_d, ruptkt_h, ruptkg_h, ruptkg_d, &</font>
+<A NAME="381">381 : </A>      !<font color="#007700">$OMP refft, reffg, ruptkg__, rsurfg_, rsurfgnew, rsoil,      &  </font>
+<A NAME="382">382 : </A>      !<font color="#007700">$OMP rrt_d, rrt_y, rrg_d, rrg_y, sumruptkt_h, output_mat)</font>
+<A NAME="383">383 : </A><font color="#007700"></font>
+<A NAME="384">384 : </A><font color="#007700"></font>
+<A NAME="385">385 : </A>      <font color='#aa2200'>end</font> <font color='#aa2200'>module</font> vegmod<font color="#007700"></font>
 
 </PRE>
 </BODY></HTML>

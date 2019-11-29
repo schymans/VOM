@@ -136,7 +136,6 @@ function printCallRows(xmlhttp,locargs) {
 <div class="tabs">
   <ul>
       <li><a href="cce.html"><span>Header</span></a></li>
-      <li><a href="cce_version_history.html"><span>Version history</span></a></li>
       <li><a href="cce_subroutines_called.html"><span>Subroutines called</span></a></li>
       <li><a href="cce_variables.html"><span>Variables</span></a></li>
       <li><a href="cce_called_by.html"><span>Called by</span></a></li>
@@ -145,65 +144,79 @@ function printCallRows(xmlhttp,locargs) {
 </div>
 <h1>Subroutine cce</h1>
 <PRE>
-<A NAME="696">696 : </A><font color="#007700"></font>
-<A NAME="697">697 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
-<A NAME="698">698 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
-<A NAME="699">699 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
-<A NAME="700">700 : </A><font color="#007700"></font>
-<A NAME="701">701 : </A>      <font color='#aa2200'>subroutine</font> cce (<A HREF='cce.html#objfun'>objfun</A>, <A HREF='cce.html#invar'>invar</A>)<font color="#007700"></font>
-<A NAME="702">702 : </A>      <font color='#aa2200'>use</font> sce_mod<font color="#007700"></font>
-<A NAME="703">703 : </A>      <font color='#aa2200'>implicit</font> <font color='#aa2200'>none</font><font color="#007700"></font>
-<A NAME="704">704 : </A><font color="#007700"></font>
-<A NAME="705">705 : </A>!<font color="#007700">     * Declarations</font>
-<A NAME="706">706 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>DIMENSION</font>(mopt),      <font color='#aa2200'>INTENT</font>(<font color='#aa2200'>inout</font>) :: <A HREF='cce.html#objfun'>objfun</A><font color="#007700"></font>
-<A NAME="707">707 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>DIMENSION</font>(npar,mopt), <font color='#aa2200'>INTENT</font>(<font color='#aa2200'>inout</font>) :: <A HREF='cce.html#invar'>invar</A><font color="#007700"></font>
-<A NAME="708">708 : </A><font color="#007700"></font>
-<A NAME="709">709 : </A>!<font color="#007700">     * Definitions</font>
-<A NAME="710">710 : </A>      <font color='#aa2200'>INTEGER</font> :: <A HREF='cce_variables.html#i_'>i_</A>, <A HREF='cce_variables.html#j_'>j_</A>, <A HREF='cce_variables.html#nsel'>nsel</A>, <A HREF='cce_variables.html#rannum'>rannum</A>, <A HREF='cce_variables.html#l'>l</A><font color="#007700"></font>
-<A NAME="711">711 : </A><font color="#007700"></font>
-<A NAME="712">712 : </A>!<font color="#007700">     * SELECT PARENTS</font>
-<A NAME="713">713 : </A><font color="#007700"></font>
-<A NAME="714">714 : </A>      <font color='#aa2200'>do</font> <A HREF='cce_variables.html#l'>l</A> = 1, mopt<font color="#007700"></font>
-<A NAME="715">715 : </A>        <A HREF='cce_subroutines_called.html#selected'>selected</A>(:) = <font color='#cc00cc'>.false.</font><font color="#007700"></font>
-<A NAME="716">716 : </A>        <A HREF='cce_variables.html#nsel'>nsel</A> = 0<font color="#007700"></font>
-<A NAME="717">717 : </A>        <font color='#aa2200'>do</font> <font color='#aa2200'>while</font> (<A HREF='cce_variables.html#nsel'>nsel</A> <font color='#cc00cc'>.ne.</font> qopt)<font color="#007700"></font>
-<A NAME="718">718 : </A>          <font color='#aa2200'>call</font> <font color='#aa2200'>random_number</font>(ranscal)             !<font color="#007700"> SCALAR RANDOM NUMBER</font>
-<A NAME="719">719 : </A>          <A HREF='cce_variables.html#rannum'>rannum</A> = <font color='#aa2200'>ceiling</font>((2.d0 * mopt + 1.d0 - <font color='#aa2200'>sqrt</font>(4.d0 * mopt      &<font color="#007700"></font>
-<A NAME="720">720 : </A>     &           * (mopt + 1.d0) * (1.d0 - ranscal) + 1.d0)) * 0.5d0)<font color="#007700"></font>
-<A NAME="721">721 : </A><font color="#007700"></font>
-<A NAME="722">722 : </A>!<font color="#007700">         * NOTE: A SIMPLER ALTERNATIVE TO THE ABOVE LINE IS (19.03.2004):</font>
-<A NAME="723">723 : </A><font color="#007700"></font>
-<A NAME="724">724 : </A>          <font color='#aa2200'>if</font> (<A HREF='cce_variables.html#rannum'>rannum</A> <font color='#cc00cc'>.ge.</font> 1 .<font color='#aa2200'>and</font>. <A HREF='cce_variables.html#rannum'>rannum</A> <font color='#cc00cc'>.le.</font> mopt) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="725">725 : </A>            <font color='#aa2200'>if</font> (.<font color='#aa2200'>not</font>. <A HREF='cce_subroutines_called.html#selected'>selected</A>(<A HREF='cce_variables.html#rannum'>rannum</A>)) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="726">726 : </A>              <A HREF='cce_subroutines_called.html#selected'>selected</A>(<A HREF='cce_variables.html#rannum'>rannum</A>) = <font color='#cc00cc'>.true.</font><font color="#007700"></font>
-<A NAME="727">727 : </A>              <A HREF='cce_variables.html#nsel'>nsel</A> = <A HREF='cce_variables.html#nsel'>nsel</A> + 1<font color="#007700"></font>
-<A NAME="728">728 : </A>            <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="729">729 : </A>          <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="730">730 : </A>        <font color='#aa2200'>enddo</font><font color="#007700"></font>
-<A NAME="731">731 : </A>        <A HREF='cce_variables.html#nsel'>nsel</A> = 0<font color="#007700"></font>
-<A NAME="732">732 : </A>        <A HREF='cce_variables.html#i_'>i_</A> = 0<font color="#007700"></font>
-<A NAME="733">733 : </A>        <font color='#aa2200'>do</font> <font color='#aa2200'>while</font> (<A HREF='cce_variables.html#nsel'>nsel</A> <font color='#cc00cc'>.ne.</font> qopt)<font color="#007700"></font>
-<A NAME="734">734 : </A>          <A HREF='cce_variables.html#i_'>i_</A> = <A HREF='cce_variables.html#i_'>i_</A> + 1<font color="#007700"></font>
-<A NAME="735">735 : </A>          <font color='#aa2200'>if</font> (<A HREF='cce_subroutines_called.html#selected'>selected</A>(<A HREF='cce_variables.html#i_'>i_</A>)) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="736">736 : </A>            <A HREF='cce_variables.html#nsel'>nsel</A> = <A HREF='cce_variables.html#nsel'>nsel</A> + 1<font color="#007700"></font>
-<A NAME="737">737 : </A>            <A HREF='cce_subroutines_called.html#parentsid'>parentsid</A>(<A HREF='cce_variables.html#nsel'>nsel</A>) = <A HREF='cce_variables.html#i_'>i_</A><font color="#007700"></font>
-<A NAME="738">738 : </A>          <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="739">739 : </A>        <font color='#aa2200'>enddo</font><font color="#007700"></font>
-<A NAME="740">740 : </A><font color="#007700"></font>
-<A NAME="741">741 : </A>!<font color="#007700">       * GENERATE OFFSPRING AND SORT THE RESULTING COMPLEX</font>
-<A NAME="742">742 : </A><font color="#007700"></font>
-<A NAME="743">743 : </A>        objfunsub(:) = <A HREF='cce.html#objfun'>objfun</A>(<A HREF='cce_subroutines_called.html#parentsid'>parentsid</A>(:))<font color="#007700"></font>
-<A NAME="744">744 : </A>        invarsub(:,:) = <A HREF='cce.html#invar'>invar</A>(:, <A HREF='cce_subroutines_called.html#parentsid'>parentsid</A>(:))<font color="#007700"></font>
-<A NAME="745">745 : </A>        <font color='#aa2200'>do</font> <A HREF='cce_variables.html#j_'>j_</A> = 1, alpha<font color="#007700"></font>
-<A NAME="746">746 : </A>          <font color='#aa2200'>call</font> <A HREF='cce_subroutines_called.html#simplex'>simplex</A>(invarsub(:,:), objfunsub(:))<font color="#007700"></font>
-<A NAME="747">747 : </A>        <font color='#aa2200'>enddo</font><font color="#007700"></font>
-<A NAME="748">748 : </A>        <A HREF='cce.html#objfun'>objfun</A>(<A HREF='cce_subroutines_called.html#parentsid'>parentsid</A>(:)) = objfunsub(:)<font color="#007700"></font>
-<A NAME="749">749 : </A>        <A HREF='cce.html#invar'>invar</A>(:, <A HREF='cce_subroutines_called.html#parentsid'>parentsid</A>(:)) = invarsub(:,:)<font color="#007700"></font>
-<A NAME="750">750 : </A>        <font color='#aa2200'>call</font> <A HREF='cce_subroutines_called.html#sortcomp'>sortcomp</A>(<A HREF='cce.html#invar'>invar</A>, <font color='#aa2200'>shape</font>(<A HREF='cce.html#invar'>invar</A>), <A HREF='cce.html#objfun'>objfun</A>, <font color='#aa2200'>size</font>(<A HREF='cce.html#objfun'>objfun</A>))<font color="#007700"></font>
-<A NAME="751">751 : </A>      <font color='#aa2200'>enddo</font><font color="#007700"></font>
-<A NAME="752">752 : </A><font color="#007700"></font>
-<A NAME="753">753 : </A>      <font color='#aa2200'>return</font><font color="#007700"></font>
-<A NAME="754">754 : </A>      <font color='#aa2200'>end</font> <font color='#aa2200'>subroutine</font> cce<font color="#007700"></font>
+<A NAME="869">869 : </A><font color="#007700"></font>
+<A NAME="870">870 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+<A NAME="871">871 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+<A NAME="872">872 : </A>!<font color="#007700">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</font>
+<A NAME="873">873 : </A><font color="#007700"></font>
+<A NAME="874">874 : </A>      <font color='#aa2200'>subroutine</font> cce (<A HREF='cce.html#objfun'>objfun</A>, <A HREF='cce.html#invar'>invar</A>)<font color="#007700"></font>
+<A NAME="875">875 : </A>      <font color='#aa2200'>use</font> vom_sce_mod<font color="#007700"></font>
+<A NAME="876">876 : </A><font color="#007700"></font>
+<A NAME="877">877 : </A>      <font color='#aa2200'>implicit</font> <font color='#aa2200'>none</font><font color="#007700"></font>
+<A NAME="878">878 : </A><font color="#007700"></font>
+<A NAME="879">879 : </A>!<font color="#007700">     * Declarations</font>
+<A NAME="880">880 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>DIMENSION</font>(mopt),          <font color='#aa2200'>INTENT</font>(<font color='#aa2200'>inout</font>) :: <A HREF='cce.html#objfun'>objfun</A><font color="#007700"></font>
+<A NAME="881">881 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>DIMENSION</font>(vom_npar,mopt), <font color='#aa2200'>INTENT</font>(<font color='#aa2200'>inout</font>) :: <A HREF='cce.html#invar'>invar</A><font color="#007700"></font>
+<A NAME="882">882 : </A><font color="#007700"></font>
+<A NAME="883">883 : </A>!<font color="#007700">     * Definitions</font>
+<A NAME="884">884 : </A>      <font color='#aa2200'>INTEGER</font>       :: <A HREF='cce_variables.html#l_'>l_</A><font color="#007700"></font>
+<A NAME="885">885 : </A>      <font color='#aa2200'>INTEGER</font>       :: <A HREF='cce_variables.html#ii'>ii</A>, <A HREF='cce_variables.html#nsel'>nsel</A>, <A HREF='cce_variables.html#rannum'>rannum</A><font color="#007700"></font>
+<A NAME="886">886 : </A>      <font color='#aa2200'>INTEGER</font>       :: <A HREF='cce_variables.html#tmp2'>tmp2</A>(2)<font color="#007700"></font>
+<A NAME="887">887 : </A>      <font color='#aa2200'>REAL</font>*8  :: <A HREF='cce_variables.html#ranscal2'>ranscal2</A>                !<font color="#007700"> Scalar random number</font>
+<A NAME="888">888 : </A>      <font color='#aa2200'>LOGICAL</font>, <font color='#aa2200'>DIMENSION</font>(mopt) :: <A HREF='cce_variables.html#selected'>selected</A><font color="#007700"></font>
+<A NAME="889">889 : </A>      <font color='#aa2200'>INTEGER</font>, <font color='#aa2200'>DIMENSION</font>(qopt) :: <A HREF='cce_variables.html#parentsid'>parentsid</A>  !<font color="#007700"> Pointer to optimisable parameters</font>
+<A NAME="890">890 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>DIMENSION</font>(qopt) :: <A HREF='cce_variables.html#objfunsub'>objfunsub</A>  !<font color="#007700"> Pointer to optimisable parameters</font>
+<A NAME="891">891 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>DIMENSION</font>(vom_npar,qopt) :: <A HREF='cce_variables.html#invarsub'>invarsub</A>  !<font color="#007700"> Pointer to optimisable parameters</font>
+<A NAME="892">892 : </A><font color="#007700"></font>
+<A NAME="893">893 : </A>!<font color="#007700">     * SELECT PARENTS</font>
+<A NAME="894">894 : </A><font color="#007700"></font>
+<A NAME="895">895 : </A>      <font color='#aa2200'>do</font> <A HREF='cce_variables.html#l_'>l_</A> = 1, mopt<font color="#007700"></font>
+<A NAME="896">896 : </A><font color="#007700"></font>
+<A NAME="897">897 : </A>          <A HREF='cce_variables.html#selected'>selected</A>(:) = <font color='#cc00cc'>.false.</font><font color="#007700"></font>
+<A NAME="898">898 : </A>          <A HREF='cce_variables.html#nsel'>nsel</A> = 0<font color="#007700"></font>
+<A NAME="899">899 : </A><font color="#007700"></font>
+<A NAME="900">900 : </A>          <font color='#aa2200'>do</font> <font color='#aa2200'>while</font> (<A HREF='cce_variables.html#nsel'>nsel</A> <font color='#cc00cc'>.ne.</font> qopt)<font color="#007700"></font>
+<A NAME="901">901 : </A>            <font color='#aa2200'>call</font> <font color='#aa2200'>random_number</font>(<A HREF='cce_variables.html#ranscal2'>ranscal2</A>)      !<font color="#007700"> SCALAR RANDOM NUMBER</font>
+<A NAME="902">902 : </A>            <A HREF='cce_variables.html#rannum'>rannum</A> = <font color='#aa2200'>CEILING</font>((2.d0 * mopt + 1.d0 - <font color='#aa2200'>sqrt</font>(4.d0 * mopt    &<font color="#007700"></font>
+<A NAME="903">903 : </A>     &             * (mopt + 1.d0) * (1.d0 - <A HREF='cce_variables.html#ranscal2'>ranscal2</A>) + 1.d0)) * 0.5d0)<font color="#007700"></font>
+<A NAME="904">904 : </A><font color="#007700"></font>
+<A NAME="905">905 : </A>!<font color="#007700">           * NOTE: A SIMPLER ALTERNATIVE TO THE ABOVE LINE IS (19.03.2004):</font>
+<A NAME="906">906 : </A><font color="#007700"></font>
+<A NAME="907">907 : </A>            <font color='#aa2200'>if</font> (<A HREF='cce_variables.html#rannum'>rannum</A> <font color='#cc00cc'>.ge.</font> 1 .<font color='#aa2200'>and</font>. <A HREF='cce_variables.html#rannum'>rannum</A> <font color='#cc00cc'>.le.</font> mopt) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="908">908 : </A>              <font color='#aa2200'>if</font> (.<font color='#aa2200'>not</font>. <A HREF='cce_variables.html#selected'>selected</A>(<A HREF='cce_variables.html#rannum'>rannum</A>)) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="909">909 : </A>                <A HREF='cce_variables.html#selected'>selected</A>(<A HREF='cce_variables.html#rannum'>rannum</A>) = <font color='#cc00cc'>.true.</font><font color="#007700"></font>
+<A NAME="910">910 : </A>                <A HREF='cce_variables.html#nsel'>nsel</A> = <A HREF='cce_variables.html#nsel'>nsel</A> + 1<font color="#007700"></font>
+<A NAME="911">911 : </A>              <font color='#aa2200'>endif</font><font color="#007700"></font>
+<A NAME="912">912 : </A>            <font color='#aa2200'>endif</font><font color="#007700"></font>
+<A NAME="913">913 : </A>          <font color='#aa2200'>enddo</font><font color="#007700"></font>
+<A NAME="914">914 : </A><font color="#007700"></font>
+<A NAME="915">915 : </A>          <A HREF='cce_variables.html#nsel'>nsel</A> = 0<font color="#007700"></font>
+<A NAME="916">916 : </A>          <A HREF='cce_variables.html#ii'>ii</A> = 0<font color="#007700"></font>
+<A NAME="917">917 : </A>          <font color='#aa2200'>do</font> <font color='#aa2200'>while</font> (<A HREF='cce_variables.html#nsel'>nsel</A> <font color='#cc00cc'>.ne.</font> qopt)<font color="#007700"></font>
+<A NAME="918">918 : </A>            <A HREF='cce_variables.html#ii'>ii</A> = <A HREF='cce_variables.html#ii'>ii</A> + 1<font color="#007700"></font>
+<A NAME="919">919 : </A>            <font color='#aa2200'>if</font> (<A HREF='cce_variables.html#selected'>selected</A>(<A HREF='cce_variables.html#ii'>ii</A>)) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="920">920 : </A>              <A HREF='cce_variables.html#nsel'>nsel</A> = <A HREF='cce_variables.html#nsel'>nsel</A> + 1<font color="#007700"></font>
+<A NAME="921">921 : </A>              <A HREF='cce_variables.html#parentsid'>parentsid</A>(<A HREF='cce_variables.html#nsel'>nsel</A>) = <A HREF='cce_variables.html#ii'>ii</A><font color="#007700"></font>
+<A NAME="922">922 : </A>            <font color='#aa2200'>endif</font><font color="#007700"></font>
+<A NAME="923">923 : </A>          <font color='#aa2200'>enddo</font><font color="#007700"></font>
+<A NAME="924">924 : </A><font color="#007700"></font>
+<A NAME="925">925 : </A>!<font color="#007700">         * GENERATE OFFSPRING AND SORT THE RESULTING COMPLEX</font>
+<A NAME="926">926 : </A><font color="#007700"></font>
+<A NAME="927">927 : </A>          <A HREF='cce_variables.html#objfunsub'>objfunsub</A>(:) = <A HREF='cce.html#objfun'>objfun</A>(<A HREF='cce_variables.html#parentsid'>parentsid</A>(:))<font color="#007700"></font>
+<A NAME="928">928 : </A>          <A HREF='cce_variables.html#invarsub'>invarsub</A>(:,:) = <A HREF='cce.html#invar'>invar</A>(:, <A HREF='cce_variables.html#parentsid'>parentsid</A>(:))<font color="#007700"></font>
+<A NAME="929">929 : </A><font color="#007700"></font>
+<A NAME="930">930 : </A>        <font color='#aa2200'>call</font> <A HREF='cce_subroutines_called.html#simplex'>simplex</A>(<A HREF='cce_variables.html#invarsub'>invarsub</A>(:,:), <A HREF='cce_variables.html#objfunsub'>objfunsub</A>(:))<font color="#007700"></font>
+<A NAME="931">931 : </A><font color="#007700"></font>
+<A NAME="932">932 : </A>          <A HREF='cce.html#objfun'>objfun</A>(<A HREF='cce_variables.html#parentsid'>parentsid</A>(:)) = <A HREF='cce_variables.html#objfunsub'>objfunsub</A>(:)<font color="#007700"></font>
+<A NAME="933">933 : </A>          <A HREF='cce.html#invar'>invar</A>(:, <A HREF='cce_variables.html#parentsid'>parentsid</A>(:)) = <A HREF='cce_variables.html#invarsub'>invarsub</A>(:,:)<font color="#007700"></font>
+<A NAME="934">934 : </A>!<font color="#007700">         * use temporary variable to prevent warning in ifort</font>
+<A NAME="935">935 : </A>          <A HREF='cce_variables.html#tmp2'>tmp2</A>(:) = <font color='#aa2200'>SHAPE</font>(<A HREF='cce.html#invar'>invar</A>)<font color="#007700"></font>
+<A NAME="936">936 : </A>          <font color='#aa2200'>call</font> <A HREF='cce_subroutines_called.html#sortcomp'>sortcomp</A>(<A HREF='cce.html#invar'>invar</A>, <A HREF='cce_variables.html#tmp2'>tmp2</A>(:), <A HREF='cce.html#objfun'>objfun</A>, <font color='#aa2200'>SIZE</font>(<A HREF='cce.html#objfun'>objfun</A>))<font color="#007700"></font>
+<A NAME="937">937 : </A><font color="#007700"></font>
+<A NAME="938">938 : </A>      <font color='#aa2200'>enddo</font><font color="#007700"></font>
+<A NAME="939">939 : </A><font color="#007700"></font>
+<A NAME="940">940 : </A>      <font color='#aa2200'>return</font><font color="#007700"></font>
+<A NAME="941">941 : </A>      <font color='#aa2200'>end</font> <font color='#aa2200'>subroutine</font> cce<font color="#007700"></font>
 
 </PRE>
 </BODY></HTML>

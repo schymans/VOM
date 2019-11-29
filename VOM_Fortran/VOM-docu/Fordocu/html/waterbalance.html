@@ -136,36 +136,20 @@ function printCallRows(xmlhttp,locargs) {
 <div class="tabs">
   <ul>
       <li class="current"><a href="waterbalance.html"><span>Header</span></a></li>
-      <li><a href="waterbalance_version_history.html"><span>Version history</span></a></li>
       <li><a href="waterbalance_subroutines_called.html"><span>Subroutines called</span></a></li>
       <li><a href="waterbalance_variables.html"><span>Variables</span></a></li>
       <li><a href="waterbalance_called_by.html"><span>Called by</span></a></li>
       <li><a href="waterbalance_source.html"><span>Source</span></a></li>
   </ul>
 </div>
-<h1>Subroutine waterbalance</h1>waterbalance is defined in file <script type='text/javascript'>document.write(getURL('watbal.f90','file:////home/sschyman/modelling/VOM/code/VOM_BGC_working_copy/trunk/VOM_Fortran/VOM-code/watbal.f90',1));</script>.<br><br>
+<h1>Subroutine waterbalance</h1>waterbalance is defined in file <script type='text/javascript'>document.write(getURL('watbal.f90','file:////home/stan/modelling/VOM/code/VOM_git8/VOM_Fortran/VOM-code/watbal.f90',1));</script>.<br><br>
 <STRONG>HEADER</STRONG><br>
 <TABLE><tr valign="top"><TD><A>
-Subroutine waterbalance( init)
+Subroutine waterbalance( )
 </A></TD></TR></TABLE>
-
-<P><STRONG>COMMENTS</STRONG>
-<TABLE>
-<tr valign="top"><td class='indexkey'>description</td><td class="indexvalue"><!-- <headerText><name>waterbalance</name><description>* Layered water balance<br>*----------------------------------------------------------------------<br>* Author: Stan Schymanski, Max Planck Institute for Biogeochemistry<br>* Email: sschym@bgc-jena.mpg.de<br>* 06/2008<br>* Version: REW with layered unsaturated zone, no routing<br>*----------------------------------------------------------------------<br>*<br>* Numbers in the commented parentheses refer to the equation numeration<br>* in the document 'equations.pdf' that comes with the documentation.<br>*<br>*----------------------------------------------------------------------<br>*<br>* This subroutine ('waterbalance') uses the variables defined in <br>* modules.f90, some of which have to be allocated prior to calling <br>* 'waterbalance'.<br>* When calling the 'waterbalance', the 'init' variable must be given <br>* (1 to generate initial conditions, otherwise 0).<br>* This subroutine calculates the water balance for a time step &lt;=dtmax.<br>* The calling program must transfer the new variables ('new' in their names)<br>* to the old variables for the next time step, before calling 'waterbalance'<br>* again. Example: call waterbalance(init) , time=time+dt, ys=ysnew...<br>*<br>*----------------------------------------------------------------------<br>* Copyright (C) 2008 Stan Schymanski<br>*<br>* This program is free software: you can redistribute it and/or modify<br>* it under the terms of the GNU General Public License as published by<br>* the Free Software Foundation, either version 3 of the License, or<br>* (at your option) any later version.<br>*<br>* This program is distributed in the hope that it will be useful,<br>* but WITHOUT ANY WARRANTY; without even the implied warranty of<br>* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the<br>* GNU General Public License for more details.<br>*<br>* You should have received a copy of the GNU General Public License<br>* along with this program. If not, see http://www.gnu.org/licenses.</description></headerText> -->
-<PRE>***********************************************************************<br>*  Layered water balance<br>*----------------------------------------------------------------------<br>*  Author: Stan Schymanski, Max Planck Institute for Biogeochemistry<br>*  Email: sschym@bgc-jena.mpg.de<br>*  06/2008<br>*  Version: REW with layered unsaturated zone, no routing<br>*----------------------------------------------------------------------<br>*<br>* Numbers in the commented parentheses refer to the equation numeration<br>* in the document 'equations.pdf' that comes with the documentation.<br>*<br>*----------------------------------------------------------------------<br>*<br>* This subroutine ('waterbalance') uses the variables defined in  <br>* modules.f90, some of which have to be allocated prior to calling  <br>* 'waterbalance'.<br>* When calling the 'waterbalance', the 'init' variable must be given <br>* (1 to generate initial conditions, otherwise 0).<br>* This subroutine calculates the water balance for a time step &lt;=dtmax.<br>* The calling program must transfer the new variables ('new' in their names)<br>* to the old variables for the next time step, before calling 'waterbalance'<br>* again. Example: call waterbalance(init) , time=time+dt, ys=ysnew...<br>*<br>*----------------------------------------------------------------------<br>*  Copyright (C) 2008  Stan Schymanski<br>*<br>*    This program is free software: you can redistribute it and/or modify<br>*    it under the terms of the GNU General Public License as published by<br>*    the Free Software Foundation, either version 3 of the License, or<br>*    (at your option) any later version.<br>*<br>*    This program is distributed in the hope that it will be useful,<br>*    but WITHOUT ANY WARRANTY; without even the implied warranty of<br>*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the<br>*    GNU General Public License for more details.<br>*<br>*    You should have received a copy of the GNU General Public License<br>*    along with this program. If not, see http://www.gnu.org/licenses.<br>*<br>***********************************************************************</PRE>
-</td></tr>
-</TABLE>
-
-<P><STRONG>ARGUMENTS</STRONG>
-<TABLE>
-<!-- <headerVar><index>0</index><name>init</name><description></description></headerVar> -->
-<tr valign="top"><td class="indexkey"><A NAME="init">init</td><td class="indexvalue">integer</td><td class="indexvalue">intent(in)</td></A></td><td class="indexvalue"><PRE><font color='gray'>? &nbsp</font></PRE>
-</td><td class="indexvalue"><A HREF="waterbalance_source.html#1">1</A>, <A HREF="waterbalance_source.html#48">48</A>, <A HREF="waterbalance_source.html#61">61</A></td></tr>
-</TABLE>
 
 <P><STRONG>USE STATEMENTS</STRONG>
 <TABLE>
-<tr valign="top"><td class="indexkey"><script type='text/javascript'>document.write(getURL('watmod','watmod.html'));</script></td><td class="indexvalue"></td>
-<tr valign="top"><td class="indexkey"><script type='text/javascript'>document.write(getURL('vegwatmod','vegwatmod.html'));</script></td><td class="indexvalue"></td>
+<tr valign="top"><td class="indexkey"><script type='text/javascript'>document.write(getURL('vom_vegwat_mod','vom_vegwat_mod.html'));</script></td><td class="indexvalue"></td>
 </TABLE>
 </BODY></HTML>

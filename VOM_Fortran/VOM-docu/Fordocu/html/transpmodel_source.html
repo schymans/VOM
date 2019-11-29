@@ -136,7 +136,6 @@ function printCallRows(xmlhttp,locargs) {
 <div class="tabs">
   <ul>
       <li><a href="transpmodel.html"><span>Header</span></a></li>
-      <li><a href="transpmodel_version_history.html"><span>Version history</span></a></li>
       <li><a href="transpmodel_subroutines_called.html"><span>Subroutines called</span></a></li>
       <li><a href="transpmodel_variables.html"><span>Variables</span></a></li>
       <li><a href="transpmodel_called_by.html"><span>Called by</span></a></li>
@@ -145,258 +144,185 @@ function printCallRows(xmlhttp,locargs) {
 </div>
 <h1>Subroutine transpmodel</h1>
 <PRE>
-<A NAME="1">  1 : </A>      <font color='#aa2200'>subroutine</font> transpmodel(<A HREF='transpmodel.html#invar'>invar</A>, <A HREF='transpmodel.html#dim_invar'>dim_invar</A>, <A HREF='transpmodel.html#nrun'>nrun</A>, <A HREF='transpmodel.html#netass'>netass</A>, <A HREF='transpmodel.html#option1'>option1</A>)<font color="#007700"></font>
-<A NAME="2">  2 : </A>!<font color="#007700">***********************************************************************</font>
-<A NAME="3">  3 : </A>!<font color="#007700">*  Transpiration model and layered water balance</font>
-<A NAME="4">  4 : </A>!<font color="#007700">*----------------------------------------------------------------------</font>
-<A NAME="5">  5 : </A>!<font color="#007700">*  Author: Stan Schymanski, CWR, University of Western Australia</font>
-<A NAME="6">  6 : </A>!<font color="#007700">*  03/2006</font>
-<A NAME="7">  7 : </A>!<font color="#007700">*  now at: Max Planck Institute for Biogeochemistry</font>
-<A NAME="8">  8 : </A>!<font color="#007700">*  Email: sschym@bgc-jena.mpg.de</font>
-<A NAME="9">  9 : </A>!<font color="#007700">*  02/2008</font>
-<A NAME="10"> 10 : </A>!<font color="#007700">*  Version: big leaf, trees and grass, layered unsaturated zone</font>
-<A NAME="11"> 11 : </A>!<font color="#007700">*  optimised root profile, pcg and Jmax25</font>
-<A NAME="12"> 12 : </A>!<font color="#007700">*----------------------------------------------------------------------</font>
-<A NAME="13"> 13 : </A>!<font color="#007700">*</font>
-<A NAME="14"> 14 : </A>!<font color="#007700">* Numbers in the commented parentheses refer to the equation numeration</font>
-<A NAME="15"> 15 : </A>!<font color="#007700">* in Schymanski (2007): PhD thesis, University of W.A. </font>
-<A NAME="16"> 16 : </A>!<font color="#007700">* and in the document 'equations.pdf' that comes with the documentation.</font>
-<A NAME="17"> 17 : </A>!<font color="#007700">*</font>
-<A NAME="18"> 18 : </A>!<font color="#007700">*----------------------------------------------------------------------</font>
-<A NAME="19"> 19 : </A>!<font color="#007700">*  Copyright (C) 2008  Stan Schymanski</font>
-<A NAME="20"> 20 : </A>!<font color="#007700">*</font>
-<A NAME="21"> 21 : </A>!<font color="#007700">*    This program is free software: you can redistribute it and/or modify</font>
-<A NAME="22"> 22 : </A>!<font color="#007700">*    it under the terms of the GNU General Public License as published by</font>
-<A NAME="23"> 23 : </A>!<font color="#007700">*    the Free Software Foundation, either version 3 of the License, or</font>
-<A NAME="24"> 24 : </A>!<font color="#007700">*    (at your option) any later version.</font>
-<A NAME="25"> 25 : </A>!<font color="#007700">*</font>
-<A NAME="26"> 26 : </A>!<font color="#007700">*    This program is distributed in the hope that it will be useful,</font>
-<A NAME="27"> 27 : </A>!<font color="#007700">*    but WITHOUT ANY WARRANTY; without even the implied warranty of</font>
-<A NAME="28"> 28 : </A>!<font color="#007700">*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</font>
-<A NAME="29"> 29 : </A>!<font color="#007700">*    GNU General Public License for more details.</font>
-<A NAME="30"> 30 : </A>!<font color="#007700">*</font>
-<A NAME="31"> 31 : </A>!<font color="#007700">*    You should have received a copy of the GNU General Public License</font>
-<A NAME="32"> 32 : </A>!<font color="#007700">*    along with this program.  If not, see http://www.gnu.org/licenses.</font>
-<A NAME="33"> 33 : </A>!<font color="#007700">*</font>
-<A NAME="34"> 34 : </A>!<font color="#007700">***********************************************************************</font>
-<A NAME="35"> 35 : </A><font color="#007700"></font>
-<A NAME="36"> 36 : </A>      <font color='#aa2200'>use</font> vegmod<font color="#007700"></font>
-<A NAME="37"> 37 : </A>      <font color='#aa2200'>use</font> vegwatmod<font color="#007700"></font>
+<A NAME="1">  1 : </A>!<font color="#007700">***********************************************************************</font>
+<A NAME="2">  2 : </A>!<font color="#007700">*  Transpiration model and layered water balance</font>
+<A NAME="3">  3 : </A>!<font color="#007700">*----------------------------------------------------------------------</font>
+<A NAME="4">  4 : </A>!<font color="#007700">*  Author: Stan Schymanski, CWR, University of Western Australia</font>
+<A NAME="5">  5 : </A>!<font color="#007700">*  03/2006</font>
+<A NAME="6">  6 : </A>!<font color="#007700">*  now at: Max Planck Institute for Biogeochemistry</font>
+<A NAME="7">  7 : </A>!<font color="#007700">*  Email: sschym@bgc-jena.mpg.de</font>
+<A NAME="8">  8 : </A>!<font color="#007700">*  02/2008</font>
+<A NAME="9">  9 : </A>!<font color="#007700">*  Version: big leaf, trees and grass, layered unsaturated zone</font>
+<A NAME="10"> 10 : </A>!<font color="#007700">*  optimised root profile, pcg_d and Jmax25</font>
+<A NAME="11"> 11 : </A>!<font color="#007700">*----------------------------------------------------------------------</font>
+<A NAME="12"> 12 : </A>!<font color="#007700">*</font>
+<A NAME="13"> 13 : </A>!<font color="#007700">* Numbers in the commented parentheses refer to the equation numeration</font>
+<A NAME="14"> 14 : </A>!<font color="#007700">* in Schymanski (2007): PhD thesis, University of W.A.</font>
+<A NAME="15"> 15 : </A>!<font color="#007700">* and in the document 'equations.pdf' that comes with the documentation.</font>
+<A NAME="16"> 16 : </A>!<font color="#007700">*</font>
+<A NAME="17"> 17 : </A>!<font color="#007700">*----------------------------------------------------------------------</font>
+<A NAME="18"> 18 : </A>!<font color="#007700">*  Copyright (C) 2008  Stan Schymanski</font>
+<A NAME="19"> 19 : </A>!<font color="#007700">*</font>
+<A NAME="20"> 20 : </A>!<font color="#007700">*    This program is free software: you can redistribute it and/or modify</font>
+<A NAME="21"> 21 : </A>!<font color="#007700">*    it under the terms of the GNU General Public License as published by</font>
+<A NAME="22"> 22 : </A>!<font color="#007700">*    the Free Software Foundation, either version 3 of the License, or</font>
+<A NAME="23"> 23 : </A>!<font color="#007700">*    (at your option) any later version.</font>
+<A NAME="24"> 24 : </A>!<font color="#007700">*</font>
+<A NAME="25"> 25 : </A>!<font color="#007700">*    This program is distributed in the hope that it will be useful,</font>
+<A NAME="26"> 26 : </A>!<font color="#007700">*    but WITHOUT ANY WARRANTY; without even the implied warranty of</font>
+<A NAME="27"> 27 : </A>!<font color="#007700">*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</font>
+<A NAME="28"> 28 : </A>!<font color="#007700">*    GNU General Public License for more details.</font>
+<A NAME="29"> 29 : </A>!<font color="#007700">*</font>
+<A NAME="30"> 30 : </A>!<font color="#007700">*    You should have received a copy of the GNU General Public License</font>
+<A NAME="31"> 31 : </A>!<font color="#007700">*    along with this program.  If not, see http://www.gnu.org/licenses.</font>
+<A NAME="32"> 32 : </A>!<font color="#007700">*</font>
+<A NAME="33"> 33 : </A>!<font color="#007700">***********************************************************************</font>
+<A NAME="34"> 34 : </A><font color="#007700"></font>
+<A NAME="35"> 35 : </A>      <font color='#aa2200'>subroutine</font> transpmodel(<A HREF='transpmodel.html#invar'>invar</A>, <A HREF='transpmodel.html#dim_invar'>dim_invar</A>, <A HREF='transpmodel.html#tp_netass'>tp_netass</A>, <A HREF='transpmodel.html#option1'>option1</A>)<font color="#007700"></font>
+<A NAME="36"> 36 : </A>      <font color='#aa2200'>use</font> vom_vegwat_mod<font color="#007700"></font>
+<A NAME="37"> 37 : </A>  !<font color="#007700">$ USE omp_lib</font>
 <A NAME="38"> 38 : </A>      <font color='#aa2200'>implicit</font> <font color='#aa2200'>none</font><font color="#007700"></font>
 <A NAME="39"> 39 : </A><font color="#007700"></font>
 <A NAME="40"> 40 : </A>      <font color='#aa2200'>INTEGER</font>, <font color='#aa2200'>INTENT</font>(<font color='#aa2200'>in</font>)    :: <A HREF='transpmodel.html#dim_invar'>dim_invar</A><font color="#007700"></font>
-<A NAME="41"> 41 : </A>      <font color='#aa2200'>INTEGER</font>, <font color='#aa2200'>INTENT</font>(<font color='#aa2200'>in</font>)    :: <A HREF='transpmodel.html#nrun'>nrun</A><font color="#007700"></font>
-<A NAME="42"> 42 : </A>      <font color='#aa2200'>REAL</font>*8,  <font color='#aa2200'>INTENT</font>(<font color='#aa2200'>inout</font>) :: <A HREF='transpmodel.html#netass'>netass</A><font color="#007700"></font>
-<A NAME="43"> 43 : </A>      <font color='#aa2200'>INTEGER</font>, <font color='#aa2200'>INTENT</font>(<font color='#aa2200'>in</font>)    :: <A HREF='transpmodel.html#option1'>option1</A><font color="#007700"></font>
-<A NAME="44"> 44 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>DIMENSION</font>(<A HREF='transpmodel.html#dim_invar'>dim_invar</A>), <font color='#aa2200'>INTENT</font>(<font color='#aa2200'>in</font>) :: <A HREF='transpmodel.html#invar'>invar</A><font color="#007700"></font>
-<A NAME="45"> 45 : </A><font color="#007700"></font>
-<A NAME="46"> 46 : </A>      <font color='#aa2200'>INTEGER</font> :: <A HREF='transpmodel_variables.html#finish'>finish</A><font color="#007700"></font>
+<A NAME="41"> 41 : </A>      <font color='#aa2200'>REAL</font>*8,  <font color='#aa2200'>INTENT</font>(<font color='#aa2200'>inout</font>) :: <A HREF='transpmodel.html#tp_netass'>tp_netass</A><font color="#007700"></font>
+<A NAME="42"> 42 : </A>      <font color='#aa2200'>INTEGER</font>, <font color='#aa2200'>INTENT</font>(<font color='#aa2200'>in</font>)    :: <A HREF='transpmodel.html#option1'>option1</A><font color="#007700"></font>
+<A NAME="43"> 43 : </A>      <font color='#aa2200'>REAL</font>*8, <font color='#aa2200'>DIMENSION</font>(<A HREF='transpmodel.html#dim_invar'>dim_invar</A>), <font color='#aa2200'>INTENT</font>(<font color='#aa2200'>in</font>) :: <A HREF='transpmodel.html#invar'>invar</A><font color="#007700"></font>
+<A NAME="44"> 44 : </A>      <font color='#aa2200'>REAL</font>*8                 :: <A HREF='transpmodel_variables.html#tp_netasst_d'>tp_netasst_d</A><font color="#007700"></font>
+<A NAME="45"> 45 : </A>      <font color='#aa2200'>REAL</font>*8                 :: <A HREF='transpmodel_variables.html#tp_netassg_d'>tp_netassg_d</A><font color="#007700"></font>
+<A NAME="46"> 46 : </A>      !<font color="#007700">REAL*8, ALLOCATABLE, DIMENSION(:,:) :: output_mat</font>
 <A NAME="47"> 47 : </A><font color="#007700"></font>
-<A NAME="48"> 48 : </A>      <A HREF='transpmodel_variables.html#finish'>finish</A> = 0<font color="#007700"></font>
+<A NAME="48"> 48 : </A>      <A HREF='transpmodel.html#tp_netass'>tp_netass</A>  = 0.d0<font color="#007700"></font>
 <A NAME="49"> 49 : </A><font color="#007700"></font>
-<A NAME="50"> 50 : </A>!<font color="#007700">dd      if (dim_invar .lt. 8) then</font>
-<A NAME="51"> 51 : </A>      <font color='#aa2200'>if</font> (<A HREF='transpmodel.html#dim_invar'>dim_invar</A> <font color='#cc00cc'>.lt.</font> 6) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="52"> 52 : </A>        <font color='#aa2200'>write</font>(*,*) "ERROR: <font color='#aa2200'>Number</font> of input parameters less than 6."<font color="#007700"></font>
-<A NAME="53"> 53 : </A>        <font color='#aa2200'>stop</font><font color="#007700"></font>
-<A NAME="54"> 54 : </A>      <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="55"> 55 : </A><font color="#007700"></font>
-<A NAME="56"> 56 : </A>      <A HREF='transpmodel.html#netass'>netass</A> = 0.d0<font color="#007700"></font>
-<A NAME="57"> 57 : </A><font color="#007700"></font>
-<A NAME="58"> 58 : </A>      <font color='#aa2200'>if</font> (<A HREF='transpmodel.html#option1'>option1</A> <font color='#cc00cc'>.eq.</font> 2) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="59"> 59 : </A>        optmode = 0<font color="#007700"></font>
-<A NAME="60"> 60 : </A>      <font color='#aa2200'>else</font><font color="#007700"></font>
-<A NAME="61"> 61 : </A>        optmode = 1<font color="#007700"></font>
-<A NAME="62"> 62 : </A>      <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="63"> 63 : </A>    <font color="#007700"></font>
-<A NAME="64"> 64 : </A>      <font color='#aa2200'>if</font> (<A HREF='transpmodel.html#option1'>option1</A> <font color='#cc00cc'>.eq.</font> 3) optmode = 2<font color="#007700"></font>
+<A NAME="50"> 50 : </A><font color="#007700"></font>
+<A NAME="51"> 51 : </A>      <font color='#aa2200'>call</font> <A HREF='transpmodel_subroutines_called.html#transpmodel_init'>transpmodel_init</A>(<A HREF='transpmodel.html#invar'>invar</A>, <A HREF='transpmodel.html#dim_invar'>dim_invar</A>, <A HREF='transpmodel.html#option1'>option1</A>)<font color="#007700"></font>
+<A NAME="52"> 52 : </A><font color="#007700"></font>
+<A NAME="53"> 53 : </A>!<font color="#007700">     * DAILY LOOPS</font>
+<A NAME="54"> 54 : </A><font color="#007700"></font>
+<A NAME="55"> 55 : </A>      <font color='#aa2200'>do</font> <font color='#aa2200'>while</font> (nday  <font color='#cc00cc'>.lt.</font> c_testday)<font color="#007700"></font>
+<A NAME="56"> 56 : </A>        nday = nday + 1<font color="#007700"></font>
+<A NAME="57"> 57 : </A>        <A HREF='transpmodel_variables.html#tp_netassg_d'>tp_netassg_d</A> = 0.d0<font color="#007700"></font>
+<A NAME="58"> 58 : </A>        <A HREF='transpmodel_variables.html#tp_netasst_d'>tp_netasst_d</A> = 0.d0<font color="#007700"></font>
+<A NAME="59"> 59 : </A><font color="#007700"></font>
+<A NAME="60"> 60 : </A>        <font color='#aa2200'>call</font> <A HREF='transpmodel_subroutines_called.html#vom_daily_init'>vom_daily_init</A>()<font color="#007700"></font>
+<A NAME="61"> 61 : </A><font color="#007700"></font>
+<A NAME="62"> 62 : </A>!<font color="#007700">     * HOURLY LOOPS (loops through each hour of daily dataset)</font>
+<A NAME="63"> 63 : </A>      <font color='#aa2200'>do</font> nhour = 1, 24<font color="#007700"></font>
+<A NAME="64"> 64 : </A>        th_ = nday * 24 + nhour - 24<font color="#007700"></font>
 <A NAME="65"> 65 : </A><font color="#007700"></font>
-<A NAME="66"> 66 : </A>!<font color="#007700">*----------------------------------------------------------------------</font>
-<A NAME="67"> 67 : </A>!<font color="#007700">*     Optimised parameters reading from invar</font>
-<A NAME="68"> 68 : </A>!<font color="#007700">*----------------------------------------------------------------------</font>
+<A NAME="66"> 66 : </A>      <font color='#aa2200'>call</font> <A HREF='transpmodel_subroutines_called.html#vom_hourly_init'>vom_hourly_init</A>()<font color="#007700"></font>
+<A NAME="67"> 67 : </A><font color="#007700"></font>
+<A NAME="68"> 68 : </A>!<font color="#007700">     * calculate gstom, et and ass</font>
 <A NAME="69"> 69 : </A><font color="#007700"></font>
-<A NAME="70"> 70 : </A>      lambdagfac = <A HREF='transpmodel.html#invar'>invar</A>(1)<font color="#007700"></font>
-<A NAME="71"> 71 : </A>      wsgexp     = <A HREF='transpmodel.html#invar'>invar</A>(2)<font color="#007700"></font>
-<A NAME="72"> 72 : </A>      lambdafac  = <A HREF='transpmodel.html#invar'>invar</A>(3)<font color="#007700"></font>
-<A NAME="73"> 73 : </A>      wsexp      = <A HREF='transpmodel.html#invar'>invar</A>(4)<font color="#007700"></font>
-<A NAME="74"> 74 : </A>      pc_        = <A HREF='transpmodel.html#invar'>invar</A>(5)<font color="#007700"></font>
-<A NAME="75"> 75 : </A>      rootdepth  = <A HREF='transpmodel.html#invar'>invar</A>(6)<font color="#007700"></font>
-<A NAME="76"> 76 : </A>!<font color="#007700">dd      mdstore    = invar(7)</font>
-<A NAME="77"> 77 : </A>!<font color="#007700">dd      rgdepth    = invar(8)</font>
-<A NAME="78"> 78 : </A><font color="#007700"></font>
-<A NAME="79"> 79 : </A>      <font color='#aa2200'>if</font> (parsaved <font color='#cc00cc'>.ne.</font> 1) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="80"> 80 : </A><font color="#007700"></font>
-<A NAME="81"> 81 : </A>!<font color="#007700">*-----Reading input parameter------------------------------------------</font>
-<A NAME="82"> 82 : </A><font color="#007700"></font>
-<A NAME="83"> 83 : </A>        <font color='#aa2200'>call</font> <A HREF='transpmodel_subroutines_called.html#vom_read_input'>vom_read_input</A>()<font color="#007700"></font>
-<A NAME="84"> 84 : </A><font color="#007700"></font>
-<A NAME="85"> 85 : </A>!<font color="#007700">*-----allocate vector sizes--------------------------------------------</font>
-<A NAME="86"> 86 : </A><font color="#007700"></font>
-<A NAME="87"> 87 : </A>        <font color='#aa2200'>call</font> <A HREF='transpmodel_subroutines_called.html#vom_alloc'>vom_alloc</A>()<font color="#007700"></font>
-<A NAME="88"> 88 : </A><font color="#007700"></font>
-<A NAME="89"> 89 : </A>!<font color="#007700">*-----File opening (saving climate and gstom ass data)-----------------</font>
-<A NAME="90"> 90 : </A><font color="#007700"></font>
-<A NAME="91"> 91 : </A>        <font color='#aa2200'>if</font> (optmode <font color='#cc00cc'>.eq.</font> 0) <font color='#aa2200'>call</font> <A HREF='transpmodel_subroutines_called.html#vom_open_output'>vom_open_output</A>()<font color="#007700"></font>
-<A NAME="92"> 92 : </A>    <font color="#007700"></font>
-<A NAME="93"> 93 : </A>        <font color='#aa2200'>if</font> (optmode <font color='#cc00cc'>.eq.</font> 2) <font color='#aa2200'>call</font> <A HREF='transpmodel_subroutines_called.html#vom_open_ncp_output'>vom_open_ncp_output</A>()<font color="#007700"></font>
+<A NAME="70"> 70 : </A>      <font color='#aa2200'>call</font> <A HREF='transpmodel_subroutines_called.html#vom_gstom'>vom_gstom</A>()<font color="#007700"></font>
+<A NAME="71"> 71 : </A><font color="#007700"></font>
+<A NAME="72"> 72 : </A>!<font color="#007700">     * SUB-HOURLY LOOPS</font>
+<A NAME="73"> 73 : </A><font color="#007700"></font>
+<A NAME="74"> 74 : </A>      <font color='#aa2200'>do</font> <font color='#aa2200'>while</font> (<font color='#aa2200'>time</font> <font color='#cc00cc'>.lt.</font> 3600.d0)<font color="#007700"></font>
+<A NAME="75"> 75 : </A><font color="#007700"></font>
+<A NAME="76"> 76 : </A>!<font color="#007700">       * setting variables from previous loop</font>
+<A NAME="77"> 77 : </A><font color="#007700"></font>
+<A NAME="78"> 78 : </A>        <font color='#aa2200'>call</font> <A HREF='transpmodel_subroutines_called.html#vom_subhourly_init'>vom_subhourly_init</A>()<font color="#007700"></font>
+<A NAME="79"> 79 : </A><font color="#007700"></font>
+<A NAME="80"> 80 : </A>!<font color="#007700">       * root water uptake</font>
+<A NAME="81"> 81 : </A><font color="#007700"></font>
+<A NAME="82"> 82 : </A>        <font color='#aa2200'>call</font> <A HREF='transpmodel_subroutines_called.html#vom_rootuptake'>vom_rootuptake</A>()<font color="#007700"></font>
+<A NAME="83"> 83 : </A><font color="#007700"></font>
+<A NAME="84"> 84 : </A>        <font color='#aa2200'>if</font> (q_md <font color='#cc00cc'>.gt.</font> 0.d0) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="85"> 85 : </A><font color="#007700"></font>
+<A NAME="86"> 86 : </A>!<font color="#007700">         * steady-state tissue water (mqss)</font>
+<A NAME="87"> 87 : </A><font color="#007700"></font>
+<A NAME="88"> 88 : </A>          <font color='#aa2200'>if</font> (wlayer_ <font color='#cc00cc'>.ge.</font> 1) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="89"> 89 : </A>            <font color='#aa2200'>call</font> <A HREF='transpmodel_subroutines_called.html#vom_mqss'>vom_mqss</A>(mqsst_)<font color="#007700"></font>
+<A NAME="90"> 90 : </A>          <font color='#aa2200'>else</font><font color="#007700"></font>
+<A NAME="91"> 91 : </A>            mqsst_ = 0.9d0 * q_mqx<font color="#007700"></font>
+<A NAME="92"> 92 : </A>          <font color='#aa2200'>endif</font><font color="#007700"></font>
+<A NAME="93"> 93 : </A>          mqsstmin = <font color='#aa2200'>MIN</font>(mqsstmin,mqsst_)<font color="#007700"></font>
 <A NAME="94"> 94 : </A><font color="#007700"></font>
-<A NAME="95"> 95 : </A>!<font color="#007700">*-----PARAMETER READING FROM SOILPROFILE.PAR---------------------------</font>
+<A NAME="95"> 95 : </A>!<font color="#007700">         * transpiration, gstom and tissue water</font>
 <A NAME="96"> 96 : </A><font color="#007700"></font>
-<A NAME="97"> 97 : </A>        <font color='#aa2200'>call</font> <A HREF='transpmodel_subroutines_called.html#vom_get_soilprofile'>vom_get_soilprofile</A>()<font color="#007700"></font>
-<A NAME="98"> 98 : </A><font color="#007700"></font>
-<A NAME="99"> 99 : </A>!<font color="#007700">*-----Climate and Calendar data reading--------------------------------</font>
-<A NAME="100">100 : </A><font color="#007700"></font>
-<A NAME="101">101 : </A>        <font color='#aa2200'>call</font> <A HREF='transpmodel_subroutines_called.html#vom_get_hourly_clim'>vom_get_hourly_clim</A>()<font color="#007700"></font>
-<A NAME="102">102 : </A><font color="#007700"></font>
-<A NAME="103">103 : </A>        parsaved = 1 <font color="#007700"></font>
-<A NAME="104">104 : </A>      <font color='#aa2200'>endif</font><font color="#007700"></font>
+<A NAME="97"> 97 : </A>          <font color='#aa2200'>call</font> <A HREF='transpmodel_subroutines_called.html#vom_tissue_water_et'>vom_tissue_water_et</A>(<A HREF='transpmodel.html#tp_netass'>tp_netass</A>)<font color="#007700"></font>
+<A NAME="98"> 98 : </A>          <font color='#aa2200'>if</font> (finish <font color='#cc00cc'>.eq.</font> 1) <font color='#aa2200'>return</font><font color="#007700"></font>
+<A NAME="99"> 99 : </A><font color="#007700"></font>
+<A NAME="100">100 : </A>        <font color='#aa2200'>endif</font><font color="#007700"></font>
+<A NAME="101">101 : </A><font color="#007700"></font>
+<A NAME="102">102 : </A>!<font color="#007700">       * water balance and conditions at next time step</font>
+<A NAME="103">103 : </A><font color="#007700"></font>
+<A NAME="104">104 : </A>        <font color='#aa2200'>call</font> <A HREF='transpmodel_subroutines_called.html#vom_subhourly'>vom_subhourly</A>()<font color="#007700"></font>
 <A NAME="105">105 : </A><font color="#007700"></font>
-<A NAME="106">106 : </A>!<font color="#007700">***********************************************************************</font>
-<A NAME="107">107 : </A>!<font color="#007700">*  Calculation of vegetation parameters</font>
-<A NAME="108">108 : </A>!<font color="#007700">*</font>
-<A NAME="109">109 : </A>!<font color="#007700">*----------------------------------------------------------------------</font>
-<A NAME="110">110 : </A>!<font color="#007700">*  Equations in equations.pdf</font>
-<A NAME="111">111 : </A>!<font color="#007700">*  (numeration in the commented parentheses)</font>
-<A NAME="112">112 : </A>!<font color="#007700">***********************************************************************</font>
-<A NAME="113">113 : </A><font color="#007700"></font>
-<A NAME="114">114 : </A>!<font color="#007700">*-----Initial values---------------------------------------------------</font>
-<A NAME="115">115 : </A><font color="#007700"></font>
-<A NAME="116">116 : </A>      <font color='#aa2200'>call</font> <A HREF='transpmodel_subroutines_called.html#vom_init_vegpar'>vom_init_vegpar</A>()<font color="#007700"></font>
-<A NAME="117">117 : </A><font color="#007700"></font>
-<A NAME="118">118 : </A>!<font color="#007700">*-----DAILY LOOPS------------------------------------------------------</font>
-<A NAME="119">119 : </A><font color="#007700"></font>
-<A NAME="120">120 : </A>      d___ = 0<font color="#007700"></font>
-<A NAME="121">121 : </A>      dtest = nyt * 365<font color="#007700"></font>
-<A NAME="122">122 : </A>      <font color='#aa2200'>if</font> (optmode <font color='#cc00cc'>.eq.</font> 0 .or. optmode <font color='#cc00cc'>.eq.</font> 2) dtest = N__<font color="#007700"></font>
-<A NAME="123">123 : </A>      <font color='#aa2200'>do</font> <font color='#aa2200'>while</font> (d___  <font color='#cc00cc'>.lt.</font> dtest)<font color="#007700"></font>
-<A NAME="124">124 : </A>        d___ = d___ + 1<font color="#007700"></font>
+<A NAME="106">106 : </A>        <font color='#aa2200'>time</font> = <font color='#aa2200'>time</font> + dt_<font color="#007700"></font>
+<A NAME="107">107 : </A>        mqtnew = mqt_ + dmqt * dt_<font color="#007700"></font>
+<A NAME="108">108 : </A><font color="#007700"></font>
+<A NAME="109">109 : </A>!<font color="#007700">       * adding up hourly fluxes</font>
+<A NAME="110">110 : </A><font color="#007700"></font>
+<A NAME="111">111 : </A>        <font color='#aa2200'>call</font> <A HREF='transpmodel_subroutines_called.html#vom_add_hourly'>vom_add_hourly</A>()<font color="#007700"></font>
+<A NAME="112">112 : </A><font color="#007700"></font>
+<A NAME="113">113 : </A>!<font color="#007700">       * END OF HOUR</font>
+<A NAME="114">114 : </A><font color="#007700"></font>
+<A NAME="115">115 : </A>      <font color='#aa2200'>enddo</font><font color="#007700"></font>
+<A NAME="116">116 : </A><font color="#007700"></font>
+<A NAME="117">117 : </A>!<font color="#007700">     * rl does not need to be included here as ass=-rl if j=0 (at night)</font>
+<A NAME="118">118 : </A>      <A HREF='transpmodel.html#tp_netass'>tp_netass</A> = <A HREF='transpmodel.html#tp_netass'>tp_netass</A> + <A HREF='transpmodel_subroutines_called.html#asst_h'>asst_h</A>(2,2) - 3600.d0 * (q_cpcct_d + rrt_d &<font color="#007700"></font>
+<A NAME="119">119 : </A>     &          + <A HREF='transpmodel_subroutines_called.html#q_tct_d'>q_tct_d</A>(2) ) + <A HREF='transpmodel_subroutines_called.html#assg_h'>assg_h</A>(2,2,2) - 3600.d0 * (<A HREF='transpmodel_subroutines_called.html#cpccg_d'>cpccg_d</A>(2)       &<font color="#007700"></font>
+<A NAME="120">120 : </A>     &          + rrg_d + <A HREF='transpmodel_subroutines_called.html#tcg_d'>tcg_d</A>(2,2))<font color="#007700"></font>
+<A NAME="121">121 : </A>      <A HREF='transpmodel_variables.html#tp_netassg_d'>tp_netassg_d</A> = <A HREF='transpmodel_variables.html#tp_netassg_d'>tp_netassg_d</A> + <A HREF='transpmodel_subroutines_called.html#assg_h'>assg_h</A>(2,2,2) - 3600.d0 * (<A HREF='transpmodel_subroutines_called.html#cpccg_d'>cpccg_d</A>(2)       &<font color="#007700"></font>
+<A NAME="122">122 : </A>     &          + rrg_d + <A HREF='transpmodel_subroutines_called.html#tcg_d'>tcg_d</A>(2,2))<font color="#007700"></font>
+<A NAME="123">123 : </A>      <A HREF='transpmodel_variables.html#tp_netasst_d'>tp_netasst_d</A> = <A HREF='transpmodel_variables.html#tp_netasst_d'>tp_netasst_d</A> + <A HREF='transpmodel_subroutines_called.html#asst_h'>asst_h</A>(2,2) - 3600.d0 * (q_cpcct_d + rrt_d &<font color="#007700"></font>
+<A NAME="124">124 : </A>     &          + <A HREF='transpmodel_subroutines_called.html#q_tct_d'>q_tct_d</A>(2) ) <font color="#007700"></font>
 <A NAME="125">125 : </A><font color="#007700"></font>
-<A NAME="126">126 : </A>        <font color='#aa2200'>call</font> <A HREF='transpmodel_subroutines_called.html#vom_daily_init'>vom_daily_init</A>()<font color="#007700"></font>
-<A NAME="127">127 : </A><font color="#007700"></font>
-<A NAME="128">128 : </A>!<font color="#007700">*-----HOURLY LOOPS-----------------------------------------------------</font>
-<A NAME="129">129 : </A><font color="#007700"></font>
-<A NAME="130">130 : </A>!<font color="#007700">       * loops through each hour of daily dataset</font>
-<A NAME="131">131 : </A>        <font color='#aa2200'>do</font> h__ = 1, 24<font color="#007700"></font>
+<A NAME="126">126 : </A>      asst_d(:,:)   = asst_d(:,:)   + <A HREF='transpmodel_subroutines_called.html#asst_h'>asst_h</A>(:,:)<font color="#007700"></font>
+<A NAME="127">127 : </A>      assg_d(:,:,:) = assg_d(:,:,:) + <A HREF='transpmodel_subroutines_called.html#assg_h'>assg_h</A>(:,:,:)<font color="#007700"></font>
+<A NAME="128">128 : </A>      ruptkt_d(:) = ruptkt_d(:) + ruptkt_h(:)<font color="#007700"></font>
+<A NAME="129">129 : </A>      ruptkg_d(:) = ruptkg_d(:) + ruptkg_h(:)<font color="#007700"></font>
+<A NAME="130">130 : </A><font color="#007700"></font>
+<A NAME="131">131 : </A>      !<font color="#007700">if (optmode .eq. 0) then</font>
 <A NAME="132">132 : </A><font color="#007700"></font>
-<A NAME="133">133 : </A>          <font color='#aa2200'>call</font> <A HREF='transpmodel_subroutines_called.html#vom_hourly_init'>vom_hourly_init</A>()<font color="#007700"></font>
-<A NAME="134">134 : </A><font color="#007700"></font>
-<A NAME="135">135 : </A>!<font color="#007700">*-----calculate gstom, et and ass--------------------------------------</font>
-<A NAME="136">136 : </A><font color="#007700"></font>
-<A NAME="137">137 : </A>          <font color='#aa2200'>call</font> <A HREF='transpmodel_subroutines_called.html#vom_gstom'>vom_gstom</A>()<font color="#007700"></font>
-<A NAME="138">138 : </A><font color="#007700"></font>
-<A NAME="139">139 : </A>!<font color="#007700">*-----SUB-HOURLY LOOPS-------------------------------------------------</font>
-<A NAME="140">140 : </A><font color="#007700"></font>
-<A NAME="141">141 : </A>          <font color='#aa2200'>do</font> <font color='#aa2200'>while</font> (<font color='#aa2200'>time</font> <font color='#cc00cc'>.lt.</font> 3600.d0)<font color="#007700"></font>
+<A NAME="133">133 : </A>       !<font color="#007700">formatted output for single model run</font>
+<A NAME="134">134 : </A>       <font color='#aa2200'>if</font> (<A HREF='transpmodel.html#option1'>option1</A> <font color='#cc00cc'>.eq.</font> 2) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="135">135 : </A>        <font color='#aa2200'>call</font> <A HREF='transpmodel_subroutines_called.html#vom_add_daily'>vom_add_daily</A>()<font color="#007700"></font>
+<A NAME="136">136 : </A>        <font color='#aa2200'>call</font> <A HREF='transpmodel_subroutines_called.html#vom_write_hourly'>vom_write_hourly</A>()<font color="#007700"></font>
+<A NAME="137">137 : </A><font color="#007700"></font>
+<A NAME="138">138 : </A>!<font color="#007700">       * check water balance</font>
+<A NAME="139">139 : </A><font color="#007700"></font>
+<A NAME="140">140 : </A>        <font color='#aa2200'>call</font> <A HREF='transpmodel_subroutines_called.html#vom_check_water'>vom_check_water</A>()<font color="#007700"></font>
+<A NAME="141">141 : </A>        <font color='#aa2200'>if</font> (finish <font color='#cc00cc'>.eq.</font> 1) <font color='#aa2200'>return</font><font color="#007700"></font>
 <A NAME="142">142 : </A><font color="#007700"></font>
-<A NAME="143">143 : </A>!<font color="#007700">*-----setting variables from previous loop-----------------------------</font>
+<A NAME="143">143 : </A>      <font color='#aa2200'>endif</font><font color="#007700"></font>
 <A NAME="144">144 : </A><font color="#007700"></font>
-<A NAME="145">145 : </A>            <font color='#aa2200'>call</font> <A HREF='transpmodel_subroutines_called.html#vom_subhourly_init'>vom_subhourly_init</A>()<font color="#007700"></font>
-<A NAME="146">146 : </A><font color="#007700"></font>
-<A NAME="147">147 : </A>!<font color="#007700">*-----root water uptake------------------------------------------------</font>
-<A NAME="148">148 : </A><font color="#007700"></font>
-<A NAME="149">149 : </A>            <font color='#aa2200'>call</font> <A HREF='transpmodel_subroutines_called.html#vom_rootuptake'>vom_rootuptake</A>()<font color="#007700"></font>
-<A NAME="150">150 : </A><font color="#007700"></font>
-<A NAME="151">151 : </A>            <font color='#aa2200'>if</font> (md_ <font color='#cc00cc'>.gt.</font> 0.d0) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="152">152 : </A><font color="#007700"></font>
-<A NAME="153">153 : </A>!<font color="#007700">*-----steady-state tissue water (mqss)---------------------------------</font>
+<A NAME="145">145 : </A>       !<font color="#007700">formatted output for multiple runs</font>
+<A NAME="146">146 : </A>       <font color='#aa2200'>if</font> (<A HREF='transpmodel.html#option1'>option1</A> <font color='#cc00cc'>.eq.</font> 5) <font color='#aa2200'>then</font><font color="#007700"></font>
+<A NAME="147">147 : </A>        <font color='#aa2200'>call</font> <A HREF='transpmodel_subroutines_called.html#vom_add_daily'>vom_add_daily</A>()<font color="#007700"></font>
+<A NAME="148">148 : </A>        !<font color="#007700">call vom_write_hourly() !replace with a new subroutine</font>
+<A NAME="149">149 : </A><font color="#007700"></font>
+<A NAME="150">150 : </A>!<font color="#007700">       * check water balance</font>
+<A NAME="151">151 : </A><font color="#007700"></font>
+<A NAME="152">152 : </A>        <font color='#aa2200'>call</font> <A HREF='transpmodel_subroutines_called.html#vom_check_water'>vom_check_water</A>()<font color="#007700"></font>
+<A NAME="153">153 : </A>        <font color='#aa2200'>if</font> (finish <font color='#cc00cc'>.eq.</font> 1) <font color='#aa2200'>return</font><font color="#007700"></font>
 <A NAME="154">154 : </A><font color="#007700"></font>
-<A NAME="155">155 : </A>              <font color='#aa2200'>if</font> (nlayers_ <font color='#cc00cc'>.ge.</font> 1) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="156">156 : </A>                <font color='#aa2200'>call</font> <A HREF='transpmodel_subroutines_called.html#vom_mqss'>vom_mqss</A>(mqss_)<font color="#007700"></font>
-<A NAME="157">157 : </A>              <font color='#aa2200'>else</font><font color="#007700"></font>
-<A NAME="158">158 : </A>                mqss_ = 0.9d0 * mqx_<font color="#007700"></font>
-<A NAME="159">159 : </A>              <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="160">160 : </A>              mqssmin = <font color='#aa2200'>MIN</font>(mqssmin,mqss_)<font color="#007700"></font>
-<A NAME="161">161 : </A>            <font color="#007700"></font>
-<A NAME="162">162 : </A>!<font color="#007700">*-----transpiration, gstom and tissue water----------------------------</font>
+<A NAME="155">155 : </A>      <font color='#aa2200'>endif</font><font color="#007700"></font>
+<A NAME="156">156 : </A><font color="#007700"></font>
+<A NAME="157">157 : </A><font color="#007700"></font>
+<A NAME="158">158 : </A><font color="#007700"></font>
+<A NAME="159">159 : </A>        <font color='#aa2200'>enddo</font><font color="#007700"></font>
+<A NAME="160">160 : </A><font color="#007700"></font>
+<A NAME="161">161 : </A>!<font color="#007700">       * END OF DAY</font>
+<A NAME="162">162 : </A><font color="#007700"></font>
 <A NAME="163">163 : </A><font color="#007700"></font>
-<A NAME="164">164 : </A>              <font color='#aa2200'>call</font> <A HREF='transpmodel_subroutines_called.html#vom_tissue_water_et'>vom_tissue_water_et</A>(<A HREF='transpmodel_variables.html#finish'>finish</A>, <A HREF='transpmodel.html#netass'>netass</A>)<font color="#007700"></font>
-<A NAME="165">165 : </A>              <font color='#aa2200'>if</font> (<A HREF='transpmodel_variables.html#finish'>finish</A> <font color='#cc00cc'>.eq.</font> 1) <font color='#aa2200'>return</font><font color="#007700"></font>
-<A NAME="166">166 : </A>            <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="167">167 : </A><font color="#007700"></font>
-<A NAME="168">168 : </A>!<font color="#007700">*-----water balance and conditions at next time step-------------------</font>
-<A NAME="169">169 : </A><font color="#007700"></font>
-<A NAME="170">170 : </A>            <font color='#aa2200'>call</font> <A HREF='transpmodel_subroutines_called.html#vom_subhourly'>vom_subhourly</A>()<font color="#007700"></font>
+<A NAME="164">164 : </A>           !<font color="#007700">if(nday .eq. 1) then</font>
+<A NAME="165">165 : </A>              !<font color="#007700">allocate matrix for 21 variables with lengt of timeseries</font>
+<A NAME="166">166 : </A>           !<font color="#007700">   allocate( output_mat (21, c_testday ) )</font>
+<A NAME="167">167 : </A>           !<font color="#007700">end if</font>
+<A NAME="168">168 : </A><font color="#007700"></font>
+<A NAME="169">169 : </A>           !<font color="#007700">last daily step</font>
+<A NAME="170">170 : </A>           <font color='#aa2200'>call</font> <A HREF='transpmodel_subroutines_called.html#transpmodel_daily_step'>transpmodel_daily_step</A>(<A HREF='transpmodel.html#tp_netass'>tp_netass</A>,<A HREF='transpmodel_variables.html#tp_netassg_d'>tp_netassg_d</A>, <A HREF='transpmodel_variables.html#tp_netasst_d'>tp_netasst_d</A>, <A HREF='transpmodel.html#option1'>option1</A>)<font color="#007700"></font>
 <A NAME="171">171 : </A><font color="#007700"></font>
-<A NAME="172">172 : </A>            <font color='#aa2200'>time</font> = <font color='#aa2200'>time</font> + dt_<font color="#007700"></font>
-<A NAME="173">173 : </A>            mqnew = mq_ + dmq * dt_<font color="#007700"></font>
-<A NAME="174">174 : </A><font color="#007700"></font>
-<A NAME="175">175 : </A>!<font color="#007700">*-----adding up hourly fluxes------------------------------------------</font>
-<A NAME="176">176 : </A><font color="#007700"></font>
-<A NAME="177">177 : </A>            <font color='#aa2200'>call</font> <A HREF='transpmodel_subroutines_called.html#vom_add_hourly'>vom_add_hourly</A>()<font color="#007700"></font>
-<A NAME="178">178 : </A><font color="#007700"></font>
-<A NAME="179">179 : </A>!<font color="#007700">*-----END OF HOUR------------------------------------------------------</font>
-<A NAME="180">180 : </A><font color="#007700"></font>
-<A NAME="181">181 : </A>          <font color='#aa2200'>enddo</font><font color="#007700"></font>
-<A NAME="182">182 : </A><font color="#007700"></font>
-<A NAME="183">183 : </A>!<font color="#007700">         * rl does not need to be included here as ass=-rl if j=0 (at night)</font>
-<A NAME="184">184 : </A>          <A HREF='transpmodel.html#netass'>netass</A> = <A HREF='transpmodel.html#netass'>netass</A> + <A HREF='transpmodel_subroutines_called.html#hass_'>hass_</A>(2) - 3600.d0 * (cpcc_ + rr_ + tc_)   &<font color="#007700"></font>
-<A NAME="185">185 : </A>     &           + <A HREF='transpmodel_subroutines_called.html#hassg'>hassg</A>(2,2) - 3600.d0 * (<A HREF='transpmodel_subroutines_called.html#cpccg'>cpccg</A>(2) + rrg + <A HREF='transpmodel_subroutines_called.html#tcg'>tcg</A>(2))<font color="#007700"></font>
-<A NAME="186">186 : </A>          ass_d(:) = ass_d(:) + <A HREF='transpmodel_subroutines_called.html#hass_'>hass_</A>(:)<font color="#007700"></font>
-<A NAME="187">187 : </A>          assg_d(:,:) = assg_d(:,:) + <A HREF='transpmodel_subroutines_called.html#hassg'>hassg</A>(:,:)<font color="#007700"></font>
-<A NAME="188">188 : </A>          ruptkvec_d(:) = ruptkvec_d(:) + hruptkvec(:)<font color="#007700"></font>
-<A NAME="189">189 : </A>          ruptkg_d(:) = ruptkg_d(:) + hruptkg(:)<font color="#007700"></font>
-<A NAME="190">190 : </A><font color="#007700"></font>
-<A NAME="191">191 : </A>          <font color='#aa2200'>if</font> (optmode <font color='#cc00cc'>.eq.</font> 0) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="192">192 : </A><font color="#007700"></font>
-<A NAME="193">193 : </A>            <font color='#aa2200'>call</font> <A HREF='transpmodel_subroutines_called.html#vom_add_daily'>vom_add_daily</A>()<font color="#007700"></font>
-<A NAME="194">194 : </A>            <font color='#aa2200'>call</font> <A HREF='transpmodel_subroutines_called.html#vom_write_hourly'>vom_write_hourly</A>()<font color="#007700"></font>
-<A NAME="195">195 : </A><font color="#007700"></font>
-<A NAME="196">196 : </A>!<font color="#007700">*-----check water balance----------------------------------------------</font>
-<A NAME="197">197 : </A><font color="#007700"></font>
-<A NAME="198">198 : </A>            <font color='#aa2200'>call</font> <A HREF='transpmodel_subroutines_called.html#vom_check_water'>vom_check_water</A>(<A HREF='transpmodel_variables.html#finish'>finish</A>)<font color="#007700"></font>
-<A NAME="199">199 : </A>            <font color='#aa2200'>if</font> (<A HREF='transpmodel_variables.html#finish'>finish</A> <font color='#cc00cc'>.eq.</font> 1) <font color='#aa2200'>return</font><font color="#007700"></font>
-<A NAME="200">200 : </A><font color="#007700"></font>
-<A NAME="201">201 : </A>          <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="202">202 : </A>        <font color='#aa2200'>enddo</font><font color="#007700"></font>
-<A NAME="203">203 : </A><font color="#007700"></font>
-<A NAME="204">204 : </A>!<font color="#007700">*-----END OF DAY-------------------------------------------------------</font>
-<A NAME="205">205 : </A><font color="#007700"></font>
-<A NAME="206">206 : </A>        <font color='#aa2200'>if</font> (optmode <font color='#cc00cc'>.eq.</font> 0) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="207">207 : </A>          <font color='#aa2200'>call</font> <A HREF='transpmodel_subroutines_called.html#vom_write_dayyear'>vom_write_dayyear</A>()<font color="#007700"></font>
-<A NAME="208">208 : </A>      <font color='#aa2200'>call</font> <A HREF='transpmodel_subroutines_called.html#vom_add_yearly'>vom_add_yearly</A>()<font color="#007700"></font>
-<A NAME="209">209 : </A>    <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="210">210 : </A><font color="#007700"></font>
-<A NAME="211">211 : </A>!<font color="#007700">*-----ADJUSTMENT OF JMAX25 and PC--------------------------------------</font>
-<A NAME="212">212 : </A><font color="#007700"></font>
-<A NAME="213">213 : </A>        <font color='#aa2200'>call</font> <A HREF='transpmodel_subroutines_called.html#vom_adapt_foliage'>vom_adapt_foliage</A>()<font color="#007700"></font>
-<A NAME="214">214 : </A><font color="#007700"></font>
-<A NAME="215">215 : </A>!<font color="#007700">*-----ADJUSTMENT OF ROOT SURFACE---------------------------------------</font>
-<A NAME="216">216 : </A><font color="#007700"></font>
-<A NAME="217">217 : </A>        <font color='#aa2200'>call</font> <A HREF='transpmodel_subroutines_called.html#vom_adapt_roots'>vom_adapt_roots</A>()<font color="#007700"></font>
-<A NAME="218">218 : </A><font color="#007700"></font>
-<A NAME="219">219 : </A>        <font color='#aa2200'>if</font> ((d___ <font color='#cc00cc'>.eq.</font> dtest) .<font color='#aa2200'>and</font>. (d___ <font color='#cc00cc'>.lt.</font> N__)) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="220">220 : </A>          <font color='#aa2200'>if</font> (<A HREF='transpmodel.html#netass'>netass</A> <font color='#cc00cc'>.le.</font> 0.d0) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="221">221 : </A>!<font color="#007700">           * estimates how bad the carbon loss would be instead of</font>
-<A NAME="222">222 : </A>!<font color="#007700">             running through the whole set</font>
-<A NAME="223">223 : </A>            <A HREF='transpmodel.html#netass'>netass</A> = <A HREF='transpmodel.html#netass'>netass</A> / nyt * ny_<font color="#007700"></font>
-<A NAME="224">224 : </A>          <font color='#aa2200'>else</font><font color="#007700"></font>
-<A NAME="225">225 : </A>            dtest = N__<font color="#007700"></font>
-<A NAME="226">226 : </A>          <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="227">227 : </A>        <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="228">228 : </A><font color="#007700"></font>
-<A NAME="229">229 : </A>      <font color='#aa2200'>enddo</font><font color="#007700"></font>
-<A NAME="230">230 : </A><font color="#007700"></font>
-<A NAME="231">231 : </A>!<font color="#007700">*-----END OF DAILY LOOPS-----------------------------------------------</font>
-<A NAME="232">232 : </A><font color="#007700"></font>
-<A NAME="233">233 : </A>      <font color='#aa2200'>if</font> (optmode <font color='#cc00cc'>.eq.</font> 0) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="234">234 : </A>        <font color='#aa2200'>print</font> *,"Cumulative error <font color='#aa2200'>in</font> water balance (initial Ws+Input-Output-final Ws, <font color='#aa2200'>in</font> m): ",error<font color="#007700"></font>
-<A NAME="235">235 : </A>        <font color='#aa2200'>print</font> *,"<font color='#aa2200'>Number</font> of times dtsu was limiting: ",dtsu_count<font color="#007700"></font>
-<A NAME="236">236 : </A>        <font color='#aa2200'>print</font> *,"<font color='#aa2200'>Number</font> of times dtmax was limiting: ",dtmax_count<font color="#007700"></font>
-<A NAME="237">237 : </A>        <font color='#aa2200'>close</font>(kfile_resultshourly)<font color="#007700"></font>
-<A NAME="238">238 : </A>        <font color='#aa2200'>close</font>(kfile_resultsdaily)<font color="#007700"></font>
-<A NAME="239">239 : </A>        <font color='#aa2200'>close</font>(kfile_yearly)<font color="#007700"></font>
-<A NAME="240">240 : </A>        <font color='#aa2200'>close</font>(kfile_rsurfdaily)<font color="#007700"></font>
-<A NAME="241">241 : </A>        <font color='#aa2200'>close</font>(kfile_delyuhourly)<font color="#007700"></font>
-<A NAME="242">242 : </A>        <font color='#aa2200'>close</font>(kfile_ruptkhourly)<font color="#007700"></font>
-<A NAME="243">243 : </A>        <font color='#aa2200'>close</font>(kfile_suvechourly)<font color="#007700"></font>
-<A NAME="244">244 : </A>      <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="245">245 : </A>    <font color="#007700"></font>
-<A NAME="246">246 : </A>      <font color='#aa2200'>if</font> (optmode <font color='#cc00cc'>.eq.</font> 2) <font color='#aa2200'>then</font><font color="#007700"></font>
-<A NAME="247">247 : </A>        <font color='#aa2200'>call</font> <A HREF='transpmodel_subroutines_called.html#vom_write_model_output'>vom_write_model_output</A>(<A HREF='transpmodel.html#netass'>netass</A>)<font color="#007700"></font>
-<A NAME="248">248 : </A>        <font color='#aa2200'>close</font>(kfile_model_output)<font color="#007700"></font>
-<A NAME="249">249 : </A>      <font color='#aa2200'>endif</font><font color="#007700"></font>
-<A NAME="250">250 : </A><font color="#007700"></font>
-<A NAME="251">251 : </A>      <font color='#aa2200'>return</font><font color="#007700"></font>
-<A NAME="252">252 : </A>      <font color='#aa2200'>end</font> <font color='#aa2200'>subroutine</font> transpmodel<font color="#007700"></font>
+<A NAME="172">172 : </A>      <font color='#aa2200'>enddo</font><font color="#007700"></font>
+<A NAME="173">173 : </A><font color="#007700"></font>
+<A NAME="174">174 : </A>!<font color="#007700">     * END OF DAILY LOOPS</font>
+<A NAME="175">175 : </A><font color="#007700"></font>
+<A NAME="176">176 : </A>      <font color='#aa2200'>call</font> <A HREF='transpmodel_subroutines_called.html#transpmodel_last_step'>transpmodel_last_step</A>(<A HREF='transpmodel.html#tp_netass'>tp_netass</A>, <A HREF='transpmodel.html#option1'>option1</A>)<font color="#007700"></font>
+<A NAME="177">177 : </A><font color="#007700"></font>
+<A NAME="178">178 : </A>      <font color='#aa2200'>return</font><font color="#007700"></font>
+<A NAME="179">179 : </A>      <font color='#aa2200'>end</font> <font color='#aa2200'>subroutine</font> transpmodel<font color="#007700"></font>
 
 </PRE>
 </BODY></HTML>
