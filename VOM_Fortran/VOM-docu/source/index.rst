@@ -44,11 +44,12 @@ The original theory and equations used in the model are described in:
 Information
 ------------------
 Author Contact:
-Stan Schymanski, Luxembourg Institute of Science and Technology
+Stan Schymanski
+Luxembourg Institute of Science and Technology
+www.list.lu
 
 Code availability:
 https://github.com/schymans/VOM
-
 
 Date of first version:
 April 2006

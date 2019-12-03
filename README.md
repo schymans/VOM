@@ -1,11 +1,9 @@
 # VOM
 The full name of the project is "Coupled Water Balance and Vegetation Optimality Model", in short "VOM". 
 The model predicts vegetation water use based on meteorological information, soils and topography only, without the need for prescribing site-specific vegetation properties or calibration against observed fluxes. 
-The model is described in the documentation in folder VOM-docu and at:
 
-http://www.bgc-jena.mpg.de/bgc-theory/index.php/Pubs/2009-WRR-SS 
+Program was originally developed by Stan Schymanski at the University of Western Australia (2002-2006), then at the Max-Planck-Institute for Biogeochemistry by Stan Schymanski, Andreas Ostrowski and Steffen Richter (2007-2011), then by Stan Schymanski at ETH Zurich (2011-2017) and since 2017 by Remko Nijzink and Stan Schymanski at the Luxembourg Institute of Science and Technology ( www.list.lu ).
 
-http://theses.library.uwa.edu.au/adt-WU2007.0095/
 
 ## Related papers:
 Schymanski, S. J., Roderick, M. L., Sivapalan, M., Hutley, L. B. and Beringer, J.: A test of the optimality approach to modelling canopy properties and CO2 uptake by natural vegetation, Plant, Cell & Environment, 30(12), 1586–1598, [doi:10.1111/j.1365-3040.2007.01728.x](https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1365-3040.2007.01728.x), 2007.
