@@ -176,7 +176,7 @@
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-      subroutine vom_write_dayyear_nc (rain, tairmax, tairmin, par,   &
+      subroutine vom_write_day_nc (rain, tairmax, tairmin, par,   &
              &  vd, esoil, jmax25t, jmax25g,             &
              &  pc, rlt , rlg, lambdat, lambdag,         &
              &  rrt, rrg , asst, &
@@ -273,7 +273,7 @@
 
 
       return
-      end subroutine vom_write_dayyear_nc
+      end subroutine vom_write_day_nc
 
 
 
@@ -282,9 +282,77 @@
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+     subroutine vom_write_day ( rain, tairmax, tairmin, par,   &
+             &  vd, esoil, jmax25t, jmax25g,             &
+             &  pc, rlt , rlg, lambdat, lambdag,         &
+             &  rrt, rrg , asst, &
+             &  assg, su_avg, zw, ws,     &
+             &  spgfcf, infx, etmt, etmg, su_1, topt,              &
+             & tcg, tct, cpccg, cpcct,                  &
+             & lai_t, lai_g, tp_netassg, tp_netasst )
+      use vom_vegwat_mod
+      implicit none
+
+      REAL*8,  INTENT(in) :: rain
+      REAL*8,  INTENT(in) :: tairmax
+      REAL*8,  INTENT(in) :: tairmin
+      REAL*8,  INTENT(in) :: par
+      REAL*8,  INTENT(in) :: vd
+      REAL*8,  INTENT(in) :: esoil
+      REAL*8,  INTENT(in) :: jmax25t
+      REAL*8,  INTENT(in) :: jmax25g
+      REAL*8,  INTENT(in) :: pc
+      REAL*8,  INTENT(in) :: rlt
+      REAL*8,  INTENT(in) :: rlg
+      REAL*8,  INTENT(in) :: lambdat
+      REAL*8,  INTENT(in) :: lambdag
+      REAL*8,  INTENT(in) :: rrt
+      REAL*8,  INTENT(in) :: rrg
+      REAL*8,  INTENT(in) :: asst
+      REAL*8,  INTENT(in) :: assg
+      REAL*8,  INTENT(in) :: su_avg
+      REAL*8,  INTENT(in) :: zw
+      REAL*8,  INTENT(in) :: ws
+      REAL*8,  INTENT(in) :: spgfcf
+      REAL*8,  INTENT(in) :: infx
+      REAL*8,  INTENT(in) :: etmt
+      REAL*8,  INTENT(in) :: etmg
+      REAL*8,  INTENT(in) :: su_1
+      REAL*8,  INTENT(in) :: topt
+      REAL*8,  INTENT(in) :: tcg
+      REAL*8,  INTENT(in) :: tct
+      REAL*8,  INTENT(in) :: cpccg
+      REAL*8,  INTENT(in) :: cpcct
+      REAL*8,  INTENT(in) :: lai_t
+      REAL*8,  INTENT(in) :: lai_g
+      REAL*8,  INTENT(in) :: tp_netassg
+      REAL*8,  INTENT(in) :: tp_netasst
+      CHARACTER(60) :: dailyformat
+      CHARACTER(3)  :: str
+
+!     * internal write to convert from number to string
+      write(str,'(I3)') wlayer_
+!     * includes a column for each sublayer
+      dailyformat = '(I6,I6,I4,I7,'//str//'E14.6)'
+
+      write(kfile_resultsdaily,'(I6,I7,I7,I7,I7,34E15.5)')             &
+     &  fyear(nday), fmonth(nday), fday(nday), nday, nhour-1,          &
+     &  rain, tairmax, tairmin, par,   &
+     &  vd, esoil, jmax25t, jmax25g,             &
+     &  pc, rlt , rlg, lambdat, lambdag,         &
+     &  rrt, rrg, asst, &
+     &  assg, su_avg, zw, ws,     &
+     &  spgfcf, infx, etmt, etmg, su_1, topt,              &
+     & tcg, tct, cpccg, cpcct,                  &
+     & lai_t, lai_g, tp_netassg, tp_netasst         
 
 
+      return
+      end subroutine vom_write_day
 
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
   subroutine check(status)
     use netcdf
