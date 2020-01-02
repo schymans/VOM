@@ -1,6 +1,16 @@
 Quickstart
 ===============================
 
+Dependencies
+--------------------------------
+Before starting, make sure the netcdf-fortran library is installed:
+
+.. code-block:: bash 
+
+    sudo apt install netcdf-bin libnetcdf-dev libnetcdff-dev
+
+The VOM will by default search for the netcdf installation in usr/include. 
+
 
 Compiling and testing the model
 --------------------------------
