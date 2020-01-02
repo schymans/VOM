@@ -298,6 +298,9 @@
 !     * File opening (saving climate and gstom ass data)
 
       if (vom_command .eq. 2) call vom_open_output()
+      if (vom_command .eq. 2) call vom_open_output_nc()
+
+
 
 !     * PARAMETER READING FROM SOILPROFILE.PAR
 
