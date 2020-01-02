@@ -197,6 +197,14 @@
        !formatted output for single model run
        if (option1 .eq. 2) then
         call vom_write_dayyear( tp_netassg, tp_netasst )
+        call vom_write_dayyear_nc( rain_d(nday), tairmax_d(nday), tairmin_d(nday), par_d(nday),   &
+             &  vd_d / 24.d0, esoil_d, jmax25t_d(2), jmax25g_d(2),             &
+             &  o_cai + pcg_d(2), rlt_d , rlg_d, lambdat_d, lambdag_d,         &
+             &  rrt_d * 3600.d0 * 24.d0, rrg_d * 3600.d0 * 24.d0, asst_d(2,2), &
+             &  assg_d(2,2,2), SUM(su__(1:wlayer_)) / wlayer_, zw_, wsnew,     &
+             &  spgfcf_d, infx_d, etmt_d, etmg_d, su__(1), topt_,              &
+             & tcg_d(2,2), q_tct_d(2), cpccg_d(2), q_cpcct_d,                  &
+             & lai_lt(2), lai_lg(2), tp_netassg, tp_netasst )
         call vom_add_yearly()
       endif
 
@@ -235,10 +243,12 @@
 
       subroutine transpmodel_last_step (tp_netass, option)
       use vom_vegwat_mod
+      use netcdf
       implicit none
 
       REAL*8, INTENT(in) :: tp_netass
       integer, INTENT(in) :: option
+      integer             :: status
 
       if (option .eq. 2) then
         print *,'Cumulative error in water balance (initial Ws+Input-Output-final Ws, in m): ',error
@@ -252,6 +262,9 @@
           close(kfile_delzhourly)
           close(kfile_ruptkthourly)
           close(kfile_suhourly)
+
+          status = nf90_close(ncid) 
+
 
         write(*,*) "Model run COMPLETE"
         write(*,*) " "

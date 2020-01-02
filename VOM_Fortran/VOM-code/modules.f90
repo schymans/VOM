@@ -112,6 +112,47 @@
       CHARACTER*100  :: i_outputpath     ! Constant root balance pressure of 1.5 MPa in grasses
       CHARACTER*100  :: i_inputpath      ! Constant root balance pressure of 1.5 MPa in grasses
 
+
+
+     integer :: ncid
+     integer :: rain_varid
+     integer :: tairmax_varid
+     integer :: tairmin_varid
+     integer :: par_varid
+     integer :: vd_varid
+     integer :: esoil_varid
+     integer :: jmax25t_varid
+     integer :: jmax25g_varid
+     integer :: pc_varid
+     integer :: rlt_varid
+     integer :: rlg_varid
+     integer :: lambdat_varid
+     integer :: lambdag_varid
+     integer :: rrt_varid
+     integer :: rrg_varid
+     integer :: asst_varid
+     integer :: assg_varid
+     integer :: su_avg_varid
+     integer :: zw_varid
+     integer :: ws_varid
+     integer :: spgfcf_varid
+     integer :: infx_varid
+     integer :: etmt_varid
+     integer :: etmg_varid
+     integer :: su_1_varid
+     integer :: topt_varid
+     integer :: tcg_varid
+     integer :: tct_varid
+     integer :: cpccg_d_varid
+     integer :: cpcct_d_varid
+     integer :: lai_t_varid
+     integer :: lai_g_varid
+     integer :: ncp_g_varid
+     integer :: ncp_t_varid
+
+     integer :: time_varid
+
+
       end module vom_file_mod
 
 !     ******************************************************************
