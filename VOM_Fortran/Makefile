@@ -43,7 +43,7 @@ MSRC = *.mod
 all: $(PROGRAM) 
 		
 $(PROGRAM): $(SRC) 
-	$(FC) -fopenmp -o $@ $^ -static-libgfortran -I${NC_INCLUDE -lnetcdff; rm $(MSRC)    #;mv $(MSRC) $(OBJ_PATH)
+	$(FC) -fopenmp -o $@ $^ -static-libgfortran -I${NC_INCLUDE} -lnetcdff; rm $(MSRC)    #;mv $(MSRC) $(OBJ_PATH)
 #	$(FC) -o $@ $^ -I${NFDIR}/include -L${NFDIR}/lib  -static ;mv $(MSRC) $(OBJ_PATH)
 %.o: %.f
 	$(FC) -o $@ $<

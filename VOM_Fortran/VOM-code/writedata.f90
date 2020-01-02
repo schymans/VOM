@@ -289,7 +289,11 @@
              &  assg, su_avg, zw, ws,     &
              &  spgfcf, infx, etmt, etmg, su_1, topt,              &
              & tcg, tct, cpccg, cpcct,                  &
-             & lai_t, lai_g, tp_netassg, tp_netasst )
+             & lai_t, lai_g, tp_netassg, tp_netasst, rsurft, &
+             & rain_yearly, par_yearly, srad_yearly, vd_yearly, esoil_yearly, etm_yearly,     &
+             & etmg_yearly, assg_yearly, rlg_yearly, rrg_yearly, cpccg_yearly, tcg_yearly,  &
+             & etmt_yearly, asst_yearly, rlt_yearly, rrt_yearly, cpcct_yearly, tct_yearly )
+
       use vom_vegwat_mod
       implicit none
 
@@ -327,6 +331,27 @@
       REAL*8,  INTENT(in) :: lai_g
       REAL*8,  INTENT(in) :: tp_netassg
       REAL*8,  INTENT(in) :: tp_netasst
+      REAL*8,  DIMENSION(s_maxlayer), INTENT(in):: rsurft
+
+      REAL*8,  INTENT(in) :: rain_yearly
+      REAL*8,  INTENT(in) :: par_yearly
+      REAL*8,  INTENT(in) :: srad_yearly
+      REAL*8,  INTENT(in) :: vd_yearly
+      REAL*8,  INTENT(in) :: esoil_yearly
+      REAL*8,  INTENT(in) :: etm_yearly
+      REAL*8,  INTENT(in) :: etmg_yearly
+      REAL*8,  INTENT(in) :: assg_yearly
+      REAL*8,  INTENT(in) :: rlg_yearly
+      REAL*8,  INTENT(in) :: rrg_yearly
+      REAL*8,  INTENT(in) :: cpccg_yearly
+      REAL*8,  INTENT(in) :: tcg_yearly
+      REAL*8,  INTENT(in) :: etmt_yearly
+      REAL*8,  INTENT(in) :: asst_yearly
+      REAL*8,  INTENT(in) :: rlt_yearly
+      REAL*8,  INTENT(in) :: rrt_yearly
+      REAL*8,  INTENT(in) :: cpcct_yearly
+      REAL*8,  INTENT(in) :: tct_yearly
+
       CHARACTER(60) :: dailyformat
       CHARACTER(3)  :: str
 
@@ -347,8 +372,54 @@
      & lai_t, lai_g, tp_netassg, tp_netasst         
 
 
+     write(kfile_rsurfdaily,dailyformat) fyear(nday), fmonth(nday), &
+     &    fday(nday), nday, rsurft(1:wlayer_) 
+
+
+
       return
       end subroutine vom_write_day
+
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+     subroutine vom_write_year ( rain_yearly, par_yearly, srad_yearly, vd_yearly, esoil_yearly, &
+             & etm_yearly, etmg_yearly, assg_yearly, rlg_yearly, rrg_yearly, cpccg_yearly, tcg_yearly,&
+             & etmt_yearly, asst_yearly, rlt_yearly, rrt_yearly, cpcct_yearly, tct_yearly )
+
+      use vom_vegwat_mod
+      implicit none
+
+      REAL*8,  INTENT(in) :: rain_yearly
+      REAL*8,  INTENT(in) :: par_yearly
+      REAL*8,  INTENT(in) :: srad_yearly
+      REAL*8,  INTENT(in) :: vd_yearly
+      REAL*8,  INTENT(in) :: esoil_yearly
+      REAL*8,  INTENT(in) :: etm_yearly
+      REAL*8,  INTENT(in) :: etmg_yearly
+      REAL*8,  INTENT(in) :: assg_yearly
+      REAL*8,  INTENT(in) :: rlg_yearly
+      REAL*8,  INTENT(in) :: rrg_yearly
+      REAL*8,  INTENT(in) :: cpccg_yearly
+      REAL*8,  INTENT(in) :: tcg_yearly
+      REAL*8,  INTENT(in) :: etmt_yearly
+      REAL*8,  INTENT(in) :: asst_yearly
+      REAL*8,  INTENT(in) :: rlt_yearly
+      REAL*8,  INTENT(in) :: rrt_yearly
+      REAL*8,  INTENT(in) :: cpcct_yearly
+      REAL*8,  INTENT(in) :: tct_yearly
+
+
+
+      write(kfile_resultsyearly,'(i6,18e16.6)') nyear, rain_yearly,       &
+     &    par_yearly, srad_yearly, vd_yearly, esoil_yearly, etm_yearly,     &
+     &    etmg_yearly, assg_yearly, rlg_yearly, rrg_yearly, cpccg_yearly, tcg_yearly,                &
+     &    etmt_yearly, asst_yearly, rlt_yearly, rrt_yearly, cpcct_yearly, tct_yearly
+
+
+      return
+      end subroutine vom_write_year
 
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
