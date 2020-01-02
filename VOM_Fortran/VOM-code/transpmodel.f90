@@ -311,7 +311,7 @@
 !     * File opening (saving climate and gstom ass data)
 
       if (vom_command .eq. 2) call vom_open_output()
-      if (vom_command .eq. 2) call vom_open_output_nc()
+
 
 
 
@@ -322,6 +322,10 @@
 !     * Climate and Calendar data reading
 
       call vom_get_hourly_clim()
+
+
+      if (vom_command .eq. 2) call vom_open_output_nc()
+
 
 !     * get timeseries of vegetation cover
       if(i_read_pc == 1) then

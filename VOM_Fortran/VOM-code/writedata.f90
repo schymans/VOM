@@ -36,7 +36,10 @@
 
 
      CHARACTER(len = 100)             :: filename 
-
+     CHARACTER(len = 250)             :: startdate 
+     CHARACTER(len = 2)             :: day_tmp 
+     CHARACTER(len = 2)             :: month_tmp 
+     CHARACTER(len = 4)             :: year_tmp 
      integer :: lon_dimid
      integer :: lon_varid
      integer :: lat_dimid
@@ -69,7 +72,17 @@
      ! Assign units attributes to coordinate variables.
      call check(  nf90_put_att(ncid, lat_varid, "units", "degrees_north") )
      call check(  nf90_put_att(ncid, lon_varid, "units", "degrees_south") )
-     call check(  nf90_put_att(ncid, time_varid, "units", "days since 1900") )
+
+     write(*,*) fday(1)
+     write(day_tmp,'(I2)') fday(1)
+     write(month_tmp,'(I2)') fmonth(1)
+     write(year_tmp,'(I4)') fyear(1)
+
+     startdate = adjustl( "days since ")//trim(adjustl(day_tmp))// & 
+                 trim(adjustl("-"))//trim(adjustl( month_tmp))// &
+                  trim(adjustl("-"))//trim(adjustl(year_tmp))  
+
+     call check(  nf90_put_att(ncid, time_varid, "units", startdate) )
 
      dimids = (/ lon_dimid, lat_dimid, time_dimid /)
 
@@ -176,8 +189,6 @@
       use netcdf
       implicit none
 
-      REAL*8,  INTENT(in) :: tp_netassg
-      REAL*8,  INTENT(in) :: tp_netasst
       REAL*8,  INTENT(in) :: rain
       REAL*8,  INTENT(in) :: tairmax
       REAL*8,  INTENT(in) :: tairmin
