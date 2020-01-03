@@ -75,6 +75,14 @@
       CHARACTER(len=*),parameter :: sfile_soilprofile   = 'soilprofile.par'
       CHARACTER(len=*),parameter :: sfile_model_output  = 'model_output.txt'
 
+      CHARACTER(len=*),parameter :: nfile_resultshourly = 'results_hourly.nc'
+      CHARACTER(len=*),parameter :: nfile_resultsdaily  = 'results_daily.nc'
+      CHARACTER(len=*),parameter :: nfile_resultsyearly = 'results_yearly.nc'
+      CHARACTER(len=*),parameter :: nfile_rsurfdaily    = 'rsurf_daily.nc'
+      CHARACTER(len=*),parameter :: nfile_delzhourly    = 'delz_hourly.nc'
+      CHARACTER(len=*),parameter :: nfile_ruptkthourly  = 'ruptkt_hourly.nc'
+      CHARACTER(len=*),parameter :: nfile_suhourly      = 'su_hourly.nc'
+
       CHARACTER(len=*),parameter :: sfile_random_output  = 'random_ncp.txt'
       CHARACTER(len=*),parameter :: sfile_random_params  = 'random_params.txt'
 

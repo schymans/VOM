@@ -57,8 +57,10 @@
 
       if(nc_flag .eqv. .True.) then
 
+
+         ! 
          filename = trim(adjustl(i_outputpath))// &
-                  trim(adjustl("results_daily.nc"))
+                  trim(adjustl(nfile_resultsdaily))
 
          ! Create the file. 
          call check( nf90_create(filename, nf90_clobber, ncid) ) 
