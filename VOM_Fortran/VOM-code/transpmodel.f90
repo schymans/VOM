@@ -211,7 +211,7 @@
         call vom_write_year( nyear, rain_y,       &
              &    par_y, srad_y, vd_y / (dayyear(nday-1)), esoil_y, etm_y,     &
              &    etmg_y, assg_y, rlg_y, rrg_y, cpccg_y, tcg_y,                &
-             &    etmt_y, asst_y, rlt_y, rrt_y, cpcct_y, tct_y)
+             &    etmt_y, asst_y, rlt_y, rrt_y, cpcct_y, tct_y, i_write_nc)
         endif
 
 !      * WRITING THE ACCUMULATED DATA FROM THE LAST YEAR TO FILE:
@@ -222,7 +222,7 @@
         call vom_write_year( nyear, rain_y,       &
          &    par_y, srad_y, vd_y / (dayyear(nday)), esoil_y, etm_y,       &
         &    etmg_y, assg_y, rlg_y, rrg_y, cpccg_y, tcg_y,                &
-        &    etmt_y, asst_y, rlt_y, rrt_y, cpcct_y, tct_y)
+        &    etmt_y, asst_y, rlt_y, rrt_y, cpcct_y, tct_y, i_write_nc)
         endif
 
         call vom_add_yearly()
@@ -285,6 +285,10 @@
 
           status = nf90_close(ncid) 
           status = nf90_close(ncid_rsurf) 
+          status = nf90_close(ncid_yearly) 
+          status = nf90_close(ncid_suhourly) 
+          status = nf90_close(ncid_ruptkt) 
+          status = nf90_close(ncid_suhourly) 
 
         write(*,*) "Model run COMPLETE"
         write(*,*) " "

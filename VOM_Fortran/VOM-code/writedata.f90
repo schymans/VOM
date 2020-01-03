@@ -525,8 +525,6 @@
         write(kfile_rsurfdaily,'(2A6,A4,A7,A)') 'fyear', 'fmonth',     &
      &    'fday', 'nday', 'rsurft_sublayer'
 
-      end if
-
 
       open(kfile_resultshourly, FILE=trim(adjustl(i_outputpath))//      &
            trim(adjustl(sfile_resultshourly)), STATUS='replace')
@@ -561,7 +559,7 @@
         write(kfile_suhourly,'(2A6,A4,A7,A5,A)') 'fyear', 'fmonth',    &
      &    'fday', 'nday', 'nhour', 'su_sublayer'
 
-
+      end if
 
       return
       end subroutine vom_open_output
@@ -719,7 +717,7 @@
 
      subroutine vom_write_year ( n_year, rain_yearly, par_yearly, srad_yearly, vd_yearly, esoil_yearly, &
              & etm_yearly, etmg_yearly, assg_yearly, rlg_yearly, rrg_yearly, cpccg_yearly, tcg_yearly,&
-             & etmt_yearly, asst_yearly, rlt_yearly, rrt_yearly, cpcct_yearly, tct_yearly )
+             & etmt_yearly, asst_yearly, rlt_yearly, rrt_yearly, cpcct_yearly, tct_yearly, nc_flag )
 
       use vom_vegwat_mod
       implicit none
@@ -743,14 +741,44 @@
       REAL*8,  INTENT(in) :: rrt_yearly
       REAL*8,  INTENT(in) :: cpcct_yearly
       REAL*8,  INTENT(in) :: tct_yearly
+      LOGICAL, INTENT(in) :: nc_flag
+
+     if(nc_flag .eqv. .TRUE.) then
+
+      count = (/ 1, 1, 1 /)
+      start = (/ 1, 1, nyear /)
+
+      !add timestep
+      call check( nf90_put_var(ncid, time_varid, nday, start= (/ nyear/)  ) )
+
+      !add variable values
+      call check( nf90_put_var(ncid_yearly, rainy_varid, rain_yearly, start = start ) )
+      call check( nf90_put_var(ncid_yearly, pary_varid, par_yearly, start = start ) )
+      call check( nf90_put_var(ncid_yearly, vdy_varid, vd_yearly, start = start ) )
+      call check( nf90_put_var(ncid_yearly, srady_varid, srad_yearly, start = start ) )
+      call check( nf90_put_var(ncid_yearly, esoily_varid, esoil_yearly, start = start ) )
+      call check( nf90_put_var(ncid_yearly, etmgy_varid, etmg_yearly, start = start ) )
+      call check( nf90_put_var(ncid_yearly, assgy_varid, assg_yearly, start = start ) )
+      call check( nf90_put_var(ncid_yearly, rlgy_varid, rlg_yearly, start = start ) )
+      call check( nf90_put_var(ncid_yearly, rrgy_varid, rrg_yearly, start = start ) )
+      call check( nf90_put_var(ncid_yearly, cpccgy_varid, cpccg_yearly, start = start ) )
+      call check( nf90_put_var(ncid_yearly, tcgy_varid, tcg_yearly, start = start ) )
+      call check( nf90_put_var(ncid_yearly, etmty_varid, etmt_yearly, start = start ) )
+      call check( nf90_put_var(ncid_yearly, assty_varid, asst_yearly, start = start ) )
+      call check( nf90_put_var(ncid_yearly, rlty_varid, rlt_yearly, start = start ) )
+      call check( nf90_put_var(ncid_yearly, rrty_varid, rrt_yearly, start = start ) )
+      call check( nf90_put_var(ncid_yearly, cpccty_varid, cpcct_yearly, start = start ) )
+      call check( nf90_put_var(ncid_yearly, tcty_varid, tct_yearly, start = start ) )
 
 
+     else
 
-      write(kfile_resultsyearly,'(i6,18e16.6)') n_year, rain_yearly,       &
-     &    par_yearly, srad_yearly, vd_yearly, esoil_yearly, etm_yearly,     &
-     &    etmg_yearly, assg_yearly, rlg_yearly, rrg_yearly, cpccg_yearly, tcg_yearly,                &
-     &    etmt_yearly, asst_yearly, rlt_yearly, rrt_yearly, cpcct_yearly, tct_yearly
+        write(kfile_resultsyearly,'(i6,18e16.6)') n_year, rain_yearly,       &
+        &    par_yearly, srad_yearly, vd_yearly, esoil_yearly, etm_yearly,     &
+        &    etmg_yearly, assg_yearly, rlg_yearly, rrg_yearly, cpccg_yearly, tcg_yearly,                &
+        &    etmt_yearly, asst_yearly, rlt_yearly, rrt_yearly, cpcct_yearly, tct_yearly
 
+     end if
 
       return
       end subroutine vom_write_year
