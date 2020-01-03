@@ -196,43 +196,35 @@
       !if (optmode .eq. 0) then
        !formatted output for single model run
        if (option1 .eq. 2) then
-        call vom_write_dayyear(tp_netassg, tp_netasst)
-        !call vom_write_day( rain_d(nday), tairmax_d(nday), tairmin_d(nday), par_d(nday),   &
-        !     &  vd_d / 24.d0, esoil_d, jmax25t_d(2), jmax25g_d(2),             &
-        !     &  o_cai + pcg_d(2), rlt_d , rlg_d, lambdat_d, lambdag_d,         &
-        !     &  rrt_d * 3600.d0 * 24.d0, rrg_d * 3600.d0 * 24.d0, asst_d(2,2), &
-        !     &  assg_d(2,2,2), SUM(su__(1:wlayer_)) / wlayer_, zw_, wsnew,     &
-        !     &  spgfcf_d, infx_d, etmt_d, etmg_d, su__(1), topt_,              &
-        !     & tcg_d(2,2), q_tct_d(2), cpccg_d(2), q_cpcct_d,                  &
-        !     & lai_lt(2), lai_lg(2), tp_netassg, tp_netasst, rsurft_ )             
 
-       !if (fyear(nday) .ne. nyear) then
-!       * for calculation of vd_y a -1 is added to nday for using dayyear of correct year
-       ! call vom_write_year( nyear, rain_y,       &
-       !      &    par_y, srad_y, vd_y / (dayyear(nday-1)), esoil_y, etm_y,     &
-       !      &    etmg_y, assg_y, rlg_y, rrg_y, cpccg_y, tcg_y,                &
-       !      &    etmt_y, asst_y, rlt_y, rrt_y, cpcct_y, tct_y)
-       ! endif
-
-!      * WRITING THE ACCUMULATED DATA FROM THE LAST YEAR TO FILE:
-
-       !if (nday .eq. c_maxday) then
-!       * call subroutine there to get yearly data for the output
-       ! call vom_add_yearly()
-       ! call vom_write_year( nyear, rain_y,       &
-       !  &    par_y, srad_y, vd_y / (dayyear(nday)), esoil_y, etm_y,       &
-       ! &    etmg_y, assg_y, rlg_y, rrg_y, cpccg_y, tcg_y,                &
-       ! &    etmt_y, asst_y, rlt_y, rrt_y, cpcct_y, tct_y)
-       ! endif
-
-        call vom_write_day_nc( rain_d(nday), tairmax_d(nday), tairmin_d(nday), par_d(nday),   &
+        call vom_write_day( rain_d(nday), tairmax_d(nday), tairmin_d(nday), par_d(nday),   &
              &  vd_d / 24.d0, esoil_d, jmax25t_d(2), jmax25g_d(2),             &
              &  o_cai + pcg_d(2), rlt_d , rlg_d, lambdat_d, lambdag_d,         &
              &  rrt_d * 3600.d0 * 24.d0, rrg_d * 3600.d0 * 24.d0, asst_d(2,2), &
              &  assg_d(2,2,2), SUM(su__(1:wlayer_)) / wlayer_, zw_, wsnew,     &
              &  spgfcf_d, infx_d, etmt_d, etmg_d, su__(1), topt_,              &
              & tcg_d(2,2), q_tct_d(2), cpccg_d(2), q_cpcct_d,                  &
-             & lai_lt(2), lai_lg(2), tp_netassg, tp_netasst )
+             & lai_lt(2), lai_lg(2), tp_netassg, tp_netasst, rsurft_, i_write_nc )             
+
+       if (fyear(nday) .ne. nyear) then
+!       * for calculation of vd_y a -1 is added to nday for using dayyear of correct year
+        call vom_write_year( nyear, rain_y,       &
+             &    par_y, srad_y, vd_y / (dayyear(nday-1)), esoil_y, etm_y,     &
+             &    etmg_y, assg_y, rlg_y, rrg_y, cpccg_y, tcg_y,                &
+             &    etmt_y, asst_y, rlt_y, rrt_y, cpcct_y, tct_y)
+        endif
+
+!      * WRITING THE ACCUMULATED DATA FROM THE LAST YEAR TO FILE:
+
+       if (nday .eq. c_maxday) then
+!       * call subroutine there to get yearly data for the output
+        call vom_add_yearly()
+        call vom_write_year( nyear, rain_y,       &
+         &    par_y, srad_y, vd_y / (dayyear(nday)), esoil_y, etm_y,       &
+        &    etmg_y, assg_y, rlg_y, rrg_y, cpccg_y, tcg_y,                &
+        &    etmt_y, asst_y, rlt_y, rrt_y, cpcct_y, tct_y)
+        endif
+
         call vom_add_yearly()
       endif
 
@@ -336,13 +328,6 @@
 
       call vom_alloc()
 
-!     * File opening (saving climate and gstom ass data)
-
-      if (vom_command .eq. 2) call vom_open_output()
-
-
-
-
 !     * PARAMETER READING FROM SOILPROFILE.PAR
 
       call vom_get_soilprofile()
@@ -352,7 +337,9 @@
       call vom_get_hourly_clim()
 
 
-      if (vom_command .eq. 2) call vom_open_output_nc()
+!     * File opening (saving climate and gstom ass data)
+
+      if (vom_command .eq. 2) call vom_open_output(i_write_nc)
 
 
 !     * get timeseries of vegetation cover
@@ -502,7 +489,8 @@
      &                    i_prootmg, i_growthmax, i_incrcovg,          &
      &                    i_incrjmax, i_incrlait, i_incrlaig,          &
      &                    i_extcoeffg, i_extcoefft, i_trans_vegcov,    &
-     &                    i_firstyear,i_lastyear, i_write_h, i_read_pc,&
+     &                    i_firstyear,i_lastyear, i_write_h,           &
+     &                    i_read_pc, i_write_nc,                       &
      &                    i_lai_function,  i_no_veg,                   &
      &                    i_inputpath, i_outputpath,                   &
      &                    o_lambdagf, o_wsgexp, o_lambdatf, o_wstexp,  &
@@ -670,64 +658,6 @@
       return
       end subroutine vom_dealloc
 
-
-
-!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-!*-----File opening (saving climate and gstom ass data)-----------------
-
-      subroutine vom_open_output ()
-      use vom_vegwat_mod
-      implicit none
-
-
-      open(kfile_resultshourly, FILE=trim(adjustl(i_outputpath))//      &
-           trim(adjustl(sfile_resultshourly)), STATUS='replace')
-      write(kfile_resultshourly,'(A6,A7,A7,A7,A7,22A15)') 'fyear',     &
-     &  'fmonth', 'fday', 'nday', 'nhour', 'rain', 'tair', 'par', 'vd',&
-     &  'esoil', 'pc', 'jmax25t', 'jmax25g', 'mqt', 'rl', 'lambdat',   &
-     &  'lambdag', 'rr', 'asst', 'assg', 'etmt', 'etmg', 'su_1',       &
-     &  'zw', 'ws', 'spgfcf', 'infx'
-
-      open(kfile_resultsdaily, FILE=trim(adjustl(i_outputpath))// &
-           trim(adjustl(sfile_resultsdaily)), STATUS='replace')
-      write(kfile_resultsdaily,'(A6,A7,A7,A7,A7, 34A15)') 'fyear',      &
-     &  'fmonth', 'fday', 'nday', 'nhour', 'rain', 'tairmax', 'tairmin', &
-     &  'par', 'vd', 'esoil', 'jmax25t', 'jmax25g', 'pc', 'rlt', 'rlg', &
-     &  'lambdat', 'lambdag', 'rrt', 'rrg', 'asst', 'assg', 'su_avg',  &
-     &  'zw', 'ws', 'spgfcf', 'infx', 'etmt', 'etmg', 'su_1', 'topt',  &
-     &  'tcg', 'tct', 'cpccg_d', 'cpcct_d',  'lai_t', 'lai_g', &
-     &'ncp_g', 'ncp_t'
-
-      open(kfile_resultsyearly, FILE=trim(adjustl(i_outputpath))// &
-           trim(adjustl(sfile_resultsyearly)), STATUS='replace')
-      write(kfile_resultsyearly,'(A6,18A16)') "nyear", "rain", "par",  &
-     &  "srad", "vd", "esoil", "etmt", "etmg", "assg", "rlg", "rrg",   &
-     &  "cpccg", "tcg", "etmt", "asst", "rlt", "rrt", "cpcct", "tct"
-
-        open(kfile_rsurfdaily, FILE=trim(adjustl(i_outputpath))// &
-             trim(adjustl(sfile_rsurfdaily)), STATUS='replace')
-        write(kfile_rsurfdaily,'(2A6,A4,A7,A)') 'fyear', 'fmonth',     &
-     &    'fday', 'nday', 'rsurft_sublayer'
-
-        open(kfile_delzhourly, FILE=trim(adjustl(i_outputpath))// &
-             trim(adjustl(sfile_delzhourly)), STATUS='replace')
-        write(kfile_delzhourly,'(2A6,A4,A7,A5,A)') 'fyear', 'fmonth',  &
-     &    'fday', 'nday', 'nhour', 'delz_sublayer'
-
-        open(kfile_ruptkthourly, FILE=trim(adjustl(i_outputpath))// &
-             trim(adjustl(sfile_ruptkthourly)), STATUS='replace')
-        write(kfile_ruptkthourly,'(2A6,A4,A7,A5,A)') 'fyear', 'fmonth',&
-     &    'fday', 'nday', 'nhour', 'ruptkt_sublayer'
-
-        open(kfile_suhourly, FILE=trim(adjustl(i_outputpath))// &
-             trim(adjustl(sfile_suhourly)), STATUS='replace')
-        write(kfile_suhourly,'(2A6,A4,A7,A5,A)') 'fyear', 'fmonth',    &
-     &    'fday', 'nday', 'nhour', 'su_sublayer'
-
-      return
-      end subroutine vom_open_output
 
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1895,60 +1825,6 @@
       return
       end subroutine vom_check_water
 
-!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-
-      subroutine vom_write_dayyear ( tp_netassg, tp_netasst )
-      use vom_vegwat_mod
-      implicit none
-
-      REAL*8,  INTENT(in) :: tp_netassg
-      REAL*8,  INTENT(in) :: tp_netasst
-      CHARACTER(60) :: dailyformat
-      CHARACTER(3)  :: str
-
-!     * internal write to convert from number to string
-      write(str,'(I3)') wlayer_
-!     * includes a column for each sublayer
-      dailyformat = '(I6,I6,I4,I7,'//str//'E14.6)'
-
-      write(kfile_resultsdaily,'(I6,I7,I7,I7,I7,34E15.5)')             &
-     &  fyear(nday), fmonth(nday), fday(nday), nday, nhour-1,          &
-     &  rain_d(nday), tairmax_d(nday), tairmin_d(nday), par_d(nday),   &
-     &  vd_d / 24.d0, esoil_d, jmax25t_d(2), jmax25g_d(2),             &
-     &  o_cai + pcg_d(2), rlt_d , rlg_d, lambdat_d, lambdag_d,         &
-     &  rrt_d * 3600.d0 * 24.d0, rrg_d * 3600.d0 * 24.d0, asst_d(2,2), &
-     &  assg_d(2,2,2), SUM(su__(1:wlayer_)) / wlayer_, zw_, wsnew,     &
-     &  spgfcf_d, infx_d, etmt_d, etmg_d, su__(1), topt_,              &
-     & tcg_d(2,2), q_tct_d(2), cpccg_d(2), q_cpcct_d,                  &
-     & lai_lt(2), lai_lg(2), tp_netassg, tp_netasst         
-
-        write(kfile_rsurfdaily,dailyformat) fyear(nday), fmonth(nday), &
-     &    fday(nday), nday, rsurft_(1:wlayer_)
-
-      if (fyear(nday) .ne. nyear) then
-!       * for calculation of vd_y a -1 is added to nday for using dayyear of correct year
-        write(kfile_resultsyearly,'(i6,18e16.6)') nyear, rain_y,       &
-     &    par_y, srad_y, vd_y / (dayyear(nday-1)), esoil_y, etm_y,     &
-     &    etmg_y, assg_y, rlg_y, rrg_y, cpccg_y, tcg_y,                &
-     &    etmt_y, asst_y, rlt_y, rrt_y, cpcct_y, tct_y
-      endif
-
-!     * WRITING THE ACCUMULATED DATA FROM THE LAST YEAR TO FILE:
-
-      if (nday .eq. c_maxday) then
-!       * call subroutine there to get yearly data for the output
-        call vom_add_yearly()
-        write(kfile_resultsyearly,'(i6,18e16.6)') nyear, rain_y,       &
-     &    par_y, srad_y, vd_y / (dayyear(nday)), esoil_y, etm_y,       &
-     &    etmg_y, assg_y, rlg_y, rrg_y, cpccg_y, tcg_y,                &
-     &    etmt_y, asst_y, rlt_y, rrt_y, cpcct_y, tct_y
-      endif
-
-      return
-      end subroutine vom_write_dayyear
 
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
