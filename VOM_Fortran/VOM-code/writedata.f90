@@ -348,7 +348,8 @@
          ! End define mode.
          call check(  nf90_enddef(ncid_hourly) )
 
-
+         call check(  nf90_put_var(ncid_hourly, lat_hourly_varid, i_lat ) )
+         call check(  nf90_put_var(ncid_hourly, lon_hourly_varid, -125.0 ))
 
          ! **************************************************************
          ! results yearly
@@ -422,6 +423,9 @@
          ! End define mode.
          call check(  nf90_enddef(ncid_yearly) )
 
+         call check(  nf90_put_var(ncid_yearly, lat_yearly_varid, i_lat ) )
+         call check(  nf90_put_var(ncid_yearly, lon_yearly_varid, -125.0 ))
+
          ! **************************************************************
          ! results root water uptake
          filename = trim(adjustl(i_outputpath))// &
@@ -433,7 +437,7 @@
          ! Define the dimensions. NetCDF will hand back an ID for each. 
          call check(  nf90_def_dim(ncid_ruptkt, "lat", n_lat, lat_ruptkt_dimid) )
          call check(  nf90_def_dim(ncid_ruptkt, "lon", n_lon, lon_ruptkt_dimid) )
-         call check(  nf90_def_dim(ncid_ruptkt, "time", NF90_UNLIMITED, time_dimid)) 
+         call check(  nf90_def_dim(ncid_ruptkt, "time", NF90_UNLIMITED, time_ruptkt_dimid)) 
          call check(  nf90_def_dim(ncid_ruptkt, "level", s_maxlayer, z_ruptkt_dimid) )
 
          call check(  nf90_def_var(ncid_ruptkt, "lat", NF90_REAL, lat_ruptkt_dimid, lat_ruptkt_varid) )
@@ -463,6 +467,10 @@
 
          ! End define mode.
          call check(  nf90_enddef(ncid_ruptkt) )
+
+         call check(  nf90_put_var(ncid_ruptkt, z_ruptkt_varid, depth) )
+         call check(  nf90_put_var(ncid_ruptkt, lat_ruptkt_varid, i_lat ) )
+         call check(  nf90_put_var(ncid_ruptkt, lon_ruptkt_varid, -125.0 ))
 
 
          ! **************************************************************
@@ -506,6 +514,8 @@
 
          ! End define mode.
          call check(  nf90_enddef(ncid_suhourly) )
+
+         call check(  nf90_put_var(ncid_suhourly, z_suhourly_varid, depth) )
 
       else
       !else plain text files instead of netcdf
@@ -720,6 +730,7 @@
              & etmt_yearly, asst_yearly, rlt_yearly, rrt_yearly, cpcct_yearly, tct_yearly, nc_flag )
 
       use vom_vegwat_mod
+      use netcdf
       implicit none
 
       INTEGER,  INTENT(in) :: n_year
@@ -742,6 +753,9 @@
       REAL*8,  INTENT(in) :: cpcct_yearly
       REAL*8,  INTENT(in) :: tct_yearly
       LOGICAL, INTENT(in) :: nc_flag
+      integer :: start(3)
+      integer :: count(3)
+
 
      if(nc_flag .eqv. .TRUE.) then
 
