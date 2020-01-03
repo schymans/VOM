@@ -284,7 +284,7 @@
           close(kfile_suhourly)
 
           status = nf90_close(ncid) 
-
+          status = nf90_close(ncid_rsurf) 
 
         write(*,*) "Model run COMPLETE"
         write(*,*) " "

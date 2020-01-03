@@ -46,22 +46,34 @@
      CHARACTER(len = 4)             :: year_tmp 
      integer :: lon_dimid
      integer :: lon_varid
+     integer :: lon_rsurf_dimid
+     integer :: lon_rsurf_varid
      integer :: lat_dimid
      integer :: lat_varid
+     integer :: lat_rsurf_dimid
+     integer :: lat_rsurf_varid
+     integer :: z_dimid
+     integer :: z_varid
      integer :: dimids(3)
+     integer :: dimids_surf(4)
 
      integer :: time_dimid
+     integer :: time_rsurf_dimid
      integer :: n_lat = 1
      integer :: n_lon = 1
      integer :: status 
+     integer :: i
+     real*8, dimension(s_maxlayer) :: depth 
+
 
       if(nc_flag .eqv. .True.) then
 
-
-         ! 
+         ! **************************************************************
+         ! first for dailyresults
          filename = trim(adjustl(i_outputpath))// &
                   trim(adjustl(nfile_resultsdaily))
 
+        write(*,*) filename
          ! Create the file. 
          call check( nf90_create(filename, nf90_clobber, ncid) ) 
 
@@ -70,13 +82,15 @@
          call check(  nf90_def_dim(ncid, "lon", n_lon, lon_dimid) )
          call check(  nf90_def_dim(ncid, "time", NF90_UNLIMITED, time_dimid)) 
 
+
          call check(  nf90_def_var(ncid, "lat", NF90_REAL, lat_dimid, lat_varid) )
          call check(  nf90_def_var(ncid, "lon", NF90_REAL, lon_dimid, lon_varid) )
          call check(  nf90_def_var(ncid, "time", NF90_INT, time_dimid, time_varid) )
 
          ! Assign units attributes to coordinate variables.
          call check(  nf90_put_att(ncid, lat_varid, "units", "degrees_north") )
-         call check(  nf90_put_att(ncid, lon_varid, "units", "degrees_south") )
+         call check(  nf90_put_att(ncid, lon_varid, "units", "degrees_east") )
+
 
          ! internal write for datestamp
          write(day_tmp,'(I2)') fday(1)
@@ -173,6 +187,53 @@
          !call check(  nf90_put_var(ncid, lon_varid, i_lon) 
 
          !call check( nf90_put_var(ncid, time_varid, nday  ) )
+
+         ! **************************************************************
+         ! daily results rsurf
+         filename = trim(adjustl(i_outputpath))// &
+                  trim(adjustl(nfile_rsurfdaily))
+
+         ! Create the file. 
+         call check( nf90_create(filename, nf90_clobber, ncid_rsurf) ) 
+
+         ! Define the dimensions. NetCDF will hand back an ID for each. 
+         call check(  nf90_def_dim(ncid_rsurf, "latitude", n_lat, lat_rsurf_dimid) )
+         call check(  nf90_def_dim(ncid_rsurf, "longitude", n_lon, lon_rsurf_dimid) )
+         call check(  nf90_def_dim(ncid_rsurf, "time", NF90_UNLIMITED, time_rsurf_dimid)) 
+         call check(  nf90_def_dim(ncid_rsurf, "level", s_maxlayer, z_dimid) )
+
+         call check(  nf90_def_var(ncid_rsurf, "latitude", NF90_REAL, lat_rsurf_dimid, lat_rsurf_varid) )
+         call check(  nf90_def_var(ncid_rsurf, "longitude", NF90_REAL, lon_rsurf_dimid, lon_rsurf_varid) )
+         call check(  nf90_def_var(ncid_rsurf, "time", NF90_INT, time_rsurf_dimid, time_rsurf_varid) )
+         call check(  nf90_def_var(ncid_rsurf, "level", NF90_REAL, z_dimid, z_varid) )
+
+         ! Assign units attributes to coordinate variables.
+         call check(  nf90_put_att(ncid_rsurf, time_rsurf_varid, "units", startdate) )
+         call check(  nf90_put_att(ncid_rsurf, lat_rsurf_varid, "units", "degrees_north") )
+         call check(  nf90_put_att(ncid_rsurf, lon_rsurf_varid, "units", "degrees_east") )
+         call check(  nf90_put_att(ncid_rsurf, z_varid, "units", "meters") )
+
+         dimids_surf = (/  lat_rsurf_dimid, lon_rsurf_dimid,  z_dimid, time_rsurf_dimid /)
+
+         !defining the variable
+         call check(  nf90_def_var(ncid_rsurf, 'rsurf', NF90_REAL, dimids_surf, rsurf_varid) )
+
+         ! Add units to the variable.
+         call check(  nf90_put_att(ncid_rsurf, rsurf_varid, "units", "m2 m-3 d-1") )  
+
+         ! End define mode.
+         call check(  nf90_enddef(ncid_rsurf) )
+
+         call check(  nf90_put_var(ncid_rsurf, lat_rsurf_varid, i_lat ) )
+         call check(  nf90_put_var(ncid_rsurf, lon_rsurf_varid, -125.0 ))
+
+         depth(1) = 0.5*s_delz(1)
+         do i=2, s_maxlayer             
+           depth(i) = (sum(s_delz(1:(i-1) )) + 0.5*s_delz(i) ) 
+         end do
+
+
+         call check(  nf90_put_var(ncid_rsurf, z_varid, depth) )
 
       else
       !else plain text files instead of netcdf
@@ -290,6 +351,10 @@
 
       integer :: start(3)
       integer :: count(3)
+
+      integer :: start_rsurf(4)
+      integer :: count_rsurf(4)
+
       CHARACTER(60) :: dailyformat
       CHARACTER(3)  :: str
 
@@ -336,6 +401,17 @@
       call check( nf90_put_var(ncid, lai_g_varid, lai_g, start = start ) )
       call check( nf90_put_var(ncid, ncp_g_varid, tp_netassg, start = start ) )
       call check( nf90_put_var(ncid, ncp_t_varid, tp_netasst, start = start ) )
+
+      count_rsurf = (/ 1, 1, s_maxlayer, 1 /)
+      start_rsurf = (/ 1, 1, 1, nday  /)
+      !count_rsurf = (/ 1, 1, 1 /)
+      !start_rsurf = (/ 1, 1, nday /)
+
+      !add timestep
+      call check( nf90_put_var(ncid_rsurf, time_rsurf_varid, nday, start= (/ nday/)  ) )
+      call check( nf90_put_var(ncid_rsurf, rsurf_varid, rsurft, start = start_rsurf, count=count_rsurf ) )
+
+      !call check( nf90_put_var(ncid_rsurf, rsurf_varid, rsurft(1), start = start_rsurf ) )
 
      else
 

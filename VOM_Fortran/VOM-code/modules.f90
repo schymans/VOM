@@ -123,6 +123,8 @@
 
 
      integer :: ncid
+     integer :: ncid_rsurf
+
      integer :: rain_varid
      integer :: tairmax_varid
      integer :: tairmin_varid
@@ -157,8 +159,10 @@
      integer :: lai_g_varid
      integer :: ncp_g_varid
      integer :: ncp_t_varid
+     integer :: rsurf_varid
 
      integer :: time_varid
+     integer :: time_rsurf_varid
 
 
       end module vom_file_mod
