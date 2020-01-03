@@ -124,6 +124,11 @@
 
      integer :: ncid
      integer :: ncid_rsurf
+     integer :: ncid_hourly
+     integer :: ncid_yearly
+     integer :: ncid_ruptkt
+     integer :: ncid_suhourly
+
 
      integer :: rain_varid
      integer :: tairmax_varid
@@ -161,8 +166,56 @@
      integer :: ncp_t_varid
      integer :: rsurf_varid
 
+     integer :: rainh_varid
+     integer :: tairh_varid
+     integer :: parh_varid
+     integer :: vdh_varid
+     integer :: esoilh_varid
+     integer :: jmax25th_varid
+     integer :: jmax25gh_varid
+     integer :: pch_varid
+     integer :: rlh_varid
+     integer :: mqth_varid
+     integer :: lambdath_varid
+     integer :: lambdagh_varid
+     integer :: rrh_varid
+     integer :: assth_varid
+     integer :: assgh_varid
+     integer :: su1h_varid
+     integer :: zwh_varid
+     integer :: wsh_varid
+     integer :: spgfcfh_varid
+     integer :: infxh_varid
+     integer :: etmth_varid
+     integer :: etmgh_varid
+ 
+     integer :: rainy_varid
+     integer :: pary_varid
+     integer :: vdy_varid
+     integer :: srady_varid
+     integer :: esoily_varid
+     integer :: etmgy_varid
+     integer :: assgy_varid
+     integer :: rlgy_varid
+     integer :: rrgy_varid
+     integer :: cpccgy_varid
+     integer :: tcgy_varid
+     integer :: etmty_varid
+     integer :: assty_varid
+     integer :: rlty_varid
+     integer :: rrty_varid
+     integer :: cpccty_varid
+     integer :: tcty_varid
+
+     integer :: ruptkt_varid
+     integer :: suhourly_varid
+
      integer :: time_varid
      integer :: time_rsurf_varid
+     integer :: time_hourly_varid
+     integer :: time_yearly_varid
+     integer :: time_ruptkt_varid
+     integer :: time_suhourly_varid
 
 
       end module vom_file_mod

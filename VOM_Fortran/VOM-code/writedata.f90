@@ -48,17 +48,50 @@
      integer :: lon_varid
      integer :: lon_rsurf_dimid
      integer :: lon_rsurf_varid
+     integer :: lon_hourly_dimid
+     integer :: lon_hourly_varid
+     integer :: lon_yearly_dimid
+     integer :: lon_yearly_varid
+     integer :: lon_ruptkt_dimid
+     integer :: lon_ruptkt_varid
+     integer :: lon_suhourly_dimid
+     integer :: lon_suhourly_varid
+
      integer :: lat_dimid
      integer :: lat_varid
      integer :: lat_rsurf_dimid
      integer :: lat_rsurf_varid
+     integer :: lat_hourly_dimid
+     integer :: lat_hourly_varid
+     integer :: lat_yearly_dimid
+     integer :: lat_yearly_varid
+     integer :: lat_ruptkt_dimid
+     integer :: lat_ruptkt_varid
+     integer :: lat_suhourly_dimid
+     integer :: lat_suhourly_varid
+
      integer :: z_dimid
      integer :: z_varid
+     integer :: z_ruptkt_varid
+     integer :: z_suhourly_varid
+     integer :: z_ruptkt_dimid
+     integer :: z_suhourly_dimid
      integer :: dimids(3)
      integer :: dimids_surf(4)
+     integer :: dimids_hourly(3)
+     integer :: dimids_yearly(3)
+     integer :: dimids_ruptkt(4)
+     integer :: dimids_suhourly(4)
+
+
 
      integer :: time_dimid
      integer :: time_rsurf_dimid
+     integer :: time_hourly_dimid
+     integer :: time_yearly_dimid
+     integer :: time_ruptkt_dimid
+     integer :: time_suhourly_dimid
+
      integer :: n_lat = 1
      integer :: n_lon = 1
      integer :: status 
@@ -73,7 +106,6 @@
          filename = trim(adjustl(i_outputpath))// &
                   trim(adjustl(nfile_resultsdaily))
 
-        write(*,*) filename
          ! Create the file. 
          call check( nf90_create(filename, nf90_clobber, ncid) ) 
 
@@ -232,8 +264,248 @@
            depth(i) = (sum(s_delz(1:(i-1) )) + 0.5*s_delz(i) ) 
          end do
 
-
          call check(  nf90_put_var(ncid_rsurf, z_varid, depth) )
+
+         ! **************************************************************
+         ! results hourly
+         filename = trim(adjustl(i_outputpath))// &
+                  trim(adjustl(nfile_resultshourly))
+
+         ! Create the file. 
+         call check( nf90_create(filename, nf90_clobber, ncid_hourly) ) 
+
+         ! Define the dimensions. NetCDF will hand back an ID for each. 
+         call check(  nf90_def_dim(ncid_hourly, "lat", n_lat, lat_hourly_dimid) )
+         call check(  nf90_def_dim(ncid_hourly, "lon", n_lon, lon_hourly_dimid) )
+         call check(  nf90_def_dim(ncid_hourly, "time", NF90_UNLIMITED, time_hourly_dimid)) 
+
+         call check(  nf90_def_var(ncid_hourly, "lat", NF90_REAL, lat_hourly_dimid, lat_hourly_varid) )
+         call check(  nf90_def_var(ncid_hourly, "lon", NF90_REAL, lon_hourly_dimid, lon_hourly_varid) )
+         call check(  nf90_def_var(ncid_hourly, "time", NF90_INT, time_hourly_dimid, time_hourly_varid) )
+
+         ! Assign units attributes to coordinate variables.
+         call check(  nf90_put_att(ncid_hourly, lat_hourly_varid, "units", "degrees_north") )
+         call check(  nf90_put_att(ncid_hourly, lon_hourly_varid, "units", "degrees_east") )
+
+         startdate = adjustl( "hours since ")//trim(adjustl(day_tmp))// & 
+                 trim(adjustl("-"))//trim(adjustl( month_tmp))// &
+                  trim(adjustl("-"))//trim(adjustl(year_tmp))  
+
+         call check(  nf90_put_att(ncid_hourly, time_hourly_varid, "units", startdate) )
+
+         ! Array with id of dimensions
+         dimids_hourly = (/ lon_hourly_dimid, lat_hourly_dimid, time_hourly_dimid /)
+
+        ! Defining the variables.
+         call check(  nf90_def_var(ncid_hourly, 'rain', NF90_REAL, dimids_hourly, rainh_varid) )
+         call check(  nf90_def_var(ncid_hourly, 'tair', NF90_REAL, dimids_hourly, tairh_varid) )
+         call check(  nf90_def_var(ncid_hourly, 'par', NF90_REAL, dimids_hourly, parh_varid) )
+         call check(  nf90_def_var(ncid_hourly, 'vd', NF90_REAL, dimids_hourly, vdh_varid) )
+         call check(  nf90_def_var(ncid_hourly, 'esoil', NF90_REAL, dimids_hourly, esoilh_varid) )
+         call check(  nf90_def_var(ncid_hourly, 'pc', NF90_REAL, dimids_hourly, pch_varid) )
+         call check(  nf90_def_var(ncid_hourly, 'jmax25t', NF90_REAL, dimids_hourly, jmax25th_varid) )
+         call check(  nf90_def_var(ncid_hourly, 'jmax25g', NF90_REAL, dimids_hourly, jmax25gh_varid) )
+         call check(  nf90_def_var(ncid_hourly, 'mqt', NF90_REAL, dimids_hourly, mqth_varid) )
+         call check(  nf90_def_var(ncid_hourly, 'rl', NF90_REAL, dimids_hourly, rlh_varid) )
+         call check(  nf90_def_var(ncid_hourly, 'lambdat', NF90_REAL, dimids_hourly, lambdath_varid) )
+         call check(  nf90_def_var(ncid_hourly, 'lambdag', NF90_REAL, dimids_hourly, lambdagh_varid) )
+         call check(  nf90_def_var(ncid_hourly, 'rr', NF90_REAL, dimids_hourly, rrh_varid) )
+         call check(  nf90_def_var(ncid_hourly, 'asst', NF90_REAL, dimids_hourly, assth_varid) )
+         call check(  nf90_def_var(ncid_hourly, 'assg', NF90_REAL, dimids_hourly, assgh_varid) )
+         call check(  nf90_def_var(ncid_hourly, 'etmt', NF90_REAL, dimids_hourly, etmth_varid))
+         call check(  nf90_def_var(ncid_hourly, 'etmg', NF90_REAL, dimids_hourly, etmgh_varid) )
+         call check(  nf90_def_var(ncid_hourly, 'su_1', NF90_REAL, dimids_hourly, su1h_varid) )
+         call check(  nf90_def_var(ncid_hourly, 'zw', NF90_REAL, dimids_hourly, zwh_varid) )
+         call check(  nf90_def_var(ncid_hourly, 'ws', NF90_REAL, dimids_hourly, wsh_varid) )
+         call check(  nf90_def_var(ncid_hourly, 'spgfcf', NF90_REAL, dimids_hourly, spgfcfh_varid) )
+         call check(  nf90_def_var(ncid_hourly, 'infx', NF90_REAL, dimids_hourly, infxh_varid) )
+
+
+         ! Add units to the variables.
+         call check(  nf90_put_att(ncid_hourly, rainh_varid, "units", "m/s") )
+         call check(  nf90_put_att(ncid_hourly, tairh_varid, "units", "oC") )
+         call check(  nf90_put_att(ncid_hourly, parh_varid, "units", "mol m-2 s-1") )
+         call check(  nf90_put_att(ncid_hourly, vdh_varid, "units", "mol mol-1") )
+         call check(  nf90_put_att(ncid_hourly, esoilh_varid, "units", "m/h") )
+         call check(  nf90_put_att(ncid_hourly, jmax25th_varid, "units", "mol m-2 s-1") )
+         call check(  nf90_put_att(ncid_hourly, jmax25gh_varid, "units", "mol m-2 s-1") )
+         call check(  nf90_put_att(ncid_hourly, pch_varid, "units", "-") )
+         call check(  nf90_put_att(ncid_hourly, rlh_varid, "units", "mol m-2 d-1") )
+         call check(  nf90_put_att(ncid_hourly, mqth_varid, "units", "kg m-2") )
+         call check(  nf90_put_att(ncid_hourly, lambdath_varid, "units", "mol mol-1") )
+         call check(  nf90_put_att(ncid_hourly, lambdagh_varid, "units", "mol mol-1") )
+         call check(  nf90_put_att(ncid_hourly, rrh_varid, "units", "mol m-2 s-1") )
+         call check(  nf90_put_att(ncid_hourly, assth_varid, "units", "mol m-2 h-1") )
+         call check(  nf90_put_att(ncid_hourly, assgh_varid, "units", "mol m-2 h-1") )
+         call check(  nf90_put_att(ncid_hourly, su1h_varid, "units", "-") )
+         call check(  nf90_put_att(ncid_hourly, zwh_varid, "units", "m") )
+         call check(  nf90_put_att(ncid_hourly, wsh_varid, "units", "m"))
+         call check(  nf90_put_att(ncid_hourly, spgfcfh_varid, "units", "m/h") )
+         call check(  nf90_put_att(ncid_hourly, infxh_varid, "units", "m/h") )
+         call check(  nf90_put_att(ncid_hourly, etmth_varid, "units", "m/h") )
+         call check(  nf90_put_att(ncid_hourly, etmgh_varid, "units", "m/h") )
+
+         ! End define mode.
+         call check(  nf90_enddef(ncid_hourly) )
+
+
+
+         ! **************************************************************
+         ! results yearly
+         filename = trim(adjustl(i_outputpath))// &
+                  trim(adjustl(nfile_resultsyearly))
+
+         ! Create the file. 
+         call check( nf90_create(filename, nf90_clobber, ncid_yearly) ) 
+
+         ! Define the dimensions. NetCDF will hand back an ID for each. 
+         call check(  nf90_def_dim(ncid_yearly, "lat", n_lat, lat_yearly_dimid) )
+         call check(  nf90_def_dim(ncid_yearly, "lon", n_lon, lon_yearly_dimid) )
+         call check(  nf90_def_dim(ncid_yearly, "time", NF90_UNLIMITED, time_yearly_dimid)) 
+
+         call check(  nf90_def_var(ncid_yearly, "lat", NF90_REAL, lat_yearly_dimid, lat_yearly_varid) )
+         call check(  nf90_def_var(ncid_yearly, "lon", NF90_REAL, lon_yearly_dimid, lon_yearly_varid) )
+         call check(  nf90_def_var(ncid_yearly, "time", NF90_INT, time_yearly_dimid, time_yearly_varid) )
+
+         ! Assign units attributes to coordinate variables.
+         call check(  nf90_put_att(ncid_yearly, lat_yearly_varid, "units", "degrees_north") )
+         call check(  nf90_put_att(ncid_yearly, lon_yearly_varid, "units", "degrees_east") )
+
+         startdate = adjustl( "years since ")//trim(adjustl(day_tmp))// & 
+                 trim(adjustl("-"))//trim(adjustl( month_tmp))// &
+                  trim(adjustl("-"))//trim(adjustl(year_tmp))  
+
+         call check(  nf90_put_att(ncid_yearly, time_yearly_varid, "units", startdate) )
+
+         ! Array with id of dimensions
+         dimids_yearly = (/ lon_yearly_dimid, lat_yearly_dimid, time_yearly_dimid /)
+
+
+       ! Defining the variables.
+         call check(  nf90_def_var(ncid_yearly, 'rain', NF90_REAL, dimids_yearly, rainy_varid) )
+         call check(  nf90_def_var(ncid_yearly, 'par', NF90_REAL, dimids_yearly, pary_varid) )
+         call check(  nf90_def_var(ncid_yearly, 'vd', NF90_REAL, dimids_yearly, vdy_varid) )
+         call check(  nf90_def_var(ncid_yearly, 'srad', NF90_REAL, dimids_yearly, srady_varid) )
+         call check(  nf90_def_var(ncid_yearly, 'esoil', NF90_REAL, dimids_yearly, esoily_varid) )
+         call check(  nf90_def_var(ncid_yearly, 'etmg', NF90_REAL, dimids_yearly, etmgy_varid) )
+         call check(  nf90_def_var(ncid_yearly, 'assg', NF90_REAL, dimids_yearly, assgy_varid) )
+         call check(  nf90_def_var(ncid_yearly, 'rlg', NF90_REAL, dimids_yearly, rlgy_varid) )
+         call check(  nf90_def_var(ncid_yearly, 'rrg', NF90_REAL, dimids_yearly, rrgy_varid) )
+         call check(  nf90_def_var(ncid_yearly, 'cpccg', NF90_REAL, dimids_yearly, cpccgy_varid) )
+         call check(  nf90_def_var(ncid_yearly, 'tcg', NF90_REAL, dimids_yearly, tcgy_varid) )
+         call check(  nf90_def_var(ncid_yearly, 'etmt', NF90_REAL, dimids_yearly, etmty_varid))
+         call check(  nf90_def_var(ncid_yearly, 'asst', NF90_REAL, dimids_yearly, assty_varid) )
+         call check(  nf90_def_var(ncid_yearly, 'rlt', NF90_REAL, dimids_yearly, rlty_varid) )
+         call check(  nf90_def_var(ncid_yearly, 'rrt', NF90_REAL, dimids_yearly, rrty_varid) )
+         call check(  nf90_def_var(ncid_yearly, 'cpcct', NF90_REAL, dimids_yearly, cpccty_varid) )
+         call check(  nf90_def_var(ncid_yearly, 'tct', NF90_REAL, dimids_yearly, tcty_varid) )
+
+         ! Add units to the variables.
+         call check(  nf90_put_att(ncid_yearly, rainy_varid, "units", "m/year") )
+         call check(  nf90_put_att(ncid_yearly, pary_varid, "units", "mol m-2 s-1") )
+         call check(  nf90_put_att(ncid_yearly, vdy_varid, "units", "mol mol-1") )
+         call check(  nf90_put_att(ncid_yearly, srady_varid, "units", "MJ m-2 year-1") )
+         call check(  nf90_put_att(ncid_yearly, esoily_varid, "units", "m/year") )
+         call check(  nf90_put_att(ncid_yearly, etmgy_varid, "units", "m/year") )
+         call check(  nf90_put_att(ncid_yearly, assgy_varid, "units", "mol m-2 year-1") )
+         call check(  nf90_put_att(ncid_yearly, rlgy_varid, "units", "mol m-2 year-1") )
+         call check(  nf90_put_att(ncid_yearly, rrgy_varid, "units", "mol m-2 year-1") )
+         call check(  nf90_put_att(ncid_yearly, cpccgy_varid, "units", "mol m-2 year-1") )
+         call check(  nf90_put_att(ncid_yearly, tcgy_varid, "units", "mol m-2 year-1") )
+         call check(  nf90_put_att(ncid_yearly, etmty_varid, "units", "m/year") )
+         call check(  nf90_put_att(ncid_yearly, assty_varid, "units", "mol m-2 year-1") )
+         call check(  nf90_put_att(ncid_yearly, rlty_varid, "units", "mol m-2 year-1") )
+         call check(  nf90_put_att(ncid_yearly, rrty_varid, "units", "mol m-2 year-1") )
+         call check(  nf90_put_att(ncid_yearly, cpccty_varid, "units", "mol m-2 year-1") )
+         call check(  nf90_put_att(ncid_yearly, tct_varid, "units", "mol m-2 year-1") )
+
+         ! End define mode.
+         call check(  nf90_enddef(ncid_yearly) )
+
+         ! **************************************************************
+         ! results root water uptake
+         filename = trim(adjustl(i_outputpath))// &
+                  trim(adjustl(nfile_ruptkthourly))
+
+         ! Create the file. 
+         call check( nf90_create(filename, nf90_clobber, ncid_ruptkt) ) 
+
+         ! Define the dimensions. NetCDF will hand back an ID for each. 
+         call check(  nf90_def_dim(ncid_ruptkt, "lat", n_lat, lat_ruptkt_dimid) )
+         call check(  nf90_def_dim(ncid_ruptkt, "lon", n_lon, lon_ruptkt_dimid) )
+         call check(  nf90_def_dim(ncid_ruptkt, "time", NF90_UNLIMITED, time_dimid)) 
+         call check(  nf90_def_dim(ncid_ruptkt, "level", s_maxlayer, z_ruptkt_dimid) )
+
+         call check(  nf90_def_var(ncid_ruptkt, "lat", NF90_REAL, lat_ruptkt_dimid, lat_ruptkt_varid) )
+         call check(  nf90_def_var(ncid_ruptkt, "lon", NF90_REAL, lon_ruptkt_dimid, lon_ruptkt_varid) )
+         call check(  nf90_def_var(ncid_ruptkt, "time", NF90_INT, time_ruptkt_dimid, time_ruptkt_varid) )
+         call check(  nf90_def_var(ncid_ruptkt, "level", NF90_REAL, z_ruptkt_dimid, z_ruptkt_varid) )
+
+         ! Assign units attributes to coordinate variables.
+         call check(  nf90_put_att(ncid_ruptkt, lat_ruptkt_varid, "units", "degrees_north") )
+         call check(  nf90_put_att(ncid_ruptkt, lon_ruptkt_varid, "units", "degrees_east") )
+         call check(  nf90_put_att(ncid_ruptkt, z_ruptkt_varid, "units", "meters") )
+
+         startdate = adjustl( "hours since ")//trim(adjustl(day_tmp))// & 
+                 trim(adjustl("-"))//trim(adjustl( month_tmp))// &
+                  trim(adjustl("-"))//trim(adjustl(year_tmp))  
+
+         call check(  nf90_put_att(ncid_ruptkt, time_ruptkt_varid, "units", startdate) )
+
+         ! Array with id of dimensions
+         dimids_ruptkt = (/ lat_ruptkt_dimid, lon_ruptkt_dimid,  z_ruptkt_dimid, time_ruptkt_dimid /)
+
+         !defining the variable
+         call check(  nf90_def_var(ncid_ruptkt, 'ruptkt', NF90_REAL, dimids_ruptkt, ruptkt_varid) )
+
+         ! Add units to the variable.
+         call check(  nf90_put_att(ncid_ruptkt, ruptkt_varid, "units", "m/h") )  
+
+         ! End define mode.
+         call check(  nf90_enddef(ncid_ruptkt) )
+
+
+         ! **************************************************************
+         ! results hourly soil moisture
+         filename = trim(adjustl(i_outputpath))// &
+                  trim(adjustl(nfile_suhourly))
+
+         ! Create the file. 
+         call check( nf90_create(filename, nf90_clobber, ncid_suhourly) ) 
+
+         ! Define the dimensions. NetCDF will hand back an ID for each. 
+         call check(  nf90_def_dim(ncid_suhourly, "lat", n_lat, lat_suhourly_dimid) )
+         call check(  nf90_def_dim(ncid_suhourly, "lon", n_lon, lon_suhourly_dimid) )
+         call check(  nf90_def_dim(ncid_suhourly, "time", NF90_UNLIMITED, time_suhourly_dimid)) 
+         call check(  nf90_def_dim(ncid_suhourly, "level", s_maxlayer, z_suhourly_dimid) )
+
+         call check(  nf90_def_var(ncid_suhourly, "lat", NF90_REAL, lat_suhourly_dimid, lat_suhourly_varid) )
+         call check(  nf90_def_var(ncid_suhourly, "lon", NF90_REAL, lon_suhourly_dimid, lon_suhourly_varid) )
+         call check(  nf90_def_var(ncid_suhourly, "time", NF90_INT, time_suhourly_dimid, time_suhourly_varid) )
+         call check(  nf90_def_var(ncid_suhourly, "level", NF90_REAL, z_suhourly_dimid, z_suhourly_varid) )
+
+         ! Assign units attributes to coordinate variables.
+         call check(  nf90_put_att(ncid_suhourly, lat_suhourly_varid, "units", "degrees_north") )
+         call check(  nf90_put_att(ncid_suhourly, lon_suhourly_varid, "units", "degrees_east") )
+         call check(  nf90_put_att(ncid_suhourly, z_suhourly_varid, "units", "meters") )
+
+         startdate = adjustl( "hours since ")//trim(adjustl(day_tmp))// & 
+                 trim(adjustl("-"))//trim(adjustl( month_tmp))// &
+                  trim(adjustl("-"))//trim(adjustl(year_tmp))  
+
+         call check(  nf90_put_att(ncid_suhourly, time_suhourly_varid, "units", startdate) )
+
+        ! Array with id of dimensions
+         dimids_suhourly = (/ lat_suhourly_dimid, lon_suhourly_dimid,  z_suhourly_dimid, time_suhourly_dimid /)
+
+         !defining the variable
+         call check(  nf90_def_var(ncid_suhourly, 'su', NF90_REAL, dimids_suhourly, suhourly_varid) )
+
+         ! Add units to the variable.
+         call check(  nf90_put_att(ncid_suhourly, suhourly_varid, "units", "-") )  
+
+         ! End define mode.
+         call check(  nf90_enddef(ncid_suhourly) )
 
       else
       !else plain text files instead of netcdf
@@ -248,6 +520,10 @@
          &  'tcg', 'tct', 'cpccg_d', 'cpcct_d',  'lai_t', 'lai_g', &
          &'ncp_g', 'ncp_t'
 
+        open(kfile_rsurfdaily, FILE=trim(adjustl(i_outputpath))// &
+             trim(adjustl(sfile_rsurfdaily)), STATUS='replace')
+        write(kfile_rsurfdaily,'(2A6,A4,A7,A)') 'fyear', 'fmonth',     &
+     &    'fday', 'nday', 'rsurft_sublayer'
 
       end if
 
@@ -268,10 +544,7 @@
      &  "srad", "vd", "esoil", "etmt", "etmg", "assg", "rlg", "rrg",   &
      &  "cpccg", "tcg", "etmt", "asst", "rlt", "rrt", "cpcct", "tct"
 
-        open(kfile_rsurfdaily, FILE=trim(adjustl(i_outputpath))// &
-             trim(adjustl(sfile_rsurfdaily)), STATUS='replace')
-        write(kfile_rsurfdaily,'(2A6,A4,A7,A)') 'fyear', 'fmonth',     &
-     &    'fday', 'nday', 'rsurft_sublayer'
+
 
         open(kfile_delzhourly, FILE=trim(adjustl(i_outputpath))// &
              trim(adjustl(sfile_delzhourly)), STATUS='replace')
