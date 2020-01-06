@@ -98,6 +98,8 @@
      integer :: n_lon = 1
      integer :: status 
      integer :: i
+     integer :: jday_base
+     integer :: jday_start
      real*8, dimension(s_maxlayer) :: depth 
 
 
@@ -131,9 +133,17 @@
          write(month_tmp,'(I2)') fmonth(1)
          write(year_tmp,'(I4)') fyear(1)
 
-         startdate = adjustl( "days since ")//trim(adjustl(day_tmp))// & 
-                 trim(adjustl("-"))//trim(adjustl( month_tmp))// &
-                  trim(adjustl("-"))//trim(adjustl(year_tmp))  
+         !startdate = adjustl( "days since ")//trim(adjustl(day_tmp))// & 
+         !        trim(adjustl("-"))//trim(adjustl( month_tmp))// &
+         !         trim(adjustl("-"))//trim(adjustl(year_tmp))//trim(" 00:00:00")
+
+         startdate = adjustl( "days since ")//trim(adjustl("01"))// & 
+                 trim(adjustl("-"))//trim(adjustl( "01"))// &
+                  trim(adjustl("-"))//trim(adjustl("1900"))//trim(" 00:00:00")
+
+         call get_julday(1900, 1, 1, jday_base)
+         call get_julday(fyear(1), fmonth(1), fday(1), jday_start)
+         startday = jday_start - jday_base
 
          call check(  nf90_put_att(ncid, time_varid, "units", startdate) )
     
@@ -648,10 +658,10 @@
 
      if(nc_flag .eqv. .TRUE.) then
       count = (/ 1, 1, 1 /)
-      start = (/ 1, 1, nday /)
+      start = (/ 1, 1, startday + nday -1 /)
 
       !add timestep
-      call check( nf90_put_var(ncid, time_varid, nday, start= (/ nday/)  ) )
+      call check( nf90_put_var(ncid, time_varid, ( startday + nday -1 ) , start= (/ nday /)   ) )
 
       !add variable values
       call check( nf90_put_var(ncid, rain_varid, rain, start = start ) )
@@ -764,8 +774,6 @@
 
 
      if(nc_flag .eqv. .TRUE.) then
-
-
 
       if( (fmonth(1) .eq. 1) .and. (fday(1) .eq. 1) .and. (n_year .eq. fyear(1) )) then
          startyear= n_year - 1
@@ -930,7 +938,8 @@
      !add time
       call check( nf90_put_var(ncid_suhourly, time_suhourly_varid, num_hour_tot, start= (/ num_hour_tot - starthour/)  ) )
 
-      !add results root water uptake
+      !add results soil moisture
+
       call check( nf90_put_var(ncid_suhourly, suhourly_varid, su_hourly, start = start_suhourly, count=count_suhourly ) )
 
 
@@ -983,6 +992,27 @@
   end subroutine check  
 
 
+  subroutine get_julday(yy, mm, dd, jday)
+
+     implicit none
+     integer, intent(in) :: yy
+     integer, intent(in) :: mm
+     integer, intent(in) :: dd
+     integer, intent(out) :: jday
+
+     integer :: part1
+     integer :: part2
+     integer :: part3    
+
+
+
+       part1 = dd-32075+1461*(yy + 4800 + (mm-14)/12)/4 
+       part2 = 367*(mm - 2 - (mm-14)/12*12)
+       part3 = -3*((yy+4900+(mm-14)/12)/100)/4
+
+       jday = part1 + part2 + part3
+
+  end subroutine get_julday
 
 
 

@@ -217,6 +217,7 @@
      integer :: time_ruptkt_varid
      integer :: time_suhourly_varid
 
+     integer :: startday
      integer :: starthour
      integer :: startyear
 
