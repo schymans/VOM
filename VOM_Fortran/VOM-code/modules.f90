@@ -217,6 +217,8 @@
      integer :: time_ruptkt_varid
      integer :: time_suhourly_varid
 
+     integer :: starthour
+     integer :: startyear
 
       end module vom_file_mod
 

@@ -44,6 +44,8 @@
      CHARACTER(len = 2)             :: day_tmp 
      CHARACTER(len = 2)             :: month_tmp 
      CHARACTER(len = 4)             :: year_tmp 
+     CHARACTER(len = 4)             :: firstyear_hourly 
+
      integer :: lon_dimid
      integer :: lon_varid
      integer :: lon_rsurf_dimid
@@ -287,6 +289,8 @@
          call check(  nf90_put_att(ncid_hourly, lat_hourly_varid, "units", "degrees_north") )
          call check(  nf90_put_att(ncid_hourly, lon_hourly_varid, "units", "degrees_east") )
 
+         ! internal write for datestamp
+         write(firstyear_hourly,'(I4)') i_firstyear
          startdate = adjustl( "hours since ")//trim(adjustl(day_tmp))// & 
                  trim(adjustl("-"))//trim(adjustl( month_tmp))// &
                   trim(adjustl("-"))//trim(adjustl(year_tmp))  
@@ -452,7 +456,7 @@
 
          startdate = adjustl( "hours since ")//trim(adjustl(day_tmp))// & 
                  trim(adjustl("-"))//trim(adjustl( month_tmp))// &
-                  trim(adjustl("-"))//trim(adjustl(year_tmp))  
+                  trim(adjustl("-"))//trim(adjustl(year_tmp)) 
 
          call check(  nf90_put_att(ncid_ruptkt, time_ruptkt_varid, "units", startdate) )
 
@@ -499,7 +503,7 @@
 
          startdate = adjustl( "hours since ")//trim(adjustl(day_tmp))// & 
                  trim(adjustl("-"))//trim(adjustl( month_tmp))// &
-                  trim(adjustl("-"))//trim(adjustl(year_tmp))  
+                  trim(adjustl("-"))//trim(adjustl(year_tmp))   
 
          call check(  nf90_put_att(ncid_suhourly, time_suhourly_varid, "units", startdate) )
 
@@ -516,6 +520,8 @@
          call check(  nf90_enddef(ncid_suhourly) )
 
          call check(  nf90_put_var(ncid_suhourly, z_suhourly_varid, depth) )
+         call check(  nf90_put_var(ncid_suhourly, lat_suhourly_varid, i_lat ) )
+         call check(  nf90_put_var(ncid_suhourly, lon_suhourly_varid, -125.0 ))
 
       else
       !else plain text files instead of netcdf
@@ -759,11 +765,18 @@
 
      if(nc_flag .eqv. .TRUE.) then
 
+
+
+      if( (fmonth(1) .eq. 1) .and. (fday(1) .eq. 1) .and. (n_year .eq. fyear(1) )) then
+         startyear= n_year - 1
+      end if
+
       count = (/ 1, 1, 1 /)
-      start = (/ 1, 1, nyear /)
+      start = (/ 1, 1, n_year - startyear /)
+
 
       !add timestep
-      call check( nf90_put_var(ncid, time_varid, nday, start= (/ nyear/)  ) )
+      call check( nf90_put_var(ncid_yearly, time_yearly_varid, n_year-startyear, start= (/ n_year - startyear/)  ) )
 
       !add variable values
       call check( nf90_put_var(ncid_yearly, rainy_varid, rain_yearly, start = start ) )
@@ -800,6 +813,163 @@
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+      subroutine vom_write_hourly ( year, month, day, num_day, num_hour, num_hour_tot,  &
+          &    rain_hourly, tair_hourly, par_hourly, vd_hourly, esoil_hourly,    &
+          &    pc_hourly, jmax25t_hourly, jmax25g_hourly, mqt_hourly,          &
+          &    rl_hourly, lambdat_hourly, lambdag_hourly, rr_hourly,  &
+          &    asst_hourly, assg_hourly, etmt_hourly, etmg_hourly, su1_hourly, zw_hourly, ws_hourly, &
+          &    spgfcf_hourly, infx_hourly, ruptkt_hourly, su_hourly, nc_flag )
+      use vom_vegwat_mod
+      use netcdf
+      implicit none
+
+
+      INTEGER,  INTENT(in) :: year
+      INTEGER,  INTENT(in) :: month
+      INTEGER,  INTENT(in) :: day
+      INTEGER,  INTENT(in) :: num_day
+      INTEGER,  INTENT(in) :: num_hour
+      INTEGER,  INTENT(in) :: num_hour_tot
+      REAL*8,  INTENT(in) :: rain_hourly
+      REAL*8,  INTENT(in) :: tair_hourly
+      REAL*8,  INTENT(in) :: par_hourly
+      REAL*8,  INTENT(in) :: vd_hourly
+      REAL*8,  INTENT(in) :: esoil_hourly
+      REAL*8,  INTENT(in) :: pc_hourly
+      REAL*8,  INTENT(in) :: jmax25t_hourly
+      REAL*8,  INTENT(in) :: jmax25g_hourly
+      REAL*8,  INTENT(in) :: mqt_hourly
+      REAL*8,  INTENT(in) :: rl_hourly
+      REAL*8,  INTENT(in) :: lambdat_hourly
+      REAL*8,  INTENT(in) :: lambdag_hourly
+      REAL*8,  INTENT(in) :: rr_hourly
+      REAL*8,  INTENT(in) :: asst_hourly
+      REAL*8,  INTENT(in) :: assg_hourly
+      REAL*8,  INTENT(in) :: etmt_hourly
+      REAL*8,  INTENT(in) :: etmg_hourly
+      REAL*8,  INTENT(in) :: su1_hourly
+      REAL*8,  INTENT(in) :: zw_hourly
+      REAL*8,  INTENT(in) :: ws_hourly
+      REAL*8,  INTENT(in) :: spgfcf_hourly
+      REAL*8,  INTENT(in) :: infx_hourly
+      REAL*8,  DIMENSION(s_maxlayer), INTENT(in):: ruptkt_hourly
+      REAL*8,  DIMENSION(s_maxlayer), INTENT(in):: su_hourly
+      LOGICAL, INTENT(in) :: nc_flag
+
+      CHARACTER(60) :: hourlyformat
+      CHARACTER(3)  :: str
+      integer :: start(3)
+      integer :: count(3)
+      integer :: start_ruptkt(4)
+      integer :: count_ruptkt(4)
+      integer :: start_suhourly(4)
+      integer :: count_suhourly(4)
+
+     if(nc_flag .eqv. .TRUE.) then
+
+
+
+      if (year .ge. i_firstyear .and. year .le. i_lastyear) then
+
+      !*****************************
+      !general hourly results
+
+      if( (month .eq. 1) .and. (day .eq. 1) .and. (year .eq. i_firstyear)) then
+         starthour = num_hour_tot - 1
+      end if
+
+      count = (/ 1, 1, 1 /)
+      start = (/ 1, 1, num_hour_tot - starthour /)
+
+      !add timestep
+      call check( nf90_put_var(ncid_hourly, time_hourly_varid, num_hour_tot, start= (/ num_hour_tot - starthour/)  ) )
+
+      !add variable values
+      call check( nf90_put_var(ncid_hourly, rainh_varid, rain_hourly, start = start ) )
+      call check( nf90_put_var(ncid_hourly, tairh_varid, tair_hourly, start = start ) )
+      call check( nf90_put_var(ncid_hourly, parh_varid, par_hourly, start = start ) )
+      call check( nf90_put_var(ncid_hourly, vdh_varid, vd_hourly, start = start ) )
+      call check( nf90_put_var(ncid_hourly, esoilh_varid, esoil_hourly, start = start ) )
+      call check( nf90_put_var(ncid_hourly, pch_varid, pc_hourly, start = start ) )
+      call check( nf90_put_var(ncid_hourly, jmax25th_varid, jmax25t_hourly, start = start ) )
+      call check( nf90_put_var(ncid_hourly, jmax25gh_varid, jmax25g_hourly, start = start ) )
+      call check( nf90_put_var(ncid_hourly, mqth_varid, mqt_hourly, start = start ) )
+      call check( nf90_put_var(ncid_hourly, rlh_varid, rl_hourly, start = start ) )
+      call check( nf90_put_var(ncid_hourly, lambdath_varid, lambdat_hourly, start = start ) )
+      call check( nf90_put_var(ncid_hourly, lambdagh_varid, lambdag_hourly, start = start ) )
+      call check( nf90_put_var(ncid_hourly, rrh_varid, rr_hourly, start = start ) )
+      call check( nf90_put_var(ncid_hourly, assth_varid, asst_hourly, start = start ) )
+      call check( nf90_put_var(ncid_hourly, assgh_varid, assg_hourly, start = start ) )
+      call check( nf90_put_var(ncid_hourly, etmth_varid, etmt_hourly, start = start ) )
+      call check( nf90_put_var(ncid_hourly, etmgh_varid, etmg_hourly, start = start ) )
+      call check( nf90_put_var(ncid_hourly, su1h_varid, su1_hourly, start = start ) )
+      call check( nf90_put_var(ncid_hourly, zwh_varid, zw_hourly, start = start ) )
+      call check( nf90_put_var(ncid_hourly, wsh_varid, ws_hourly, start = start ) )
+      call check( nf90_put_var(ncid_hourly, spgfcfh_varid, spgfcf_hourly, start = start ) )
+      call check( nf90_put_var(ncid_hourly, infxh_varid, infx_hourly, start = start ) )
+
+
+      !*****************************
+      !root water uptake
+
+      count_ruptkt = (/ 1, 1, s_maxlayer, 1 /)
+      start_ruptkt = (/ 1, 1, 1, num_hour_tot - starthour /)
+
+      !add time
+      call check( nf90_put_var(ncid_ruptkt, time_ruptkt_varid, num_hour_tot, start= (/ num_hour_tot - starthour/)  ) )
+
+      !add results root water uptake
+      call check( nf90_put_var(ncid_ruptkt, ruptkt_varid, ruptkt_hourly, start = start_ruptkt, count=count_ruptkt ) )
+
+      !*****************************
+      !soil moisture 
+      count_suhourly = (/ 1, 1, s_maxlayer, 1 /)
+      start_suhourly = (/ 1, 1, 1, num_hour_tot - starthour  /)
+
+     !add time
+      call check( nf90_put_var(ncid_suhourly, time_suhourly_varid, num_hour_tot, start= (/ num_hour_tot - starthour/)  ) )
+
+      !add results root water uptake
+      call check( nf90_put_var(ncid_suhourly, suhourly_varid, su_hourly, start = start_suhourly, count=count_suhourly ) )
+
+
+     end if
+
+     else
+
+
+         if (year .ge. i_firstyear .and. year .le. i_lastyear) then
+!          * internal write to convert from number to string
+          write(str,'(i3)') wlayer_
+!         * includes a column for each sublayer
+          hourlyformat = '(I6,I6,I4,I7,I5,'//str//'E14.6)'
+
+          write(kfile_resultshourly,'(I6,I7,I7,I7,I7,22E15.5)')          &
+          &    year, month, day, num_day, num_hour,          &
+          &    rain_hourly, tair_hourly, par_hourly, vd_hourly, esoil_hourly,    &
+          &    pc_hourly, jmax25t_hourly, jmax25g_hourly, mqt_hourly,          &
+          &    rl_hourly, lambdat_hourly, lambdag_hourly, rr_hourly,  &
+          &    asst_hourly, assg_hourly, etmt_hourly, etmg_hourly, su1_hourly, zw_hourly, ws_hourly, &
+          &    spgfcf_hourly, infx_hourly
+
+          write(kfile_delzhourly,hourlyformat) fyear(nday),            &
+          &      fmonth(nday), fday(nday), nday, nhour, s_delz(1:wlayer_)
+
+          write(kfile_ruptkthourly,hourlyformat) fyear(nday),          &
+          &      fmonth(nday), fday(nday), nday, nhour, ruptkt_h(1:wlayer_)
+
+          write(kfile_suhourly,hourlyformat) fyear(nday),              &
+          &      fmonth(nday), fday(nday), nday, nhour, su__(1:wlayer_)
+         endif
+
+
+      end if
+
+      return
+      end subroutine vom_write_hourly
+
+
 
   subroutine check(status)
     use netcdf
