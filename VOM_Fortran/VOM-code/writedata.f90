@@ -418,7 +418,7 @@
          call check(  nf90_put_att(ncid_yearly, rlty_varid, "units", "mol m-2 year-1") )
          call check(  nf90_put_att(ncid_yearly, rrty_varid, "units", "mol m-2 year-1") )
          call check(  nf90_put_att(ncid_yearly, cpccty_varid, "units", "mol m-2 year-1") )
-         call check(  nf90_put_att(ncid_yearly, tct_varid, "units", "mol m-2 year-1") )
+         call check(  nf90_put_att(ncid_yearly, tcty_varid, "units", "mol m-2 year-1") )
 
          ! End define mode.
          call check(  nf90_enddef(ncid_yearly) )
