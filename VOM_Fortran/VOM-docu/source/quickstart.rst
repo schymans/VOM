@@ -3,7 +3,9 @@ Quickstart
 
 Dependencies
 --------------------------------
-Before starting, make sure the netcdf-fortran library is installed:
+Before starting, make sure an appropriate fortran compiler is installed. The code has been tested and developed mainly with gfortran.
+
+In addition, make sure the netcdf-fortran library is installed:
 
 .. code-block:: bash 
 
