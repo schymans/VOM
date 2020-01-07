@@ -44,6 +44,7 @@ o_rgdepth=0.1d1,        ! root depth grasses (can be in shufflepar)
 &end
 &input2par
 i_lat=12.5d0,           ! geogr. latitude in degrees
+i_lon=131.2d0,          ! geogr. longitude in degrees
 i_cz=15.0d0,            ! average soil elevation in m
 i_cgs=10.0d0,           ! Capital Gamma S (length scale for seepage outflow REG) (m)
 i_zr=10.0d0,            ! average channel bed elevation in m
