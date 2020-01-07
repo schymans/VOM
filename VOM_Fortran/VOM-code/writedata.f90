@@ -40,7 +40,7 @@
 
      LOGICAL, INTENT(in) :: nc_flag
      CHARACTER(len = 100)             :: filename 
-     CHARACTER(len = 250)             :: startdate 
+     CHARACTER(len = 250)             :: refdate 
      CHARACTER(len = 2)             :: day_tmp 
      CHARACTER(len = 2)             :: month_tmp 
      CHARACTER(len = 4)             :: year_tmp 
@@ -100,6 +100,7 @@
      integer :: i
      integer :: jday_base
      integer :: jday_start
+     integer :: jday_startout
      real*8, dimension(s_maxlayer) :: depth 
 
 
@@ -133,11 +134,7 @@
          write(month_tmp,'(I2)') fmonth(1)
          write(year_tmp,'(I4)') fyear(1)
 
-         !startdate = adjustl( "days since ")//trim(adjustl(day_tmp))// & 
-         !        trim(adjustl("-"))//trim(adjustl( month_tmp))// &
-         !         trim(adjustl("-"))//trim(adjustl(year_tmp))//trim(" 00:00:00")
-
-         startdate = adjustl( "days since ")//trim(adjustl("01"))// & 
+         refdate = adjustl( "days since ")//trim(adjustl("01"))// & 
                  trim(adjustl("-"))//trim(adjustl( "01"))// &
                   trim(adjustl("-"))//trim(adjustl("1900"))//trim(" 00:00:00")
 
@@ -145,7 +142,7 @@
          call get_julday(fyear(1), fmonth(1), fday(1), jday_start)
          startday = jday_start - jday_base
 
-         call check(  nf90_put_att(ncid, time_varid, "units", startdate) )
+         call check(  nf90_put_att(ncid, time_varid, "units", refdate) )
     
          ! Array with id of dimensions
          dimids = (/ lon_dimid, lat_dimid, time_dimid /)
@@ -228,9 +225,8 @@
          ! Write the coordinate variable data. This will put the latitudes
          ! and longitudes of our data grid into the netCDF file.
          call check(  nf90_put_var(ncid, lat_varid, i_lat) )
-         !call check(  nf90_put_var(ncid, lon_varid, i_lon) 
+         call check(  nf90_put_var(ncid, lon_varid, i_lon) )
 
-         !call check( nf90_put_var(ncid, time_varid, nday  ) )
 
          ! **************************************************************
          ! daily results rsurf
@@ -252,7 +248,7 @@
          call check(  nf90_def_var(ncid_rsurf, "level", NF90_REAL, z_dimid, z_varid) )
 
          ! Assign units attributes to coordinate variables.
-         call check(  nf90_put_att(ncid_rsurf, time_rsurf_varid, "units", startdate) )
+         call check(  nf90_put_att(ncid_rsurf, time_rsurf_varid, "units", refdate) )
          call check(  nf90_put_att(ncid_rsurf, lat_rsurf_varid, "units", "degrees_north") )
          call check(  nf90_put_att(ncid_rsurf, lon_rsurf_varid, "units", "degrees_east") )
          call check(  nf90_put_att(ncid_rsurf, z_varid, "units", "meters") )
@@ -269,7 +265,7 @@
          call check(  nf90_enddef(ncid_rsurf) )
 
          call check(  nf90_put_var(ncid_rsurf, lat_rsurf_varid, i_lat ) )
-         call check(  nf90_put_var(ncid_rsurf, lon_rsurf_varid, -125.0 ))
+         call check(  nf90_put_var(ncid_rsurf, lon_rsurf_varid, i_lon ))
 
          depth(1) = 0.5*s_delz(1)
          do i=2, s_maxlayer             
@@ -301,11 +297,21 @@
 
          ! internal write for datestamp
          write(firstyear_hourly,'(I4)') i_firstyear
-         startdate = adjustl( "hours since ")//trim(adjustl(day_tmp))// & 
-                 trim(adjustl("-"))//trim(adjustl( month_tmp))// &
-                  trim(adjustl("-"))//trim(adjustl(year_tmp))  
+         !refdate = adjustl( "hours since ")//trim(adjustl(day_tmp))// & 
+         !        trim(adjustl("-"))//trim(adjustl( month_tmp))// &
+         !         trim(adjustl("-"))//trim(adjustl(year_tmp))  
+         refdate = adjustl( "hours since ")//trim(adjustl("01"))// & 
+                 trim(adjustl("-"))//trim(adjustl( "01"))// &
+                  trim(adjustl("-"))//trim(adjustl("1900"))//trim(" 00:00:00")
 
-         call check(  nf90_put_att(ncid_hourly, time_hourly_varid, "units", startdate) )
+
+         call get_julday(i_firstyear, 1, 1, jday_startout)
+
+         starthour = ((jday_startout - jday_base) * 24)  -1
+
+         !write(*,*) starthour    
+
+         call check(  nf90_put_att(ncid_hourly, time_hourly_varid, "units", refdate) )
 
          ! Array with id of dimensions
          dimids_hourly = (/ lon_hourly_dimid, lat_hourly_dimid, time_hourly_dimid /)
@@ -363,7 +369,7 @@
          call check(  nf90_enddef(ncid_hourly) )
 
          call check(  nf90_put_var(ncid_hourly, lat_hourly_varid, i_lat ) )
-         call check(  nf90_put_var(ncid_hourly, lon_hourly_varid, -125.0 ))
+         call check(  nf90_put_var(ncid_hourly, lon_hourly_varid, i_lon ))
 
          ! **************************************************************
          ! results yearly
@@ -386,11 +392,11 @@
          call check(  nf90_put_att(ncid_yearly, lat_yearly_varid, "units", "degrees_north") )
          call check(  nf90_put_att(ncid_yearly, lon_yearly_varid, "units", "degrees_east") )
 
-         startdate = adjustl( "years since ")//trim(adjustl(day_tmp))// & 
-                 trim(adjustl("-"))//trim(adjustl( month_tmp))// &
-                  trim(adjustl("-"))//trim(adjustl(year_tmp))  
+         refdate = adjustl( "years since ")//trim(adjustl("01"))// & 
+                 trim(adjustl("-"))//trim(adjustl( "01"))// &
+                  trim(adjustl("-"))//trim(adjustl("1900"))//trim(" 00:00:00")
 
-         call check(  nf90_put_att(ncid_yearly, time_yearly_varid, "units", startdate) )
+         call check(  nf90_put_att(ncid_yearly, time_yearly_varid, "units", refdate) )
 
          ! Array with id of dimensions
          dimids_yearly = (/ lon_yearly_dimid, lat_yearly_dimid, time_yearly_dimid /)
@@ -438,7 +444,7 @@
          call check(  nf90_enddef(ncid_yearly) )
 
          call check(  nf90_put_var(ncid_yearly, lat_yearly_varid, i_lat ) )
-         call check(  nf90_put_var(ncid_yearly, lon_yearly_varid, -125.0 ))
+         call check(  nf90_put_var(ncid_yearly, lon_yearly_varid, i_lon ))
 
          ! **************************************************************
          ! results root water uptake
@@ -464,11 +470,15 @@
          call check(  nf90_put_att(ncid_ruptkt, lon_ruptkt_varid, "units", "degrees_east") )
          call check(  nf90_put_att(ncid_ruptkt, z_ruptkt_varid, "units", "meters") )
 
-         startdate = adjustl( "hours since ")//trim(adjustl(day_tmp))// & 
-                 trim(adjustl("-"))//trim(adjustl( month_tmp))// &
-                  trim(adjustl("-"))//trim(adjustl(year_tmp)) 
+         !startdate = adjustl( "hours since ")//trim(adjustl(day_tmp))// & 
+         !       trim(adjustl("-"))//trim(adjustl( month_tmp))// &
+         !         trim(adjustl("-"))//trim(adjustl(year_tmp)) 
 
-         call check(  nf90_put_att(ncid_ruptkt, time_ruptkt_varid, "units", startdate) )
+         refdate = adjustl( "hours since ")//trim(adjustl("01"))// & 
+                 trim(adjustl("-"))//trim(adjustl( "01"))// &
+                  trim(adjustl("-"))//trim(adjustl("1900"))//trim(" 00:00:00")
+
+         call check(  nf90_put_att(ncid_ruptkt, time_ruptkt_varid, "units", refdate) )
 
          ! Array with id of dimensions
          dimids_ruptkt = (/ lat_ruptkt_dimid, lon_ruptkt_dimid,  z_ruptkt_dimid, time_ruptkt_dimid /)
@@ -484,7 +494,7 @@
 
          call check(  nf90_put_var(ncid_ruptkt, z_ruptkt_varid, depth) )
          call check(  nf90_put_var(ncid_ruptkt, lat_ruptkt_varid, i_lat ) )
-         call check(  nf90_put_var(ncid_ruptkt, lon_ruptkt_varid, -125.0 ))
+         call check(  nf90_put_var(ncid_ruptkt, lon_ruptkt_varid, i_lon ))
 
 
          ! **************************************************************
@@ -511,11 +521,14 @@
          call check(  nf90_put_att(ncid_suhourly, lon_suhourly_varid, "units", "degrees_east") )
          call check(  nf90_put_att(ncid_suhourly, z_suhourly_varid, "units", "meters") )
 
-         startdate = adjustl( "hours since ")//trim(adjustl(day_tmp))// & 
-                 trim(adjustl("-"))//trim(adjustl( month_tmp))// &
-                  trim(adjustl("-"))//trim(adjustl(year_tmp))   
+         !startdate = adjustl( "hours since ")//trim(adjustl(day_tmp))// & 
+         !        trim(adjustl("-"))//trim(adjustl( month_tmp))// &
+         !         trim(adjustl("-"))//trim(adjustl(year_tmp))   
+         refdate = adjustl( "hours since ")//trim(adjustl("01"))// & 
+                 trim(adjustl("-"))//trim(adjustl( "01"))// &
+                  trim(adjustl("-"))//trim(adjustl("1900"))//trim(" 00:00:00")
 
-         call check(  nf90_put_att(ncid_suhourly, time_suhourly_varid, "units", startdate) )
+         call check(  nf90_put_att(ncid_suhourly, time_suhourly_varid, "units", refdate) )
 
         ! Array with id of dimensions
          dimids_suhourly = (/ lat_suhourly_dimid, lon_suhourly_dimid,  z_suhourly_dimid, time_suhourly_dimid /)
@@ -531,7 +544,7 @@
 
          call check(  nf90_put_var(ncid_suhourly, z_suhourly_varid, depth) )
          call check(  nf90_put_var(ncid_suhourly, lat_suhourly_varid, i_lat ) )
-         call check(  nf90_put_var(ncid_suhourly, lon_suhourly_varid, -125.0 ))
+         call check(  nf90_put_var(ncid_suhourly, lon_suhourly_varid, i_lon ))
 
       else
       !else plain text files instead of netcdf
@@ -658,7 +671,7 @@
 
      if(nc_flag .eqv. .TRUE.) then
       count = (/ 1, 1, 1 /)
-      start = (/ 1, 1, startday + nday -1 /)
+      start = (/ 1, 1,  nday /)
 
       !add timestep
       call check( nf90_put_var(ncid, time_varid, ( startday + nday -1 ) , start= (/ nday /)   ) )
@@ -705,7 +718,7 @@
       !start_rsurf = (/ 1, 1, nday /)
 
       !add timestep
-      call check( nf90_put_var(ncid_rsurf, time_rsurf_varid, nday, start= (/ nday/)  ) )
+      call check( nf90_put_var(ncid_rsurf, time_rsurf_varid, ( startday + nday -1 ) , start= (/ nday/)  ) )
       call check( nf90_put_var(ncid_rsurf, rsurf_varid, rsurft, start = start_rsurf, count=count_rsurf ) )
 
       !call check( nf90_put_var(ncid_rsurf, rsurf_varid, rsurft(1), start = start_rsurf ) )
@@ -775,16 +788,16 @@
 
      if(nc_flag .eqv. .TRUE.) then
 
-      if( (fmonth(1) .eq. 1) .and. (fday(1) .eq. 1) .and. (n_year .eq. fyear(1) )) then
-         startyear= n_year - 1
-      end if
 
       count = (/ 1, 1, 1 /)
-      start = (/ 1, 1, n_year - startyear /)
+      start = (/ 1, 1, n_year - fyear(1) + 1 /)
 
 
       !add timestep
-      call check( nf90_put_var(ncid_yearly, time_yearly_varid, n_year-startyear, start= (/ n_year - startyear/)  ) )
+      call check( nf90_put_var(ncid_yearly, time_yearly_varid, (n_year - 1900 ) , &
+         start= (/ n_year - fyear(1) + 1/)  ) ) 
+
+
 
       !add variable values
       call check( nf90_put_var(ncid_yearly, rainy_varid, rain_yearly, start = start ) )
@@ -883,15 +896,19 @@
       !*****************************
       !general hourly results
 
-      if( (month .eq. 1) .and. (day .eq. 1) .and. (year .eq. i_firstyear)) then
-         starthour = num_hour_tot - 1
+      if( (month .eq. 1) .and. (day .eq. 1) .and. (year .eq. i_firstyear) .and. (num_hour .eq. 1)) then
+         hourdiff = num_hour_tot - 1
       end if
 
       count = (/ 1, 1, 1 /)
-      start = (/ 1, 1, num_hour_tot - starthour /)
+      start = (/ 1, 1, num_hour_tot-hourdiff /)
 
       !add timestep
-      call check( nf90_put_var(ncid_hourly, time_hourly_varid, num_hour_tot, start= (/ num_hour_tot - starthour/)  ) )
+      call check( nf90_put_var(ncid_hourly, time_hourly_varid, (starthour + num_hour_tot - hourdiff ), &
+                                start= (/ num_hour_tot-hourdiff /)  ) )
+
+
+
 
       !add variable values
       call check( nf90_put_var(ncid_hourly, rainh_varid, rain_hourly, start = start ) )
@@ -922,21 +939,26 @@
       !root water uptake
 
       count_ruptkt = (/ 1, 1, s_maxlayer, 1 /)
-      start_ruptkt = (/ 1, 1, 1, num_hour_tot - starthour /)
+      start_ruptkt = (/ 1, 1, 1, num_hour_tot-hourdiff /)
 
       !add time
-      call check( nf90_put_var(ncid_ruptkt, time_ruptkt_varid, num_hour_tot, start= (/ num_hour_tot - starthour/)  ) )
+      call check( nf90_put_var(ncid_ruptkt, time_ruptkt_varid, (starthour + num_hour_tot - hourdiff), &
+                    start= (/ num_hour_tot-hourdiff/)  ) )
 
       !add results root water uptake
       call check( nf90_put_var(ncid_ruptkt, ruptkt_varid, ruptkt_hourly, start = start_ruptkt, count=count_ruptkt ) )
 
+
+
       !*****************************
       !soil moisture 
       count_suhourly = (/ 1, 1, s_maxlayer, 1 /)
-      start_suhourly = (/ 1, 1, 1, num_hour_tot - starthour  /)
+      start_suhourly = (/ 1, 1, 1, num_hour_tot-hourdiff /)
 
      !add time
-      call check( nf90_put_var(ncid_suhourly, time_suhourly_varid, num_hour_tot, start= (/ num_hour_tot - starthour/)  ) )
+      call check( nf90_put_var(ncid_suhourly, time_suhourly_varid, (starthour + num_hour_tot - hourdiff), &
+            start= (/ num_hour_tot-hourdiff /)  ) )
+
 
       !add results soil moisture
 

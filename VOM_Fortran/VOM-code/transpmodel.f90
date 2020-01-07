@@ -506,7 +506,7 @@
      &                    o_lambdagf, o_wsgexp, o_lambdatf, o_wstexp,  &
      &                    o_cai, o_rtdepth, o_mdstore, o_rgdepth
 
-      namelist /input2par/ i_lat, i_cz, i_cgs, i_zr, i_go, i_ksat,     &
+      namelist /input2par/ i_lat, i_lon, i_cz, i_cgs, i_zr, i_go, i_ksat,     &
      &                     i_thetar, i_thetas, i_nvg, i_avg, i_delz
 
 

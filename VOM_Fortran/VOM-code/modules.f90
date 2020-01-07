@@ -220,6 +220,7 @@
      integer :: startday
      integer :: starthour
      integer :: startyear
+     integer :: hourdiff
 
       end module vom_file_mod
 
@@ -435,6 +436,7 @@
 !     * Catchment parameters
 
       REAL*8  :: i_lat                 ! geogr. latitude
+      REAL*8  :: i_lon                 ! geogr. longitude
 
 !     * Soil parameters
 
