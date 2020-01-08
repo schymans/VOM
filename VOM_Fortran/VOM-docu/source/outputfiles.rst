@@ -1,5 +1,7 @@
 Outputfiles
 ===============================
+Output files can by default created in plain text format, but can also be set to netcdf by changing the flag i_write_nc to .True.
+
 
 results_daily.txt
 -------------------------------
@@ -155,7 +157,7 @@ results_yearly.txt
 +-----------------+-------------------------------------------------------------------------------------------------------------+
 |assg             | CO2 uptake rate by seasonal vegetation (in mol m-2 a-1)                                                     |
 +-----------------+-------------------------------------------------------------------------------------------------------------+
-|asst             | CO2 uptake rate by trees (in mol m-2 h-1)                                                                   |
+|asst             | CO2 uptake rate by trees (in mol m-2 a-1)                                                                   |
 +-----------------+-------------------------------------------------------------------------------------------------------------+
 |rlg              | Leaf respiration rate by seasonal vegetation (in mol m-2 a-1)                                               |
 +-----------------+-------------------------------------------------------------------------------------------------------------+

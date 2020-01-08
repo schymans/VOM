@@ -29,8 +29,10 @@ export OMP_NUM_THREADS=2
 FCFLAGS = 
 FLFLAGS =
 
+NC_INCLUDE=/usr/include
+
 #source objects
-SRC = VOM-code/modules.f90 VOM-code/readdata.f90 VOM-code/coreprog.f90 VOM-code/sample.f90 VOM-code/sce.f90 VOM-code/transpmodel.f90 VOM-code/watbal.f90 
+SRC = VOM-code/modules.f90 VOM-code/readdata.f90 VOM-code/writedata.f90 VOM-code/coreprog.f90 VOM-code/sample.f90 VOM-code/sce.f90 VOM-code/transpmodel.f90 VOM-code/watbal.f90 
 
 TESTS = VOM_test/test_tmp/model.x
 
@@ -41,7 +43,7 @@ MSRC = *.mod
 all: $(PROGRAM) 
 		
 $(PROGRAM): $(SRC) 
-	$(FC) -fopenmp -o $@ $^ -static-libgfortran; rm $(MSRC)    #;mv $(MSRC) $(OBJ_PATH)
+	$(FC) -fopenmp -o $@ $^ -static-libgfortran -I${NC_INCLUDE} -lnetcdff; rm $(MSRC)    #;mv $(MSRC) $(OBJ_PATH)
 #	$(FC) -o $@ $^ -I${NFDIR}/include -L${NFDIR}/lib  -static ;mv $(MSRC) $(OBJ_PATH)
 %.o: %.f
 	$(FC) -o $@ $<

@@ -75,6 +75,14 @@
       CHARACTER(len=*),parameter :: sfile_soilprofile   = 'soilprofile.par'
       CHARACTER(len=*),parameter :: sfile_model_output  = 'model_output.txt'
 
+      CHARACTER(len=*),parameter :: nfile_resultshourly = 'results_hourly.nc'
+      CHARACTER(len=*),parameter :: nfile_resultsdaily  = 'results_daily.nc'
+      CHARACTER(len=*),parameter :: nfile_resultsyearly = 'results_yearly.nc'
+      CHARACTER(len=*),parameter :: nfile_rsurfdaily    = 'rsurf_daily.nc'
+      CHARACTER(len=*),parameter :: nfile_delzhourly    = 'delz_hourly.nc'
+      CHARACTER(len=*),parameter :: nfile_ruptkthourly  = 'ruptkt_hourly.nc'
+      CHARACTER(len=*),parameter :: nfile_suhourly      = 'su_hourly.nc'
+
       CHARACTER(len=*),parameter :: sfile_random_output  = 'random_ncp.txt'
       CHARACTER(len=*),parameter :: sfile_random_params  = 'random_params.txt'
 
@@ -111,6 +119,108 @@
 
       CHARACTER*100  :: i_outputpath     ! Constant root balance pressure of 1.5 MPa in grasses
       CHARACTER*100  :: i_inputpath      ! Constant root balance pressure of 1.5 MPa in grasses
+
+
+
+     integer :: ncid
+     integer :: ncid_rsurf
+     integer :: ncid_hourly
+     integer :: ncid_yearly
+     integer :: ncid_ruptkt
+     integer :: ncid_suhourly
+
+
+     integer :: rain_varid
+     integer :: tairmax_varid
+     integer :: tairmin_varid
+     integer :: par_varid
+     integer :: vd_varid
+     integer :: esoil_varid
+     integer :: jmax25t_varid
+     integer :: jmax25g_varid
+     integer :: pc_varid
+     integer :: rlt_varid
+     integer :: rlg_varid
+     integer :: lambdat_varid
+     integer :: lambdag_varid
+     integer :: rrt_varid
+     integer :: rrg_varid
+     integer :: asst_varid
+     integer :: assg_varid
+     integer :: su_avg_varid
+     integer :: zw_varid
+     integer :: ws_varid
+     integer :: spgfcf_varid
+     integer :: infx_varid
+     integer :: etmt_varid
+     integer :: etmg_varid
+     integer :: su_1_varid
+     integer :: topt_varid
+     integer :: tcg_varid
+     integer :: tct_varid
+     integer :: cpccg_d_varid
+     integer :: cpcct_d_varid
+     integer :: lai_t_varid
+     integer :: lai_g_varid
+     integer :: ncp_g_varid
+     integer :: ncp_t_varid
+     integer :: rsurf_varid
+
+     integer :: rainh_varid
+     integer :: tairh_varid
+     integer :: parh_varid
+     integer :: vdh_varid
+     integer :: esoilh_varid
+     integer :: jmax25th_varid
+     integer :: jmax25gh_varid
+     integer :: pch_varid
+     integer :: rlh_varid
+     integer :: mqth_varid
+     integer :: lambdath_varid
+     integer :: lambdagh_varid
+     integer :: rrh_varid
+     integer :: assth_varid
+     integer :: assgh_varid
+     integer :: su1h_varid
+     integer :: zwh_varid
+     integer :: wsh_varid
+     integer :: spgfcfh_varid
+     integer :: infxh_varid
+     integer :: etmth_varid
+     integer :: etmgh_varid
+ 
+     integer :: rainy_varid
+     integer :: pary_varid
+     integer :: vdy_varid
+     integer :: srady_varid
+     integer :: esoily_varid
+     integer :: etmgy_varid
+     integer :: assgy_varid
+     integer :: rlgy_varid
+     integer :: rrgy_varid
+     integer :: cpccgy_varid
+     integer :: tcgy_varid
+     integer :: etmty_varid
+     integer :: assty_varid
+     integer :: rlty_varid
+     integer :: rrty_varid
+     integer :: cpccty_varid
+     integer :: tcty_varid
+
+     integer :: ruptkt_varid
+     integer :: suhourly_varid
+
+     integer :: time_varid
+     integer :: time_rsurf_varid
+     integer :: time_hourly_varid
+     integer :: time_yearly_varid
+     integer :: time_ruptkt_varid
+     integer :: time_suhourly_varid
+
+     integer :: startday
+     integer :: starthour
+     integer :: startyear
+     integer :: hourdiff
 
       end module vom_file_mod
 
@@ -326,6 +436,7 @@
 !     * Catchment parameters
 
       REAL*8  :: i_lat                 ! geogr. latitude
+      REAL*8  :: i_lon                 ! geogr. longitude
 
 !     * Soil parameters
 
@@ -354,7 +465,8 @@
       INTEGER :: i_lastyear             ! Last year for the generation of hourly output in computation mode
 
       INTEGER :: i_write_h              ! Flag to write out hourly input values after conversation from daily values
-      INTEGER :: i_read_pc              ! Flag to write out hourly input values after conversation from daily values
+      INTEGER :: i_read_pc              ! Flag to read vegetation cover as input
+      LOGICAL :: i_write_nc             ! Flag to write to netcdf instead of plain text
       INTEGER :: i_lai_function         ! Switch to use 1) linear or 2) exponential LAI estimate, as function of cover
       INTEGER :: i_no_veg               ! Flag to switch vegetation off (1=no vegetation)
 
