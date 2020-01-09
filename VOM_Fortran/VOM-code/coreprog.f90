@@ -35,6 +35,7 @@
       REAL*8, ALLOCATABLE :: vom_invar(:)
       REAL*8              :: vom_objfun
 
+      REAL*8              :: obj_tmp
       INTEGER             :: beststat
       INTEGER             :: iostat
       LOGICAL             :: exist
@@ -129,6 +130,34 @@
             !stop if there is convergence  
             if (iostat .eq. 0) then
                run_sce = .FALSE.
+
+               write(*,*) "Start single calculation with optimized parameters..."
+               
+               vom_command = 2
+               call transpmodel_init_once(vom_command)
+
+               open(kfile_bestpars, FILE=trim(adjustl(i_inputpath)) // &
+                  trim(adjustl(sfile_bestpars)),&
+                  STATUS='old', IOSTAT=iostat)
+                  if (iostat .ne. 0) then
+                     write(0,*) "ERROR opening ", sfile_bestpars
+                     stop
+                   endif
+                rewind(kfile_bestpars)
+                read(kfile_bestpars,*) vom_invar(:), obj_tmp
+                close(kfile_bestpars)
+
+                !run the model once more
+                call transpmodel(vom_invar, SIZE(vom_invar), vom_objfun, vom_command)
+
+                !check if the outcomes are the same
+                if( abs(obj_tmp - vom_objfun) .gt. 0.001) then
+                   write(*,*) "WARNING: NCP-values differ!"
+                   write(*,*) "SCE-based NCP :", obj_tmp
+                   write(*,*) "Single run NCP:", vom_objfun
+                end if
+
+
             end if
             
             call cpu_time(currtime) 
