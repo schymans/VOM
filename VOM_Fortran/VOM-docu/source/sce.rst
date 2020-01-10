@@ -35,6 +35,8 @@ files of the previous round are available.
 
 Outputs
 -------------------------------
+After the SCE-algoritm finishes, it runs the VOM once more with the optimized parameters. It creates the same files as for a single run, 
+as can be found  in the section on the outputs for a single run (see :ref:`outputfiles`). 
 
 +-----------------+---------------------------------------------------------------------------------------------------------------+
 |Filename         | Description                                                                                                   |
