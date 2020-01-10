@@ -30,6 +30,7 @@
 
       program vom
       use vom_sce_mod
+      use vom_vegwat_mod
       implicit none
 
       REAL*8, ALLOCATABLE :: vom_invar(:)
@@ -133,10 +134,10 @@
 
                write(*,*) "Start single calculation with optimized parameters..."
                
-               vom_command = 2
-               call transpmodel_init_once(vom_command)
+               
+               call vom_open_output(i_write_nc)
 
-               open(kfile_bestpars, FILE=trim(adjustl(i_inputpath)) // &
+               open(kfile_bestpars, FILE=trim(adjustl(i_outputpath)) // &
                   trim(adjustl(sfile_bestpars)),&
                   STATUS='old', IOSTAT=iostat)
                   if (iostat .ne. 0) then
@@ -148,7 +149,7 @@
                 close(kfile_bestpars)
 
                 !run the model once more
-                call transpmodel(vom_invar, SIZE(vom_invar), vom_objfun, vom_command)
+                call transpmodel(vom_invar, SIZE(vom_invar), vom_objfun, 2)
 
                 !check if the outcomes are the same
                 if( abs(obj_tmp - vom_objfun) .gt. 0.001) then

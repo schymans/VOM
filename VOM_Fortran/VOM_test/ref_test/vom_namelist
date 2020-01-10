@@ -65,15 +65,15 @@ i_patience=10,          ! NUMBER OF LOOPS WITHOUT INCREASE IN OF BEFORE OPTIMISA
 i_nsimp=3,              ! NUMBER OF OPTIMISATIONS PER COMPLEX AND RUN
 i_focus=1.0,            ! IF <1.0, THE SPREAD OF THE RANDOM SEED AROUND THE INITIAL VALUES IS LIMITED
 i_iter=10,              ! Maximum iterations in case of random runs
-vom_npar=6,             ! number of parameters in shuffle2par used for optimization in SCE
+vom_npar=8,             ! number of parameters in shuffle2par used for optimization in SCE
 n_thread=1,             ! number of threads to be used in parallel
 sce_restart=.TRUE.,     ! restart SCE from previous run
 runtime_limit=5,        ! time in minutes before sce stops
 &end
 &shuffle2par
-parname0='lambdagf'   'wsgexp'      'lambdatf'   'wstexp'      'cai'        'rtdepth' 'mdstore' 'rgdepth' 'target' 'i_cgs'    'i_zr'   'i_go' 'i_ksat' 'i_thetar' 'i_thetas' 'i_nvg' 'i_avg'
-parval0= 0.779827d+03 -0.132889d+01 0.160181d+04 -0.564496d+00 0.300000d+00 0.300000d+01 1.0d2  0.1d1       100d0   10.0d0    10.0d0   0.033d0 2.50d-6   0.065d0     0.41d0     1.89d0  7.5d0
-parmin0= 0.0d0        -3.0d0        0.0d0        -3.0d0        0.0d0        1.0d0        0.9d2  0.05d0      100d0   10.0d0     1.0d0   0.003d0 1.00d-6   0.055d0     0.20d0     1.2d0   1.5d0
-parmax0= 1.0d04       1.0d0         1.0d04       1.0d0         1.0d0        9.0d0        1.1d2  2.0d0       1000d0  1000.0d0  36.47d0  0.133d0 1.50d-5   0.075d0     0.50d0     2.0d0   10.0d0
-paropt0= 1            1             1            1             1            1            0      1                0         0         0        0       0         0           0         0        0
+parname0='lambdagf'   'wsgexp'      'lambdatf'   'wstexp'      'cai'        'rtdepth' 'mdstore' 'rgdepth' 'i_cgs'    'i_zr'   'i_go' 'i_ksat' 'i_thetar' 'i_thetas' 'i_nvg' 'i_avg'
+parval0= 0.779827d+03 -0.132889d+01 0.160181d+04 -0.564496d+00 0.300000d+00 0.300000d+01 1.0d2  0.1d1       10.0d0    10.0d0   0.033d0 2.50d-6   0.065d0     0.41d0     1.89d0  7.5d0
+parmin0= 0.0d0        -3.0d0        0.0d0        -3.0d0        0.0d0        1.0d0        0.9d2  0.05d0      10.0d0     1.0d0   0.003d0 1.00d-6   0.055d0     0.20d0     1.2d0   1.5d0
+parmax0= 1.0d04       1.0d0         1.0d04       1.0d0         1.0d0        9.0d0        1.1d2  2.0d0       1000.0d0  36.47d0  0.133d0 1.50d-5   0.075d0     0.50d0     2.0d0   10.0d0
+paropt0= 1            1             1            1             1            1            0      1                0         0         0        0       0         0           0         0       
 &end
