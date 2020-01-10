@@ -1245,6 +1245,11 @@ end if
         close(kfile_lastbest)
 
         if (final == 1) then
+          open(kfile_bestpars, FILE=trim(adjustl(i_outputpath)) // &
+             trim(adjustl(sfile_bestpars)))
+             write(kfile_bestpars,outformat) var(:), obj
+          close(kfile_bestpars)
+
           open(kfile_beststat, FILE=trim(adjustl(i_outputpath)) // &
              trim(adjustl(sfile_beststat)))
             write(kfile_beststat,*) 1

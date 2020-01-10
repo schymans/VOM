@@ -30,11 +30,13 @@
 
       program vom
       use vom_sce_mod
+      use vom_vegwat_mod
       implicit none
 
       REAL*8, ALLOCATABLE :: vom_invar(:)
       REAL*8              :: vom_objfun
 
+      REAL*8              :: obj_tmp
       INTEGER             :: beststat
       INTEGER             :: iostat
       LOGICAL             :: exist
@@ -129,6 +131,34 @@
             !stop if there is convergence  
             if (iostat .eq. 0) then
                run_sce = .FALSE.
+
+               write(*,*) "Start single calculation with optimized parameters..."
+               
+               
+               call vom_open_output(i_write_nc)
+
+               open(kfile_bestpars, FILE=trim(adjustl(i_outputpath)) // &
+                  trim(adjustl(sfile_bestpars)),&
+                  STATUS='old', IOSTAT=iostat)
+                  if (iostat .ne. 0) then
+                     write(0,*) "ERROR opening ", sfile_bestpars
+                     stop
+                   endif
+                rewind(kfile_bestpars)
+                read(kfile_bestpars,*) vom_invar(:), obj_tmp
+                close(kfile_bestpars)
+
+                !run the model once more
+                call transpmodel(vom_invar, SIZE(vom_invar), vom_objfun, 2)
+
+                !check if the outcomes are the same
+                if( abs(obj_tmp - vom_objfun) .gt. 0.001) then
+                   write(*,*) "WARNING: NCP-values differ!"
+                   write(*,*) "SCE-based NCP :", obj_tmp
+                   write(*,*) "Single run NCP:", vom_objfun
+                end if
+
+
             end if
             
             call cpu_time(currtime) 
