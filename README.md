@@ -2,7 +2,23 @@
 The full name of the project is "Coupled Water Balance and Vegetation Optimality Model", in short "VOM". 
 The model predicts vegetation water use based on meteorological information, soils and topography only, without the need for prescribing site-specific vegetation properties or calibration against observed fluxes. 
 
-Program was originally developed by Stan Schymanski at the University of Western Australia (2002-2006), then at the Max-Planck-Institute for Biogeochemistry by Stan Schymanski, Andreas Ostrowski and Steffen Richter (2007-2011), then by Stan Schymanski at ETH Zurich (2011-2017) and since 2017 by Remko Nijzink and Stan Schymanski at the Luxembourg Institute of Science and Technology ( www.list.lu ).
+The programme was originally developed by Stan Schymanski at the University of Western Australia (2002-2006), then at the Max-Planck-Institute for Biogeochemistry by Stan Schymanski, Andreas Ostrowski and Steffen Richter (2007-2011), then by Stan Schymanski at ETH Zurich (2011-2017) and since 2017 by Remko Nijzink and Stan Schymanski at the Luxembourg Institute of Science and Technology ( www.list.lu ).
+
+## Releases
+Latest: [![DOI](https://zenodo.org/badge/31459756.svg)](https://zenodo.org/badge/latestdoi/31459756)
+
+## Documentation
+
+The model documentation can be found at:
+[https://vom.readthedocs.io/](https://vom.readthedocs.io/en/latest/)
+
+An offline version of the documentation can be found in html-format in the folder [VOM-docu/build/html/](VOM-docu/build/html/).
+Two additional pdf files containing equations can be found in VOM-docu: [VOM-docu/Equations.pdf](VOM-docu/Equations.pdf) and 
+[VOM-docu/Watbal3.pdf](VOM-docu/Watbal3.pdf).
+
+The directory [VOM-docu/Fordocu](VOM-docu/Fordocu) contains automatically generated documenation
+based on comments in the .f90 files. This one is helpful for understanding the
+structure of the source code.
 
 
 ## Related papers:
@@ -35,22 +51,6 @@ The initial author of the code and documentation is Stan Schymanski, and initial
         /vom-input
             input files needed by the model and example forcing data
  
-## Documentation
-
-The model documentation can be found at:
-[https://vom.readthedocs.io/](https://vom.readthedocs.io/en/latest/)
-
-An offline version of the documentation can be found in html-format in the folder [VOM-docu/build/html/](VOM-docu/build/html/).
-Two additional pdf files containing equations can be found in VOM-docu: [VOM-docu/Equations.pdf](VOM-docu/Equations.pdf) and 
-[VOM-docu/Watbal3.pdf](VOM-docu/Watbal3.pdf).
-
-The directory [VOM-docu/Fordocu](VOM-docu/Fordocu) contains automatically generated documenation
-based on comments in the .f90 files. This one is helpful for understanding the
-structure of the source code.
-
-
-
-
 
 
 
