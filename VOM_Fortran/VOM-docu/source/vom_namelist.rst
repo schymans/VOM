@@ -5,9 +5,9 @@ The file "vom_namelist" is an input file for the VOM, containing all settings fo
 +-----------------+----------------------------------------------------------------------------------------------------+-----------+
 |i_alpha          | initial slope of j(par) curve                                                                      | \-        |
 +-----------------+----------------------------------------------------------------------------------------------------+-----------+
-|i_cpccf          | water transport cost factor (cpcc=pc*rootdepth*cpccf)                                              |mol/m^3/s |
+|i_cpccf          | water transport cost factor (cpcc=pc*rootdepth*cpccf)                                              |mol/m^3/s  |
 +-----------------+----------------------------------------------------------------------------------------------------+-----------+
-|i_tcf            | turnover cost factor for foliage (tc=tcf*LAI)                                                      |mol/m^2/s   |
+|i_tcf            | turnover cost factor for foliage (tc=tcf*LAI)                                                      |mol/m^2/s  |
 +-----------------+----------------------------------------------------------------------------------------------------+-----------+
 |i_maxyear        | number of years to process                                                                         | \-        |
 +-----------------+----------------------------------------------------------------------------------------------------+-----------+

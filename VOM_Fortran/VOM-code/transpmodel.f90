@@ -915,7 +915,7 @@
         suns = 12d0 + 0.5d0 * daylength
         tairmean = (tairmax_d(in) + tairmin_d(in)) / 2.d0
         dtair = tairmax_d(in) - tairmin_d(in)
-        vp__ = vp_d(in) * 100.d0             ! vp in Pa
+        vp__ = vp_d(in) * 100.d0             ! vp__ in Pa, vp_d in hPa
 
 !       * Loop through every hour of day, where ik=hour
         do ik = 1, 24
