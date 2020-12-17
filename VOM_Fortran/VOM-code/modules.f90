@@ -455,6 +455,7 @@
       REAL*8  :: i_growthmax            ! Parameter determining maximum daily growth increment of root surface area
       REAL*8  :: i_incrcovg             ! parameter determining maximum increment percentage of grass cover
       REAL*8  :: i_incrjmax             ! parameter determining maximum increment percentage of jmax25
+      REAL*8  :: i_jmax_ini             ! parameter determining the start value of jmax25
       REAL*8  :: i_incrlait             ! parameter determining maximum increment percentage of lai trees
       REAL*8  :: i_incrlaig             ! parameter determining maximum increment percentage of lai grasses
       REAL*8  :: i_extcoeffg            ! extinction coefficient beer's law grasses

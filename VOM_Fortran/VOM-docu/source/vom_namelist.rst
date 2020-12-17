@@ -5,9 +5,9 @@ The file "vom_namelist" is an input file for the VOM, containing all settings fo
 +-----------------+----------------------------------------------------------------------------------------------------+-----------+
 |i_alpha          | initial slope of j(par) curve                                                                      | \-        |
 +-----------------+----------------------------------------------------------------------------------------------------+-----------+
-|i_cpccf          | water transport cost factor (cpcc=pc*rootdepth*cpccf)                                              |mol/m/m2/s |
+|i_cpccf          | water transport cost factor (cpcc=pc*rootdepth*cpccf)                                              |mol/m^3/s |
 +-----------------+----------------------------------------------------------------------------------------------------+-----------+
-|i_tcf            | turnover cost factor for foliage (tc=tcf*LAI)                                                      |mol/m2/s   |
+|i_tcf            | turnover cost factor for foliage (tc=tcf*LAI)                                                      |mol/m^2/s   |
 +-----------------+----------------------------------------------------------------------------------------------------+-----------+
 |i_maxyear        | number of years to process                                                                         | \-        |
 +-----------------+----------------------------------------------------------------------------------------------------+-----------+
@@ -43,6 +43,8 @@ The file "vom_namelist" is an input file for the VOM, containing all settings fo
 +-----------------+----------------------------------------------------------------------------------------------------+-----------+
 |i_incrjmax       | parameter determining maximum increment percentage of jmax25                                       | \-        |
 +-----------------+----------------------------------------------------------------------------------------------------+-----------+
+|i_jmax_ini       |  parameter determining the start value of jmax25                                                   | mol/m^2/s |
++-----------------+----------------------------------------------------------------------------------------------------+-----------+
 |i_incrlait       | parameter determining maximum increment percentage of LAI grasses                                  | \-        |
 +-----------------+----------------------------------------------------------------------------------------------------+-----------+
 |i_incrlaig       | parameter determining maximum increment percentage of LAI trees                                    | \-        |
@@ -59,9 +61,9 @@ The file "vom_namelist" is an input file for the VOM, containing all settings fo
 +-----------------+----------------------------------------------------------------------------------------------------+-----------+
 |i_trans_vegcov   | fraction of radiative energy reaching soil under full cover (0-1)                                  | \-        |
 +-----------------+----------------------------------------------------------------------------------------------------+-----------+
-|i_la|i_function  | switch for 1) linear or 2) exponential function of LAI for foliage cost                            | \-        |
+|i_lai_function   | switch for 1) linear or 2) exponential function of LAI for foliage cost                            | \-        |
 +-----------------+----------------------------------------------------------------------------------------------------+-----------+
-|i_n|o_veg        | switch for running VOM without vegetation (0-with, 1-without)                                      | \-        |
+|i_no_veg         | switch for running VOM without vegetation (0-with, 1-without)                                      | \-        |
 +-----------------+----------------------------------------------------------------------------------------------------+-----------+
 |i_extcoeffg      | extinction coefficient beer's law grasses                                                          | \-        |
 +-----------------+----------------------------------------------------------------------------------------------------+-----------+

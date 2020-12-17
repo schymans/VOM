@@ -497,7 +497,8 @@
      &                    i_toptstart, i_rlratio, i_mdtf, i_mqxtf,     &
      &                    i_rrootm, i_rsurfmin, i_rsurf_, i_rootrad,   &
      &                    i_prootmg, i_growthmax, i_incrcovg,          &
-     &                    i_incrjmax, i_incrlait, i_incrlaig,          &
+     &                    i_incrjmax, i_jmax_ini,                      &
+     &                    i_incrlait, i_incrlaig,                      &
      &                    i_extcoeffg, i_extcoefft, i_trans_vegcov,    &
      &                    i_firstyear,i_lastyear, i_write_h,           &
      &                    i_read_pc, i_write_nc,                       &
@@ -1043,8 +1044,8 @@
       if (pos_slt .gt. wlayernew) then
         rsurftnew(wlayernew+1:pos_slt) = i_rsurfmin * s_delz(wlayernew+1:pos_slt)
       endif
-      jmax25t_d(2) = 0.0003d0
-      jmax25g_d(2) = 0.0003d0
+      jmax25t_d(2) = i_jmax_ini
+      jmax25g_d(2) = i_jmax_ini
 
       !set minimum grass coverage, 0 if no vegetation
       if(i_no_veg .eq. 0) then

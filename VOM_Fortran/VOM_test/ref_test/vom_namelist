@@ -19,6 +19,7 @@ i_prootmg=150.0d0,      ! constant root balance pressure of 1.5 MPa in grasses
 i_growthmax=0.1d0,      ! parameter determining maximum daily growth increment of root surface area
 i_incrcovg=0.02d0,      ! parameter determining maximum increment percentage of grass cover
 i_incrjmax=0.01d0,      ! parameter determining maximum increment percentage of jmax25
+i_jmax_ini=0.0003d0,    ! parameter determining the start value of jmax25
 i_incrlait=0.02d0,      ! parameter determining maximum increment percentage of LAI grasses
 i_incrlaig=0.02d0,      ! parameter determining maximum increment percentage of LAI trees
 i_firstyear=2000,       ! firstyear for the generation of hourly output in computation mode
