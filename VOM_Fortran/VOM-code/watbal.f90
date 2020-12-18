@@ -1,43 +1,51 @@
 !***********************************************************************
-!*  Layered water balance
-!*----------------------------------------------------------------------
-!*  Author: Stan Schymanski, Max Planck Institute for Biogeochemistry
-!*  Email: sschym@bgc-jena.mpg.de
-!*  06/2008
-!*  Version: REW with layered unsaturated zone, no routing
-!*----------------------------------------------------------------------
-!*
-!* Numbers in the commented parentheses refer to the equation numeration
-!* in the document 'equations.pdf' that comes with the documentation.
-!*
-!*----------------------------------------------------------------------
-!*
-!* This subroutine ('waterbalance') uses the variables defined in
-!* modules.f90, some of which have to be allocated prior to calling
-!* 'waterbalance'.
-!* When calling the 'waterbalance', the 'init' variable must be given
-!* (1 to generate initial conditions, otherwise 0).
-!* This subroutine calculates the water balance for a time step <=dtmax.
-!* The calling program must transfer the new variables ('new' in their names)
-!* to the old variables for the next time step, before calling 'waterbalance'
-!* again. Example: call waterbalance(init) , time=time+dt, zw=zwnew...
-!*
-!*----------------------------------------------------------------------
-!*  Copyright (C) 2008  Stan Schymanski
-!*
-!*    This program is free software: you can redistribute it and/or modify
-!*    it under the terms of the GNU General Public License as published by
-!*    the Free Software Foundation, either version 3 of the License, or
-!*    (at your option) any later version.
-!*
-!*    This program is distributed in the hope that it will be useful,
-!*    but WITHOUT ANY WARRANTY; without even the implied warranty of
-!*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-!*    GNU General Public License for more details.
-!*
-!*    You should have received a copy of the GNU General Public License
-!*    along with this program. If not, see http://www.gnu.org/licenses.
-!*
+!        Optimised Vegetation Optimality Model (VOM)
+!        Layered water balance
+!        Original code coming from: https://github.com/schymans/VOM
+!-----------------------------------------------------------------------
+!        Author: 
+!           Stan Schymanski
+!           Now at: LIST, Luxembourg Institute of Science and Technology,
+!                Belvaux, Luxembourg
+!    
+!        Contributors: 
+!           Remko Nijzink
+!           Now at: LIST, Luxembourg Institute of Science and Technology,
+!                Belvaux, Luxembourg
+!
+!        Version: 06/2008  REW with layered unsaturated zone, no routing
+!-----------------------------------------------------------------------
+!
+!        Numbers in the commented parentheses refer to the equation numeration
+!        in Schymanski (2007): PhD thesis, University of W.A.
+!        and in the document 'equations.pdf' that comes with the documentation.
+!
+!        This subroutine ('waterbalance') uses the variables defined in
+!        modules.f90, some of which have to be allocated prior to calling
+!       'waterbalance'.
+!        When calling the 'waterbalance', the 'init' variable must be given
+!        (1 to generate initial conditions, otherwise 0).
+!        This subroutine calculates the water balance for a time step <=dtmax.
+!        The calling program must transfer the new variables ('new' in their names)
+!        to the old variables for the next time step, before calling 'waterbalance'
+!        again. Example: call waterbalance(init) , time=time+dt, zw=zwnew...
+!-----------------------------------------------------------------------
+!
+!  Copyright (C) 2008  Stan Schymanski
+!
+!    This program is free software: you can redistribute it and/or modify
+!    it under the terms of the GNU General Public License as published by
+!    the Free Software Foundation, either version 3 of the License, or
+!    (at your option) any later version.
+!
+!    This program is distributed in the hope that it will be useful,
+!    but WITHOUT ANY WARRANTY; without even the implied warranty of
+!    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+!    GNU General Public License for more details.
+!
+!    You should have received a copy of the GNU General Public License
+!    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+!
 !***********************************************************************
 
       subroutine waterbalance()

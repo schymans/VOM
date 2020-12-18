@@ -1,36 +1,45 @@
 !***********************************************************************
-!*  Transpiration model and layered water balance
-!*----------------------------------------------------------------------
-!*  Author: Stan Schymanski, CWR, University of Western Australia
-!*  03/2006
-!*  now at: Max Planck Institute for Biogeochemistry
-!*  Email: sschym@bgc-jena.mpg.de
-!*  02/2008
-!*  Version: big leaf, trees and grass, layered unsaturated zone
-!*  optimised root profile, pcg_d and Jmax25
-!*----------------------------------------------------------------------
-!*
-!* Numbers in the commented parentheses refer to the equation numeration
-!* in Schymanski (2007): PhD thesis, University of W.A.
-!* and in the document 'equations.pdf' that comes with the documentation.
-!*
-!*----------------------------------------------------------------------
-!*  Copyright (C) 2008  Stan Schymanski
-!*
-!*    This program is free software: you can redistribute it and/or modify
-!*    it under the terms of the GNU General Public License as published by
-!*    the Free Software Foundation, either version 3 of the License, or
-!*    (at your option) any later version.
-!*
-!*    This program is distributed in the hope that it will be useful,
-!*    but WITHOUT ANY WARRANTY; without even the implied warranty of
-!*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-!*    GNU General Public License for more details.
-!*
-!*    You should have received a copy of the GNU General Public License
-!*    along with this program.  If not, see http://www.gnu.org/licenses.
-!*
+!        Optimised Vegetation Optimality Model (VOM)
+!        Transpiration model and layered water balance
+!        Original code coming from: https://github.com/schymans/VOM
+!-----------------------------------------------------------------------
+!        Author: 
+!           Stan Schymanski
+!           Now at: LIST, Luxembourg Institute of Science and Technology,
+!                Belvaux, Luxembourg
+!    
+!        Contributors: 
+!           Remko Nijzink
+!           Now at: LIST, Luxembourg Institute of Science and Technology,
+!                Belvaux, Luxembourg
+!
+!        Version: big leaf, trees and grass, layered unsaturated zone
+!        optimised root profile, pcg_d and Jmax25
+!-----------------------------------------------------------------------
+!
+!        Numbers in the commented parentheses refer to the equation numeration
+!        in Schymanski (2007): PhD thesis, University of W.A.
+!        and in the document 'equations.pdf' that comes with the documentation.
+!
+!-----------------------------------------------------------------------
+!
+!  Copyright (C) 2008  Stan Schymanski
+!
+!    This program is free software: you can redistribute it and/or modify
+!    it under the terms of the GNU General Public License as published by
+!    the Free Software Foundation, either version 3 of the License, or
+!    (at your option) any later version.
+!
+!    This program is distributed in the hope that it will be useful,
+!    but WITHOUT ANY WARRANTY; without even the implied warranty of
+!    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+!    GNU General Public License for more details.
+!
+!    You should have received a copy of the GNU General Public License
+!    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+!
 !***********************************************************************
+
 
       subroutine transpmodel(invar, dim_invar, tp_netass, option1)
       use vom_vegwat_mod
