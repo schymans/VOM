@@ -872,9 +872,8 @@
      &      par_h(i), rain_h(i), press_h(i), ca_h(i)
           if (par_h(i) .lt. 0.d0) par_h(i) = 0.d0
           ca_h(i) = ca_h(i) / 1.0d6
-          vp__ = vp_h(i) * 100.d0
           vd_h(i) = (((0.6108d0 * p_E ** (17.27d0 * tair_h(ii)        &
-     &             / (tair_h(i) + 237.3d0))) * 1000) - vp__)          &
+     &             / (tair_h(i) + 237.3d0))) * 1000) - vp_h(i) * 100.d0)          &
      &             / (press_h(i) * 100.d0)
           if (h .lt. oldh) then
             dayyear(ii) = dummyint1
@@ -1065,9 +1064,9 @@
 
       !set minimum grass coverage, 0 if no vegetation
       if(i_no_veg .eq. 0) then
-         c_pcgmin     = 0.02d0 ! minimum grass pc; initial point for growth
+         c_caigmin     = 0.02d0 ! minimum grass pc; initial point for growth
       else
-         c_pcgmin     = 0.00d0 !no grasses
+         c_caigmin     = 0.00d0 !no grasses
       end if
 
       !check if seasonal coverage is read
@@ -1079,9 +1078,9 @@
          end if
 
       else       
-         caig_d(2)     = MIN(1.d0 - o_cait, c_pcgmin)
+         caig_d(2)     = MIN(1.d0 - o_cait, c_caigmin)
          caig_d(:)     = caig_d(2) + (/-i_incrcovg,0.0d0,i_incrcovg/)  ! vector with values varying by 1%
-         caig_d(3)     = MIN(MAX(c_pcgmin, caig_d(3)), 1.d0 - o_cait)
+         caig_d(3)     = MIN(MAX(c_caigmin, caig_d(3)), 1.d0 - o_cait)
       end if
 
       rootlim(:,:,:) = 0.d0
@@ -1171,7 +1170,7 @@
       else
          caig_d(:)     = caig_d(2) + (/-i_incrcovg,0.0d0,i_incrcovg/)  ! perc. change grass cover
          caig_d(:)     = MAX(caig_d(:), 0.d0)
-         caig_d(3)     = MIN(MAX(c_pcgmin, caig_d(3)), 1.d0 - o_cait)
+         caig_d(3)     = MIN(MAX(c_caigmin, caig_d(3)), 1.d0 - o_cait)
       end if
 
 
@@ -1346,8 +1345,6 @@
       REAL*8 :: part1, part2, part3, part4, part5
       REAL*8 :: part6, part7, part8, part9
       INTEGER:: ii
-      REAL*8 :: Ma_lg(3)
-      REAL*8 :: Ma_lt(3)
 
 
       if (par_h(th_) .gt. 0.d0) then
