@@ -1239,8 +1239,7 @@
       implicit none
 
       INTEGER :: ii           !counter
-      REAL*8 :: Ma_lg(3)      !local fraction of absorbed radiation grasses
-      REAL*8 :: Ma_lt(3)      !local fraction of absorbed radiation trees
+
 
 !     * (Out[274], derived from (3.25))
       gammastar = 0.00004275d0                                         &
