@@ -334,9 +334,9 @@
       REAL*8  :: wsnew                  ! Total soil water store at next time step (m)
       REAL*8  :: wsold                  ! Previous total soil water storage (m)
 
-      REAL*8  :: o_cait                 ! Projected cover perennial vegetation (0-1)
-      REAL*8  :: caig_d(3)              ! Projected cover seasonal vegetation (pcg_d(2) is actual value)
-      REAL*8  :: c_pcgmin               ! Minimum grass pc; initial point for growth (-)
+      REAL*8  :: o_cait                 ! Crown area index perennial vegetation (0-1)
+      REAL*8  :: caig_d(3)              ! Crown area index seasonal vegetation (caig_d(2) is actual value)
+      REAL*8  :: c_caigmin              ! Minimum grass crown area index; initial point for growth (-)
 
 !     * leaf
 
@@ -516,7 +516,7 @@
 
       !$OMP threadprivate( time, error, finish, nyear, nday, nhour, th_, c_testday,   & 
       !$OMP topt_, par_y, srad_y,   &
-      !$OMP vd_d, vd_y, rain_y, gammastar, wsnew, wsold, o_cai, pcg_d, c_pcgmin, &
+      !$OMP vd_d, vd_y, rain_y, gammastar, wsnew, wsold, o_cait, caig_d, c_caigmin, &
       !$OMP o_wstexp, o_wsgexp, o_lambdatf, o_lambdagf, lambdat_d, lambdag_d, gstomt, gstomg, &
       !$OMP rlt_h, rlt_d, rlt_y, rlg_h, rlg_d, rlg_y, transpt, transpg, q_tct_d, tct_y, tcg_d, &
       !$OMP tcg_y, jactt, jactg, jmaxt_h, jmaxg_h, jmax25t_d, jmax25g_d, &

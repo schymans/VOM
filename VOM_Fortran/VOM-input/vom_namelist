@@ -38,7 +38,7 @@ o_lambdagf=0.779827d3,  ! factor for calculating lambdag_d
 o_wsgexp=-0.132889d1,   ! exponent for calculating lambdag
 o_lambdatf=0.160181d4,  ! factor for calculating lambdat_d
 o_wstexp=-0.564496d0,   ! exponent for calculating lambdat_d
-o_cai=0.3d0,            ! projected cover perennial vegetation (0-1)
+o_cait=0.3d0,           ! projected cover perennial vegetation (0-1)
 o_rtdepth=0.3d1,        ! tree rooting depth (m)
 o_mdstore=1.0d2,        ! wood water storage parameter of trees (can be in shufflepar)
 o_rgdepth=0.1d1,        ! root depth grasses (can be in shufflepar)
@@ -72,9 +72,9 @@ sce_restart=.TRUE.,     ! restart SCE from previous run
 runtime_limit=5,        ! time in minutes before sce stops
 &end
 &shuffle2par
-parname0='lambdagf'   'wsgexp'      'lambdatf'   'wstexp'      'pct'        'rtdepth',
-parval0= 0.779827d+03 -0.132889d+01 0.160181d+04 -0.564496d+00 0.300000d+00 0.300000d+01,
-parmin0= 0.0d0        -3.0d0        0.0d0        -3.0d0        0.0d0        1.0d0,
-parmax0= 1.0d04       1.0d0         1.0d04       1.0d0         1.0d0        9.0d0,
-paropt0= 1            1             1            1             1            1,
+parname0='lambdagf'   'wsgexp'      'lambdatf'   'wstexp'      'cait'       'rtdepth' 'mdstore' 'rgdepth' 'i_cgs'    'i_zr'   'i_go' 'i_ksat' 'i_thetar' 'i_thetas' 'i_nvg' 'i_avg'
+parval0= 0.779827d+03 -0.132889d+01 0.160181d+04 -0.564496d+00 0.300000d+00 0.300000d+01 1.0d2  0.1d1       10.0d0    10.0d0   0.033d0 2.50d-6   0.065d0     0.41d0     1.89d0  7.5d0
+parmin0= 0.0d0        -3.0d0        0.0d0        -3.0d0        0.0d0        1.0d0        0.9d2  0.05d0      10.0d0     1.0d0   0.003d0 1.00d-6   0.055d0     0.20d0     1.2d0   1.5d0
+parmax0= 1.0d04       1.0d0         1.0d04       1.0d0         1.0d0        9.0d0        1.1d2  2.0d0       1000.0d0  36.47d0  0.133d0 1.50d-5   0.075d0     0.50d0     2.0d0   10.0d0
+paropt0= 1            1             1            1             1            1            0      1                0         0         0        0       0         0           0         0  
 &end

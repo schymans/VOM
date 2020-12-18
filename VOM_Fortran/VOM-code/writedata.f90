@@ -3,14 +3,9 @@
 !        Write output data from the VOM to netcdf
 !        Original code coming from: https://github.com/schymans/VOM
 !-----------------------------------------------------------------------
-!        Author: 
-!           Stan Schymanski
-!           Now at: LIST, Luxembourg Institute of Science and Technology,
-!                Belvaux, Luxembourg
-!    
-!        Contributors: 
-!           Remko Nijzink
-!           Now at: LIST, Luxembourg Institute of Science and Technology,
+!        Author: Stan Schymanski
+!
+!        Now at: LIST, Luxembourg Institute of Science and Technology,
 !                Belvaux, Luxembourg
 !
 !        Version: reading of command line arguments
