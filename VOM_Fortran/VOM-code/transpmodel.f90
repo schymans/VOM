@@ -618,6 +618,8 @@
       allocate(tair_h(c_maxhour))
       allocate(rain_h(c_maxhour))
       allocate(ca_h(c_maxhour))
+      allocate(press_h(c_maxhour))
+      allocate(vp_h(c_maxhour))
 
       allocate(par_d(c_maxday))
 
@@ -866,10 +868,14 @@
         oldh = 99
         do i = 1, c_maxhour
           read(kfile_hourlyweather,'(5i8,5e11.3)') h, dummyint1,       &
-     &      dummyint2, dummyint3, dummyint4, tair_h(i), vd_h(i),       &
-     &      par_h(i), rain_h(i), ca_h(i)
+     &      dummyint2, dummyint3, dummyint4, tair_h(i), vp_h(i),       &
+     &      par_h(i), rain_h(i), press_h(i), ca_h(i)
           if (par_h(i) .lt. 0.d0) par_h(i) = 0.d0
           ca_h(i) = ca_h(i) / 1.0d6
+          vp__ = vp_h(i) * 100.d0
+          vd_h(i) = (((0.6108d0 * p_E ** (17.27d0 * tair_h(ii)        &
+     &             / (tair_h(i) + 237.3d0))) * 1000) - vp__)          &
+     &             / (press_h(i) * 100.d0)
           if (h .lt. oldh) then
             dayyear(ii) = dummyint1
             fday(ii)    = dummyint2
@@ -909,7 +915,7 @@
         open(kfile_hourlyweather, FILE=trim(adjustl(i_inputpath))// &
              trim(adjustl(sfile_hourlyweather)), STATUS='new')
         write(kfile_hourlyweather,'(5a8,5a11)') 'hour', 'dayyear', 'fday', &
-     &    'fmonth', 'fyear', 'tair_h', 'vd_h', 'par_h', 'rain_h', 'ca_h'
+     &    'fmonth', 'fyear', 'tair_h', 'vp_h', 'par_h', 'rain_h','press_h' ,'ca_h'
       endif
 
       do in = in1, in2
@@ -938,13 +944,14 @@
      &               * COS(3.805d0 - ((-1.d0 + ik) * p_pi) / 12.d0))
 
           ca_h(ii) = ca_d(in) / 1.0d6
+          press_h(ii) = press_d(in)
 
 !         vd_h(ii) = 0.006028127d0 * 2.718282d0 ** ((17.27d0 * tair_h(ii)) &
 !    &             / (237.3d0 + tair_h(ii))) - 9.869233d-6 * vp__
 !         * (derived from 3.54+3.55) (Out[52]), accounts for diurnal variation in vapour deficit
           vd_h(ii) = (((0.6108d0 * p_E ** (17.27d0 * tair_h(ii)        &
      &             / (tair_h(ii) + 237.3d0))) * 1000) - vp__)          &
-     &             / (press_d(in) * 100.d0)
+     &             / (press_h(ii) * 100.d0)
           if (vd_h(ii) .le. 0.d0) vd_h(ii) = 0.d0
 
 !         * average rainfall in hour ii (m/s)
@@ -975,9 +982,9 @@
           endif
 
           if (i_write_h == 1) then
-            write(kfile_hourlyweather,'(5i8,5e11.3)') ik, dayyear(in), &
-     &        fday(in), fmonth(in), fyear(in), tair_h(ii), vd_h(ii),   &
-     &        par_h(ii), rain_h(ii), ca_h(ii)
+            write(kfile_hourlyweather,'(5i8,6e11.3)') ik, dayyear(in), &
+     &        fday(in), fmonth(in), fyear(in), tair_h(ii), vp__/100.d0,   &
+     &        par_h(ii), rain_h(ii), press_h(ii), ca_h(ii)
           endif
 
         enddo

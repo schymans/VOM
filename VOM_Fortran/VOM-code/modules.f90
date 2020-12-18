@@ -304,6 +304,7 @@
       REAL*8              :: topt_      ! Optimal temperature in temperature response curve (K)
 
       REAL*8, ALLOCATABLE :: press_d(:) ! Daily air pressure (Pa)
+      REAL*8, ALLOCATABLE :: press_h(:) ! Hourly air pressure (Pa)
 
       REAL*8, ALLOCATABLE :: par_h(:)   ! Hourly photosynthetically active radiation (mol/m2/s)
       REAL*8, ALLOCATABLE :: par_d(:)   ! Daily photosynthetically active radiation (mol/m2/d)
@@ -316,6 +317,7 @@
       REAL*8, ALLOCATABLE :: ca_d(:)    ! Daily atmospheric CO2 mole fraction
 
       REAL*8, ALLOCATABLE :: vp_d(:)    ! Daily absolute vapour pressure (hPa)
+      REAL*8, ALLOCATABLE :: vp_h(:)    ! Hourly absolute vapour pressure (hPa)
 
       REAL*8, ALLOCATABLE :: vd_h(:)    ! Hourly atmospheric vapour deficit (VPD/air pressure) (Pa/Pa)
       REAL*8              :: vd_d       ! Mean daily atmospheric vapour deficit (mol/mol)
