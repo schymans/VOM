@@ -334,8 +334,8 @@
       REAL*8  :: wsnew                  ! Total soil water store at next time step (m)
       REAL*8  :: wsold                  ! Previous total soil water storage (m)
 
-      REAL*8  :: o_cai                  ! Projected cover perennial vegetation (0-1)
-      REAL*8  :: pcg_d(3)               ! Projected cover seasonal vegetation (pcg_d(2) is actual value)
+      REAL*8  :: o_cait                 ! Projected cover perennial vegetation (0-1)
+      REAL*8  :: caig_d(3)              ! Projected cover seasonal vegetation (pcg_d(2) is actual value)
       REAL*8  :: c_pcgmin               ! Minimum grass pc; initial point for growth (-)
 
 !     * leaf

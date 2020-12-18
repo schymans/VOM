@@ -203,7 +203,7 @@
 !     * soil evaporation
 
       esoil__  = (par_h(th_)/(srad2par_h * l_E_* rho_wat) ) * &
-                  (1.d0 - (1.d0-i_trans_vegcov) * (o_cai + pcg_d(2))) * su__(1)
+                  (1.d0 - (1.d0-i_trans_vegcov) * (o_cait + caig(2))) * su__(1)
 
 !     * Seepage face flow as a function of zw_ following eq_spgfcf in Watbal3.
 

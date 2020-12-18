@@ -14,7 +14,7 @@
 !                Belvaux, Luxembourg
 !
 !        Version: big leaf, trees and grass, layered unsaturated zone
-!        optimised root profile, pcg_d and Jmax25
+!        optimised root profile, caig and Jmax25
 !-----------------------------------------------------------------------
 !
 !        Numbers in the commented parentheses refer to the equation numeration
@@ -144,7 +144,7 @@
         call vom_add_daily()
         call vom_write_hourly(fyear(nday), fmonth(nday), fday(nday), nday, nhour, th_,          &
              &    rain_h(th_), tair_h(th_), par_h(th_), vd_h(th_), esoil_h,    &
-             &    o_cai + pcg_d(2), jmax25t_d(2), jmax25g_d(2), mqt_,          &
+             &    o_cait + caig(2), jmax25t_d(2), jmax25g_d(2), mqt_,          &
              &    rlt_h(2,2) + rlg_h(2,2,2), lambdat_d, lambdag_d, rrt_d + rrg_d,  &
              &    asst_h(2,2), assg_h(2,2,2), etmt_h, etmg_h, su__(1), zw_, wsnew, &
              &    spgfcf_h, infx_h, ruptkt_h, su__, i_write_nc)
@@ -213,7 +213,7 @@
 
         call vom_write_day( rain_d(nday), tairmax_d(nday), tairmin_d(nday), par_d(nday),   &
              &  vd_d / 24.d0, esoil_d, jmax25t_d(2), jmax25g_d(2),             &
-             &  o_cai + pcg_d(2), rlt_d , rlg_d, lambdat_d, lambdag_d,         &
+             &  o_cait + caig(2), rlt_d , rlg_d, lambdat_d, lambdag_d,         &
              &  rrt_d * 3600.d0 * 24.d0, rrg_d * 3600.d0 * 24.d0, asst_d(2,2), &
              &  assg_d(2,2,2), SUM(su__(1:wlayer_)) / wlayer_, zw_, wsnew,     &
              &  spgfcf_d, infx_d, etmt_d, etmg_d, su__(1), topt_,              &
@@ -435,7 +435,7 @@
       if (vom_npar .ge. 2) o_wsgexp   = vom_invar(2)
       if (vom_npar .ge. 3) o_lambdatf = vom_invar(3)
       if (vom_npar .ge. 4) o_wstexp   = vom_invar(4)
-      if (vom_npar .ge. 5) o_cai      = vom_invar(5)
+      if (vom_npar .ge. 5) o_cait      = vom_invar(5)
       if (vom_npar .ge. 6) o_rtdepth  = vom_invar(6)
       if (vom_npar .ge. 7) o_mdstore  = vom_invar(7)
       if (vom_npar .ge. 8) o_rgdepth  = vom_invar(8)
@@ -454,7 +454,7 @@
          o_wsgexp   = 0.0
          o_lambdatf = 0.0 
          o_wstexp   = 0.0
-         o_cai      = 0.0
+         o_cait      = 0.0
          o_rtdepth  = 0.0
          o_mdstore  = 0.0
          o_rgdepth  = 0.0
@@ -514,7 +514,7 @@
      &                    i_lai_function,  i_no_veg,                   &
      &                    i_inputpath, i_outputpath,                   &
      &                    o_lambdagf, o_wsgexp, o_lambdatf, o_wstexp,  &
-     &                    o_cai, o_rtdepth, o_mdstore, o_rgdepth
+     &                    o_cait, o_rtdepth, o_mdstore, o_rgdepth
 
       namelist /input2par/ i_lat, i_lon, i_cz, i_cgs, i_zr, i_go, i_ksat,     &
      &                     i_thetar, i_thetas, i_nvg, i_avg, i_delz
@@ -1015,7 +1015,7 @@
 
 !     * Set vegetation parameters
 
-      q_md   = o_cai * i_mdtf + o_mdstore
+      q_md   = o_cait * i_mdtf + o_mdstore
       q_mqx  = q_md * i_mqxtf
       mqtnew = 0.95d0 * q_mqx                  ! initial wood water storage
       mqtold = mqtnew
@@ -1065,16 +1065,16 @@
 
       !check if seasonal coverage is read
       if(i_read_pc == 1) then
-         pcg_d(:) = perc_cov_veg( 1 )
+         caig(:) = perc_cov_veg( 1 )
          !adjust value if perennial + seasonal > 1
-         if( (pcg_d(1) + o_cai) .gt. 1.0) then
-            pcg_d(:) = 1.d0 - o_cai
+         if( (caig(1) + o_cait) .gt. 1.0) then
+            caig(:) = 1.d0 - o_cait
          end if
 
       else       
-         pcg_d(2)     = MIN(1.d0 - o_cai, c_pcgmin)
-         pcg_d(:)     = pcg_d(2) + (/-i_incrcovg,0.0d0,i_incrcovg/)  ! vector with values varying by 1%
-         pcg_d(3)     = MIN(MAX(c_pcgmin, pcg_d(3)), 1.d0 - o_cai)
+         caig(2)     = MIN(1.d0 - o_cait, c_pcgmin)
+         caig(:)     = caig(2) + (/-i_incrcovg,0.0d0,i_incrcovg/)  ! vector with values varying by 1%
+         caig(3)     = MIN(MAX(c_pcgmin, caig(3)), 1.d0 - o_cait)
       end if
 
       rootlim(:,:,:) = 0.d0
@@ -1084,11 +1084,11 @@
       select case(i_lai_function)
       case(1)
 !        * (3.38)  foliage turnover costs, assuming crown LAI of 2.5
-         q_tct_d(:) = i_tcf * o_cai * 2.5d0
+         q_tct_d(:) = i_tcf * o_cait * 2.5d0
 
       case(2)
 !        * foliage turnover costs, LAI as a function of cover (Choudhurry,1987; Monsi and Saeki,1953)
-         q_tct_d(:) = i_tcf * o_cai * lai_lt(:)
+         q_tct_d(:) = i_tcf * o_cait * lai_lt(:)
       end select
 
 !     * Setting yearly, daily and hourly parameters
@@ -1154,17 +1154,17 @@
       lai_lg(:) = MAX( lai_lg(:), 0.1d0 ) !minimum value, else lai doesn't pick up anymore
 
       if( i_read_pc == 1) then   
-         pcg_d(:) = perc_cov_veg(nday)  
+         caig(:) = perc_cov_veg(nday)  
 
          !adjust value if perennial + seasonal > 1
-         if( (pcg_d(1) + o_cai) .gt. 1.0) then
-            pcg_d(:) = 1.d0 - o_cai
+         if( (caig(1) + o_cait) .gt. 1.0) then
+            caig(:) = 1.d0 - o_cait
          end if
 
       else
-         pcg_d(:)     = pcg_d(2) + (/-i_incrcovg,0.0d0,i_incrcovg/)  ! perc. change grass cover
-         pcg_d(:)     = MAX(pcg_d(:), 0.d0)
-         pcg_d(3)     = MIN(MAX(c_pcgmin, pcg_d(3)), 1.d0 - o_cai)
+         caig(:)     = caig(2) + (/-i_incrcovg,0.0d0,i_incrcovg/)  ! perc. change grass cover
+         caig(:)     = MAX(caig(:), 0.d0)
+         caig(3)     = MIN(MAX(c_pcgmin, caig(3)), 1.d0 - o_cait)
       end if
 
 
@@ -1173,15 +1173,15 @@
       case(1)
 !        * (3.38) foliage turnover costs, assuming LAI/pc of 2.5
          do ii = 1,3
-            tcg_d(ii,:)     = i_tcf * pcg_d(:) * 2.5d0 !grasses
+            tcg_d(ii,:)     = i_tcf * caig(:) * 2.5d0 !grasses
          end do
-         q_tct_d(:)     = i_tcf * o_cai * 2.5d0    !trees
+         q_tct_d(:)     = i_tcf * o_cait * 2.5d0    !trees
       case(2)
 !        * foliage turnover costs, varying lai
          do ii = 1,3
-            tcg_d(ii, :) = i_tcf * pcg_d(:) * lai_lg(ii) !grasses 
+            tcg_d(ii, :) = i_tcf * caig(:) * lai_lg(ii) !grasses 
          end do
-         q_tct_d(:) = i_tcf * o_cai * lai_lt(:)     !trees
+         q_tct_d(:) = i_tcf * o_cait * lai_lt(:)     !trees
       end select
 
 
@@ -1190,8 +1190,8 @@
 
 
 !     * (3.42, 2.45e-10 from (Out[165])) costs of water distribution and storage
-      q_cpcct_d = i_cpccf * o_cai * o_rtdepth + o_mdstore * 2.45d-10
-      cpccg_d(:) = i_cpccf * pcg_d(:) * o_rgdepth  ! (3.42) water transport costs
+      q_cpcct_d = i_cpccf * o_cait * o_rtdepth + o_mdstore * 2.45d-10
+      cpccg_d(:) = i_cpccf * caig(:) * o_rgdepth  ! (3.42) water transport costs
 
 
 !     * (3.40), (Out[190]) root respiration grasses [mol/s]
@@ -1260,7 +1260,7 @@
 
 !     * (3.24), (Out[312]), leaf respiration trees
      do ii = 1,3 !loop for LAI-values
-      rlt_h(:,ii) = ((ca_h(th_) - gammastar) * o_cai * Ma_lt(ii) * jmaxt_h(:)         &
+      rlt_h(:,ii) = ((ca_h(th_) - gammastar) * o_cait * Ma_lt(ii) * jmaxt_h(:)         &
      &         * i_rlratio) / (4.d0 * (ca_h(th_) + 2.d0 * gammastar)   &
      &         * (1.d0 + i_rlratio))
      end do
@@ -1285,13 +1285,13 @@
 
 !    * respiration grasses
      do ii = 1,3 !loop for LAI-values
-         rlg_h(1,:,ii) = ((ca_h(th_) - gammastar) * pcg_d(1) * Ma_lg(ii) * jmaxg_h(:)    &
+         rlg_h(1,:,ii) = ((ca_h(th_) - gammastar) * caig(1) * Ma_lg(ii) * jmaxg_h(:)    &
         &           * i_rlratio) / (4.d0 * (ca_h(th_) + 2.d0 * gammastar) &
         &           * (1.d0 + i_rlratio))  ! (3.24), (Out[312])
-         rlg_h(2,:,ii) = ((ca_h(th_) - gammastar) * pcg_d(2) * Ma_lg(ii) * jmaxg_h(:)    &
+         rlg_h(2,:,ii) = ((ca_h(th_) - gammastar) * caig(2) * Ma_lg(ii) * jmaxg_h(:)    &
         &           * i_rlratio) / (4.d0 * (ca_h(th_) + 2.d0 * gammastar) &
         &           * (1.d0 + i_rlratio))  ! (3.24), (Out[312])
-         rlg_h(3,:,ii) = ((ca_h(th_) - gammastar) * pcg_d(3) * Ma_lg(ii) * jmaxg_h(:)    &
+         rlg_h(3,:,ii) = ((ca_h(th_) - gammastar) * caig(3) * Ma_lg(ii) * jmaxg_h(:)    &
         &           * i_rlratio) / (4.d0 * (ca_h(th_) + 2.d0 * gammastar) &
         &           * (1.d0 + i_rlratio))  ! (3.24), (Out[312])
      end do
@@ -1360,7 +1360,7 @@
 !       * calculate electron transport capacity trees
         do ii = 1,3
            jactt(:,ii)   = (1.d0 - p_E ** (-(i_alpha * par_h(th_))           &    
-        &             / jmaxt_h(:))) * jmaxt_h(:) * o_cai * Ma_lt(ii)  ! (3.23), (Out[311])
+        &             / jmaxt_h(:))) * jmaxt_h(:) * o_cait * Ma_lt(ii)  ! (3.23), (Out[311])
         end do
 
       select case(i_lai_function)
@@ -1375,11 +1375,11 @@
 !       * calculate electron transport capacity grasses
         do ii = 1,3
            jactg(1,:,ii) = (1.d0 - p_E ** (-(i_alpha * par_h(th_))           &
-     &             / jmaxg_h(:))) * jmaxg_h(:) * pcg_d(1) * Ma_lg(ii)  ! (3.23), (Out[311])
+     &             / jmaxg_h(:))) * jmaxg_h(:) * caig(1) * Ma_lg(ii)  ! (3.23), (Out[311])
            jactg(2,:,ii) = (1.d0 - p_E ** (-(i_alpha * par_h(th_))           &
-     &             / jmaxg_h(:))) * jmaxg_h(:) * pcg_d(2) * Ma_lg(ii)  ! (3.23), (Out[311])
+     &             / jmaxg_h(:))) * jmaxg_h(:) * caig(2) * Ma_lg(ii)  ! (3.23), (Out[311])
            jactg(3,:,ii) = (1.d0 - p_E ** (-(i_alpha * par_h(th_))           &
-     &             / jmaxg_h(:))) * jmaxg_h(:) * pcg_d(3) * Ma_lg(ii)  ! (3.23), (Out[311])
+     &             / jmaxg_h(:))) * jmaxg_h(:) * caig(3) * Ma_lg(ii)  ! (3.23), (Out[311])
         end do
 
         cond1      = (2.d0 * p_a * vd_h(th_)) / (ca_h(th_) + 2.d0 * gammastar)
@@ -1790,7 +1790,7 @@
         write(kfile_resultshourly,'(I6,I7,I7,I7,I7,22E15.5)')          &
      &    fyear(nday), fmonth(nday), fday(nday), nday, nhour,          &
      &    rain_h(th_), tair_h(th_), par_h(th_), vd_h(th_), esoil_h,    &
-     &    o_cai + pcg_d(2), jmax25t_d(2), jmax25g_d(2), mqt_,          &
+     &    o_cait + caig(2), jmax25t_d(2), jmax25g_d(2), mqt_,          &
      &    rlt_h(2,2) + rlg_h(2,2,2), lambdat_d, lambdag_d, rrt_d + rrg_d,  &
      &    asst_h(2,2), assg_h(2,2,2), etmt_h, etmg_h, su__(1), zw_, wsnew, &
      &    spgfcf_h, infx_h
@@ -1886,7 +1886,7 @@
        output_mat(4, nday) = jmax25g_d(2)
 
        ! Projected cover perennial vegetation plus actual cover seasonal vegetation 
-       output_mat(5, nday) = o_cai + pcg_d(2)
+       output_mat(5, nday) = o_cait + caig(2)
 
        ! Daily tree plus grass leaf respiration
        output_mat(6, nday) = rlt_d + rlg_d
@@ -2082,7 +2082,7 @@
       REAL*8  :: max_netcg_tmp          ! Temporary max net carbon profit
       REAL*8  :: netcg_d(3,3)           ! Daily grass net carbon profit
       REAL*8  :: netct_d(3,3)           ! Daily grass net carbon profit
-      REAL*8  :: pcg_d_tmp              ! Temporary grass cover
+      REAL*8  :: caig_tmp              ! Temporary grass cover
       INTEGER :: posma(1)               ! Pointer to variable values that achieved maximum assimilation
       INTEGER :: posbest(2)              ! Pointer to variable values that achieved maximum net assimilation
       !trees
@@ -2120,7 +2120,7 @@
          !check if carbon profit is higher for different LAI
          if( max_netcg_tmp .gt. max_netcg) then
             
-            pcg_d_tmp = MIN(1.d0 - o_cai, pcg_d(posbest(1))) !cover grasses to temporary variable
+            caig_tmp = MIN(1.d0 - o_cait, caig(posbest(1))) !cover grasses to temporary variable
             lai_g_tmp = lai_lg(ii)                          !lai grasses in temporary variable
             jmax25g_tmp = jmax25g_d(posbest(2))              !jmax25 grasses in temporary variable
             max_netcg = max_netcg_tmp                       !new NCP is higher as previous
@@ -2129,7 +2129,7 @@
       end do
 
       !save all temporary variables to the global vectors
-      pcg_d(2)     = pcg_d_tmp
+      caig(2)     = caig_tmp
       jmax25g_d(2) = jmax25g_tmp
       lai_lg(2)    = lai_g_tmp
 
