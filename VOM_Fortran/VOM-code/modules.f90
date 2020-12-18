@@ -340,6 +340,9 @@
       REAL*8  :: caig_d(3)              ! Crown area index seasonal vegetation (caig_d(2) is actual value)
       REAL*8  :: c_caigmin              ! Minimum grass crown area index; initial point for growth (-)
 
+      REAL*8 :: Ma_lg(3)                !local fraction of absorbed radiation grasses (-)
+      REAL*8 :: Ma_lt(3)                !local fraction of absorbed radiation trees (-)
+
 !     * leaf
 
       REAL*8  :: o_wstexp               ! Exponent for calculating lambdat_d (-)
