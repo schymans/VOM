@@ -1,14 +1,20 @@
 !***********************************************************************
 !        Optimised Vegetation Optimality Model (VOM)
 !        Core program to run optimisation (sce) and transpmodel
+!        Original code coming from: https://github.com/schymans/VOM
 !-----------------------------------------------------------------------
-!        Author: Stan Schymanski, CWR, University of Western Australia
-!        05/05/2004
+!        Author: 
+!           Stan Schymanski
+!           Now at: LIST, Luxembourg Institute of Science and Technology,
+!                Belvaux, Luxembourg
+!    
+!        Contributors: 
+!           Remko Nijzink
+!           Now at: LIST, Luxembourg Institute of Science and Technology,
+!                Belvaux, Luxembourg
 !
-!        Now at: MPI for Biogeochemistry, Jena, Germany
-!        30/07/2007
-!   sschym@bgc-jena.mpg.de
 !
+!        First version: 05/05/2004
 !-----------------------------------------------------------------------
 !
 !  Copyright (C) 2008  Stan Schymanski

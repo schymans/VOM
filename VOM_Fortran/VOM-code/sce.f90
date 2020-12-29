@@ -1,43 +1,55 @@
-!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!***********************************************************************
+!        Optimised Vegetation Optimality Model (VOM)
+!        SHUFFLED COMPLEX EVOLUTION
+!        Original code coming from: https://github.com/schymans/VOM
+!-----------------------------------------------------------------------
+!        Author: 
+!           Neil Viney
+!           Centre for Water Research (CWR), The University of WA                
+!    
+!        Contributors: 
+!           Stan Schymanski
+!           Now at: LIST, Luxembourg Institute of Science and Technology,
+!                Belvaux, Luxembourg
 !
-! SHUFFLED COMPLEX EVOLUTION
-!   Parameter optimisation algorithm based on a paper by Duan et al.
-!   (1993, J. Opt. Theory and Appl., 76, 501--521).
+!           Remko Nijzink
+!           Now at: LIST, Luxembourg Institute of Science and Technology,
+!                Belvaux, Luxembourg
 !
-!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-! VERSION 2.1 ---  01 February 1999
-! Written by Neil Viney, Centre for Water Research (CWR), The University of WA
-! Modified by Stan Schymanski, CWR, 05 April 2004 (to run with transpmodel)
-! Extended by Stan Schymanski, SESE, 02 June 2006 to follow Muttil & Liong
-! (2004, Journal of Hydraulic Engineering-Asce 130(12):1202-1205) and
-! Duan et al. (1994, Journal of Hydrology 158)
+!        Version: 2.1 - 01 February 1999
+!-----------------------------------------------------------------------
 !
-!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!         Parameter optimisation algorithm based on a paper by Duan et al.
+!         (1993, J. Opt. Theory and Appl., 76, 501--521).
+!         Modified by Stan Schymanski, CWR, 05 April 2004 (to run with 
+!         transpmodel).
+!         Extended by Stan Schymanski, SESE, 02 June 2006 to follow 
+!         Muttil & Liong (2004, Journal of Hydraulic Engineering-Asce 
+!         130(12):1202-1205) and Duan et al. (1994, Journal of Hydrology 
+!         158)
+!         This implementation MAXIMISES the objective function, which is
+!         calculated by the model, not by the optimiser. The optimiser 
+!         transfers parameter values to the model subroutine and receives 
+!         the value of the objective function.
 !
-! This implementation MAXIMISES the objective function, which is
-! calculated by the model, not by the optimiser. The optimiser transfers
-! parameter values to the model subroutine and receives the value of the
-! objective function.
+!-----------------------------------------------------------------------
 !
-!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!  Copyright (C) 2008  Stan Schymanski
 !
-! Copyright (C) 2008 Stan Schymanski
+!    This program is free software: you can redistribute it and/or modify
+!    it under the terms of the GNU General Public License as published by
+!    the Free Software Foundation, either version 3 of the License, or
+!    (at your option) any later version.
 !
-!   This program is free software: you can redistribute it and/or modify
-!   it under the terms of the GNU General Public License as published by
-!   the Free Software Foundation, either version 3 of the License, or
-!   (at your option) any later version.
+!    This program is distributed in the hope that it will be useful,
+!    but WITHOUT ANY WARRANTY; without even the implied warranty of
+!    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+!    GNU General Public License for more details.
 !
-!   This program is distributed in the hope that it will be useful,
-!   but WITHOUT ANY WARRANTY; without even the implied warranty of
-!   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-!   GNU General Public License for more details.
+!    You should have received a copy of the GNU General Public License
+!    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 !
-!   You should have received a copy of the GNU General Public License
-!   along with this program. If not, see <http://www.gnu.org/licenses/>.
-!
-!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+!***********************************************************************
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -810,7 +822,7 @@ end if
       !$OMP private( m_, first, msg, writeformat) &
       !$OMP COPYIN( time, error, finish, nyear, nday, nhour, th_, c_testday,   & 
       !$OMP topt_, par_y, srad_y,  vd_d, vd_y, &
-      !$OMP rain_y, gammastar, wsnew, wsold, o_cai, pcg_d, c_pcgmin, &
+      !$OMP rain_y, gammastar, wsnew, wsold, o_cait, caig_d, c_caigmin, &
       !$OMP o_wstexp, o_wsgexp, o_lambdatf, o_lambdagf, &
       !$OMP i_cz, i_cgs, i_zr, i_go, i_ksat, i_thetar, i_thetas, i_nvg, i_avg, &
       !$OMP lambdat_d, lambdag_d, gstomt, gstomg, &
