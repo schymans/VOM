@@ -1246,10 +1246,11 @@
      &          / (149.d0 * p_R_ * (273.d0 + tair_h(th_))))
 
 !     * (Out[310], derived from (3.26)) Temperature dependence of Jmax
-      jmaxt_h(:) = (p_E ** ((i_ha * (-25.d0 + tair_h(th_))) / ((25.d0 + 273.d0)  &
-        &           * p_R_ * (tair_h(th_) + 273.d0) ))* ((-1.d0 + p_E ** (-(i_hd * (-298.d0      &
+      jmaxt_h(:) =  (p_E ** ((i_ha * (-25.d0 + tair_h(th_)))                &
+        &           / ((25.d0 + 273.d0)  * p_R_ * (tair_h(th_) + 273.d0) )) &
+        &           * ((-1.d0 + p_E ** (-(i_hd * (-298.d0                   &
         &           + topt_)) /( (25.d0 + 273.d0) * p_R_ * topt_))) * i_ha  &
-        &           + i_hd) * jmax25t_d(:)) / ((-1.d0 + p_E ** ((i_hd     &
+        &           + i_hd) * jmax25t_d(:)) / ((-1.d0 + p_E ** ((i_hd       &
         &           * (273.d0 + tair_h(th_) - topt_)) / ( (tair_h(th_)      &
         &           + 273.d0) * p_R_ * topt_))) * i_ha + i_hd) 
 
@@ -1269,10 +1270,11 @@
      end do
 
 !     * (Out[310], derived from (3.26)) Temperature dependence of Jmax
-      jmaxg_h(:) = (p_E ** ((i_ha * (-25.d0 + tair_h(th_))) / ((25.d0 + 273.d0)  &
-        &           * p_R_ * (tair_h(th_) + 273.d0) )) * ((-1.d0 + p_E ** (-(i_hd * (-298.d0      &
+      jmaxg_h(:) = (p_E ** ((i_ha * (-25.d0 + tair_h(th_)))                 &
+        &           / ((25.d0 + 273.d0)  * p_R_ * (tair_h(th_) + 273.d0) )) &
+        &           * ((-1.d0 + p_E ** (-(i_hd * (-298.d0                   &
         &           + topt_)) /( (25.d0 + 273.d0) * p_R_ * topt_))) * i_ha  &
-        &           + i_hd) * jmax25g_d(:)) / ((-1.d0 + p_E ** ((i_hd     &
+        &           + i_hd) * jmax25g_d(:)) / ((-1.d0 + p_E ** ((i_hd       &
         &           * (273.d0 + tair_h(th_) - topt_)) / ( (tair_h(th_)      &
         &           + 273.d0) * p_R_ * topt_))) * i_ha + i_hd)
 
