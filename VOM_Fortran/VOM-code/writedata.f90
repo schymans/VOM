@@ -568,8 +568,9 @@
 
       open(kfile_resultshourly, FILE=trim(adjustl(i_outputpath))//      &
            trim(adjustl(sfile_resultshourly)), STATUS='replace')
-      write(kfile_resultshourly,'(A6,A7,A7,A7,A7,22A15)') 'fyear',     &
-     &  'fmonth', 'fday', 'nday', 'nhour', 'rain', 'tair', 'par', 'vd',&
+      write(kfile_resultshourly,'(A6,A7,A7,A7,A7,24A15)') 'fyear',     &
+     &  'fmonth', 'fday', 'nday', 'nhour', 'rain', 'tair', 'par',      &
+     &  'gstomt', 'gstomg', 'vd',                                      &
      &  'esoil', 'pc', 'jmax25t', 'jmax25g', 'mqt', 'rl', 'lambdat',   &
      &  'lambdag', 'rr', 'asst', 'assg', 'etmt', 'etmg', 'su_1',       &
      &  'zw', 'ws', 'spgfcf', 'infx'
@@ -837,7 +838,7 @@
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
       subroutine vom_write_hourly ( year, month, day, num_day, num_hour, num_hour_tot,  &
-          &    rain_hourly, tair_hourly, par_hourly, vd_hourly, esoil_hourly,    &
+          &    rain_hourly, tair_hourly, par_hourly, gstomt_hourly, gstomg_hourly ,vd_hourly, esoil_hourly,    &
           &    pc_hourly, jmax25t_hourly, jmax25g_hourly, mqt_hourly,          &
           &    rl_hourly, lambdat_hourly, lambdag_hourly, rr_hourly,  &
           &    asst_hourly, assg_hourly, etmt_hourly, etmg_hourly, su1_hourly, zw_hourly, ws_hourly, &
@@ -856,6 +857,8 @@
       REAL*8,  INTENT(in) :: rain_hourly
       REAL*8,  INTENT(in) :: tair_hourly
       REAL*8,  INTENT(in) :: par_hourly
+      REAL*8,  INTENT(in) :: gstomt_hourly
+      REAL*8,  INTENT(in) :: gstomg_hourly
       REAL*8,  INTENT(in) :: vd_hourly
       REAL*8,  INTENT(in) :: esoil_hourly
       REAL*8,  INTENT(in) :: pc_hourly
@@ -977,9 +980,9 @@
 !         * includes a column for each sublayer
           hourlyformat = '(I6,I6,I4,I7,I5,'//str//'E14.6)'
 
-          write(kfile_resultshourly,'(I6,I7,I7,I7,I7,22E15.5)')          &
+          write(kfile_resultshourly,'(I6,I7,I7,I7,I7,24E15.5)')          &
           &    year, month, day, num_day, num_hour,          &
-          &    rain_hourly, tair_hourly, par_hourly, vd_hourly, esoil_hourly,    &
+          &    rain_hourly, tair_hourly, par_hourly, gstomt_hourly, gstomg_hourly, vd_hourly, esoil_hourly,    &
           &    pc_hourly, jmax25t_hourly, jmax25g_hourly, mqt_hourly,          &
           &    rl_hourly, lambdat_hourly, lambdag_hourly, rr_hourly,  &
           &    asst_hourly, assg_hourly, etmt_hourly, etmg_hourly, su1_hourly, zw_hourly, ws_hourly, &
