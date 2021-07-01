@@ -218,7 +218,8 @@
              &  assg_d(2,2,2), SUM(su__(1:wlayer_)) / wlayer_, zw_, wsnew,     &
              &  spgfcf_d, infx_d, etmt_d, etmg_d, su__(1), topt_,              &
              & tcg_d(2,2), q_tct_d(2), cpccg_d(2), q_cpcct_d,                  &
-             & lai_lt(2), lai_lg(2), tp_netassg, tp_netasst, rsurft_, i_write_nc )             
+             & lai_lt(2), lai_lg(2), lai_lt(2)*o_cait + lai_lg(2)*caig_d(2), caig_d(2),  &
+             & tp_netassg, tp_netasst, rsurft_, i_write_nc )             
 
        if (fyear(nday) .ne. nyear) then
 !       * for calculation of vd_y a -1 is added to nday for using dayyear of correct year

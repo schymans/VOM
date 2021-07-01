@@ -557,8 +557,8 @@
          &  'par', 'vd', 'esoil', 'jmax25t', 'jmax25g', 'pc', 'rlt', 'rlg', &
          &  'lambdat', 'lambdag', 'rrt', 'rrg', 'asst', 'assg', 'su_avg',  &
          &  'zw', 'ws', 'spgfcf', 'infx', 'etmt', 'etmg', 'su_1', 'topt',  &
-         &  'tcg', 'tct', 'cpccg_d', 'cpcct_d',  'lai_t', 'lai_g', &
-         &'ncp_g', 'ncp_t'
+         &  'tcg', 'tct', 'cpccg_d', 'cpcct_d',  'lai_t', 'lai_g', 'lai_tot', &
+         &   'cai_g', 'ncp_g', 'ncp_t'
 
         open(kfile_rsurfdaily, FILE=trim(adjustl(i_outputpath))// &
              trim(adjustl(sfile_rsurfdaily)), STATUS='replace')
@@ -617,7 +617,7 @@
              &  assg, su_avg, zw, ws,     &
              &  spgfcf, infx, etmt, etmg, su_1, topt,              &
              & tcg, tct, cpccg, cpcct,                  &
-             & lai_t, lai_g, tp_netassg, tp_netasst, rsurft, nc_flag )
+             & lai_t, lai_g, lai_tot, caig, tp_netassg, tp_netasst, rsurft, nc_flag )
 
 
       use vom_vegwat_mod
@@ -656,6 +656,8 @@
       REAL*8,  INTENT(in) :: cpcct
       REAL*8,  INTENT(in) :: lai_t
       REAL*8,  INTENT(in) :: lai_g
+      REAL*8,  INTENT(in) :: lai_tot
+      REAL*8,  INTENT(in) :: caig      
       REAL*8,  INTENT(in) :: tp_netassg
       REAL*8,  INTENT(in) :: tp_netasst
       REAL*8,  DIMENSION(s_maxlayer), INTENT(in):: rsurft
@@ -732,7 +734,7 @@
 !     * includes a column for each sublayer
       dailyformat = '(I6,I6,I4,I7,'//str//'E14.6)'
 
-      write(kfile_resultsdaily,'(I6,I7,I7,I7,I7,34E15.5)')             &
+      write(kfile_resultsdaily,'(I6,I7,I7,I7,I7,36E15.5)')             &
      &  fyear(nday), fmonth(nday), fday(nday), nday, nhour-1,          &
      &  rain, tairmax, tairmin, par,   &
      &  vd, esoil, jmax25t, jmax25g,             &
@@ -741,7 +743,7 @@
      &  assg, su_avg, zw, ws,     &
      &  spgfcf, infx, etmt, etmg, su_1, topt,              &
      & tcg, tct, cpccg, cpcct,                  &
-     & lai_t, lai_g, tp_netassg, tp_netasst         
+     & lai_t, lai_g, lai_tot, caig, tp_netassg, tp_netasst         
 
 
      write(kfile_rsurfdaily,dailyformat) fyear(nday), fmonth(nday), &
