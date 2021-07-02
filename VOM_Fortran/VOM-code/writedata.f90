@@ -552,7 +552,7 @@
 
          open(kfile_resultsdaily, FILE=trim(adjustl(i_outputpath))// &
            trim(adjustl(sfile_resultsdaily)), STATUS='replace')
-         write(kfile_resultsdaily,'(A6,A7,A7,A7,A7, 34A15)') 'fyear',      &
+         write(kfile_resultsdaily,'(A6,A7,A7,A7,A7, 36A15)') 'fyear',      &
          &  'fmonth', 'fday', 'nday', 'nhour', 'rain', 'tairmax', 'tairmin', &
          &  'par', 'vd', 'esoil', 'jmax25t', 'jmax25g', 'pc', 'rlt', 'rlg', &
          &  'lambdat', 'lambdag', 'rrt', 'rrg', 'asst', 'assg', 'su_avg',  &
