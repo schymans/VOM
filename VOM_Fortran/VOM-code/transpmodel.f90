@@ -502,7 +502,7 @@
 
 !     * Definition of variable parameters
 
-      namelist /inputpar/ i_alpha, i_cpccf, i_tcf, i_maxyear,          &
+      namelist /inputpar/ i_alpha, i_cpccf, i_tcfg, i_tcft, i_maxyear, &
      &                    i_testyear, i_ha, i_hd, i_toptf,             &
      &                    i_toptstart, i_rlratio, i_mdtf, i_mqxtf,     &
      &                    i_rrootm, i_rsurfmin, i_rsurf_, i_rootrad,   &
@@ -1120,11 +1120,11 @@
       select case(i_lai_function)
       case(1)
 !        * (3.38)  foliage turnover costs, assuming crown LAI of 2.5
-         q_tct_d(:) = i_tcf * o_cait * 2.5d0
+         q_tct_d(:) = i_tcft * o_cait * 2.5d0
 
       case(2)
 !        * foliage turnover costs, LAI as a function of cover (Choudhurry,1987; Monsi and Saeki,1953)
-         q_tct_d(:) = i_tcf * o_cait * lai_lt(:)
+         q_tct_d(:) = i_tcft * o_cait * lai_lt(:)
       end select
 
 !     * Setting yearly, daily and hourly parameters
@@ -1209,15 +1209,15 @@
       case(1)
 !        * (3.38) foliage turnover costs, assuming LAI/pc of 2.5
          do ii = 1,3
-            tcg_d(ii,:)     = i_tcf * caig_d(:) * 2.5d0 !grasses
+            tcg_d(ii,:)     = i_tcfg * caig_d(:) * 2.5d0 !grasses
          end do
-         q_tct_d(:)     = i_tcf * o_cait * 2.5d0    !trees
+         q_tct_d(:)     = i_tcfg * o_cait * 2.5d0    !trees
       case(2)
 !        * foliage turnover costs, varying lai
          do ii = 1,3
-            tcg_d(ii, :) = i_tcf * caig_d(:) * lai_lg(ii) !grasses 
+            tcg_d(ii, :) = i_tcfg * caig_d(:) * lai_lg(ii) !grasses 
          end do
-         q_tct_d(:) = i_tcf * o_cait * lai_lt(:)     !trees
+         q_tct_d(:) = i_tcfg * o_cait * lai_lt(:)     !trees
       end select
 
 

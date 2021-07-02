@@ -1,7 +1,8 @@
 &inputpar
 i_alpha=0.3d0,          ! initial slope of j(par) curve
 i_cpccf=1.2d-6,         ! water transport cost factor (cpcc=pc*rootdepth*cpccf) in mol/m/m2/s
-i_tcf=2.2d-7,           ! turnover cost factor for foliage (tc=tcf*LAI) in mol/m2/s
+i_tcfg=2.2d-7,           ! turnover cost factor for foliage (tc=tcf*LAI) in mol/m2/s
+i_tcft=2.2d-7,           ! turnover cost factor for foliage (tc=tcf*LAI) in mol/m2/s
 i_maxyear=30,           ! number of years to process
 i_testyear=1,           ! number of years after which to perform initial test of netass
 i_ha=43790.0d0,         ! parameters to calculate jmax(temp)
