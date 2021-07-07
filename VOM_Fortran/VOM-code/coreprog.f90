@@ -56,7 +56,7 @@
       LOGICAL             :: change_out     ! Change output true/false
 
       beststat = 0
-      call cpu_time(starttime)
+      call system_clock(starttime)
 
       call read_commandline(outputpath_tmp, inputpath_tmp, change_in, change_out)
 
@@ -167,7 +167,7 @@
 
             end if
             
-            call cpu_time(currtime) 
+            call system_clock(currtime) 
             runtime = (currtime - starttime)  / (60.0) !minutes
             !also stop when time is exceeded
             if (runtime .gt. runtime_limit) then
