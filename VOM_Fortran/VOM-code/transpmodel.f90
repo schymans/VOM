@@ -855,8 +855,9 @@
 !       * Calculation of derived parameters
 
         call vom_calc_derived()
-
-        if (i_write_h == 1) exist=.TRUE.
+        call vom_calc_zenith()
+        
+        !if (i_write_h == 1) exist=.TRUE.
       endif
 
 !     * Reading hourly climate data if available
@@ -869,14 +870,18 @@
         ii = 1
         oldh = 99
         do i = 1, c_maxhour
-          read(kfile_hourlyweather,'(5i8,5e11.3)') h, dummyint1,       &
+        
+          !read hourly inputs
+          read(kfile_hourlyweather, '(5i8,6e11.4)') h, dummyint1,       &
      &      dummyint2, dummyint3, dummyint4, tair_h(i), vp_h(i),       &
-     &      par_h(i), rain_h(i), press_h(i), ca_h(i)
+     &      par_h(i), rain_h(i), press_h(i), ca_h(i)   
           if (par_h(i) .lt. 0.d0) par_h(i) = 0.d0
-          ca_h(i) = ca_h(i) / 1.0d6
-          vd_h(i) = (((0.6108d0 * p_E ** (17.27d0 * tair_h(ii)        &
+
+          !calculate vapor pressure deficit
+          vd_h(i) = (((0.6108d0 * p_E ** (17.27d0 * tair_h(i)        &
      &             / (tair_h(i) + 237.3d0))) * 1000) - vp_h(i) * 100.d0)          &
      &             / (press_h(i) * 100.d0)
+     
           if (h .lt. oldh) then
             dayyear(ii) = dummyint1
             fday(ii)    = dummyint2
@@ -887,6 +892,10 @@
           oldh = h
         enddo
         close(kfile_hourlyweather)
+        
+        !derive zenith for fpar-calculations
+        call vom_calc_zenith()
+                
       endif
 
       return
@@ -921,7 +930,7 @@
       if (i_write_h == 1) then
         open(kfile_hourlyweather, FILE=trim(adjustl(i_inputpath))// &
              trim(adjustl(sfile_hourlyweather)), STATUS='new')
-        write(kfile_hourlyweather,'(5a8,5a11)') 'hour', 'dayyear', 'fday', &
+        write(kfile_hourlyweather,'(5a8,6a11)') 'hour', 'dayyear', 'fday', &
      &    'fmonth', 'fyear', 'tair_h', 'vp_h', 'par_h', 'rain_h','press_h' ,'ca_h'
       endif
 
@@ -951,31 +960,9 @@
      &               * COS(3.805d0 - ((-1.d0 + ik) * p_pi) / 12.d0))
 
 
-!         solar declination (Campbell and Norman, 1998, Eq.11.2)
-          delta = ASIN(0.39785*SIN( p_pi*(278.97+0.9856*dayyear(in)+1.9165*SIN( p_pi*(356.6+0.9856*dayyear(in))/180))/180) )
-
-!         longitude correction  time of solar noon, in hours 
-          standard_meridian = NINT(i_lon/15.d0)*15.d0
-          LC = (standard_meridian-i_lon)/15d0  
-
-!         equation of time correction, in hours (Campbell and Norman, 1998, Eq.11.4)
-          f = p_pi*(279.575+0.98565*dayyear(in))/180d0
-          ET = (-104.7*SIN(f)+596.2*SIN(2*f)+4.3*SIN(3*f)-12.7*SIN(4*f)       &
-                -429.3*COS(f)-2.0*COS(2*f)+19.3*COS(3*f)) /3600 !equation of time
-
-!         time of solar noon (Campbell and Norman, 1998, Eq.11.2)
-          to = 12d0 - LC - ET
-          
-
-!         calculate the zenith angle of the sun (Campbell and Norman, 1998, Eq.11.1)
-          phi_zenith(ii) = ACOS(SIN(p_pi*i_lat/180d0)*SIN(delta) + COS(p_pi*i_lat/180d0)*COS(delta)*COS(p_pi*15.d0*(ik-to)/180d0))
-
-
           ca_h(ii) = ca_d(in) / 1.0d6
           press_h(ii) = press_d(in)
 
-!         vd_h(ii) = 0.006028127d0 * 2.718282d0 ** ((17.27d0 * tair_h(ii)) &
-!    &             / (237.3d0 + tair_h(ii))) - 9.869233d-6 * vp__
 !         * (derived from 3.54+3.55) (Out[52]), accounts for diurnal variation in vapour deficit
           vd_h(ii) = (((0.6108d0 * p_E ** (17.27d0 * tair_h(ii)        &
      &             / (tair_h(ii) + 237.3d0))) * 1000) - vp__)          &
@@ -1010,7 +997,7 @@
           endif
 
           if (i_write_h == 1) then
-            write(kfile_hourlyweather,'(5i8,6e11.3)') ik, dayyear(in), &
+            write(kfile_hourlyweather,'(5i8,6e11.4)') ik, dayyear(in), &
      &        fday(in), fmonth(in), fyear(in), tair_h(ii), vp__/100.d0,   &
      &        par_h(ii), rain_h(ii), press_h(ii), ca_h(ii)
           endif
@@ -1022,6 +1009,59 @@
 
       return
       end subroutine vom_calc_derived
+
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!*-----Calculation of derived parameters--------------------------------
+
+      subroutine vom_calc_zenith ()
+      use vom_vegwat_mod
+      implicit none
+
+      INTEGER :: in, ik, ii
+      INTEGER :: in1, in2
+      REAL*8  :: tairmean
+      REAL*8  :: delta                  ! solar declination      
+      REAL*8  :: standard_meridian      ! standard_meridian
+      REAL*8  :: f                      ! factor in calculation of solar time
+      REAL*8  :: to                     ! time of solar noon
+      REAL*8  :: LC                     ! longitude correction time of solar noon
+      REAL*8  :: ET                     ! time correction time of solar noon          
+
+      in1 = 1
+      in2 = c_maxday
+
+      do in = in1, in2
+
+!       * Loop through every hour of day, where ik=hour
+        do ik = 1, 24
+          ii = in * 24 + ik - 24
+
+!         solar declination (Campbell and Norman, 1998, Eq.11.2)
+          delta = ASIN(0.39785*SIN( p_pi*(278.97+0.9856*dayyear(in)+1.9165*SIN( p_pi*(356.6+0.9856*dayyear(in))/180))/180) )
+
+!         longitude correction  time of solar noon, in hours 
+          standard_meridian = NINT(i_lon/15.d0)*15.d0
+          LC = (standard_meridian-i_lon)/15d0  
+
+!         equation of time correction, in hours (Campbell and Norman, 1998, Eq.11.4)
+          f = p_pi*(279.575+0.98565*dayyear(in))/180d0
+          ET = (-104.7*SIN(f)+596.2*SIN(2*f)+4.3*SIN(3*f)-12.7*SIN(4*f)       &
+                -429.3*COS(f)-2.0*COS(2*f)+19.3*COS(3*f)) /3600 !equation of time
+
+!         time of solar noon (Campbell and Norman, 1998, Eq.11.2)
+          to = 12d0 - LC - ET          
+
+!         calculate the zenith angle of the sun (Campbell and Norman, 1998, Eq.11.1)
+          phi_zenith(ii) = ACOS(SIN(p_pi*i_lat/180d0)*SIN(delta) + COS(p_pi*i_lat/180d0)*COS(delta)*COS(p_pi*15.d0*(ik-to)/180d0))
+
+        enddo
+      enddo
+
+      return
+      end subroutine vom_calc_zenith
+
 
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
