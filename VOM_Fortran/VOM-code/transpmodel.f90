@@ -950,7 +950,7 @@
       endif
 
       do in = in1, in2
-        par_d(in) = 2.0804d0 * srad_d(in)  ! (Out[17]), par in mol/m2 if srad was MJ/m2
+        par_d(in) = srad2par_d * srad_d(in)  ! (Out[17]), par in mol/m2 if srad was MJ/m2
         daylength = 12.d0 - 7.639437d0 * ASIN((0.397949d0              &
      &            * COS(0.172142d0 + 0.017214d0 * dayyear(in))         &
      &            * TAN(0.017453d0 * i_lat))                           &
@@ -1025,7 +1025,7 @@
           part1 = omega_s * sin(i_lat*p_pi/180.0d0)*sin(delta)
           part2 = cos(i_lat*p_pi/180.0d0)*cos(delta)*sin(omega_s)
 
-          par_et_h(ii) = (60 / p_pi) * Gsc * dr * (part1 + part2) ! MJ/m2/h
+          par_et_h(ii) = srad2par_h * (60 / p_pi) * Gsc * dr * (part1 + part2) ! mol/m2/h
           
 !         * split par into direct and diffuse par (Roderick et al. 1999)
 
