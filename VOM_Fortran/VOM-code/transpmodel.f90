@@ -615,6 +615,10 @@
       allocate(ca_d(c_maxday))
 
       allocate(par_h(c_maxhour))
+      allocate(pardiff_h(c_maxhour))
+      allocate(pardir_h(c_maxhour))
+      allocate(par_et_h(c_maxhour))          
+      
       allocate(vd_h(c_maxhour))
       allocate(tair_h(c_maxhour))
       allocate(rain_h(c_maxhour))
@@ -917,15 +921,33 @@
       REAL*8  :: delta                  ! solar declination      
       REAL*8  :: dtair
       REAL*8  :: daylength              ! Day length (hours)
+      REAL*8  :: omega_s                ! solar hour angle (rad)  
+      REAL*8  :: part1                  ! part of calc. extraterrestrial rad.         
+      REAL*8  :: part2                  ! part of calc. extraterrestrial rad.         
       REAL*8  :: standard_meridian      ! standard_meridian
+      REAL*8  :: dr                     ! inverse relative distance Earth-Sun
       REAL*8  :: f                      ! factor in calculation of solar time
       REAL*8  :: to                     ! time of solar noon
       REAL*8  :: LC                     ! longitude correction time of solar noon
-      REAL*8  :: ET                     ! time correction time of solar noon          
+      REAL*8  :: ET                     ! time correction time of solar noon 
+      REAL*8  :: A0                     ! parameter to split PAR           
+      REAL*8  :: A1                     ! parameter to split PAR           
+      REAL*8  :: X0                     ! parameter to split PAR          
+      REAL*8  :: X1                     ! parameter to split PAR          
+      REAL*8  :: Y0                     ! parameter to split PAR           
+      REAL*8  :: Y1                     ! parameter to split PAR           
       REAL*8  :: vp__                   ! Absolute vapour pressure in the air (Pa)
 
         in1 = 1
         in2 = c_maxday
+
+        !parameters to split par into direct and diffuse par (Roderick, 1999)
+          X0 = 0.26d0
+          Y0 = 0.96d0
+          Y1 = 0.05d0          
+          X1 = 0.80-0.0017*abs(i_lat) + 0.000044*abs(i_lat)**2
+
+
 
       if (i_write_h == 1) then
         open(kfile_hourlyweather, FILE=trim(adjustl(i_inputpath))// &
@@ -995,7 +1017,47 @@
           else
             par_h(ii) = 0.d0
           endif
+          
+!         * inverse relative distance Earth-Sun
+          dr = 1.0d0 + 0.033d0 * COS(dayyear(in) * 2.0d0*p_pi/365.0d0)
+          
+!         solar declination (Campbell and Norman, 1998, Eq.11.2)
+          delta = ASIN(0.39785*SIN( p_pi*(278.97+0.9856*dayyear(in)+1.9165*SIN( p_pi*(356.6+0.9856*dayyear(in))/180))/180) )
+          
+!         sunset hour angle
+          omega_s = acos(-tan(i_lat * p_pi/180.0d0) * tan(delta))
+          
+!         * calculate extra terrestrial irradiance
 
+          part1 = omega_s * sin(i_lat*p_pi/180.0d0)*sin(delta)
+          part2 = cos(i_lat*p_pi/180.0d0)*cos(delta)*sin(omega_s)
+
+          par_et_h(ii) = (60 / p_pi) * Gsc * dr * (part1 + part2) ! MJ/m2/h
+          
+!         * split par into direct and diffuse par (Roderick et al. 1999)
+
+          if( (par_h(ii) / par_et_h(ii) ) .le. X0) then     
+             
+             ! eq. 4a Roderick (1999), Rs/Ro below threshold  
+             pardiff_h(ii) = par_h(ii) * Y0          
+          end if
+          
+          if(  (  (par_h(ii) / par_et_h(ii) ) .le. X1 ) .and. (  (par_h(ii) / par_et_h(ii) ) .gt. X0 ) ) then    
+          
+             ! eq. 4b Roderick (1999), linear part between X0 and X1        
+             A1 = (Y1 - Y0) / (X1 - X0) 
+             A0 = Y1 - A1*X1
+             pardiff_h(ii) = par_h(ii) * (A0 + A1 * (par_h(ii) / par_et_h(ii)) )          
+          end if
+          
+          if( (par_h(ii) / par_et_h(ii) ) .ge. X1) then   
+          
+             ! eq. 4c Roderick (1999), above threshold       
+             pardiff_h(ii) = par_h(ii) * Y1          
+          end if
+
+                  
+         ! write hourly weatherdata to file 
           if (i_write_h == 1) then
             write(kfile_hourlyweather,'(5i8,6e11.4)') ik, dayyear(in), &
      &        fday(in), fmonth(in), fyear(in), tair_h(ii), vp__/100.d0,   &

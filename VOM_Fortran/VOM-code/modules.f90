@@ -283,7 +283,8 @@
       REAL*8, PARAMETER :: srad2par_h = 2.0699d0  ! Conversion from srad to par hourly (mol/MJ)
       REAL*8, PARAMETER :: srad2par_d = 2.0804d0  ! Conversion from srad to par daily (mol/MJ)
       REAL*8, PARAMETER :: rho_wat = 1000.0d0     ! Density of water (kg/m3)
-
+      REAL*8, PARAMETER :: Gsc     = 0.0820d0     ! Solar constant (MJ m-2 day-1)
+      
       INTEGER :: nyear                  ! Year
       INTEGER :: nday                   ! Day since start of run
       INTEGER :: nhour                  ! Hour of day
@@ -311,7 +312,12 @@
       REAL*8, ALLOCATABLE :: par_h(:)   ! Hourly photosynthetically active radiation (mol/m2/s)
       REAL*8, ALLOCATABLE :: par_d(:)   ! Daily photosynthetically active radiation (mol/m2/d)
       REAL*8              :: par_y      ! Annual photosynthetically active radiation (mol/m2/y)
-
+      
+      REAL*8, ALLOCATABLE :: pardiff_h(:) ! Hourly diffuse photosynthetically active radiation (mol/m2/s)
+      REAL*8, ALLOCATABLE :: pardir_h(:)  ! Hourly direct photosynthetically active radiation (mol/m2/s)
+      
+      REAL*8, ALLOCATABLE :: par_et_h(:)  ! Hourly extraterrestrial radiation (mol/m2/s)
+      
       REAL*8, ALLOCATABLE :: srad_d(:)  ! Daily shortwave radiation  (MJ/m2/d)
       REAL*8              :: srad_y     ! Annual shortwave radiation (MJ/m2/y)
 
