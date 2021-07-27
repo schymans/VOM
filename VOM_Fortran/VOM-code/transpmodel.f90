@@ -931,23 +931,16 @@
       REAL*8  :: LC                     ! longitude correction time of solar noon
       REAL*8  :: ET                     ! time correction time of solar noon 
       REAL*8  :: A0                     ! parameter to split PAR           
-      REAL*8  :: A1                     ! parameter to split PAR           
-      REAL*8  :: X0                     ! parameter to split PAR          
-      REAL*8  :: X1                     ! parameter to split PAR          
-      REAL*8  :: Y0                     ! parameter to split PAR           
-      REAL*8  :: Y1                     ! parameter to split PAR           
+      REAL*8  :: A1                     ! parameter to split PAR       
+      REAL*8  :: X1                     ! parameter to split PAR              
+         
       REAL*8  :: vp__                   ! Absolute vapour pressure in the air (Pa)
 
         in1 = 1
         in2 = c_maxday
 
         !parameters to split par into direct and diffuse par (Roderick, 1999)
-          X0 = 0.26d0
-          Y0 = 0.96d0
-          Y1 = 0.05d0          
-          X1 = 0.80-0.0017*abs(i_lat) + 0.000044*abs(i_lat)**2
-
-
+        X1 = 0.80-0.0017*abs(i_lat) + 0.000044*abs(i_lat)**2
 
       if (i_write_h == 1) then
         open(kfile_hourlyweather, FILE=trim(adjustl(i_inputpath))// &

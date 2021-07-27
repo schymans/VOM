@@ -284,6 +284,9 @@
       REAL*8, PARAMETER :: srad2par_d = 2.0804d0  ! Conversion from srad to par daily (mol/MJ)
       REAL*8, PARAMETER :: rho_wat = 1000.0d0     ! Density of water (kg/m3)
       REAL*8, PARAMETER :: Gsc     = 0.0820d0     ! Solar constant (MJ m-2 day-1)
+      REAL*8, PARAMETER :: X0      = 0.26d0       ! parameter to split PAR          
+      REAL*8, PARAMETER :: Y0      = 0.96d0       ! parameter to split PAR           
+      REAL*8, PARAMETER :: Y1      =  0.05d0      ! parameter to split PAR      
       
       INTEGER :: nyear                  ! Year
       INTEGER :: nday                   ! Day since start of run
