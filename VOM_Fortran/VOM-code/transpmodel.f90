@@ -925,9 +925,10 @@
       REAL*8  :: part1                  ! part of calc. extraterrestrial rad.         
       REAL*8  :: part2                  ! part of calc. extraterrestrial rad.         
       REAL*8  :: standard_meridian      ! standard_meridian
-      REAL*8  :: dr                     ! inverse relative distance Earth-Sun
+      REAL*8  :: dr2                    ! eccentricity correction
       REAL*8  :: f                      ! factor in calculation of solar time
       REAL*8  :: to                     ! time of solar noon
+      REAL*8  :: Tauw                   ! day angle      
       REAL*8  :: LC                     ! longitude correction time of solar noon
       REAL*8  :: ET                     ! time correction time of solar noon 
       REAL*8  :: A0                     ! parameter to split PAR           
@@ -1009,23 +1010,38 @@
             if (par_h(ii) .lt. 0.d0) par_h(ii) = 0.d0
           else
             par_h(ii) = 0.d0
-          endif
+          endif         
           
-!         * inverse relative distance Earth-Sun
-          dr = 1.0d0 + 0.033d0 * COS(dayyear(in) * 2.0d0*p_pi/365.0d0)
+!         day angle (Eq. A.2 Roderick, 1999)
+          Tauw = (2.0d0*p_pi/360.0d0) * (360.0d0/365.0d0)*(dayyear(in) - 1.0 ) !rad
+                    
+!         solar declination (Eq. A.3 Roderick, 1999)      
+          delta = 0.006918d0 - 0.399912*cos(Tauw) + 0.070257*sin(Tauw) - 0.006758*cos(2*Tauw) + &
+                  0.000907*sin(2*Tauw) - 0.002697*cos(3*Tauw) + 0.00148*sin(3*Tauw)
           
-!         solar declination (Campbell and Norman, 1998, Eq.11.2)
-          delta = ASIN(0.39785*SIN( p_pi*(278.97+0.9856*dayyear(in)+1.9165*SIN( p_pi*(356.6+0.9856*dayyear(in))/180))/180) )
+!         eccentricity correction (Eq. A.4 Roderick, 1999)          
+          dr2 = 1.000110 + 0.034221*cos(Tauw) + 0.001280*sin(Tauw)+0.000719*cos(Tauw) + &
+                0.00077*sin(2*Tauw)
           
-!         sunset hour angle
-          omega_s = acos(-tan(i_lat * p_pi/180.0d0) * tan(delta))
+!         sunset hour angle (Eq. A.5 Roderick, 1999)        
+          if(abs(-tan(i_lat * p_pi/180.0d0) * tan(delta) ) .lt. 1.0) then
+             omega_s = acos(-tan(i_lat * p_pi/180.0d0) * tan(delta))
+          else
+            if(  ( delta * i_lat * p_pi/180.0d0 ) .gt. 0.0) then            
+               omega_s = p_pi             
+             else             
+               omega_s = 0.0
+             end if             
+           end if
           
-!         * calculate extra terrestrial irradiance
+          
+!         * calculate extra terrestrial irradiance (Eq A.1 Roderick 1999)
 
-          part1 = omega_s * sin(i_lat*p_pi/180.0d0)*sin(delta)
+          part1 = omega_s * sin(i_lat*p_pi/180.0d0)*sin(delta)          
           part2 = cos(i_lat*p_pi/180.0d0)*cos(delta)*sin(omega_s)
 
-          par_et_h(ii) = srad2par_h * (60 / p_pi) * Gsc * dr * (part1 + part2) ! mol/m2/h
+          par_et_h(ii) = srad2par_h * 37.595 * dr2 * (part1 + part2) / (24.0) ! mol/m2/h
+          
           
 !         * split par into direct and diffuse par (Roderick et al. 1999)
 
@@ -1049,6 +1065,8 @@
              pardiff_h(ii) = par_h(ii) * Y1          
           end if
 
+          pardir_h(ii) = par_h(ii) - pardiff_h(ii)
+          
                   
          ! write hourly weatherdata to file 
           if (i_write_h == 1) then
@@ -1083,7 +1101,8 @@
       REAL*8  :: to                     ! time of solar noon
       REAL*8  :: LC                     ! longitude correction time of solar noon
       REAL*8  :: ET                     ! time correction time of solar noon          
-
+      REAL*8  :: Tauw                   ! day angle      
+      
       in1 = 1
       in2 = c_maxday
 
@@ -1093,8 +1112,13 @@
         do ik = 1, 24
           ii = in * 24 + ik - 24
 
-!         solar declination (Campbell and Norman, 1998, Eq.11.2)
-          delta = ASIN(0.39785*SIN( p_pi*(278.97+0.9856*dayyear(in)+1.9165*SIN( p_pi*(356.6+0.9856*dayyear(in))/180))/180) )
+!         day angle (Eq. A.2 Roderick, 1999)
+          Tauw = (2.0d0*p_pi/360.0d0) * (360.0d0/365.0d0)*(dayyear(in) - 1.0 ) !rad
+
+
+!         solar declination (Eq. A.3 Roderick, 1999)      
+          delta = 0.006918d0 - 0.399912*cos(Tauw) + 0.070257*sin(Tauw) - 0.006758*cos(2*Tauw) + &
+                  0.000907*sin(2*Tauw) - 0.002697*cos(3*Tauw) + 0.00148*sin(3*Tauw)
 
 !         longitude correction  time of solar noon, in hours 
           standard_meridian = NINT(i_lon/15.d0)*15.d0
