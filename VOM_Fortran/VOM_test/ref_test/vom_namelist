@@ -23,6 +23,7 @@ i_incrjmax=0.01d0,      ! parameter determining maximum increment percentage of 
 i_jmax_ini=0.0003d0,    ! parameter determining the start value of jmax25
 i_incrlait=0.02d0,      ! parameter determining maximum increment percentage of LAI grasses
 i_incrlaig=0.02d0,      ! parameter determining maximum increment percentage of LAI trees
+i_la=0.1d0              ! leaf area per canopy layer
 i_firstyear=2000,       ! firstyear for the generation of hourly output in computation mode
 i_lastyear=2000,        ! lastyear for the generation of hourly output in computation mode
 i_write_h=0,            ! flag to greate a file with hourly values from daily values
