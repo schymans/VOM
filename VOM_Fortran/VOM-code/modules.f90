@@ -353,9 +353,15 @@
 
       REAL*8 :: fpar_lg(3)                !local fraction of absorbed radiation grasses (-)
       REAL*8 :: fpar_lt(3)                !local fraction of absorbed radiation trees (-)
-
+     
       REAL*8 :: fpard_lg                !mean local fraction of absorbed radiation grasses per day (-)
       REAL*8 :: fpard_lt                !mean local fraction of absorbed radiation trees pea day (-)
+      
+      REAL*8 :: frac_sung(3)            !fraction sunlit leaves grasses (-)
+      REAL*8 :: frac_shadeg(3)          !fraction shaded leaves grasses (-)
+
+      REAL*8 :: frac_sunt(3)            !fraction sunlit leaves trees (-)
+      REAL*8 :: frac_shadet(3)          !fraction shaded leaves trees (-)
       
 !     * leaf
 
@@ -517,6 +523,7 @@
       REAL*8  :: i_chi_t                ! ratio projected areas of canopy elements on horizontal and vertical surfaces (-)
       REAL*8  :: i_alpha_abs                ! ratio projected areas of canopy elements on horizontal and vertical surfaces (-)
       REAL*8  :: i_trans_vegcov         ! fraction of radiative energy reaching soil under full cover (0-1) (-)
+      REAL*8  :: i_la                   ! leaf area per canopy layer  (-)      
 
       INTEGER :: i_firstyear            ! First year for the generation of hourly output in computation mode
       INTEGER :: i_lastyear             ! Last year for the generation of hourly output in computation mode

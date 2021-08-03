@@ -509,7 +509,8 @@
      &                    i_prootmg, i_growthmax, i_incrcovg,          &
      &                    i_incrjmax, i_jmax_ini,                      &
      &                    i_incrlait, i_incrlaig,                      &
-     &                    i_chi_t, i_chi_g,i_alpha_abs, i_trans_vegcov,&
+     &                    i_chi_t, i_chi_g,i_alpha_abs,                &
+     &                    i_trans_vegcov, i_la,                        &     
      &                    i_firstyear,i_lastyear, i_write_h,           &
      &                    i_read_pc, i_write_nc,                       &
      &                    i_lai_function,  i_no_veg,                   &
@@ -1481,6 +1482,10 @@
       REAL*8 :: part1, part2, part3, part4, part5
       REAL*8 :: part6, part7, part8, part9
       INTEGER:: ii
+      INTEGER:: ilay
+      REAL*8 :: lag_shade(3)          
+      REAL*8 :: lat_shade(3)                
+      INTEGER:: nlay            
       REAL*8 :: kappa
       
       select case(i_lai_function)
@@ -1488,6 +1493,9 @@
       
         fpar_lt(:) = 1.0d0
         fpar_lg(:) = 1.0d0
+        
+        frac_shadeg(:) = 1.0d0
+        frac_sung(:) = 1.0d0
         
       case(2)
       
@@ -1502,6 +1510,27 @@
 !       * fraction of absorbed radiation per crown area grasses (Beer-lambert)
         fpar_lg(:) = 1.0d0 - p_E ** (-lai_lg(:) * kappa * sqrt(i_alpha_abs) )        
         
+        
+!       * estimate shaded and sunlit fractions, based on Schymanski et al. (2007)                
+        do ii = 1,3
+           nlay = lai_lg(ii) / i_la
+           do ilay = 1, nlay           
+              lag_shade(ii) = lag_shade(ii) + i_la * (1.0d0 - i_la) ** (ilay - 1.0d0)           
+           end do        
+        end do
+              frac_shadeg(ii) = lag_shade(ii) / lai_lg(ii) 
+              frac_sung(ii) = 1.0d0 - frac_shadeg(ii) 
+        
+        do ii = 1,3
+           nlay = lai_lt(ii) / i_la
+           do ilay = 1, nlay
+              lat_shade(ii) = lat_shade(ii) + i_la * (1.0d0 - i_la) ** (ilay - 1.0d0)           
+           end do        
+        end do
+              frac_shadet(ii) = lat_shade(ii) / lai_lt(ii) 
+              frac_sunt(ii) = 1.0d0 - frac_shadet(ii) 
+        
+        
       end select
 
       if (par_h(th_) .gt. 0.d0) then
@@ -1511,18 +1540,51 @@
 
 !       * calculate electron transport capacity trees
         do ii = 1,3
-           jactt(:,ii)   = (1.d0 - p_E ** (-(i_alpha * fpar_lt(ii) * par_h(th_))           &    
+        
+            select case(i_lai_function)
+              case(1)
+                   jactt(:,ii)   = (1.d0 - p_E ** (-(i_alpha * fpar_lt(ii) * par_h(th_))           &    
         &             / jmaxt_h(:))) * jmaxt_h(:) * o_cait  ! (3.23), (Out[311])
+        
+              case(2)
+                   jactt(:,ii)   = ( (1.d0 - p_E ** (-(i_alpha * fpar_lt(ii) * (pardir_h(th_) + pardiff_h(th_)) ) &    
+        &             / jmaxt_h(:))) * jmaxt_h(:) * o_cait * frac_sunt(ii) ) +                                      &
+        &                          ( (1.d0 - p_E ** (-(i_alpha * fpar_lt(ii) * pardiff_h(th_) )                    &    
+        &             / jmaxt_h(:))) * jmaxt_h(:) * o_cait * frac_shadet(ii) )
+        
+             end select
         end do
 
 !       * calculate electron transport capacity grasses
         do ii = 1,3
-           jactg(1,:,ii) = (1.d0 - p_E ** (-(i_alpha * fpar_lg(ii) * par_h(th_))           &
-     &             / jmaxg_h(:))) * jmaxg_h(:) * caig_d(1)   ! (3.23), (Out[311])
-           jactg(2,:,ii) = (1.d0 - p_E ** (-(i_alpha * fpar_lg(ii) * par_h(th_))           &
-     &             / jmaxg_h(:))) * jmaxg_h(:) * caig_d(2)   ! (3.23), (Out[311])
-           jactg(3,:,ii) = (1.d0 - p_E ** (-(i_alpha * fpar_lg(ii) * par_h(th_))           &
-     &             / jmaxg_h(:))) * jmaxg_h(:) * caig_d(3)  ! (3.23), (Out[311])
+        
+          select case(i_lai_function)
+              case(1)
+               
+               jactg(1,:,ii) = (1.d0 - p_E ** (-(i_alpha * fpar_lg(ii) * par_h(th_))           &
+             &       / jmaxg_h(:))) * jmaxg_h(:) * caig_d(1)   ! (3.23), (Out[311])
+               jactg(2,:,ii) = (1.d0 - p_E ** (-(i_alpha * fpar_lg(ii) * par_h(th_))           &
+             &       / jmaxg_h(:))) * jmaxg_h(:) * caig_d(2)   ! (3.23), (Out[311])
+               jactg(3,:,ii) = (1.d0 - p_E ** (-(i_alpha * fpar_lg(ii) * par_h(th_))           &
+             &       / jmaxg_h(:))) * jmaxg_h(:) * caig_d(3)  ! (3.23), (Out[311])
+             
+              case(2) 
+               jactg(1,:,ii)   = ( (1.d0 - p_E ** (-(i_alpha * fpar_lg(ii) * (pardir_h(th_) + pardiff_h(th_)) ) &    
+             &     / jmaxg_h(:))) * jmaxg_h(:) * caig_d(1) * frac_sung(ii) ) +                                &
+             &     ( (1.d0 - p_E ** (-(i_alpha * fpar_lg(ii) * pardiff_h(th_) )                                  &    
+             &     / jmaxg_h(:))) * jmaxg_h(:) * caig_d(1) * frac_shadeg(ii) )
+             
+               jactg(2,:,ii)   = ( (1.d0 - p_E ** (-(i_alpha * fpar_lg(ii) * (pardir_h(th_) + pardiff_h(th_)) ) &    
+             &     / jmaxg_h(:))) * jmaxg_h(:) * caig_d(2) * frac_sung(ii) ) +                                &
+             &     ( (1.d0 - p_E ** (-(i_alpha * fpar_lg(ii) * pardiff_h(th_) )                                  &    
+             &     / jmaxg_h(:))) * jmaxg_h(:) * caig_d(2) * frac_shadeg(ii) )
+             
+               jactg(3,:,ii)   = ( (1.d0 - p_E ** (-(i_alpha * fpar_lg(ii) * (pardir_h(th_) + pardiff_h(th_)) ) &    
+             &     / jmaxg_h(:))) * jmaxg_h(:) * caig_d(3) * frac_sung(ii) ) +                                &
+             &     ( (1.d0 - p_E ** (-(i_alpha * fpar_lg(ii) * pardiff_h(th_) )                                  &    
+             &     / jmaxg_h(:))) * jmaxg_h(:) * caig_d(3) * frac_shadeg(ii) )             
+             
+          end select
         end do
 
         cond1      = (2.d0 * p_a * vd_h(th_)) / (ca_h(th_) + 2.d0 * gammastar)
