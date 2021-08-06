@@ -1041,8 +1041,7 @@
           part1 = omega_s * sin(i_lat*p_pi/180.0d0)*sin(delta)          
           part2 = cos(i_lat*p_pi/180.0d0)*cos(delta)*sin(omega_s)
 
-          par_et_h(ii) = srad2par_h * 37.595 * dr2 * (part1 + part2) / (24.0) ! mol/m2/h
-          
+          par_et_h(ii) = srad2par_h * 37.595 * dr2 * (part1 + part2) / (24.0*60.0*60.0) !mol/m2/s
           
 !         * split par into direct and diffuse par (Roderick et al. 1999)
 
@@ -1525,6 +1524,8 @@
             !fractions of shade and sunlit leaf areas
             frac_shadeg(ii) = lag_shade(ii) / lai_lg(ii) 
             frac_sung(ii) = 1.0d0 - frac_shadeg(ii)      
+            
+
         end do
 
         
@@ -1542,7 +1543,7 @@
             frac_shadet(ii) = lat_shade(ii) / lai_lt(ii) 
             frac_sunt(ii) = 1.0d0 - frac_shadet(ii)                 
         end do
- 
+
         
         
       end select
@@ -1550,7 +1551,6 @@
       if (par_h(th_) .gt. 0.d0) then
 !       * adaptation of topt to air temperature during sunlight
         topt_ = topt_ + i_toptf * (tair_h(th_) + 273.d0 - topt_)
-
 
 !       * calculate electron transport capacity trees
         do ii = 1,3
