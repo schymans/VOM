@@ -1509,7 +1509,7 @@
 !       * fraction of absorbed radiation per crown area grasses (Beer-lambert)
         fpar_lg(:) = 1.0d0 - p_E ** (-lai_lg(:) * kappa * sqrt(i_alpha_abs) )        
         
-        
+        lag_shade(:) = 0.0d0
 !       * estimate shaded and sunlit fractions, based on Schymanski et al. (2007)                
         do ii = 1,3
         
@@ -1522,13 +1522,13 @@
            end do   
            
             !fractions of shade and sunlit leaf areas
-            frac_shadeg(ii) = lag_shade(ii) / lai_lg(ii) 
-            frac_sung(ii) = 1.0d0 - frac_shadeg(ii)      
-            
+            frac_shadeg(ii) = MIN( (lag_shade(ii) / lai_lg(ii)), 1.0d0)
+            frac_sung(ii) = 1.0d0 - frac_shadeg(ii)                  
 
         end do
 
         
+        lat_shade(:) = 0.0d0
         do ii = 1,3
         
            !determine layers in canopy, with leaf area i_la per layer
@@ -1540,7 +1540,7 @@
            end do  
            
             !fractions of shade and sunlit leaf areas           
-            frac_shadet(ii) = lat_shade(ii) / lai_lt(ii) 
+            frac_shadet(ii) = MIN( (lat_shade(ii) / lai_lt(ii) ), 1.0d0)
             frac_sunt(ii) = 1.0d0 - frac_shadet(ii)                 
         end do
 
