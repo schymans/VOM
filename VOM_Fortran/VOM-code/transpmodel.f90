@@ -1482,8 +1482,8 @@
       REAL*8 :: part6, part7, part8, part9
       INTEGER:: ii
       INTEGER:: ilay
-      REAL*8 :: lag_shade(3)          
-      REAL*8 :: lat_shade(3)                
+      REAL*8 :: lag_sun(3)          
+      REAL*8 :: lat_sun(3)                
       INTEGER:: nlay            
       REAL*8 :: kappa
       
@@ -1493,9 +1493,11 @@
         fpar_lt(:) = 1.0d0
         fpar_lg(:) = 1.0d0
         
-        frac_shadeg(:) = 1.0d0
+        frac_shadeg(:) = 0.0d0
         frac_sung(:) = 1.0d0
         
+        frac_shadet(:) = 0.0d0
+        frac_sunt(:) = 1.0d0
       case(2)
       
 !       * extinction coefficient (Xiao et al. (2015) eq.6, Campbell and Norman (1998) eq. 15.4)
@@ -1509,39 +1511,39 @@
 !       * fraction of absorbed radiation per crown area grasses (Beer-lambert)
         fpar_lg(:) = 1.0d0 - p_E ** (-lai_lg(:) * kappa * sqrt(i_alpha_abs) )        
         
-        lag_shade(:) = 0.0d0
+        lag_sun(:) = 0.0d0
 !       * estimate shaded and sunlit fractions, based on Schymanski et al. (2007)                
         do ii = 1,3
         
            !determine layers in canopy, with leaf area i_la per layer        
-           nlay = lai_lg(ii) / i_la
-           
+           nlay = NINT(lai_lg(ii) / i_la )
+
            !loop over layers and deterime shaded area (Eq. 3, Schymanski et al., 2007)
            do ilay = 1, nlay           
-              lag_shade(ii) = lag_shade(ii) + i_la * (1.0d0 - i_la) ** (ilay - 1.0d0)           
+              lag_sun(ii) = lag_sun(ii) + i_la * (1.0d0 - i_la) ** (ilay - 1.0d0)           
            end do   
            
             !fractions of shade and sunlit leaf areas
-            frac_shadeg(ii) = MIN( (lag_shade(ii) / lai_lg(ii)), 1.0d0)
-            frac_sung(ii) = 1.0d0 - frac_shadeg(ii)                  
+            frac_sung(ii) = MIN( (lag_sun(ii) / lai_lg(ii)), 1.0d0)
+            frac_shadeg(ii) = 1.0d0 - frac_sung(ii)                  
 
         end do
 
         
-        lat_shade(:) = 0.0d0
+        lat_sun(:) = 0.0d0
         do ii = 1,3
         
            !determine layers in canopy, with leaf area i_la per layer
-           nlay = lai_lt(ii) / i_la
+           nlay = NINT(lai_lt(ii) / i_la)
            
            !loop over layers and deterime shaded area (Eq. 3, Schymanski et al., 2007)           
            do ilay = 1, nlay
-              lat_shade(ii) = lat_shade(ii) + i_la * (1.0d0 - i_la) ** (ilay - 1.0d0)           
+              lat_sun(ii) = lat_sun(ii) + i_la * (1.0d0 - i_la) ** (ilay - 1.0d0)           
            end do  
            
             !fractions of shade and sunlit leaf areas           
-            frac_shadet(ii) = MIN( (lat_shade(ii) / lai_lt(ii) ), 1.0d0)
-            frac_sunt(ii) = 1.0d0 - frac_shadet(ii)                 
+            frac_sunt(ii) = MIN( (lat_sun(ii) / lai_lt(ii) ), 1.0d0)
+            frac_shadet(ii) = 1.0d0 - frac_sunt(ii)                 
         end do
 
         
