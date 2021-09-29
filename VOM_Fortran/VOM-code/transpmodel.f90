@@ -1515,31 +1515,20 @@
 !       * estimate shaded and sunlit fractions, based on Schymanski et al. (2007)                
         do ii = 1,3
         
-           !determine layers in canopy, with leaf area i_la per layer        
-           nlay = NINT(lai_lg(ii) / i_la )
-
-           !loop over layers and deterime shaded area (Eq. 3, Schymanski et al., 2007)
-           do ilay = 1, nlay           
-              lag_sun(ii) = lag_sun(ii) + i_la * (1.0d0 - i_la) ** (ilay - 1.0d0)           
-           end do   
-           
+            !Eq15.23 from Campbell and Norman (1998)
+            lag_sun(ii) = (1.0d0 - p_E**( -lai_lg(ii) * kappa  ) )/kappa
+                   
             !fractions of shade and sunlit leaf areas
             frac_sung(ii) = MIN( (lag_sun(ii) / lai_lg(ii)), 1.0d0)
             frac_shadeg(ii) = 1.0d0 - frac_sung(ii)                  
 
         end do
-
         
         lat_sun(:) = 0.0d0
         do ii = 1,3
         
-           !determine layers in canopy, with leaf area i_la per layer
-           nlay = NINT(lai_lt(ii) / i_la)
-           
-           !loop over layers and deterime shaded area (Eq. 3, Schymanski et al., 2007)           
-           do ilay = 1, nlay
-              lat_sun(ii) = lat_sun(ii) + i_la * (1.0d0 - i_la) ** (ilay - 1.0d0)           
-           end do  
+            !Eq15.23 from Campbell and Norman (1998)        
+            lat_sun(ii) = (1.0d0 - p_E**( -lai_lt(ii) * kappa  ) )/kappa           
            
             !fractions of shade and sunlit leaf areas           
             frac_sunt(ii) = MIN( (lat_sun(ii) / lai_lt(ii) ), 1.0d0)
