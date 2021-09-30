@@ -510,7 +510,7 @@
      &                    i_incrjmax, i_jmax_ini,                      &
      &                    i_incrlait, i_incrlaig,                      &
      &                    i_chi_t, i_chi_g,i_alpha_abs,                &
-     &                    i_trans_vegcov, i_la,                        &     
+     &                    i_trans_vegcov,                              &     
      &                    i_firstyear,i_lastyear, i_write_h,           &
      &                    i_read_pc, i_write_nc,                       &
      &                    i_lai_function,  i_no_veg,                   &

@@ -67,9 +67,9 @@ The file "vom_namelist" is an input file for the VOM, containing all settings fo
 +-----------------+----------------------------------------------------------------------------------------------------+-----------+
 |i_no_veg         | switch for running VOM without vegetation (0-with, 1-without)                                      | \-        |
 +-----------------+----------------------------------------------------------------------------------------------------+-----------+
-|i_extcoeffg      | extinction coefficient beer's law grasses                                                          | \-        |
+|i_chi_g          | ratio projected areas of grass canopy elements on horizontal and vertical surfaces (-)             | \-        |
 +-----------------+----------------------------------------------------------------------------------------------------+-----------+
-|i_extcoefft      | extinction coefficient beer's law trees                                                            | \-        |
+|i_chi_t          | ratio projected areas of tree canopy elements on horizontal and vertical surfaces (-)              | \-        |
 +-----------------+----------------------------------------------------------------------------------------------------+-----------+
 |i_inputpath      | path to folder with inputfiles                                                                     | \-        |
 +-----------------+----------------------------------------------------------------------------------------------------+-----------+

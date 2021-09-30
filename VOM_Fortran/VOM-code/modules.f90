@@ -523,7 +523,6 @@
       REAL*8  :: i_chi_t                ! ratio projected areas of canopy elements on horizontal and vertical surfaces (-)
       REAL*8  :: i_alpha_abs                ! ratio projected areas of canopy elements on horizontal and vertical surfaces (-)
       REAL*8  :: i_trans_vegcov         ! fraction of radiative energy reaching soil under full cover (0-1) (-)
-      REAL*8  :: i_la                   ! leaf area per canopy layer  (-)      
 
       INTEGER :: i_firstyear            ! First year for the generation of hourly output in computation mode
       INTEGER :: i_lastyear             ! Last year for the generation of hourly output in computation mode
