@@ -1488,7 +1488,7 @@
       REAL*8 :: kappa
       
       select case(i_lai_function)
-      case(1)
+      case(1) !no dynamic LAI, no shaded/sunlit fractions
       
         fpar_lt(:) = 1.0d0
         fpar_lg(:) = 1.0d0
@@ -1498,7 +1498,29 @@
         
         frac_shadet(:) = 0.0d0
         frac_sunt(:) = 1.0d0
-      case(2)
+        
+      case(2) !dynamic LAI, no shaded/sunlit fractions
+      
+!       * extinction coefficient (Xiao et al. (2015) eq.6, Campbell and Norman (1998) eq. 15.4)
+        kappa = sqrt(i_chi_t**2+tan(phi_zenith(th_))**2)/(i_chi_t+1.774*(i_chi_t+1.182)**(-0.733) )        
+        
+!       * fraction of absorbed radiation per crown area (Beer-lambert, Xiao et al. (2015) eq.5, Campbell and Norman (1998) eq. 15.6)
+        fpar_lt(:) = 1.0d0 - p_E ** (-lai_lt(:) * kappa * sqrt(i_alpha_abs) )   
+       
+!       * extinction coefficient, Xiao et al. (2015)
+        kappa = sqrt(i_chi_g**2+tan(phi_zenith(th_))**2)/(i_chi_g+1.774*(i_chi_g+1.182)**(-0.733) ) 
+!       * fraction of absorbed radiation per crown area grasses (Beer-lambert)
+        fpar_lg(:) = 1.0d0 - p_E ** (-lai_lg(:) * kappa * sqrt(i_alpha_abs) )        
+        
+!       *        
+        frac_shadeg(:) = 0.0d0
+        frac_sung(:) = 1.0d0
+        
+        frac_shadet(:) = 0.0d0
+        frac_sunt(:) = 1.0d0
+
+      
+      case(3) !dynamic LAI, with shaded/sunlit fractions
       
 !       * extinction coefficient (Xiao et al. (2015) eq.6, Campbell and Norman (1998) eq. 15.4)
         kappa = sqrt(i_chi_t**2+tan(phi_zenith(th_))**2)/(i_chi_t+1.774*(i_chi_t+1.182)**(-0.733) )        
@@ -1512,7 +1534,7 @@
         fpar_lg(:) = 1.0d0 - p_E ** (-lai_lg(:) * kappa * sqrt(i_alpha_abs) )        
         
         lag_sun(:) = 0.0d0
-!       * estimate shaded and sunlit fractions, based on Schymanski et al. (2007)                
+!       * estimate shaded and sunlit fractions                
         do ii = 1,3
         
             !Eq15.23 from Campbell and Norman (1998)
@@ -1550,8 +1572,12 @@
               case(1)
                    jactt(:,ii)   = (1.d0 - p_E ** (-(i_alpha * fpar_lt(ii) * par_h(th_))           &    
         &             / jmaxt_h(:))) * jmaxt_h(:) * o_cait  ! (3.23), (Out[311])
-        
+       
               case(2)
+                   jactt(:,ii)   = (1.d0 - p_E ** (-(i_alpha * fpar_lt(ii) * par_h(th_))           &    
+        &             / jmaxt_h(:))) * jmaxt_h(:) * o_cait  ! (3.23), (Out[311])    
+        
+              case(3)
                    jactt(:,ii)   = ( (1.d0 - p_E ** (-(i_alpha * fpar_lt(ii) * (pardir_h(th_) + pardiff_h(th_)) ) &    
         &             / jmaxt_h(:))) * jmaxt_h(:) * o_cait * frac_sunt(ii) ) +                                      &
         &                          ( (1.d0 - p_E ** (-(i_alpha * fpar_lt(ii) * pardiff_h(th_) )                    &    
@@ -1574,6 +1600,15 @@
              &       / jmaxg_h(:))) * jmaxg_h(:) * caig_d(3)  ! (3.23), (Out[311])
              
               case(2) 
+              
+               jactg(1,:,ii) = (1.d0 - p_E ** (-(i_alpha * fpar_lg(ii) * par_h(th_))           &
+             &       / jmaxg_h(:))) * jmaxg_h(:) * caig_d(1)   ! (3.23), (Out[311])
+               jactg(2,:,ii) = (1.d0 - p_E ** (-(i_alpha * fpar_lg(ii) * par_h(th_))           &
+             &       / jmaxg_h(:))) * jmaxg_h(:) * caig_d(2)   ! (3.23), (Out[311])
+               jactg(3,:,ii) = (1.d0 - p_E ** (-(i_alpha * fpar_lg(ii) * par_h(th_))           &
+             &       / jmaxg_h(:))) * jmaxg_h(:) * caig_d(3)  ! (3.23), (Out[311])
+                          
+              case(3) 
                jactg(1,:,ii)   = ( (1.d0 - p_E ** (-(i_alpha * fpar_lg(ii) * (pardir_h(th_) + pardiff_h(th_)) ) &    
              &     / jmaxg_h(:))) * jmaxg_h(:) * caig_d(1) * frac_sung(ii) ) +                                &
              &     ( (1.d0 - p_E ** (-(i_alpha * fpar_lg(ii) * pardiff_h(th_) )                                  &    

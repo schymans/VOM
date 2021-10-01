@@ -63,7 +63,7 @@ The file "vom_namelist" is an input file for the VOM, containing all settings fo
 +-----------------+----------------------------------------------------------------------------------------------------+-----------+
 |i_trans_vegcov   | fraction of radiative energy reaching soil under full cover (0-1)                                  | \-        |
 +-----------------+----------------------------------------------------------------------------------------------------+-----------+
-|i_lai_function   | switch for 1) linear or 2) exponential function of LAI for foliage cost                            | \-        |
+|i_lai_function   | switch for 1) no LAI dynamics, 2) dynamic LAI, 3) dynamic LAI with shaded/sunlit fractions         | \-        |
 +-----------------+----------------------------------------------------------------------------------------------------+-----------+
 |i_no_veg         | switch for running VOM without vegetation (0-with, 1-without)                                      | \-        |
 +-----------------+----------------------------------------------------------------------------------------------------+-----------+
