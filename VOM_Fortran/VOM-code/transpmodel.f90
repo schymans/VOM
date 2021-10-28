@@ -1879,7 +1879,7 @@
 !       * (3.35), 1.e6 to convert from m (=1000kg/m2) to g/m2; (Out[250])
         dmqt = (SUM(ruptkt__(:)) - etmt__ * o_cait) * 1.d6
       else
-        dmqt = -etmt__ * 1.d6
+        dmqt = -etmt__ * o_cait * 1.d6
       endif
 
       return
@@ -1908,7 +1908,7 @@
         endif
 
         if (ABS(mqt_ - mqsst_) .gt. q_mqx / 1.d6) then
-          dtss = (mqt_ - mqsst_) / (1.d6 * (etmt__ - SUM(ruptkt__(:))))
+          dtss = (mqt_ - mqsst_) / (1.d6 * ( (etmt__ * o_cait) - SUM(ruptkt__(:))))
           if (dtss .le. 0.d0) dtss = 99999.d0
         else
           dtss = 99999.d0
