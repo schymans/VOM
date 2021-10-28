@@ -1829,7 +1829,7 @@
 
       sum2 = SUM(((-c_hhydrst(1:pos_ult) - pcap_(1:pos_ult))           &
      &     * rsurft_(1:pos_ult)) / (i_rrootm + rsoil(1:pos_ult)))
-      mul2 = (q_md + q_mqx) * (q_md + q_mqx) * (etmt__ - sum2)
+      mul2 = (q_md + q_mqx) * (q_md + q_mqx) * (etmt__ * o_cait - sum2)
 
       mqss_out = q_mqx * (mul1 - mul2) / mul1
       mqss_out = MAX(0.9d0 * q_mqx, mqss_out)
