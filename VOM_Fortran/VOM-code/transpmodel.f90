@@ -145,7 +145,7 @@
         call vom_write_hourly(fyear(nday), fmonth(nday), fday(nday), nday, nhour, th_,          &
              &    rain_h(th_), tair_h(th_), par_h(th_), gstomt, gstomg(2,2,2), vd_h(th_), esoil_h,    &
              &    fpar_lt(2)*o_cait + fpar_lg(2)*caig_d(2), jmax25t_d(2), jmax25g_d(2), mqt_,          &
-             &    rlt_h(2,2) + rlg_h(2,2,2), lambdat_d, lambdag_d, rrt_d + rrg_d,  &
+             &    rlt_h(2,2) + rlg_h(2,2), lambdat_d, lambdag_d, rrt_d + rrg_d,  &
              &    asst_h(2,2), assg_h(2,2,2), etmt_h, etmg_h, su__(1), zw_, wsnew, &
              &    spgfcf_h, infx_h, ruptkt_h, su__, i_write_nc)
 
@@ -1607,8 +1607,8 @@
         cond1      = (2.d0 * p_a * vd_h(th_)) / (ca_h(th_) + 2.d0 * gammastar)
         cond2      = (4.d0 * ca_h(th_) * rlt_h(2,2) + 8.d0 * gammastar   &
      &             * rlt_h(2,2)) / (ca_h(th_) - gammastar)
-        cond3(:,:,:) = (4.d0 * ca_h(th_) * rlg_h(:,:,:) + 8.d0 * gammastar &
-     &             * rlg_h(:,:,:)) / (ca_h(th_) - gammastar)
+        cond3(:,:,:) = (4.d0 * ca_h(th_) * rlg_h(:,:) + 8.d0 * gammastar &
+     &             * rlg_h(:,:)) / (ca_h(th_) - gammastar)
 
         if (vd_h(th_) .gt. 0.d0 .and. lambdat_d .gt. cond1 .and. jactt(2,2) .gt. cond2) then
 
@@ -1739,14 +1739,14 @@
             ruptkt__(pos_ult+1:s_maxlayer) = 0.d0
 
             if (SUM(ruptkt__(:)) .gt. 0.d0) then
-              if (etmt__ .gt. SUM(ruptkt__(:))) then
+              if ( (etmt__ * o_cait) .gt. SUM(ruptkt__(:))) then
                 changef = 1.d0
-                etmt__   = SUM(ruptkt__(:))
+                etmt__   = SUM(ruptkt__(:)) / o_cait
                 transpt = etmt__ * 55555.555555555555d0  ! (Out[249]) mol/s=m/s*10^6 g/m/(18g/mol)
                 gstomt = transpt / (p_a * vd_h(th_))
               endif
 !             * Setting SUM(ruptkt__)=etmt__ and distributing according to relative uptake:
-              ruptkt__(:) = etmt__ * (ruptkt__(:) / (SUM(ruptkt__(:))))
+              ruptkt__(:) = o_cait * etmt__ * (ruptkt__(:) / (SUM(ruptkt__(:))))
             else
               ruptkt__(:) = 0.d0
               changef     = 1.d0
@@ -1771,13 +1771,13 @@
      &                        / rsurfg_(:))) / kunsat_(1:pos_ulg)))
           ruptkg__(pos_ulg+1:s_maxlayer) = 0.d0
           if (SUM(ruptkg__(:)) .gt. 0.d0) then
-            where (etmg__(:,:) .gt. SUM(ruptkg__(:)))
+            where ( (etmg__(:,:)*caig_d(2)) .gt. SUM(ruptkg__(:)))
               rootlim(:,:,:)  = 1.d0
-              etmg__(:,:)   = SUM(ruptkg__(:))
+              etmg__(:,:)   = SUM(ruptkg__(:)) / caig_d(2)
               transpg(:,:)  = etmg__(:,:) * 55555.555555555555d0  ! (Out[249]) mol/s=m/s*10^6 g/m/(18g/mol)
               gstomg(:,:,:)   = transpg(:,:) / (p_a * vd_h(th_))
             end where
-            ruptkg__(1:pos_ulg) = etmg__(2,2) * (ruptkg__(1:pos_ulg)   &
+            ruptkg__(1:pos_ulg) = caig_d(2) * etmg__(2,2) * (ruptkg__(1:pos_ulg)   &
      &                          / (SUM(ruptkg__(:))))
           else
             ruptkg__(:)  = 0.d0
@@ -1990,7 +1990,7 @@
       spgfcf_d = spgfcf_d + spgfcf_h
       infx_d   = infx_d   + infx_h
       rlt_d    = rlt_d    + rlt_h(2,2)   * 3600.d0  ! rlt_d in mol/day
-      rlg_d    = rlg_d    + rlg_h(2,2,2) * 3600.d0
+      rlg_d    = rlg_d    + rlg_h(2,2) * 3600.d0
       fpard_lg = fpard_lg + (fpar_lg(2) / 24d0) !mean fpar per day
       fpard_lt = fpard_lt + (fpar_lt(2) / 24d0) !mean fpar per day
       
