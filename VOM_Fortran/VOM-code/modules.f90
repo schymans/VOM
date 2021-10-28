@@ -419,7 +419,7 @@
       REAL*8  :: etmt_h                 ! Hourly transpiration (m/h)
       REAL*8  :: etmt_d                 ! Daily transpiration rate (m/d)
       REAL*8  :: etmt_y                 ! Annual tree transpiration (mm/y)
-      REAL*8  :: etmg__(3,3,3)          ! Grass transpiration rate (m/s)
+      REAL*8  :: etmg__(3,3)          ! Grass transpiration rate (m/s)
       REAL*8  :: etmg_h                 ! Hourly grass transpiration (m/h)
       REAL*8  :: etmg_d                 ! Daily grass transpiration (m/d)
       REAL*8  :: etmg_y                 ! Annual grass transpiration (mm/y)

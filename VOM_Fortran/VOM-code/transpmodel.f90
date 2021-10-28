@@ -1657,14 +1657,14 @@
         endwhere
         end do
         transpg(:,:) = p_a * vd_h(th_) * gstomg(:,:)  ! (3.28) transpiration rate in mol/s
-        etmg__(:,:,:) = (transpg(:,:) * 18.d0) / (10.d0 ** 6.d0)  ! transpiration rate in m/s
+        etmg__(:,:) = (transpg(:,:) * 18.d0) / (10.d0 ** 6.d0)  ! transpiration rate in m/s
       else
         jactt(:,:)    = 0.d0
         gstomt      = 0.d0
         etmt__      = 0.d0
         jactg(:,:)  = 0.d0
         gstomg(:,:) = 0.d0
-        etmg__(:,:,:) = 0.d0
+        etmg__(:,:) = 0.d0
       endif
 
 
@@ -1762,7 +1762,7 @@
         endif
 
         pos_ulg = MIN(pos_slg, wlayer_)
-        if (MAXVAL(etmg__(:,:,:)) .gt. 0.d0) then
+        if (MAXVAL(etmg__(:,:)) .gt. 0.d0) then
 !         * root uptake by grasses can not be negative, as storage negligible
           ruptkg__(1:pos_slg) = MAX(0.d0,((-pcap_(1:pos_ulg)           &
      &                        + (i_prootmg - c_hhydrst(1:pos_ulg)))    &
@@ -1771,17 +1771,17 @@
      &                        / rsurfg_(:))) / kunsat_(1:pos_ulg)))
           ruptkg__(pos_ulg+1:s_maxlayer) = 0.d0
           if (SUM(ruptkg__(:)) .gt. 0.d0) then
-            where (etmg__(:,:,:) .gt. SUM(ruptkg__(:)))
+            where (etmg__(:,:) .gt. SUM(ruptkg__(:)))
               rootlim(:,:,:)  = 1.d0
-              etmg__(:,:,:)   = SUM(ruptkg__(:))
-              transpg(:,:)  = etmg__(:,:,:) * 55555.555555555555d0  ! (Out[249]) mol/s=m/s*10^6 g/m/(18g/mol)
+              etmg__(:,:)   = SUM(ruptkg__(:))
+              transpg(:,:)  = etmg__(:,:) * 55555.555555555555d0  ! (Out[249]) mol/s=m/s*10^6 g/m/(18g/mol)
               gstomg(:,:,:)   = transpg(:,:) / (p_a * vd_h(th_))
             end where
-            ruptkg__(1:pos_ulg) = etmg__(2,2,2) * (ruptkg__(1:pos_ulg)   &
+            ruptkg__(1:pos_ulg) = etmg__(2,2) * (ruptkg__(1:pos_ulg)   &
      &                          / (SUM(ruptkg__(:))))
           else
             ruptkg__(:)  = 0.d0
-            etmg__(:,:,:)  = 0.d0
+            etmg__(:,:)  = 0.d0
             transpg(:,:) = 0.d0
             gstomg(:,:,:)  = 0.d0
           endif
@@ -1791,9 +1791,9 @@
       else
         ruptkg__(:)  = 0.d0
         ruptkt__(:)  = 0.d0
-        etmg__(:,:,:)  = 0.d0
+        etmg__(:,:)  = 0.d0
         transpg(:,:) = 0.d0
-        gstomg(:,:,:)  = 0.d0
+        gstomg(:,:)  = 0.d0
       endif
 
       return
@@ -1968,7 +1968,7 @@
         io_h        = io_h        + dt_ * io__
         esoil_h     = esoil_h     + dt_ * esoil__
         etmt_h      = etmt_h      + dt_ * etmt__
-        etmg_h      = etmg_h      + dt_ * etmg__(2,2,2)
+        etmg_h      = etmg_h      + dt_ * etmg__(2,2)
         sumruptkt_h = sumruptkt_h + dt_ * SUM(ruptkt__(:))
       endif
 
