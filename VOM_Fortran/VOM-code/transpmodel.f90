@@ -1571,17 +1571,17 @@
             select case(i_lai_function)
               case(1) ! no dynamic LAI, fpar is set to 1
                    jactt(:,ii)   = (1.d0 - p_E ** (-(i_alpha * fpar_lt(ii) * par_h(th_))           &    
-        &             / jmaxt_h(:))) * jmaxt_h(:) * o_cait  ! (3.23), (Out[311])
+        &             / jmaxt_h(:))) * jmaxt_h(:)  ! (3.23), (Out[311])
        
               case(2) ! dynamic LAI, with fpar-calculation
                    jactt(:,ii)   = (1.d0 - p_E ** (-(i_alpha * fpar_lt(ii) * par_h(th_))           &    
-        &             / jmaxt_h(:))) * jmaxt_h(:) * o_cait  ! (3.23), (Out[311])    
+        &             / jmaxt_h(:))) * jmaxt_h(:)  ! (3.23), (Out[311])    
         
               case(3) ! shaded and sunlit, with diffuse and direct radiation
                    jactt(:,ii)   = ( (1.d0 - p_E ** (-(i_alpha * fpar_lt(ii) * (pardir_h(th_) + pardiff_h(th_)) ) &    
-        &             / jmaxt_h(:))) * jmaxt_h(:) * o_cait * frac_sunt(ii) ) +                                      &
+        &             / jmaxt_h(:))) * jmaxt_h(:) * frac_sunt(ii) ) +                                      &
         &                          ( (1.d0 - p_E ** (-(i_alpha * fpar_lt(ii) * pardiff_h(th_) )                    &    
-        &             / jmaxt_h(:))) * jmaxt_h(:) * o_cait * frac_shadet(ii) )
+        &             / jmaxt_h(:))) * jmaxt_h(:) * frac_shadet(ii) )
         
              end select
         end do
@@ -1593,36 +1593,36 @@
               case(1) ! no dynamic LAI, fpar is set to 1
                
                jactg(1,:,ii) = (1.d0 - p_E ** (-(i_alpha * fpar_lg(ii) * par_h(th_))           &
-             &       / jmaxg_h(:))) * jmaxg_h(:) * caig_d(1)   ! (3.23), (Out[311])
+             &       / jmaxg_h(:))) * jmaxg_h(:)  ! (3.23), (Out[311])
                jactg(2,:,ii) = (1.d0 - p_E ** (-(i_alpha * fpar_lg(ii) * par_h(th_))           &
-             &       / jmaxg_h(:))) * jmaxg_h(:) * caig_d(2)   ! (3.23), (Out[311])
+             &       / jmaxg_h(:))) * jmaxg_h(:)  ! (3.23), (Out[311])
                jactg(3,:,ii) = (1.d0 - p_E ** (-(i_alpha * fpar_lg(ii) * par_h(th_))           &
-             &       / jmaxg_h(:))) * jmaxg_h(:) * caig_d(3)  ! (3.23), (Out[311])
+             &       / jmaxg_h(:))) * jmaxg_h(:)  ! (3.23), (Out[311])
              
               case(2) ! dynamic LAI, with fpar-calculation
               
                jactg(1,:,ii) = (1.d0 - p_E ** (-(i_alpha * fpar_lg(ii) * par_h(th_))           &
-             &       / jmaxg_h(:))) * jmaxg_h(:) * caig_d(1)   ! (3.23), (Out[311])
+             &       / jmaxg_h(:))) * jmaxg_h(:)  ! (3.23), (Out[311])
                jactg(2,:,ii) = (1.d0 - p_E ** (-(i_alpha * fpar_lg(ii) * par_h(th_))           &
-             &       / jmaxg_h(:))) * jmaxg_h(:) * caig_d(2)   ! (3.23), (Out[311])
+             &       / jmaxg_h(:))) * jmaxg_h(:)  ! (3.23), (Out[311])
                jactg(3,:,ii) = (1.d0 - p_E ** (-(i_alpha * fpar_lg(ii) * par_h(th_))           &
-             &       / jmaxg_h(:))) * jmaxg_h(:) * caig_d(3)  ! (3.23), (Out[311])
+             &       / jmaxg_h(:))) * jmaxg_h(:)  ! (3.23), (Out[311])
                           
               case(3) ! shaded and sunlit, with diffuse and direct radiation
                jactg(1,:,ii)   = ( (1.d0 - p_E ** (-(i_alpha * fpar_lg(ii) * (pardir_h(th_) + pardiff_h(th_)) ) &    
-             &     / jmaxg_h(:))) * jmaxg_h(:) * caig_d(1) * frac_sung(ii) ) +                                &
+             &     / jmaxg_h(:))) * jmaxg_h(:)  * frac_sung(ii) ) +                                &
              &     ( (1.d0 - p_E ** (-(i_alpha * fpar_lg(ii) * pardiff_h(th_) )                                  &    
-             &     / jmaxg_h(:))) * jmaxg_h(:) * caig_d(1) * frac_shadeg(ii) )
+             &     / jmaxg_h(:))) * jmaxg_h(:) * frac_shadeg(ii) )
              
                jactg(2,:,ii)   = ( (1.d0 - p_E ** (-(i_alpha * fpar_lg(ii) * (pardir_h(th_) + pardiff_h(th_)) ) &    
-             &     / jmaxg_h(:))) * jmaxg_h(:) * caig_d(2) * frac_sung(ii) ) +                                &
+             &     / jmaxg_h(:))) * jmaxg_h(:) * frac_sung(ii) ) +                                &
              &     ( (1.d0 - p_E ** (-(i_alpha * fpar_lg(ii) * pardiff_h(th_) )                                  &    
-             &     / jmaxg_h(:))) * jmaxg_h(:) * caig_d(2) * frac_shadeg(ii) )
+             &     / jmaxg_h(:))) * jmaxg_h(:) * frac_shadeg(ii) )
              
                jactg(3,:,ii)   = ( (1.d0 - p_E ** (-(i_alpha * fpar_lg(ii) * (pardir_h(th_) + pardiff_h(th_)) ) &    
-             &     / jmaxg_h(:))) * jmaxg_h(:) * caig_d(3) * frac_sung(ii) ) +                                &
+             &     / jmaxg_h(:))) * jmaxg_h(:) * frac_sung(ii) ) +                                &
              &     ( (1.d0 - p_E ** (-(i_alpha * fpar_lg(ii) * pardiff_h(th_) )                                  &    
-             &     / jmaxg_h(:))) * jmaxg_h(:) * caig_d(3) * frac_shadeg(ii) )             
+             &     / jmaxg_h(:))) * jmaxg_h(:) * frac_shadeg(ii) )             
              
           end select
         end do
