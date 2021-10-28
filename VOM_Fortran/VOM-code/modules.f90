@@ -372,12 +372,12 @@
       REAL*8  :: lambdat_d              ! Target dE/dA for calculating gstomt (mol/mol)
       REAL*8  :: lambdag_d              ! Target dE/dA for calculating gstomg (mol/mol)
       REAL*8  :: gstomt                 ! Tree stomatal conductance (mol/m2/s)
-      REAL*8  :: gstomg(3,3,3)          ! Grass stomatal conductance (mol/m2/s)
+      REAL*8  :: gstomg(3,3)            ! Grass stomatal conductance (mol/m2/s)
 
       REAL*8  :: rlt_h(3,3)             ! Tree leaf respiration for different values of Jmax (rlt_h(2) is actual value) (mol/h)
       REAL*8  :: rlt_d                  ! Daily tree leaf respiration (mol/d)
       REAL*8  :: rlt_y                  ! Annual tree leaf respiration (mol/y)
-      REAL*8  :: rlg_h(3,3,3)           ! Grass leaf respiration (mol/h)
+      REAL*8  :: rlg_h(3,3)           ! Grass leaf respiration (mol/h)
       REAL*8  :: rlg_d                  ! Daily grass leaf respiration (mol/d)
       REAL*8  :: rlg_y                  ! Annual grass leaf respiration (mol/y)
 
@@ -390,7 +390,7 @@
       REAL*8  :: tcg_y                  ! Annual grass foliage turnover costs (mol/m2/y)
 
       REAL*8  :: jactt(3,3)             ! Electron transport rates for different values of Jmax (jactt(2) is actual value) (mol/m2/s)
-      REAL*8  :: jactg(3,3,3)           ! Grass electron transport rate (mol/m2/s)
+      REAL*8  :: jactg(3,3)           ! Grass electron transport rate (mol/m2/s)
 
       REAL*8  :: jmaxt_h(3)             ! Tree photosynthetic electron transport capacity (mol/m2/s)
       REAL*8  :: jmaxg_h(3)             ! Grass electron transport capacity (mol/m2/s)
