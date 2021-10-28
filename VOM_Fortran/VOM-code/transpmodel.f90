@@ -1656,8 +1656,8 @@
           gstomg(:,ii) = 0.d0
         endwhere
         end do
-        transpg(:,:,:) = p_a * vd_h(th_) * gstomg(:,:)  ! (3.28) transpiration rate in mol/s
-        etmg__(:,:,:) = (transpg(:,:,:) * 18.d0) / (10.d0 ** 6.d0)  ! transpiration rate in m/s
+        transpg(:,:) = p_a * vd_h(th_) * gstomg(:,:)  ! (3.28) transpiration rate in mol/s
+        etmg__(:,:,:) = (transpg(:,:) * 18.d0) / (10.d0 ** 6.d0)  ! transpiration rate in m/s
       else
         jactt(:,:)    = 0.d0
         gstomt      = 0.d0
@@ -1774,15 +1774,15 @@
             where (etmg__(:,:,:) .gt. SUM(ruptkg__(:)))
               rootlim(:,:,:)  = 1.d0
               etmg__(:,:,:)   = SUM(ruptkg__(:))
-              transpg(:,:,:)  = etmg__(:,:,:) * 55555.555555555555d0  ! (Out[249]) mol/s=m/s*10^6 g/m/(18g/mol)
-              gstomg(:,:,:)   = transpg(:,:,:) / (p_a * vd_h(th_))
+              transpg(:,:)  = etmg__(:,:,:) * 55555.555555555555d0  ! (Out[249]) mol/s=m/s*10^6 g/m/(18g/mol)
+              gstomg(:,:,:)   = transpg(:,:) / (p_a * vd_h(th_))
             end where
             ruptkg__(1:pos_ulg) = etmg__(2,2,2) * (ruptkg__(1:pos_ulg)   &
      &                          / (SUM(ruptkg__(:))))
           else
             ruptkg__(:)  = 0.d0
             etmg__(:,:,:)  = 0.d0
-            transpg(:,:,:) = 0.d0
+            transpg(:,:) = 0.d0
             gstomg(:,:,:)  = 0.d0
           endif
         else
@@ -1792,7 +1792,7 @@
         ruptkg__(:)  = 0.d0
         ruptkt__(:)  = 0.d0
         etmg__(:,:,:)  = 0.d0
-        transpg(:,:,:) = 0.d0
+        transpg(:,:) = 0.d0
         gstomg(:,:,:)  = 0.d0
       endif
 

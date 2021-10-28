@@ -382,7 +382,7 @@
       REAL*8  :: rlg_y                  ! Annual grass leaf respiration (mol/y)
 
       REAL*8  :: transpt                ! Tree transpiration rate (mol/m2/s)
-      REAL*8  :: transpg(3,3,3)         ! Grass transpiration rate (mol/m2/s)
+      REAL*8  :: transpg(3,3)         ! Grass transpiration rate (mol/m2/s)
 
       REAL*8  :: q_tct_d(3)             ! Tree foliage turnover costs (mol/m2/s)
       REAL*8  :: tct_y                  ! Annual tree foliage turnover costs (mol/m2/y)
