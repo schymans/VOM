@@ -143,7 +143,7 @@
        if (option1 .eq. 2) then
         call vom_add_daily()
         call vom_write_hourly(fyear(nday), fmonth(nday), fday(nday), nday, nhour, th_,          &
-             &    rain_h(th_), tair_h(th_), par_h(th_), gstomt, gstomg(2,2,2), vd_h(th_), esoil_h,    &
+             &    rain_h(th_), tair_h(th_), par_h(th_), gstomt, gstomg(2,2), vd_h(th_), esoil_h,    &
              &    fpar_lt(2)*o_cait + fpar_lg(2)*caig_d(2), jmax25t_d(2), jmax25g_d(2), mqt_,          &
              &    rlt_h(2,2) + rlg_h(2,2), lambdat_d, lambdag_d, rrt_d + rrg_d,  &
              &    asst_h(2,2), assg_h(2,2,2), etmt_h, etmg_h, su__(1), zw_, wsnew, &
@@ -1471,7 +1471,7 @@
       implicit none
 
       REAL*8 :: cond1, cond2
-      REAL*8 :: cond3(3,3,3)
+      REAL*8 :: cond3(3,3)
       REAL*8 :: part1, part2, part3, part4, part5
       REAL*8 :: part6, part7, part8, part9
       INTEGER:: ii
@@ -1607,7 +1607,7 @@
         cond1      = (2.d0 * p_a * vd_h(th_)) / (ca_h(th_) + 2.d0 * gammastar)
         cond2      = (4.d0 * ca_h(th_) * rlt_h(2,2) + 8.d0 * gammastar   &
      &             * rlt_h(2,2)) / (ca_h(th_) - gammastar)
-        cond3(:,:,:) = (4.d0 * ca_h(th_) * rlg_h(:,:) + 8.d0 * gammastar &
+        cond3(:,:) = (4.d0 * ca_h(th_) * rlg_h(:,:) + 8.d0 * gammastar &
      &             * rlg_h(:,:)) / (ca_h(th_) - gammastar)
 
         if (vd_h(th_) .gt. 0.d0 .and. lambdat_d .gt. cond1 .and. jactt(2,2) .gt. cond2) then
@@ -1635,7 +1635,7 @@
         etmt__ = (transpt * 18.d0) / (10.d0 ** 6.d0)  ! transpiration rate in m/s
 
         do ii = 1,3
-        where (vd_h(th_) .gt. 0.d0 .and. lambdag_d .gt. cond1 .and. jactg(:,ii) .gt. cond3(:,:,ii))
+        where (vd_h(th_) .gt. 0.d0 .and. lambdag_d .gt. cond1 .and. jactg(:,ii) .gt. cond3(:,ii))
           gstomg(:,ii) = MAX(0.d0,(0.25d0 * (p_a * (ca_h(th_)           &
            &          * (jactg(:,ii) - 4.d0 * rlg_h(:,ii)) - 4.d0        &
            &          * gammastar * (jactg(:,ii) + 2.d0 * rlg_h(:,ii)))  &
@@ -1707,6 +1707,8 @@
       use vom_vegwat_mod
       implicit none
 
+      INTEGER:: jj
+
       if (wlayernew .ge. 1) then
         pos_ult = MIN(pos_slt, wlayer_)
         if (q_md .gt. 0.d0) then
@@ -1771,19 +1773,21 @@
      &                        / rsurfg_(:))) / kunsat_(1:pos_ulg)))
           ruptkg__(pos_ulg+1:s_maxlayer) = 0.d0
           if (SUM(ruptkg__(:)) .gt. 0.d0) then
-            where ( (etmg__(:,:)*caig_d(2)) .gt. SUM(ruptkg__(:)))
-              rootlim(:,:,:)  = 1.d0
+          do jj = 1, 3 !loop for caig
+            where ( (etmg__(:,:)*caig_d(jj)) .gt. SUM(ruptkg__(:)))
+              rootlim(jj,:,:)  = 1.d0
               etmg__(:,:)   = SUM(ruptkg__(:)) / caig_d(2)
               transpg(:,:)  = etmg__(:,:) * 55555.555555555555d0  ! (Out[249]) mol/s=m/s*10^6 g/m/(18g/mol)
-              gstomg(:,:,:)   = transpg(:,:) / (p_a * vd_h(th_))
+              gstomg(:,:)   = transpg(:,:) / (p_a * vd_h(th_))
             end where
+          end do   
             ruptkg__(1:pos_ulg) = caig_d(2) * etmg__(2,2) * (ruptkg__(1:pos_ulg)   &
      &                          / (SUM(ruptkg__(:))))
           else
             ruptkg__(:)  = 0.d0
             etmg__(:,:)  = 0.d0
             transpg(:,:) = 0.d0
-            gstomg(:,:,:)  = 0.d0
+            gstomg(:,:)  = 0.d0
           endif
         else
           ruptkg__(:) = 0.d0
@@ -1934,7 +1938,7 @@
       implicit none
 
       REAL*8 :: asst__(3,3)
-      REAL*8 :: assg__(3,3,3)
+      REAL*8 :: assg__(3,3)
       INTEGER:: ii
       INTEGER:: jj      
 
@@ -1949,16 +1953,16 @@
         asst_h(:,:) = asst_h(:,:) + asst__(:,:) * dt_ * o_cait
 
     do ii = 1,3 !loop for LAI values
-        assg__(:,ii) =  (4.d0 * ca_h(th_) * gstomg(:,:,ii) + 8.d0 * gammastar &
-        &         * gstomg(:,:,ii) + jactg(:,ii) - 4.d0 * rlg_h(:,ii)       &
-        &         - SQRT((-4.d0 * ca_h(th_) * gstomg(:,:,ii) + 8.d0       &
-        &         * gammastar * gstomg(:,:,ii) + jactg(:,ii) - 4.d0        &
+        assg__(:,ii) =  (4.d0 * ca_h(th_) * gstomg(:,ii) + 8.d0 * gammastar &
+        &         * gstomg(:,ii) + jactg(:,ii) - 4.d0 * rlg_h(:,ii)       &
+        &         - SQRT((-4.d0 * ca_h(th_) * gstomg(:,ii) + 8.d0       &
+        &         * gammastar * gstomg(:,ii) + jactg(:,ii) - 4.d0        &
         &         * rlg_h(:,ii)) ** 2.d0 + 16.d0 * gammastar            &
-        &         * gstomg(:,:,ii) * (8.d0 * ca_h(th_) * gstomg(:,:,ii)      &
+        &         * gstomg(:,ii) * (8.d0 * ca_h(th_) * gstomg(:,ii)      &
         &         + jactg(:,ii) + 8.d0 * rlg_h(:,ii)))) / 8.d0  ! (3.22); (Out[319])
     end do
-    do jj, 1,3 !loop for caig values
-      assg_h(jj,:,:) = assg_h(jj,:,:) + assg__(:,:,:) * dt_ * caig_d(jj)
+    do jj = 1,3 !loop for caig values
+      assg_h(jj,:,:) = assg_h(jj,:,:) + assg__(:,:) * dt_ * caig_d(jj)
     end do  
       ruptkt_h(:) = ruptkt_h(:) + ruptkt__(:) * dt_
       ruptkg_h(:) = ruptkg_h(:) + ruptkg__(:) * dt_
