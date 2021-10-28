@@ -1852,9 +1852,9 @@
 !     * makes sure that tissue water does not get below 0.9mqx
       if (mqt_ .le. 0.9d0 * q_mqx) then
         if (wlayer_ .ge. 1) then
-          if (etmt__ .gt. 0.9d0 * SUM(ruptkt__(:))) then
+          if ( (etmt__ * o_cait) .gt. 0.9d0 * SUM(ruptkt__(:))) then
             if (SUM(ruptkt__(:)) .ge. 0.d0) then
-              etmt__ = SUM(ruptkt__(:))
+              etmt__ = SUM(ruptkt__(:)) / o_cait
               transpt = etmt__ * 55555.555555555555d0  ! (Out[249]) mol/s=m/s*10^6 g/m/(18g/mol)
               gstomt = transpt / (p_a * vd_h(th_))
             else
@@ -1877,7 +1877,7 @@
       endif
       if (wlayer_ .ge. 0) then
 !       * (3.35), 1.e6 to convert from m (=1000kg/m2) to g/m2; (Out[250])
-        dmqt = (SUM(ruptkt__(:)) - etmt__) * 1.d6
+        dmqt = (SUM(ruptkt__(:)) - etmt__ * o_cait) * 1.d6
       else
         dmqt = -etmt__ * 1.d6
       endif
