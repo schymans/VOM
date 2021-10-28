@@ -1939,27 +1939,27 @@
       INTEGER:: jj      
 
     do ii = 1,3 !loop for LAI values
-      asst__(:,ii) = o_cait * ( (4.d0 * ca_h(th_) * gstomt + 8.d0 * gammastar        &
+      asst__(:,ii) =  (4.d0 * ca_h(th_) * gstomt + 8.d0 * gammastar        &
         &          * gstomt + jactt(:,ii) - 4.d0 * rlt_h(:,ii) - SQRT((-4.d0    &
         &          * ca_h(th_) * gstomt + 8.d0 * gammastar * gstomt       &
         &          + jactt(:,ii) - 4.d0 * rlt_h(:,ii)) ** 2.d0 + 16.d0          &
         &          * gammastar * gstomt * (8.d0 * ca_h(th_) * gstomt      &
-        &          + jactt(:,ii) + 8.d0 * rlt_h(:,ii)))) / 8.d0 ) ! (3.22) ; (Out[319])
+        &          + jactt(:,ii) + 8.d0 * rlt_h(:,ii)))) / 8.d0  ! (3.22) ; (Out[319])
     end do
-        asst_h(:,:) = asst_h(:,:) + asst__(:,:) * dt_
+        asst_h(:,:) = asst_h(:,:) + asst__(:,:) * dt_ * o_cait
 
     do ii = 1,3 !loop for LAI values
-        do jj, 1,3 !loop for caig values
-        assg__(jj,:,ii) = caig(jj) * ( (4.d0 * ca_h(th_) * gstomg(:,:,ii) + 8.d0 * gammastar &
+        assg__(:,ii) =  (4.d0 * ca_h(th_) * gstomg(:,:,ii) + 8.d0 * gammastar &
         &         * gstomg(:,:,ii) + jactg(:,ii) - 4.d0 * rlg_h(:,ii)       &
         &         - SQRT((-4.d0 * ca_h(th_) * gstomg(:,:,ii) + 8.d0       &
         &         * gammastar * gstomg(:,:,ii) + jactg(:,ii) - 4.d0        &
         &         * rlg_h(:,ii)) ** 2.d0 + 16.d0 * gammastar            &
         &         * gstomg(:,:,ii) * (8.d0 * ca_h(th_) * gstomg(:,:,ii)      &
-        &         + jactg(:,ii) + 8.d0 * rlg_h(:,ii)))) / 8.d0 ) ! (3.22); (Out[319])
-        end do
+        &         + jactg(:,ii) + 8.d0 * rlg_h(:,ii)))) / 8.d0  ! (3.22); (Out[319])
     end do
-      assg_h(:,:,:) = assg_h(:,:,:) + assg__(:,:,:) * dt_
+    do jj, 1,3 !loop for caig values
+      assg_h(jj,:,:) = assg_h(jj,:,:) + assg__(:,:,:) * dt_ * caig_d(jj)
+    end do  
       ruptkt_h(:) = ruptkt_h(:) + ruptkt__(:) * dt_
       ruptkg_h(:) = ruptkg_h(:) + ruptkg__(:) * dt_
       if (optmode .eq. 0) then
@@ -1967,8 +1967,8 @@
         infx_h      = infx_h      + dt_ * infx__
         io_h        = io_h        + dt_ * io__
         esoil_h     = esoil_h     + dt_ * esoil__
-        etmt_h      = etmt_h      + dt_ * etmt__
-        etmg_h      = etmg_h      + dt_ * etmg__(2,2)
+        etmt_h      = etmt_h      + dt_ * etmt__ * o_cait
+        etmg_h      = etmg_h      + dt_ * etmg__(2,2) * caig_d(2)
         sumruptkt_h = sumruptkt_h + dt_ * SUM(ruptkt__(:))
       endif
 
