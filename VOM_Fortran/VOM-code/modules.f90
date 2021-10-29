@@ -453,7 +453,7 @@
       REAL*8, ALLOCATABLE :: rsurfg_(:)    ! Root surface area of grasses in each layer (m2/m3)
       REAL*8, ALLOCATABLE :: rsurfgnew(:)  ! Adjusted root surface area of grasses in each layer for next day (m2/m3)
 
-      REAL*8              :: rootlim(3,3,3)  ! Indicator whether root surface are was limiting root water uptake (-)
+      REAL*8              :: rootlim(3,3)  ! Indicator whether root surface are was limiting root water uptake (-)
 
       REAL*8, ALLOCATABLE :: rsoil(:)   ! Resistance to water flow towards roots in each soil layer (s)
 

@@ -1232,7 +1232,7 @@
          caig_d(3)     = MIN(MAX(c_caigmin, caig_d(3)), 1.d0 - o_cait)
       end if
 
-      rootlim(:,:,:) = 0.d0
+      rootlim(:,:) = 0.d0
 
 !     * Direct costs
 
@@ -1773,14 +1773,14 @@
      &                        / rsurfg_(:))) / kunsat_(1:pos_ulg)))
           ruptkg__(pos_ulg+1:s_maxlayer) = 0.d0
           if (SUM(ruptkg__(:)) .gt. 0.d0) then
-          do jj = 1, 3 !loop for caig
-            where ( (etmg__(:,:)*caig_d(jj)) .gt. SUM(ruptkg__(:)))
-              rootlim(jj,:,:)  = 1.d0
+          !do jj = 1, 3 !loop for caig
+            where ( (etmg__(:,:)*caig_d(2)) .gt. SUM(ruptkg__(:)))
+              rootlim(:,:)  = 1.d0
               etmg__(:,:)   = SUM(ruptkg__(:)) / caig_d(2)
               transpg(:,:)  = etmg__(:,:) * 55555.555555555555d0  ! (Out[249]) mol/s=m/s*10^6 g/m/(18g/mol)
               gstomg(:,:)   = transpg(:,:) / (p_a * vd_h(th_))
             end where
-          end do   
+          !end do   
             ruptkg__(1:pos_ulg) = caig_d(2) * etmg__(2,2) * (ruptkg__(1:pos_ulg)   &
      &                          / (SUM(ruptkg__(:))))
           else
@@ -1833,7 +1833,7 @@
 
       sum2 = SUM(((-c_hhydrst(1:pos_ult) - pcap_(1:pos_ult))           &
      &     * rsurft_(1:pos_ult)) / (i_rrootm + rsoil(1:pos_ult)))
-      mul2 = (q_md + q_mqx) * (q_md + q_mqx) * (etmt__ * o_cait - sum2)
+      mul2 = (q_md + q_mqx) * (q_md + q_mqx) * ( (etmt__ * o_cait) - sum2)
 
       mqss_out = q_mqx * (mul1 - mul2) / mul1
       mqss_out = MAX(0.9d0 * q_mqx, mqss_out)
@@ -1853,6 +1853,8 @@
       REAL*8,  INTENT(inout) :: netass
       CHARACTER(len=135) :: msg
 
+
+      
 !     * makes sure that tissue water does not get below 0.9mqx
       if (mqt_ .le. 0.9d0 * q_mqx) then
         if (wlayer_ .ge. 1) then
@@ -1861,6 +1863,7 @@
               etmt__ = SUM(ruptkt__(:)) / o_cait
               transpt = etmt__ * 55555.555555555555d0  ! (Out[249]) mol/s=m/s*10^6 g/m/(18g/mol)
               gstomt = transpt / (p_a * vd_h(th_))
+              dmqt = 0.d0
             else
               write(msg,'(A20,I2,A1,I2,A1,I4)') 'vegetation dies on: ', &
      &          fday(nday), '/', fmonth(nday), '/', fyear(nday)
@@ -1879,9 +1882,13 @@
           gstomt  = 0.d0
         endif
       endif
-      if (wlayer_ .ge. 0) then
+      if ( wlayer_ .ge. 0 ) then
 !       * (3.35), 1.e6 to convert from m (=1000kg/m2) to g/m2; (Out[250])
-        dmqt = (SUM(ruptkt__(:)) - etmt__ * o_cait) * 1.d6
+        if ( abs(SUM(ruptkt__(:)) - (etmt__ * o_cait) ) .gt. tiny(SUM(ruptkt__(:)) - (etmt__ * o_cait))  ) then
+           dmqt = (SUM(ruptkt__(:)) - (etmt__ * o_cait) ) * 1.d6
+        else
+           dmqt = 0d0
+        endif
       else
         dmqt = -etmt__ * o_cait * 1.d6
       endif
@@ -1908,7 +1915,9 @@
         if (dmqt .gt. 0.d0) then
           dtmq = (q_mqx - mqt_) / dmqt
         elseif (dmqt .lt. 0.d0) then
-          dtmq = (0.9d0 * q_mqx - mqt_) / dmqt
+          if( abs(0.9d0 * q_mqx - mqt_) .gt. tiny(0.9d0 * q_mqx - mqt_)  ) then
+             dtmq = (0.9d0 * q_mqx - mqt_) / dmqt
+          end if
         endif
 
         if (ABS(mqt_ - mqsst_) .gt. q_mqx / 1.d6) then
@@ -2374,7 +2383,7 @@
 !     *-----SEASONAL VEGETATION---------------
 
 !     * rootlim is either 0 or 1. Change it to be either -1 or + 1:
-      rootlim(posmna(1),posmna(2), posmna(3)) = 2.d0 * rootlim(posmna(1),posmna(2),posmna(3)) - 1.d0
+      rootlim(posmna(2), posmna(3)) = 2.d0 * rootlim(posmna(2),posmna(3)) - 1.d0
 
       reffg(:) = 0.d0
       maxval_tmp = MAXVAL(ruptkg_d(1:pos_slg) / rsurfg_(1:pos_slg))
@@ -2384,7 +2393,7 @@
 
 !     * if roots are going to be reduced, reverse effectivity vector
 
-      if (rootlim(posmna(1),posmna(2),posmna(3)) .lt. 0.d0) then
+      if (rootlim(posmna(2),posmna(3)) .lt. 0.d0) then
         reffg(:) = 1.d0 - reffg(:)
       endif
 
@@ -2394,11 +2403,11 @@
      &                     * s_delz(1:pos_slg) - rsurft_(1:pos_slg),   &
      &                     MAX(i_rsurfmin * s_delz(1:pos_slg),         &
      &                     rsurfg_(1:pos_slg) + rsurfg_(1:pos_slg)     &
-     &                     * i_growthmax * rootlim(posmna(1),posmna(2),posmna(3))&
+     &                     * i_growthmax * rootlim(posmna(2),posmna(3))&
      &                     * reffg(1:pos_slg)))
       rsurfgnew(pos_slg+1:s_maxlayer) = 0.d0
 
-      rootlim(:,:,:) = 0.d0
+      rootlim(:,:) = 0.d0
       ruptkt_d(:)  = 0.d0
       changef      = 0.d0
 
