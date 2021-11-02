@@ -1342,12 +1342,13 @@
             tcg_d(ii,:)     = i_tcfg * caig_d(:) * 2.5d0 !grasses
          end do
          q_tct_d(:)     = i_tcfg * o_cait * 2.5d0    !trees
-      case(2)
+      case(2, 3, 4)
 !        * foliage turnover costs, varying lai
          do ii = 1,3
             tcg_d(ii, :) = i_tcfg * caig_d(:) * lai_lg(ii) !grasses 
          end do
          q_tct_d(:) = i_tcfg * o_cait * lai_lt(:)     !trees
+                  
       end select
 
 
@@ -1556,7 +1557,7 @@
         frac_sunt(:) = 1.0d0
 
       
-      case(3) !dynamic LAI, with shaded/sunlit fractions
+      case(3, 4) !dynamic LAI, with shaded/sunlit fractions
       
 !       * extinction coefficient (Xiao et al. (2015) eq.6, Campbell and Norman (1998) eq. 15.4)
         kappa = sqrt(i_chi_t**2+tan(phi_zenith(th_))**2)/(i_chi_t+1.774*(i_chi_t+1.182)**(-0.733) )        
