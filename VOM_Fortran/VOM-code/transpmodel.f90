@@ -1210,7 +1210,9 @@
       endif
       jmax25t_d(2) = i_jmax_ini
       jmax25g_d(2) = i_jmax_ini
-
+      jmax25ts_d(2) = i_jmax_ini
+      jmax25gs_d(2) = i_jmax_ini
+      
       !set minimum grass coverage, 0 if no vegetation
       if(i_no_veg .eq. 0) then
          c_caigmin     = 0.02d0 ! minimum grass pc; initial point for growth
@@ -1304,7 +1306,7 @@
 !     * Shaded Jmax values
 !     * vector with values varying by 1%
       jmax25ts_d(:) = jmax25ts_d(2) * (/1.0d0-i_incrjmax,1.0d0,1.0d0+i_incrjmax/)
-      jmax25ts_d(:) = MAX(jmax25t_d(:), 50.0d-6)
+      jmax25ts_d(:) = MAX(jmax25ts_d(:), 50.0d-6)
       
       jmax25gs_d(:) = jmax25gs_d(2) * (/1.0d0-i_incrjmax,1.0d0,1.0d0+i_incrjmax/)
       jmax25gs_d(:) = MAX(jmax25gs_d(:), 50.0d-6)
@@ -2226,7 +2228,7 @@
         io_h        = io_h        + dt_ * io__
         esoil_h     = esoil_h     + dt_ * esoil__
         etmt_h      = etmt_h      + dt_ * (etmt__ + etmts__) * o_cait
-        etmg_h      = etmg_h      + dt_ * (etmg__(2,2) +etmgs__(2,2) ) * caig_d(2)
+        etmg_h      = etmg_h      + dt_ * (etmg__(2,2) + etmgs__(2,2) ) * caig_d(2)
         sumruptkt_h = sumruptkt_h + dt_ * SUM(ruptkt__(:))
       endif
 
