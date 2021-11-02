@@ -416,10 +416,14 @@
 !     * plant water
 
       REAL*8  :: asst_h(3,3)            ! Tree hourly assimilation rate for different values of Jmax (asst_h(2) is actual value) (mol/m2/h)
+      REAL*8  :: assts_h(3,3)           ! Shaded tree hourly assimilation rate for different values of Jmax (asst_h(2) is actual value) (mol/m2/h)
       REAL*8  :: asst_d(3,3)            ! Daily tree assimilation (mol/m2/d)
+      REAL*8  :: assts_d(3,3)           ! Shade daily tree assimilation (mol/m2/d)      
       REAL*8  :: asst_y                 ! Annual tree assimilation (mol/m2/y)
       REAL*8  :: assg_h(3,3,3)          ! Hourly grass assimilation (mol/m2/h)
+      REAL*8  :: assgs_h(3,3,3)         ! Shade hourly grass assimilation (mol/m2/h)      
       REAL*8  :: assg_d(3,3,3)          ! Daily grass assimilation (mol/m2/d)
+      REAL*8  :: assgs_d(3,3,3)         ! Shade daily grass assimilation (mol/m2/d)      
       REAL*8  :: assg_y                 ! Annual grass assimilation (mol/m2/y)
 
       REAL*8  :: q_cpcct_d              ! Tree water transport costs as a function of projected cover and rooting depth (mol/m2/s)
@@ -473,7 +477,7 @@
 
       REAL*8, ALLOCATABLE :: refft(:)   ! Relative root water uptake efficiency for trees in each layer (-)
       REAL*8, ALLOCATABLE :: reffg(:)   ! Relative root water uptake efficiency for grasses in each layer (-)
-      INTEGER             :: posmna(3)  ! Pointer to variable values that achieved maximum net assimilation (-)
+      INTEGER             :: posmna(4)  ! Pointer to variable values that achieved maximum net assimilation (-)
  
       REAL*8              :: rrt_d      ! Tree root respiration rate (mol/m2/s)
       REAL*8              :: rrt_y      ! Annual tree root respiration (mol/m2/y)
@@ -561,7 +565,7 @@
       !$OMP o_wstexp, o_wsgexp, o_lambdatf, o_lambdagf, lambdat_d, lambdag_d, gstomt, gstomg, gstomts, gstomgs, &
       !$OMP rlt_h, rlts_h, rlt_d, rlt_y, rlg_h, rlgs_h, rlg_d, rlg_y, transpt, transpg, q_tct_d, tct_y, tcg_d, &
       !$OMP tcg_y, jactt, jactg, jmaxt_h, jmaxg_h, jmaxts_h, jmaxgs_h, jmax25t_d, jmax25g_d, &
-      !$OMP asst_h, asst_d, asst_y, assg_h, assg_d, assg_y, &
+      !$OMP asst_h, assts_h, asst_d, asst_y, assg_h,assgs_h, assg_d, assg_y, &
       !$OMP q_cpcct_d, cpcct_y, cpccg_d, cpccg_y, etmt__, etmt_h, etmt_d, etmt_y, etmg__, etmg_h, &
       !$OMP etmg_d, etmg_y, etm_y, mqt_, mqtnew, mqtold, dmqt, q_mqx, mqsst_, mqsstmin, q_md, &
       !$OMP o_mdstore, o_rtdepth, o_rgdepth, pos_slt, pos_slg, pos_ult, pos_ulg, changef, &

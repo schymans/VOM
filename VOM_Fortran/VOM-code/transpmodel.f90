@@ -124,16 +124,19 @@
       enddo
 
 !     * rl does not need to be included here as ass=-rl if j=0 (at night)
-      tp_netass = tp_netass + asst_h(2,2) - 3600.d0 * (q_cpcct_d + rrt_d &
-     &          + q_tct_d(2) ) + assg_h(2,2,2) - 3600.d0 * (cpccg_d(2)       &
+      tp_netass = tp_netass + asst_h(2,2) + assts_h(2,2) - 3600.d0 * (q_cpcct_d + rrt_d &
+     &          + q_tct_d(2) ) + assg_h(2,2,2) +  assgs_h(2,2,2)   - 3600.d0 * (cpccg_d(2)       &
      &          + rrg_d + tcg_d(2,2))
-      tp_netassg_d = tp_netassg_d + assg_h(2,2,2) - 3600.d0 * (cpccg_d(2)       &
+      tp_netassg_d = tp_netassg_d + assg_h(2,2,2) + assgs_h(2,2,2) - 3600.d0 * (cpccg_d(2)       &
      &          + rrg_d + tcg_d(2,2))
-      tp_netasst_d = tp_netasst_d + asst_h(2,2) - 3600.d0 * (q_cpcct_d + rrt_d &
+      tp_netasst_d = tp_netasst_d + asst_h(2,2) + assts_h(2,2) - 3600.d0 * (q_cpcct_d + rrt_d &
      &          + q_tct_d(2) ) 
 
       asst_d(:,:)   = asst_d(:,:)   + asst_h(:,:)
+      assts_d(:,:)  = assts_d(:,:)   + assts_h(:,:)      
       assg_d(:,:,:) = assg_d(:,:,:) + assg_h(:,:,:)
+      assgs_d(:,:,:) = assgs_d(:,:,:) + assgs_h(:,:,:)      
+      
       ruptkt_d(:) = ruptkt_d(:) + ruptkt_h(:)
       ruptkg_d(:) = ruptkg_d(:) + ruptkg_h(:)
 
@@ -145,8 +148,8 @@
         call vom_write_hourly(fyear(nday), fmonth(nday), fday(nday), nday, nhour, th_,          &
              &    rain_h(th_), tair_h(th_), par_h(th_), gstomt, gstomg(2,2), vd_h(th_), esoil_h,    &
              &    fpar_lt(2)*o_cait + fpar_lg(2)*caig_d(2), jmax25t_d(2), jmax25g_d(2), mqt_,          &
-             &    rlt_h(2,2) + rlg_h(2,2), lambdat_d, lambdag_d, rrt_d + rrg_d,  &
-             &    asst_h(2,2), assg_h(2,2,2), etmt_h, etmg_h, su__(1), zw_, wsnew, &
+             &    rlt_h(2,2) +  rlts_h(2,2) + rlg_h(2,2) + rlgs_h(2,2), lambdat_d, lambdag_d, rrt_d + rrg_d,  &
+             &    asst_h(2,2) + assts_h(2,2), assg_h(2,2,2) + assgs_h(2,2,2), etmt_h, etmg_h, su__(1), zw_, wsnew, &
              &    spgfcf_h, infx_h, ruptkt_h, su__, i_write_nc)
 
 !       * check water balance
@@ -1498,7 +1501,9 @@
 
       time        = 0.d0
       asst_h(:,:)   = 0.d0
+      assts_h(:,:)   = 0.d0      
       assg_h(:,:,:) = 0.d0
+      assgs_h(:,:,:) = 0.d0      
       ruptkt_h(:) = 0.d0
       ruptkg_h(:) = 0.d0
 
@@ -1947,13 +1952,16 @@
           if (SUM(ruptkg__(:)) .gt. 0.d0) then
              
               if(i_lai_function == 4) then  
-                where ( (  (etmg__(:,:)+ etmgs__(:,:)) *caig_d(2)) .gt. SUM(ruptkg__(:)))
+              
+                where ( ( etmg__(:,:) *caig_d(2) ) .gt. (frac_sung(2)*SUM(ruptkg__(:)) ) )
                   rootlim(:,:)  = 1.d0              
                   etmg__(:,:)   = SUM(ruptkg__(:)) / (caig_d(2) * frac_sung(2))
                   transpg(:,:)  = etmg__(:,:) * 55555.555555555555d0  ! (Out[249]) mol/s=m/s*10^6 g/m/(18g/mol)
                   gstomg(:,:)   = transpg(:,:) / (p_a * vd_h(th_))
               
                   !shaded part
+                where ( ( etmgs__(:,:) *caig_d(2) ) .gt. (frac_shadeg(2)*SUM(ruptkg__(:)) ) )   
+                  rootlims(:,:)  = 1.d0                                             
                   etmgs__(:,:)   = SUM(ruptkg__(:)) / (caig_d(2) * frac_shadeg(2))
                   transpgs(:,:)  = etmgs__(:,:) * 55555.555555555555d0  ! (Out[249]) mol/s=m/s*10^6 g/m/(18g/mol)
                   gstomgs(:,:)   = transpgs(:,:) / (p_a * vd_h(th_))
@@ -2181,7 +2189,8 @@
         
         
     end do
-        asst_h(:,:) = asst_h(:,:) + asst__(:,:) * dt_ * o_cait + assts__(:,:) * dt_ * o_cait
+        asst_h(:,:) = asst_h(:,:) + asst__(:,:) * dt_ * o_cait  
+        assts_h(:,:) = assts_h(:,:) + assts__(:,:) * dt_ * o_cait
 
     do ii = 1,3 !loop for LAI values
      if(i_lai_function == 4) then    
@@ -2217,7 +2226,8 @@
     end do
     
     do jj = 1,3 !loop for caig values
-      assg_h(jj,:,:) = assg_h(jj,:,:) + assg__(:,:) * dt_ * caig_d(jj) + assgs__(:,:) * dt_ * caig_d(jj)
+      assg_h(jj,:,:) = assg_h(jj,:,:) + assg__(:,:) * dt_ * caig_d(jj) 
+      assgs_h(jj,:,:) = assgs_h(jj,:,:) + assgs__(:,:) * dt_ * caig_d(jj)
     end do  
     
     
@@ -2477,14 +2487,14 @@
         esoil_y  = esoil_y + esoil_d           * 1000.d0  ! in [mm]
 !       * for grasses
         etmg_y   = etmg_y  + etmg_d * 1000.d0 ! in [mm]
-        assg_y   = assg_y  + assg_d(2,2,2)
+        assg_y   = assg_y  + assg_d(2,2,2) + assgs_d(2,2,2)
         rlg_y    = rlg_y   + rlg_d
         rrg_y    = rrg_y   + rrg_d      * 3600.d0 * 24.d0
         cpccg_y  = cpccg_y + cpccg_d(2) * 3600.d0 * 24.d0
         tcg_y    = tcg_y   + tcg_d(2,2)   * 3600.d0 * 24.d0
 !       * for trees
         etmt_y   = etmt_y  + etmt_d * 1000.d0  ! in [mm]
-        asst_y   = asst_y  + asst_d(2,2)
+        asst_y   = asst_y  + asst_d(2,2) + assts_d(2,2) 
         rlt_y    = rlt_y   + rlt_d
         rrt_y    = rrt_y   + rrt_d     * 3600.d0 * 24.d0
         cpcct_y  = cpcct_y + q_cpcct_d * 3600.d0 * 24.d0
@@ -2499,7 +2509,7 @@
         esoil_y  = esoil_d * 1000.d0
 !       * for grasses
         etmg_y   = etmg_d * 1000.d0
-        assg_y   = assg_d(2,2,2)
+        assg_y   = assg_d(2,2,2) + assgs_d(2,2,2)
         rlg_y    = rlg_d
         rrg_y    = rrg_d      * 3600.d0 * 24.d0
         cpccg_y  = cpccg_d(2) * 3600.d0 * 24.d0
@@ -2530,24 +2540,29 @@
       REAL*8  :: lai_g_tmp              ! Temporary leaf area index for comparison
       REAL*8  :: max_netcg              ! Maximum daily grass net carbon profit grasses
       REAL*8  :: max_netcg_tmp          ! Temporary max net carbon profit
-      REAL*8  :: netcg_d(3,3)           ! Daily grass net carbon profit
-      REAL*8  :: netct_d(3,3)           ! Daily grass net carbon profit
+      REAL*8  :: netcg_d(3,3,3)           ! Daily grass net carbon profit
+      REAL*8  :: netct_d(3,3,3,3)           ! Daily grass net carbon profit
       REAL*8  :: caig_d_tmp              ! Temporary grass cover
       INTEGER :: posma(1)               ! Pointer to variable values that achieved maximum assimilation
       INTEGER :: posbest(2)              ! Pointer to variable values that achieved maximum net assimilation
+      INTEGER :: posbestg(4)              ! Pointer to variable values that achieved maximum net assimilation      
       !trees
 
       !loop over foliage costs due to different LAI
       !3 values of ncp due to different jmax25t values and LAI
-      netct_d(1,:) = asst_d(1,:) - 3600.d0 * 24.d0 * (q_cpcct_d + rrt_d + q_tct_d(:))
-      netct_d(2,:) = asst_d(2,:) - 3600.d0 * 24.d0 * (q_cpcct_d + rrt_d + q_tct_d(:))
-      netct_d(3,:) = asst_d(3,:) - 3600.d0 * 24.d0 * (q_cpcct_d + rrt_d + q_tct_d(:))
+      do ii = 1,3 !loop for sunlit jmax25
+         do jj = 1,3 !loop for shaded jmax25              
+          netct_d(ii,jj,:) = (asst_d(ii,:) + assts_d(jj,:) ) - 3600.d0 * 24.d0 * (q_cpcct_d + rrt_d + q_tct_d(:))
+         end do
+      end do 
+      
+      
       posbest(:)    = MAXLOC(netct_d(:,:))
 
-
-      lai_lt(2) = lai_lt(posbest(2))                    !lai trees 
+      lai_lt(2) = lai_lt(posbest(3))                    !lai trees 
       jmax25t_d(2) = jmax25t_d(posbest(1))              !jmax25 trees in 
-  
+      jmax25ts_d(2) = jmax25t_d(posbest(2))              !jmax25 trees in 
+        
       !set daily value back to zero
       asst_d(:,:)    = 0.d0
 
@@ -2557,34 +2572,54 @@
       !set initial max value at zero
       max_netcg    = -9999.d0
 
-      !loop over foliage costs due to different LAI
-      do ii = 1,3
-
-         !3 values of ncp due to different cover (rows in assg_d) and jmax25g (columns in assg_d)
-         netcg_d(1,:) = assg_d(1,:,ii) - 3600.d0 * 24.d0 * (cpccg_d(1) + rrg_d + tcg_d(ii, 1))
-         netcg_d(2,:) = assg_d(2,:,ii) - 3600.d0 * 24.d0 * (cpccg_d(2) + rrg_d + tcg_d(ii, 2))
-         netcg_d(3,:) = assg_d(3,:,ii) - 3600.d0 * 24.d0 * (cpccg_d(3) + rrg_d + tcg_d(ii, 3))
-         posbest(:)    = MAXLOC(netcg_d(:,:))
-         max_netcg_tmp= netcg_d( posbest(1), posbest(2) )
-
-         !check if carbon profit is higher for different LAI
-         if( max_netcg_tmp .gt. max_netcg) then
-            
-            caig_d_tmp = MIN(1.d0 - o_cait, caig_d(posbest(1))) !cover grasses to temporary variable
-            lai_g_tmp = lai_lg(ii)                          !lai grasses in temporary variable
-            jmax25g_tmp = jmax25g_d(posbest(2))              !jmax25 grasses in temporary variable
-            max_netcg = max_netcg_tmp                       !new NCP is higher as previous
-            posmna = (/ posbest , ii /)
-         end if
+      do jj = 1,3 !loop for sunlit jmax25   
+         do kk = 1,3 !loop for shaded jmax25  
+           do ll = 1,3 !loop over foliage costs due to different LAI             
+             
+             netcg_d(:,jj,kk,ll) = (assg_d(:,jj,ll) + assgs_d(:,kk,ll)) - 3600.d0 * 24.d0 * (cpccg_d(:) + rrg_d + tcg_d(ll, :))
+             
+           end do
+         end do
       end do
-
-      !save all temporary variables to the global vectors
-      caig_d(2)     = caig_d_tmp
-      jmax25g_d(2) = jmax25g_tmp
-      lai_lg(2)    = lai_g_tmp
+             
+      posbestg(:)    = MAXLOC(netcg_d(:, :, :, :))             
+      posmna = posbestg(:)
+      
+      caig_d(2)     = caig_d(posbestg(1))
+      jmax25g_d(2) = jmax25g_d(posbestg(2)) 
+      jmax25gs_d(2) = jmax25gs_d(posbestg(3))       
+      lai_lg(2)    = lai_lg(posbestg(4))
 
       !set daily value back to zero
-      assg_d(:,:,:)  = 0.d0
+      assg_d(:,:,:)  = 0.d0      
+      
+      !do ii = 1,3
+
+         !3 values of ncp due to different cover (rows in assg_d) and jmax25g (columns in assg_d)
+      !   netcg_d(1,:) = assg_d(1,:,ii) - 3600.d0 * 24.d0 * (cpccg_d(1) + rrg_d + tcg_d(ii, 1))
+      !   netcg_d(2,:) = assg_d(2,:,ii) - 3600.d0 * 24.d0 * (cpccg_d(2) + rrg_d + tcg_d(ii, 2))
+      !   netcg_d(3,:) = assg_d(3,:,ii) - 3600.d0 * 24.d0 * (cpccg_d(3) + rrg_d + tcg_d(ii, 3))
+      !   posbest(:)    = MAXLOC(netcg_d(:,:))
+      !   max_netcg_tmp= netcg_d( posbest(1), posbest(2) )
+
+         !check if carbon profit is higher for different LAI
+!         if( max_netcg_tmp .gt. max_netcg) then
+            
+!            caig_d_tmp = MIN(1.d0 - o_cait, caig_d(posbest(1))) !cover grasses to temporary variable
+!            lai_g_tmp = lai_lg(ii)                          !lai grasses in temporary variable
+!            jmax25g_tmp = jmax25g_d(posbest(2))              !jmax25 grasses in temporary variable
+!            max_netcg = max_netcg_tmp                       !new NCP is higher as previous
+!            posmna = (/ posbest , ii /)
+!         end if
+!      end do
+
+      !save all temporary variables to the global vectors
+!      caig_d(2)     = caig_d_tmp
+!      jmax25g_d(2) = jmax25g_tmp
+!      lai_lg(2)    = lai_g_tmp
+
+      !set daily value back to zero
+!      assg_d(:,:,:)  = 0.d0
 
       return
       end subroutine vom_adapt_foliage
