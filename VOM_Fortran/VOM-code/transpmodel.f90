@@ -1695,7 +1695,7 @@
         endif
         transpt = p_a * vd_h(th_) * gstomt  ! (3.28) transpiration rate in mol/s
         if(i_lai_function == 4) then        
-           etmt__ = frac_sun(2) * (transpt * 18.d0) / (10.d0 ** 6.d0)  ! transpiration rate in m/s        
+           etmt__ = frac_sunt(2) * (transpt * 18.d0) / (10.d0 ** 6.d0)  ! transpiration rate in m/s        
         else        
            etmt__ = (transpt * 18.d0) / (10.d0 ** 6.d0)  ! transpiration rate in m/s
         end if
@@ -1904,7 +1904,7 @@
                   transpts = etmts__ * 55555.555555555555d0  ! (Out[249]) mol/s=m/s*10^6 g/m/(18g/mol)
                   gstomts = transpts / (p_a * vd_h(th_))                                
                 else                
-                  etmt__   = SUM(ruptkt__(:)) / (o_cait * frac
+                  etmt__   = SUM(ruptkt__(:)) / o_cait 
                   transpt = etmt__ * 55555.555555555555d0  ! (Out[249]) mol/s=m/s*10^6 g/m/(18g/mol)
                   gstomt = transpt / (p_a * vd_h(th_))
                   
@@ -1942,34 +1942,33 @@
      &                        / rsurfg_(:))) / kunsat_(1:pos_ulg)))
           ruptkg__(pos_ulg+1:s_maxlayer) = 0.d0
           if (SUM(ruptkg__(:)) .gt. 0.d0) then
-          !do jj = 1, 3 !loop for caig
-            where ( (  (etmg__(:,:)+ etmgs__(:,:)) *caig_d(2)) .gt. SUM(ruptkg__(:)))
-              rootlim(:,:)  = 1.d0
-              etmg__(:,:)   = SUM(ruptkg__(:)) / (caig_d(2) * frac_sung(2))
-              transpg(:,:)  = etmg__(:,:) * 55555.555555555555d0  ! (Out[249]) mol/s=m/s*10^6 g/m/(18g/mol)
-              gstomg(:,:)   = transpg(:,:) / (p_a * vd_h(th_))
-              
+             
               if(i_lai_function == 4) then  
-                etmg__(:,:)   = SUM(ruptkg__(:)) / (caig_d(2) * frac_sung(2))
-                transpg(:,:)  = etmg__(:,:) * 55555.555555555555d0  ! (Out[249]) mol/s=m/s*10^6 g/m/(18g/mol)
-                gstomg(:,:)   = transpg(:,:) / (p_a * vd_h(th_))
+                where ( (  (etmg__(:,:)+ etmgs__(:,:)) *caig_d(2)) .gt. SUM(ruptkg__(:)))
+                  rootlim(:,:)  = 1.d0              
+                  etmg__(:,:)   = SUM(ruptkg__(:)) / (caig_d(2) * frac_sung(2))
+                  transpg(:,:)  = etmg__(:,:) * 55555.555555555555d0  ! (Out[249]) mol/s=m/s*10^6 g/m/(18g/mol)
+                  gstomg(:,:)   = transpg(:,:) / (p_a * vd_h(th_))
               
-                etmgs__(:,:)   = SUM(ruptkg__(:)) / (caig_d(2) * frac_shadeg(2))
-                transpgs(:,:)  = etmgs__(:,:) * 55555.555555555555d0  ! (Out[249]) mol/s=m/s*10^6 g/m/(18g/mol)
-                gstomgs(:,:)   = transpgs(:,:) / (p_a * vd_h(th_))
-                
+                  !shaded part
+                  etmgs__(:,:)   = SUM(ruptkg__(:)) / (caig_d(2) * frac_shadeg(2))
+                  transpgs(:,:)  = etmgs__(:,:) * 55555.555555555555d0  ! (Out[249]) mol/s=m/s*10^6 g/m/(18g/mol)
+                  gstomgs(:,:)   = transpgs(:,:) / (p_a * vd_h(th_))
+                end where                                              
               else
-                etmg__(:,:)   = SUM(ruptkg__(:)) / caig_d(2) 
-                transpg(:,:)  = etmg__(:,:) * 55555.555555555555d0  ! (Out[249]) mol/s=m/s*10^6 g/m/(18g/mol)
-                gstomg(:,:)   = transpg(:,:) / (p_a * vd_h(th_))
+                where ( (  (etmg__(:,:)+ etmgs__(:,:)) *caig_d(2)) .gt. SUM(ruptkg__(:)))
+                  rootlim(:,:)  = 1.d0               
+                  etmg__(:,:)   = SUM(ruptkg__(:)) / caig_d(2) 
+                  transpg(:,:)  = etmg__(:,:) * 55555.555555555555d0  ! (Out[249]) mol/s=m/s*10^6 g/m/(18g/mol)
+                  gstomg(:,:)   = transpg(:,:) / (p_a * vd_h(th_))
                    
-                etmgs__(:,:)   = 0.0d0
-                transpgs(:,:)  = 0.0d0
-                gstomgs(:,:)   = 0.0d0                               
+                  !no shaded part                   
+                  etmgs__(:,:)   = 0.0d0
+                  transpgs(:,:)  = 0.0d0
+                  gstomgs(:,:)   = 0.0d0   
+                end where                              
               end if
-              
-            end where
-          !end do   
+ 
             ruptkg__(1:pos_ulg) = caig_d(2) * (etmg__(2,2) + etmgs__(2,2) )* (ruptkg__(1:pos_ulg)   &
      &                          / (SUM(ruptkg__(:))))
           else
@@ -2079,7 +2078,8 @@
       endif
       if ( wlayer_ .ge. 0 ) then
 !       * (3.35), 1.e6 to convert from m (=1000kg/m2) to g/m2; (Out[250])
-        if ( abs(SUM(ruptkt__(:)) - ( (etmt__ + etmts__) * o_cait) ) .gt. tiny(SUM(ruptkt__(:)) - ( (etmt__ +etmts__) * o_cait))  ) then
+        if ( abs(SUM(ruptkt__(:)) - ( (etmt__ + etmts__) * o_cait) ) &
+            .gt. tiny(SUM(ruptkt__(:)) - ( (etmt__ +etmts__) * o_cait))  ) then        
            dmqt = (SUM(ruptkt__(:)) - ( (etmt__ +etmts__)* o_cait) ) * 1.d6
         else
            dmqt = 0d0
@@ -2165,7 +2165,7 @@
         &          + jactts(:,ii) - 4.d0 * rlts_h(:,ii)) ** 2.d0 + 16.d0          &
         &          * gammastar * gstomts * (8.d0 * ca_h(th_) * gstomts      &
         &          + jactts(:,ii) + 8.d0 * rlts_h(:,ii)))) / 8.d0 ) ! (3.22) ; (Out[319])     
-     else:
+     else
       asst__(:,ii) =  (4.d0 * ca_h(th_) * gstomt + 8.d0 * gammastar        &
         &          * gstomt + jactt(:,ii) - 4.d0 * rlt_h(:,ii) - SQRT((-4.d0    &
         &          * ca_h(th_) * gstomt + 8.d0 * gammastar * gstomt       &
@@ -2226,7 +2226,7 @@
         io_h        = io_h        + dt_ * io__
         esoil_h     = esoil_h     + dt_ * esoil__
         etmt_h      = etmt_h      + dt_ * (etmt__ + etmts__) * o_cait
-        etmg_h      = etmg_h      + dt_ * (etmg__(2,2) +etmgs__) * caig_d(2)
+        etmg_h      = etmg_h      + dt_ * (etmg__(2,2) +etmgs__(2,2) ) * caig_d(2)
         sumruptkt_h = sumruptkt_h + dt_ * SUM(ruptkt__(:))
       endif
 
