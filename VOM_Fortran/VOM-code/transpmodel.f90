@@ -218,7 +218,7 @@
              &  vd_d / 24.d0, esoil_d, jmax25t_d(2), jmax25g_d(2),             &
              &  fpard_lt*o_cait + fpard_lg*caig_d(2), rlt_d , rlg_d, lambdat_d, lambdag_d,         &
              &  rrt_d * 3600.d0 * 24.d0, rrg_d * 3600.d0 * 24.d0, asst_d(2,2), &
-             &  assg_d(2,2,2), SUM(su__(1:wlayer_)) / wlayer_, zw_, wsnew,     &
+             &  assg_d(2,2,2) + assgs_d(2,2,2)  , SUM(su__(1:wlayer_)) / wlayer_, zw_, wsnew,     &
              &  spgfcf_d, infx_d, etmt_d, etmg_d, su__(1), topt_,              &
              & tcg_d(2,2), q_tct_d(2), cpccg_d(2), q_cpcct_d,                  &
              & lai_lt(2), lai_lg(2), lai_lt(2)*o_cait + lai_lg(2)*caig_d(2), caig_d(2),  &
@@ -1904,11 +1904,11 @@
               if ( ( (etmt__ + etmts__)* o_cait) .gt. SUM(ruptkt__(:))) then
                 changef = 1.d0
                 if(i_lai_function == 4) then  
-                  etmt__   = SUM(ruptkt__(:)) / (o_cait * frac_sunt(2) )
+                  etmt__   = (SUM(ruptkt__(:)) * frac_sunt(2) ) / o_cait 
                   transpt = etmt__ * 55555.555555555555d0  ! (Out[249]) mol/s=m/s*10^6 g/m/(18g/mol)
                   gstomt = transpt / (p_a * vd_h(th_))
                   
-                  etmts__   = SUM(ruptkt__(:)) / (o_cait * frac_shadet(2) )
+                  etmts__   = (SUM(ruptkt__(:)) * frac_shadet(2) )/ o_cait 
                   transpts = etmts__ * 55555.555555555555d0  ! (Out[249]) mol/s=m/s*10^6 g/m/(18g/mol)
                   gstomts = transpts / (p_a * vd_h(th_))                                
                 else                
@@ -1922,7 +1922,7 @@
                 end if 
               endif
 !             * Setting SUM(ruptkt__)=etmt__ and distributing according to relative uptake:
-              ruptkt__(:) = o_cait * etmt__ * (ruptkt__(:) / (SUM(ruptkt__(:))))
+              ruptkt__(:) = o_cait * (etmt__ + etmts__)* (ruptkt__(:) / (SUM(ruptkt__(:))))
             else
               ruptkt__(:) = 0.d0
               changef     = 1.d0
@@ -1955,14 +1955,14 @@
               
                 where ( ( etmg__(:,:) *caig_d(2) ) .gt. (frac_sung(2)*SUM(ruptkg__(:)) ) )
                   rootlim(:,:)  = 1.d0              
-                  etmg__(:,:)   = SUM(ruptkg__(:)) / (caig_d(2) * frac_sung(2))
+                  etmg__(:,:)   = (SUM(ruptkg__(:))* frac_sung(2) ) / caig_d(2) 
                   transpg(:,:)  = etmg__(:,:) * 55555.555555555555d0  ! (Out[249]) mol/s=m/s*10^6 g/m/(18g/mol)
                   gstomg(:,:)   = transpg(:,:) / (p_a * vd_h(th_))
-              
+                end where                                                            
                   !shaded part
                 where ( ( etmgs__(:,:) *caig_d(2) ) .gt. (frac_shadeg(2)*SUM(ruptkg__(:)) ) )   
                   rootlims(:,:)  = 1.d0                                             
-                  etmgs__(:,:)   = SUM(ruptkg__(:)) / (caig_d(2) * frac_shadeg(2))
+                  etmgs__(:,:)   = (SUM(ruptkg__(:))* frac_shadeg(2)) / caig_d(2) 
                   transpgs(:,:)  = etmgs__(:,:) * 55555.555555555555d0  ! (Out[249]) mol/s=m/s*10^6 g/m/(18g/mol)
                   gstomgs(:,:)   = transpgs(:,:) / (p_a * vd_h(th_))
                 end where                                              
@@ -2038,7 +2038,7 @@
 
       sum2 = SUM(((-c_hhydrst(1:pos_ult) - pcap_(1:pos_ult))           &
      &     * rsurft_(1:pos_ult)) / (i_rrootm + rsoil(1:pos_ult)))
-      mul2 = (q_md + q_mqx) * (q_md + q_mqx) * ( (etmt__ * o_cait) - sum2)
+      mul2 = (q_md + q_mqx) * (q_md + q_mqx) * ( ( (etmt__ + etmts__) * o_cait) - sum2)
 
       mqss_out = q_mqx * (mul1 - mul2) / mul1
       mqss_out = MAX(0.9d0 * q_mqx, mqss_out)
@@ -2063,12 +2063,29 @@
 !     * makes sure that tissue water does not get below 0.9mqx
       if (mqt_ .le. 0.9d0 * q_mqx) then
         if (wlayer_ .ge. 1) then
-          if ( (etmt__ * o_cait) .gt. 0.9d0 * SUM(ruptkt__(:))) then
+          if ( ( (etmt__ + etmts__)* o_cait) .gt. 0.9d0 * SUM(ruptkt__(:))) then
             if (SUM(ruptkt__(:)) .ge. 0.d0) then
-              etmt__ = SUM(ruptkt__(:)) / o_cait
-              transpt = etmt__ * 55555.555555555555d0  ! (Out[249]) mol/s=m/s*10^6 g/m/(18g/mol)
-              gstomt = transpt / (p_a * vd_h(th_))
-              dmqt = 0.d0
+            
+              if(i_lai_function == 4) then
+            
+                etmt__ = SUM(ruptkt__(:)) * frac_sunt(2) / o_cait
+                transpt = etmt__ * 55555.555555555555d0  ! (Out[249]) mol/s=m/s*10^6 g/m/(18g/mol)
+                gstomt = transpt / (p_a * vd_h(th_))
+              
+                etmts__ = SUM(ruptkt__(:)) * frac_shadet(2) / o_cait
+                transpts = etmts__ * 55555.555555555555d0  ! (Out[249]) mol/s=m/s*10^6 g/m/(18g/mol)
+                gstomts = transpts / (p_a * vd_h(th_))
+                dmqt = 0.d0         
+                
+              else
+              
+                etmt__ = SUM(ruptkt__(:))/ o_cait
+                transpt = etmt__ * 55555.555555555555d0  ! (Out[249]) mol/s=m/s*10^6 g/m/(18g/mol)
+                gstomt = transpt / (p_a * vd_h(th_))
+                dmqt = 0.d0
+              
+              end if
+              
             else
               write(msg,'(A20,I2,A1,I2,A1,I4)') 'vegetation dies on: ', &
      &          fday(nday), '/', fmonth(nday), '/', fyear(nday)
@@ -2085,6 +2102,9 @@
           etmt__  = 0.d0
           transpt = 0.d0
           gstomt  = 0.d0
+          etmts__  = 0.d0
+          transpts = 0.d0
+          gstomts  = 0.d0          
         endif
       endif
       if ( wlayer_ .ge. 0 ) then
@@ -2127,7 +2147,7 @@
         endif
 
         if (ABS(mqt_ - mqsst_) .gt. q_mqx / 1.d6) then
-          dtss = (mqt_ - mqsst_) / (1.d6 * ( (etmt__ * o_cait) - SUM(ruptkt__(:))))
+          dtss = (mqt_ - mqsst_) / (1.d6 * ( ( (etmt__+etmts__) * o_cait) - SUM(ruptkt__(:))))
           if (dtss .le. 0.d0) dtss = 99999.d0
         else
           dtss = 99999.d0
@@ -2536,15 +2556,18 @@
       implicit none
 
       INTEGER :: ii                     ! Counter
+      INTEGER :: jj                     ! Counter 
+      INTEGER :: ll                     ! Counter 
+      INTEGER :: kk                     ! Counter                           
       REAL*8  :: jmax25g_tmp            ! Temporary jmax25g for comparison
       REAL*8  :: lai_g_tmp              ! Temporary leaf area index for comparison
       REAL*8  :: max_netcg              ! Maximum daily grass net carbon profit grasses
       REAL*8  :: max_netcg_tmp          ! Temporary max net carbon profit
-      REAL*8  :: netcg_d(3,3,3)           ! Daily grass net carbon profit
-      REAL*8  :: netct_d(3,3,3,3)           ! Daily grass net carbon profit
+      REAL*8  :: netcg_d(3,3,3,3)           ! Daily grass net carbon profit
+      REAL*8  :: netct_d(3,3,3)           ! Daily grass net carbon profit
       REAL*8  :: caig_d_tmp              ! Temporary grass cover
       INTEGER :: posma(1)               ! Pointer to variable values that achieved maximum assimilation
-      INTEGER :: posbest(2)              ! Pointer to variable values that achieved maximum net assimilation
+      INTEGER :: posbest(3)              ! Pointer to variable values that achieved maximum net assimilation
       INTEGER :: posbestg(4)              ! Pointer to variable values that achieved maximum net assimilation      
       !trees
 
@@ -2557,15 +2580,16 @@
       end do 
       
       
-      posbest(:)    = MAXLOC(netct_d(:,:))
+      posbest(:)    = MAXLOC(netct_d(:,:,:))
 
-      lai_lt(2) = lai_lt(posbest(3))                    !lai trees 
+
       jmax25t_d(2) = jmax25t_d(posbest(1))              !jmax25 trees in 
-      jmax25ts_d(2) = jmax25t_d(posbest(2))              !jmax25 trees in 
-        
+      jmax25ts_d(2) = jmax25t_d(posbest(2))             !jmax25 trees in 
+      lai_lt(2) = lai_lt(posbest(3))                    !lai trees 
+              
       !set daily value back to zero
       asst_d(:,:)    = 0.d0
-
+      assts_d(:,:)   = 0.d0
 
       !grasses
 
@@ -2592,7 +2616,8 @@
 
       !set daily value back to zero
       assg_d(:,:,:)  = 0.d0      
-      
+      assgs_d(:,:,:)  = 0.d0      
+            
       !do ii = 1,3
 
          !3 values of ncp due to different cover (rows in assg_d) and jmax25g (columns in assg_d)
@@ -2666,7 +2691,11 @@
 !     *-----SEASONAL VEGETATION---------------
 
 !     * rootlim is either 0 or 1. Change it to be either -1 or + 1:
-      rootlim(posmna(2), posmna(3)) = 2.d0 * rootlim(posmna(2),posmna(3)) - 1.d0
+      if(i_lai_function == 4) then        
+          rootlim(posmna(2), posmna(4)) = 2.d0 * (rootlim(posmna(2),posmna(4)) * rootlims(posmna(3),posmna(4))  )- 1.d0
+      else
+          rootlim(posmna(2), posmna(4)) = 2.d0 * rootlim(posmna(2),posmna(4)) - 1.d0      
+      end if
 
       reffg(:) = 0.d0
       maxval_tmp = MAXVAL(ruptkg_d(1:pos_slg) / rsurfg_(1:pos_slg))
@@ -2676,7 +2705,7 @@
 
 !     * if roots are going to be reduced, reverse effectivity vector
 
-      if (rootlim(posmna(2),posmna(3)) .lt. 0.d0) then
+      if (rootlim(posmna(2),posmna(4)) .lt. 0.d0) then
         reffg(:) = 1.d0 - reffg(:)
       endif
 
@@ -2686,7 +2715,7 @@
      &                     * s_delz(1:pos_slg) - rsurft_(1:pos_slg),   &
      &                     MAX(i_rsurfmin * s_delz(1:pos_slg),         &
      &                     rsurfg_(1:pos_slg) + rsurfg_(1:pos_slg)     &
-     &                     * i_growthmax * rootlim(posmna(2),posmna(3))&
+     &                     * i_growthmax * rootlim(posmna(2),posmna(4))&
      &                     * reffg(1:pos_slg)))
       rsurfgnew(pos_slg+1:s_maxlayer) = 0.d0
 
