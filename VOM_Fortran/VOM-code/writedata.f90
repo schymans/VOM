@@ -610,13 +610,14 @@
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-     subroutine vom_write_day ( rain, tairmax, tairmin, par,   &
-             &  vd, esoil, jmax25t, jmax25g,             &
-             &  pc, rlt , rlg, lambdat, lambdag,         &
-             &  rrt, rrg , asst, &
-             &  assg, su_avg, zw, ws,     &
-             &  spgfcf, infx, etmt, etmg, su_1, topt,              &
-             & tcg, tct, cpccg, cpcct,                  &
+     subroutine vom_write_day ( rain, tairmax, tairmin, par,         &
+             &  vd, esoil, jmax25t, jmax25g, jmax25ts, jmax25gs,     &
+             &  pc, rlt , rlg, lambdat, lambdag,                     &
+             &  rrt, rrg , asst,                                     &
+             &  assg, su_avg, zw, ws,                                &
+             &  spgfcf, infx, etmt, etmg, su_1, topt,                &
+             & tcg, tct, cpccg, cpcct,                               &
+             & fsun_t, fshade_t, fsun_g, fshade_g,                   &
              & lai_t, lai_g, lai_tot, caig, tp_netassg, tp_netasst, rsurft, nc_flag )
 
 
@@ -632,6 +633,8 @@
       REAL*8,  INTENT(in) :: esoil
       REAL*8,  INTENT(in) :: jmax25t
       REAL*8,  INTENT(in) :: jmax25g
+      REAL*8,  INTENT(in) :: jmax25ts
+      REAL*8,  INTENT(in) :: jmax25gs      
       REAL*8,  INTENT(in) :: pc
       REAL*8,  INTENT(in) :: rlt
       REAL*8,  INTENT(in) :: rlg
@@ -654,6 +657,10 @@
       REAL*8,  INTENT(in) :: tct
       REAL*8,  INTENT(in) :: cpccg
       REAL*8,  INTENT(in) :: cpcct
+      REAL*8,  INTENT(in) :: fsun_t
+      REAL*8,  INTENT(in) :: fshade_t  
+      REAL*8,  INTENT(in) :: fsun_g
+      REAL*8,  INTENT(in) :: fshade_g            
       REAL*8,  INTENT(in) :: lai_t
       REAL*8,  INTENT(in) :: lai_g
       REAL*8,  INTENT(in) :: lai_tot
@@ -734,16 +741,17 @@
 !     * includes a column for each sublayer
       dailyformat = '(I6,I6,I4,I7,'//str//'E14.6)'
 
-      write(kfile_resultsdaily,'(I6,I7,I7,I7,I7,36E15.5)')             &
-     &  fyear(nday), fmonth(nday), fday(nday), nday, nhour-1,          &
-     &  rain, tairmax, tairmin, par,   &
-     &  vd, esoil, jmax25t, jmax25g,             &
-     &  pc, rlt , rlg, lambdat, lambdag,         &
-     &  rrt, rrg, asst, &
-     &  assg, su_avg, zw, ws,     &
-     &  spgfcf, infx, etmt, etmg, su_1, topt,              &
-     & tcg, tct, cpccg, cpcct,                  &
-     & lai_t, lai_g, lai_tot, caig, tp_netassg, tp_netasst         
+      write(kfile_resultsdaily,'(I6,I7,I7,I7,I7,42E15.5)')    &
+     &  fyear(nday), fmonth(nday), fday(nday), nday, nhour-1, &
+     &  rain, tairmax, tairmin, par,                          &
+     &  vd, esoil, jmax25t, jmax25g, jmax25ts, jmax25gs,      &
+     &  pc, rlt , rlg, lambdat, lambdag,                      &
+     &  rrt, rrg, asst,                                       &
+     &  assg, su_avg, zw, ws,                                 &
+     &  spgfcf, infx, etmt, etmg, su_1, topt,                 &
+     &  tcg, tct, cpccg, cpcct,                               &
+     &  fsun_t, fshade_t, fsun_g, fshade_g,                   &
+     &  lai_t, lai_g, lai_tot, caig, tp_netassg, tp_netasst         
 
 
      write(kfile_rsurfdaily,dailyformat) fyear(nday), fmonth(nday), &

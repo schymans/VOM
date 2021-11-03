@@ -214,14 +214,15 @@
        !formatted output for single model run
        if (option1 .eq. 2) then
 
-        call vom_write_day( rain_d(nday), tairmax_d(nday), tairmin_d(nday), par_d(nday),   &
-             &  vd_d / 24.d0, esoil_d, jmax25t_d(2), jmax25g_d(2),             &
-             &  fpard_lt*o_cait + fpard_lg*caig_d(2), rlt_d , rlg_d, lambdat_d, lambdag_d,         &
-             &  rrt_d * 3600.d0 * 24.d0, rrg_d * 3600.d0 * 24.d0, asst_d(2,2), &
-             &  assg_d(2,2,2) + assgs_d(2,2,2)  , SUM(su__(1:wlayer_)) / wlayer_, zw_, wsnew,     &
-             &  spgfcf_d, infx_d, etmt_d, etmg_d, su__(1), topt_,              &
-             & tcg_d(2,2), q_tct_d(2), cpccg_d(2), q_cpcct_d,                  &
-             & lai_lt(2), lai_lg(2), lai_lt(2)*o_cait + lai_lg(2)*caig_d(2), caig_d(2),  &
+        call vom_write_day( rain_d(nday), tairmax_d(nday), tairmin_d(nday), par_d(nday),         &
+             &  vd_d / 24.d0, esoil_d, jmax25t_d(2), jmax25g_d(2), jmax25ts_d(2), jmax25gs_d(2), &
+             &  fpard_lt*o_cait + fpard_lg*caig_d(2), rlt_d , rlg_d, lambdat_d, lambdag_d,       &
+             &  rrt_d * 3600.d0 * 24.d0, rrg_d * 3600.d0 * 24.d0, asst_d(2,2),                   &
+             &  assg_d(2,2,2) + assgs_d(2,2,2)  , SUM(su__(1:wlayer_)) / wlayer_, zw_, wsnew,    &
+             &  spgfcf_d, infx_d, etmt_d, etmg_d, su__(1), topt_,                                &
+             & tcg_d(2,2), q_tct_d(2), cpccg_d(2), q_cpcct_d,                                    &
+             & frac_sunt(2), frac_shadet(2), frac_sung(2), frac_shadeg(2),                       &
+             & lai_lt(2), lai_lg(2), lai_lt(2)*o_cait + lai_lg(2)*caig_d(2), caig_d(2),          &
              & tp_netassg, tp_netasst, rsurft_, i_write_nc )             
 
        if (fyear(nday) .ne. nyear) then
