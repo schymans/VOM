@@ -552,12 +552,14 @@
 
          open(kfile_resultsdaily, FILE=trim(adjustl(i_outputpath))// &
            trim(adjustl(sfile_resultsdaily)), STATUS='replace')
-         write(kfile_resultsdaily,'(A6,A7,A7,A7,A7, 36A15)') 'fyear',      &
-         &  'fmonth', 'fday', 'nday', 'nhour', 'rain', 'tairmax', 'tairmin', &
-         &  'par', 'vd', 'esoil', 'jmax25t', 'jmax25g', 'pc', 'rlt', 'rlg', &
-         &  'lambdat', 'lambdag', 'rrt', 'rrg', 'asst', 'assg', 'su_avg',  &
-         &  'zw', 'ws', 'spgfcf', 'infx', 'etmt', 'etmg', 'su_1', 'topt',  &
-         &  'tcg', 'tct', 'cpccg_d', 'cpcct_d',  'lai_t', 'lai_g', 'lai_tot', &
+         write(kfile_resultsdaily,'(A6,A7,A7,A7,A7, 42A15)') 'fyear',         &
+         &  'fmonth', 'fday', 'nday', 'nhour', 'rain', 'tairmax', 'tairmin',  &
+         &  'par', 'vd', 'esoil', 'jmax25t', 'jmax25g', 'jmax25t', 'jmax25g', &
+         &  'pc', 'rlt', 'rlg',                                               &
+         &  'lambdat', 'lambdag', 'rrt', 'rrg', 'asst', 'assg', 'su_avg',     &
+         &  'zw', 'ws', 'spgfcf', 'infx', 'etmt', 'etmg', 'su_1', 'topt',     &
+         &  'tcg', 'tct', 'cpccg_d', 'cpcct_d', 'fsunt', 'fshadet',           &
+         &  'fsung', 'fshadeg', 'lai_t', 'lai_g', 'lai_tot',                  &
          &   'cai_g', 'ncp_g', 'ncp_t'
 
         open(kfile_rsurfdaily, FILE=trim(adjustl(i_outputpath))// &

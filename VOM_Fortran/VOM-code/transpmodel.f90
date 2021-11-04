@@ -2281,8 +2281,8 @@
       esoil_d  = esoil_d  + esoil_h
       spgfcf_d = spgfcf_d + spgfcf_h
       infx_d   = infx_d   + infx_h
-      rlt_d    = rlt_d    + rlt_h(2,2)   * 3600.d0  ! rlt_d in mol/day
-      rlg_d    = rlg_d    + rlg_h(2,2) * 3600.d0
+      rlt_d    = rlt_d    + (rlt_h(2,2) + rlts_h(2,2))  * 3600.d0  ! rlt_d in mol/day
+      rlg_d    = rlg_d    + (rlg_h(2,2) + rlgs_h(2,2)) * 3600.d0
       fpard_lg = fpard_lg + (fpar_lg(2) / 24d0) !mean fpar per day
       fpard_lt = fpard_lt + (fpar_lt(2) / 24d0) !mean fpar per day
       
