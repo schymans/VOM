@@ -566,8 +566,9 @@
       !$OMP o_wstexp, o_wsgexp, o_lambdatf, o_lambdagf, lambdat_d, lambdag_d, gstomt, gstomg, gstomts, gstomgs, &
       !$OMP rlt_h, rlts_h, rlt_d, rlt_y, rlg_h, rlgs_h, rlg_d, rlg_y, transpt, transpg, q_tct_d, tct_y, tcg_d, &
       !$OMP tcg_y, jactt, jactg, jmaxt_h, jmaxg_h, jmaxts_h, jmaxgs_h, jmax25t_d, jmax25g_d, &
-      !$OMP asst_h, assts_h, asst_d, asst_y, assg_h,assgs_h, assg_d, assg_y, &
-      !$OMP q_cpcct_d, cpcct_y, cpccg_d, cpccg_y, etmt__, etmt_h, etmt_d, etmt_y, etmg__, etmg_h, &
+      !$OMP jmax25ts_d, jmax25gs_d,jactts, jactgs, transpts, transpgs,   &
+      !$OMP asst_h, assts_h, asst_d, assts_d, asst_y, assg_h, assgs_h, assg_d, assgs_d, assg_y, &
+      !$OMP q_cpcct_d, cpcct_y, cpccg_d, cpccg_y, etmt__, etmts__, etmt_h, etmt_d, etmt_y, etmg__, etmgs__, etmg_h, &
       !$OMP etmg_d, etmg_y, etm_y, mqt_, mqtnew, mqtold, dmqt, q_mqx, mqsst_, mqsstmin, q_md, &
       !$OMP o_mdstore, o_rtdepth, o_rgdepth, pos_slt, pos_slg, pos_ult, pos_ulg, changef, &
       !$OMP rootlim, posmna, &
