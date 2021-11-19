@@ -2111,10 +2111,10 @@
       if ( wlayer_ .ge. 0 ) then
 !       * (3.35), 1.e6 to convert from m (=1000kg/m2) to g/m2; (Out[250])
         if ( abs(SUM(ruptkt__(:)) - ( (etmt__ + etmts__) * o_cait) ) &
-            .gt. tiny(SUM(ruptkt__(:)) - ( (etmt__ +etmts__) * o_cait))  ) then        
+            .gt. epsilon(SUM(ruptkt__(:)) - ( (etmt__ +etmts__) * o_cait))  ) then        
            dmqt = (SUM(ruptkt__(:)) - ( (etmt__ +etmts__)* o_cait) ) * 1.d6
         else
-           dmqt = 0d0
+           dmqt = 0.d0
         endif
       else
         dmqt = -1.0* (etmt__ + etmts__)* o_cait * 1.d6
@@ -2134,19 +2134,20 @@
 
       REAL*8  :: dtss
       REAL*8  :: dtmq         ! Maximum timestep allowed by tree water content change
-
+      
       dtmq = 99999.d0
 
       if (q_md .gt. 0.d0) then
 !       * avoids mq from becoming larger than mqx or smaller than 0.9mqx
         if (dmqt .gt. 0.d0) then
           dtmq = (q_mqx - mqt_) / dmqt
-        elseif (dmqt .lt. 0.d0) then
-          if( abs(0.9d0 * q_mqx - mqt_) .gt. tiny(0.9d0 * q_mqx - mqt_)  ) then
-             dtmq = (0.9d0 * q_mqx - mqt_) / dmqt
-          end if
-        endif
 
+        elseif (dmqt .lt. 0.d0) then
+          if( abs(0.9d0 * q_mqx - mqt_) .gt. epsilon(0.9d0 * q_mqx - mqt_)  ) then
+             dtmq = (0.9d0 * q_mqx - mqt_) / dmqt
+          end if         
+        endif
+          
         if (ABS(mqt_ - mqsst_) .gt. q_mqx / 1.d6) then
           dtss = (mqt_ - mqsst_) / (1.d6 * ( ( (etmt__+etmts__) * o_cait) - SUM(ruptkt__(:))))
           if (dtss .le. 0.d0) dtss = 99999.d0
@@ -2158,6 +2159,10 @@
       endif
 
       dtmax = MIN(dtss, dtmq, 3600.d0 - time)
+
+      if(dtmax .le. 0.d0) then
+         stop "Error dtmax=<0.0s"      
+      end if
 
 !     * waterbalance uses dtmax for the determination of dt
       call waterbalance()

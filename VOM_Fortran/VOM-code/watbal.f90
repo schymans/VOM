@@ -296,6 +296,11 @@
 
       dt_ = MAX(0.d0, MIN(dtsu, dtmax))
 
+      if( dt_ .le. tiny( MIN(dtsu, dtmax)  )  ) then
+         stop "Error dt=0.0s"      
+      end if
+
+
       if (dt_ .eq. dtsu) then
         dtsu_count = dtsu_count + 1
       elseif (dt_ .eq. dtmax) then

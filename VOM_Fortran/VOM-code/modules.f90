@@ -573,7 +573,7 @@
       !$OMP o_mdstore, o_rtdepth, o_rgdepth, pos_slt, pos_slg, pos_ult, pos_ulg, changef, &
       !$OMP rootlim, rootlims, posmna, &
       !$OMP frac_sung, frac_sunt, frac_shadeg, frac_shadet, fpar_lt, fpar_lg, &
-      !$OMP lai_lg, lai_lt, &            
+      !$OMP lai_lg, lai_lt, fpard_lg, fpard_lt, &            
       !$OMP ruptkt__, rsurft_, rsurftnew, prootm, ruptkt_d, ruptkt_h, ruptkg_h, ruptkg_d, &
       !$OMP refft, reffg, ruptkg__, rsurfg_, rsurfgnew, rsoil,      &  
       !$OMP rrt_d, rrt_y, rrg_d, rrg_y, sumruptkt_h, output_mat)

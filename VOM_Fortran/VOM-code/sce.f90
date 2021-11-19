@@ -838,7 +838,9 @@ end if
       !$OMP o_mdstore, o_rtdepth, o_rgdepth, pos_slt, pos_slg, pos_ult, pos_ulg, changef, &
       !$OMP rootlim, rootlims, posmna, rrt_d, rrt_y, rrg_d, rrg_y, sumruptkt_h,  &
       !$OMP wlayer_, wlayernew, dt_, dtmax, dtsu_count, dtmax_count, esoil__, esoil_h, &
+      !$OMP ruptkt__, rsurft_, rsurftnew, prootm, ruptkt_d, ruptkt_h, ruptkg_h, ruptkg_d, &
       !$OMP esoil_d, esoil_y, spgfcf__, spgfcf_h, spgfcf_d, inf__, infx__, infx_h, infx_d, &
+      !$OMP refft, reffg, ruptkg__, rsurfg_, rsurfgnew, rsoil,      &        
       !$OMP zw_, zwnew, wc_,  io__, io_h, ioacum, &
       !$OMP ranscal, bestobj, bestincomp, evolution)
       !$OMP do SCHEDULE(DYNAMIC)
@@ -1108,7 +1110,11 @@ end if
       REAL*8, ALLOCATABLE :: tmp_8(:)
 
         nrun = nrun + 1
-
+        
+      allocate(tmp_8(nopt))
+      tmp_8(:) = invar(optid(:))
+      write(kfile_sceout,outformat) tmp_8(:), -9999.d0
+      deallocate(tmp_8)            
       call transpmodel(invar(:), vom_npar, objfun, 1)
 
         bestmark = ' '
