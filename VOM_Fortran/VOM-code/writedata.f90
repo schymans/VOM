@@ -552,13 +552,13 @@
 
          open(kfile_resultsdaily, FILE=trim(adjustl(i_outputpath))// &
            trim(adjustl(sfile_resultsdaily)), STATUS='replace')
-         write(kfile_resultsdaily,'(A6,A7,A7,A7,A7, 34A15)') 'fyear',      &
+         write(kfile_resultsdaily,'(A6,A7,A7,A7,A7, 36A15)') 'fyear',      &
          &  'fmonth', 'fday', 'nday', 'nhour', 'rain', 'tairmax', 'tairmin', &
          &  'par', 'vd', 'esoil', 'jmax25t', 'jmax25g', 'pc', 'rlt', 'rlg', &
          &  'lambdat', 'lambdag', 'rrt', 'rrg', 'asst', 'assg', 'su_avg',  &
          &  'zw', 'ws', 'spgfcf', 'infx', 'etmt', 'etmg', 'su_1', 'topt',  &
-         &  'tcg', 'tct', 'cpccg_d', 'cpcct_d',  'lai_t', 'lai_g', &
-         &'ncp_g', 'ncp_t'
+         &  'tcg', 'tct', 'cpccg_d', 'cpcct_d',  'lai_t', 'lai_g', 'lai_tot', &
+         &   'cai_g', 'ncp_g', 'ncp_t'
 
         open(kfile_rsurfdaily, FILE=trim(adjustl(i_outputpath))// &
              trim(adjustl(sfile_rsurfdaily)), STATUS='replace')
@@ -568,8 +568,9 @@
 
       open(kfile_resultshourly, FILE=trim(adjustl(i_outputpath))//      &
            trim(adjustl(sfile_resultshourly)), STATUS='replace')
-      write(kfile_resultshourly,'(A6,A7,A7,A7,A7,22A15)') 'fyear',     &
-     &  'fmonth', 'fday', 'nday', 'nhour', 'rain', 'tair', 'par', 'vd',&
+      write(kfile_resultshourly,'(A6,A7,A7,A7,A7,24A15)') 'fyear',     &
+     &  'fmonth', 'fday', 'nday', 'nhour', 'rain', 'tair', 'par',      &
+     &  'gstomt', 'gstomg', 'vd',                                      &
      &  'esoil', 'pc', 'jmax25t', 'jmax25g', 'mqt', 'rl', 'lambdat',   &
      &  'lambdag', 'rr', 'asst', 'assg', 'etmt', 'etmg', 'su_1',       &
      &  'zw', 'ws', 'spgfcf', 'infx'
@@ -616,7 +617,7 @@
              &  assg, su_avg, zw, ws,     &
              &  spgfcf, infx, etmt, etmg, su_1, topt,              &
              & tcg, tct, cpccg, cpcct,                  &
-             & lai_t, lai_g, tp_netassg, tp_netasst, rsurft, nc_flag )
+             & lai_t, lai_g, lai_tot, caig, tp_netassg, tp_netasst, rsurft, nc_flag )
 
 
       use vom_vegwat_mod
@@ -655,6 +656,8 @@
       REAL*8,  INTENT(in) :: cpcct
       REAL*8,  INTENT(in) :: lai_t
       REAL*8,  INTENT(in) :: lai_g
+      REAL*8,  INTENT(in) :: lai_tot
+      REAL*8,  INTENT(in) :: caig      
       REAL*8,  INTENT(in) :: tp_netassg
       REAL*8,  INTENT(in) :: tp_netasst
       REAL*8,  DIMENSION(s_maxlayer), INTENT(in):: rsurft
@@ -731,7 +734,7 @@
 !     * includes a column for each sublayer
       dailyformat = '(I6,I6,I4,I7,'//str//'E14.6)'
 
-      write(kfile_resultsdaily,'(I6,I7,I7,I7,I7,34E15.5)')             &
+      write(kfile_resultsdaily,'(I6,I7,I7,I7,I7,36E15.5)')             &
      &  fyear(nday), fmonth(nday), fday(nday), nday, nhour-1,          &
      &  rain, tairmax, tairmin, par,   &
      &  vd, esoil, jmax25t, jmax25g,             &
@@ -740,7 +743,7 @@
      &  assg, su_avg, zw, ws,     &
      &  spgfcf, infx, etmt, etmg, su_1, topt,              &
      & tcg, tct, cpccg, cpcct,                  &
-     & lai_t, lai_g, tp_netassg, tp_netasst         
+     & lai_t, lai_g, lai_tot, caig, tp_netassg, tp_netasst         
 
 
      write(kfile_rsurfdaily,dailyformat) fyear(nday), fmonth(nday), &
@@ -837,7 +840,7 @@
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
       subroutine vom_write_hourly ( year, month, day, num_day, num_hour, num_hour_tot,  &
-          &    rain_hourly, tair_hourly, par_hourly, vd_hourly, esoil_hourly,    &
+          &    rain_hourly, tair_hourly, par_hourly, gstomt_hourly, gstomg_hourly ,vd_hourly, esoil_hourly,    &
           &    pc_hourly, jmax25t_hourly, jmax25g_hourly, mqt_hourly,          &
           &    rl_hourly, lambdat_hourly, lambdag_hourly, rr_hourly,  &
           &    asst_hourly, assg_hourly, etmt_hourly, etmg_hourly, su1_hourly, zw_hourly, ws_hourly, &
@@ -856,6 +859,8 @@
       REAL*8,  INTENT(in) :: rain_hourly
       REAL*8,  INTENT(in) :: tair_hourly
       REAL*8,  INTENT(in) :: par_hourly
+      REAL*8,  INTENT(in) :: gstomt_hourly
+      REAL*8,  INTENT(in) :: gstomg_hourly
       REAL*8,  INTENT(in) :: vd_hourly
       REAL*8,  INTENT(in) :: esoil_hourly
       REAL*8,  INTENT(in) :: pc_hourly
@@ -977,9 +982,9 @@
 !         * includes a column for each sublayer
           hourlyformat = '(I6,I6,I4,I7,I5,'//str//'E14.6)'
 
-          write(kfile_resultshourly,'(I6,I7,I7,I7,I7,22E15.5)')          &
+          write(kfile_resultshourly,'(I6,I7,I7,I7,I7,24E15.5)')          &
           &    year, month, day, num_day, num_hour,          &
-          &    rain_hourly, tair_hourly, par_hourly, vd_hourly, esoil_hourly,    &
+          &    rain_hourly, tair_hourly, par_hourly, gstomt_hourly, gstomg_hourly, vd_hourly, esoil_hourly,    &
           &    pc_hourly, jmax25t_hourly, jmax25g_hourly, mqt_hourly,          &
           &    rl_hourly, lambdat_hourly, lambdag_hourly, rr_hourly,  &
           &    asst_hourly, assg_hourly, etmt_hourly, etmg_hourly, su1_hourly, zw_hourly, ws_hourly, &

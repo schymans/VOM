@@ -283,7 +283,11 @@
       REAL*8, PARAMETER :: srad2par_h = 2.0699d0  ! Conversion from srad to par hourly (mol/MJ)
       REAL*8, PARAMETER :: srad2par_d = 2.0804d0  ! Conversion from srad to par daily (mol/MJ)
       REAL*8, PARAMETER :: rho_wat = 1000.0d0     ! Density of water (kg/m3)
-
+      REAL*8, PARAMETER :: Gsc     = 0.0820d0     ! Solar constant (MJ m-2 day-1)
+      REAL*8, PARAMETER :: X0      = 0.26d0       ! parameter to split PAR          
+      REAL*8, PARAMETER :: Y0      = 0.96d0       ! parameter to split PAR           
+      REAL*8, PARAMETER :: Y1      =  0.05d0      ! parameter to split PAR      
+      
       INTEGER :: nyear                  ! Year
       INTEGER :: nday                   ! Day since start of run
       INTEGER :: nhour                  ! Hour of day
@@ -297,6 +301,8 @@
 
 !     * climate
 
+      REAL*8, ALLOCATABLE :: phi_zenith(:)  ! zenith angle
+      
       REAL*8, ALLOCATABLE :: tair_h(:)    ! Hourly air temperature (K)
       REAL*8, ALLOCATABLE :: tairmin_d(:) ! Daily minimum temperature (K)
       REAL*8, ALLOCATABLE :: tairmax_d(:) ! Daily maximum temperature (K)
@@ -309,7 +315,12 @@
       REAL*8, ALLOCATABLE :: par_h(:)   ! Hourly photosynthetically active radiation (mol/m2/s)
       REAL*8, ALLOCATABLE :: par_d(:)   ! Daily photosynthetically active radiation (mol/m2/d)
       REAL*8              :: par_y      ! Annual photosynthetically active radiation (mol/m2/y)
-
+      
+      REAL*8, ALLOCATABLE :: pardiff_h(:) ! Hourly diffuse photosynthetically active radiation (mol/m2/s)
+      REAL*8, ALLOCATABLE :: pardir_h(:)  ! Hourly direct photosynthetically active radiation (mol/m2/s)
+      
+      REAL*8, ALLOCATABLE :: par_et_h(:)  ! Hourly extraterrestrial radiation (mol/m2/s)
+      
       REAL*8, ALLOCATABLE :: srad_d(:)  ! Daily shortwave radiation  (MJ/m2/d)
       REAL*8              :: srad_y     ! Annual shortwave radiation (MJ/m2/y)
 
@@ -340,9 +351,18 @@
       REAL*8  :: caig_d(3)              ! Crown area index seasonal vegetation (caig_d(2) is actual value)
       REAL*8  :: c_caigmin              ! Minimum grass crown area index; initial point for growth (-)
 
-      REAL*8 :: Ma_lg(3)                !local fraction of absorbed radiation grasses (-)
-      REAL*8 :: Ma_lt(3)                !local fraction of absorbed radiation trees (-)
+      REAL*8 :: fpar_lg(3)                !local fraction of absorbed radiation grasses (-)
+      REAL*8 :: fpar_lt(3)                !local fraction of absorbed radiation trees (-)
+     
+      REAL*8 :: fpard_lg                !mean local fraction of absorbed radiation grasses per day (-)
+      REAL*8 :: fpard_lt                !mean local fraction of absorbed radiation trees pea day (-)
+      
+      REAL*8 :: frac_sung(3)            !fraction sunlit leaves grasses (-)
+      REAL*8 :: frac_shadeg(3)          !fraction shaded leaves grasses (-)
 
+      REAL*8 :: frac_sunt(3)            !fraction sunlit leaves trees (-)
+      REAL*8 :: frac_shadet(3)          !fraction shaded leaves trees (-)
+      
 !     * leaf
 
       REAL*8  :: o_wstexp               ! Exponent for calculating lambdat_d (-)
@@ -464,7 +484,8 @@
 
       REAL*8  :: i_alpha                ! Initial slope of electron transport curve (-)
       REAL*8  :: i_cpccf                ! Water transport costs per m root depth and m^2 cover (mol/m^3/s)
-      REAL*8  :: i_tcf                  ! Turnover cost factor for foliage (tc=i_tcf*LAI) (mol/m^2/s)
+      REAL*8  :: i_tcfg                 ! Turnover cost factor for foliage grasses (tc=i_tcf*LAI) (mol/m^2/s)
+      REAL*8  :: i_tcft                 ! Turnover cost factor for foliage trees (tc=i_tcf*LAI) (mol/m^2/s)
       INTEGER :: i_maxyear              ! Number of years to process
       INTEGER :: i_testyear             ! Number of years after which to perform initial test of netass
       REAL*8  :: i_ha                   ! Temperature response parameter (J/mol)
@@ -498,8 +519,9 @@
       REAL*8  :: i_jmax_ini             ! parameter determining the start value of jmax25 (mol/m2/s)
       REAL*8  :: i_incrlait             ! parameter determining maximum increment percentage of lai trees (-)
       REAL*8  :: i_incrlaig             ! parameter determining maximum increment percentage of lai grasses
-      REAL*8  :: i_extcoeffg            ! extinction coefficient beer's law grasses (-)
-      REAL*8  :: i_extcoefft            ! extinction coefficient beer's law trees (-)
+      REAL*8  :: i_chi_g                ! ratio projected areas of canopy elements on horizontal and vertical surfaces (-)
+      REAL*8  :: i_chi_t                ! ratio projected areas of canopy elements on horizontal and vertical surfaces (-)
+      REAL*8  :: i_alpha_abs                ! ratio projected areas of canopy elements on horizontal and vertical surfaces (-)
       REAL*8  :: i_trans_vegcov         ! fraction of radiative energy reaching soil under full cover (0-1) (-)
 
       INTEGER :: i_firstyear            ! First year for the generation of hourly output in computation mode

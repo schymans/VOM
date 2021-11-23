@@ -143,8 +143,8 @@
        if (option1 .eq. 2) then
         call vom_add_daily()
         call vom_write_hourly(fyear(nday), fmonth(nday), fday(nday), nday, nhour, th_,          &
-             &    rain_h(th_), tair_h(th_), par_h(th_), vd_h(th_), esoil_h,    &
-             &    Ma_lt*o_cait + Ma_lg*caig_d(2), jmax25t_d(2), jmax25g_d(2), mqt_,          &
+             &    rain_h(th_), tair_h(th_), par_h(th_), gstomt, gstomg(2,2,2), vd_h(th_), esoil_h,    &
+             &    fpar_lt(2)*o_cait + fpar_lg(2)*caig_d(2), jmax25t_d(2), jmax25g_d(2), mqt_,          &
              &    rlt_h(2,2) + rlg_h(2,2,2), lambdat_d, lambdag_d, rrt_d + rrg_d,  &
              &    asst_h(2,2), assg_h(2,2,2), etmt_h, etmg_h, su__(1), zw_, wsnew, &
              &    spgfcf_h, infx_h, ruptkt_h, su__, i_write_nc)
@@ -213,12 +213,13 @@
 
         call vom_write_day( rain_d(nday), tairmax_d(nday), tairmin_d(nday), par_d(nday),   &
              &  vd_d / 24.d0, esoil_d, jmax25t_d(2), jmax25g_d(2),             &
-             &  Ma_lt*o_cait + Ma_lg*caig_d(2), rlt_d , rlg_d, lambdat_d, lambdag_d,         &
+             &  fpard_lt*o_cait + fpard_lg*caig_d(2), rlt_d , rlg_d, lambdat_d, lambdag_d,         &
              &  rrt_d * 3600.d0 * 24.d0, rrg_d * 3600.d0 * 24.d0, asst_d(2,2), &
              &  assg_d(2,2,2), SUM(su__(1:wlayer_)) / wlayer_, zw_, wsnew,     &
              &  spgfcf_d, infx_d, etmt_d, etmg_d, su__(1), topt_,              &
              & tcg_d(2,2), q_tct_d(2), cpccg_d(2), q_cpcct_d,                  &
-             & lai_lt(2), lai_lg(2), tp_netassg, tp_netasst, rsurft_, i_write_nc )             
+             & lai_lt(2), lai_lg(2), lai_lt(2)*o_cait + lai_lg(2)*caig_d(2), caig_d(2),  &
+             & tp_netassg, tp_netasst, rsurft_, i_write_nc )             
 
        if (fyear(nday) .ne. nyear) then
 !       * for calculation of vd_y a -1 is added to nday for using dayyear of correct year
@@ -501,14 +502,15 @@
 
 !     * Definition of variable parameters
 
-      namelist /inputpar/ i_alpha, i_cpccf, i_tcf, i_maxyear,          &
+      namelist /inputpar/ i_alpha, i_cpccf, i_tcfg, i_tcft, i_maxyear, &
      &                    i_testyear, i_ha, i_hd, i_toptf,             &
      &                    i_toptstart, i_rlratio, i_mdtf, i_mqxtf,     &
      &                    i_rrootm, i_rsurfmin, i_rsurf_, i_rootrad,   &
      &                    i_prootmg, i_growthmax, i_incrcovg,          &
      &                    i_incrjmax, i_jmax_ini,                      &
      &                    i_incrlait, i_incrlaig,                      &
-     &                    i_extcoeffg, i_extcoefft, i_trans_vegcov,    &
+     &                    i_chi_t, i_chi_g,i_alpha_abs,                &
+     &                    i_trans_vegcov,                              &     
      &                    i_firstyear,i_lastyear, i_write_h,           &
      &                    i_read_pc, i_write_nc,                       &
      &                    i_lai_function,  i_no_veg,                   &
@@ -614,6 +616,10 @@
       allocate(ca_d(c_maxday))
 
       allocate(par_h(c_maxhour))
+      allocate(pardiff_h(c_maxhour))
+      allocate(pardir_h(c_maxhour))
+      allocate(par_et_h(c_maxhour))          
+      
       allocate(vd_h(c_maxhour))
       allocate(tair_h(c_maxhour))
       allocate(rain_h(c_maxhour))
@@ -622,7 +628,8 @@
       allocate(vp_h(c_maxhour))
 
       allocate(par_d(c_maxday))
-
+      allocate(phi_zenith(c_maxhour))
+      
       allocate(s_delz(s_maxlayer))
       allocate(s_ksat(s_maxlayer))
       allocate(s_avg(s_maxlayer))
@@ -853,8 +860,9 @@
 !       * Calculation of derived parameters
 
         call vom_calc_derived()
-
-        if (i_write_h == 1) exist=.TRUE.
+        call vom_calc_zenith()
+        
+        !if (i_write_h == 1) exist=.TRUE.
       endif
 
 !     * Reading hourly climate data if available
@@ -867,14 +875,18 @@
         ii = 1
         oldh = 99
         do i = 1, c_maxhour
-          read(kfile_hourlyweather,'(5i8,5e11.3)') h, dummyint1,       &
+        
+          !read hourly inputs
+          read(kfile_hourlyweather, '(5i8,6e11.4)') h, dummyint1,       &
      &      dummyint2, dummyint3, dummyint4, tair_h(i), vp_h(i),       &
-     &      par_h(i), rain_h(i), press_h(i), ca_h(i)
+     &      par_h(i), rain_h(i), press_h(i), ca_h(i)   
           if (par_h(i) .lt. 0.d0) par_h(i) = 0.d0
-          ca_h(i) = ca_h(i) / 1.0d6
-          vd_h(i) = (((0.6108d0 * p_E ** (17.27d0 * tair_h(ii)        &
+
+          !calculate vapor pressure deficit
+          vd_h(i) = (((0.6108d0 * p_E ** (17.27d0 * tair_h(i)        &
      &             / (tair_h(i) + 237.3d0))) * 1000) - vp_h(i) * 100.d0)          &
      &             / (press_h(i) * 100.d0)
+     
           if (h .lt. oldh) then
             dayyear(ii) = dummyint1
             fday(ii)    = dummyint2
@@ -885,6 +897,10 @@
           oldh = h
         enddo
         close(kfile_hourlyweather)
+        
+        !derive zenith for fpar-calculations
+        call vom_calc_zenith()
+                
       endif
 
       return
@@ -903,22 +919,40 @@
       INTEGER :: in1, in2
       REAL*8  :: sunr, suns
       REAL*8  :: tairmean
+      REAL*8  :: delta                  ! solar declination      
       REAL*8  :: dtair
       REAL*8  :: daylength              ! Day length (hours)
+      REAL*8  :: omega_s                ! solar hour angle (rad)  
+      REAL*8  :: part1                  ! part of calc. extraterrestrial rad.         
+      REAL*8  :: part2                  ! part of calc. extraterrestrial rad.         
+      REAL*8  :: standard_meridian      ! standard_meridian
+      REAL*8  :: dr2                    ! eccentricity correction
+      REAL*8  :: f                      ! factor in calculation of solar time
+      REAL*8  :: to                     ! time of solar noon
+      REAL*8  :: Tauw                   ! day angle      
+      REAL*8  :: LC                     ! longitude correction time of solar noon
+      REAL*8  :: ET                     ! time correction time of solar noon 
+      REAL*8  :: A0                     ! parameter to split PAR           
+      REAL*8  :: A1                     ! parameter to split PAR       
+      REAL*8  :: X1                     ! parameter to split PAR              
+         
       REAL*8  :: vp__                   ! Absolute vapour pressure in the air (Pa)
 
         in1 = 1
         in2 = c_maxday
 
+        !parameters to split par into direct and diffuse par (Roderick, 1999)
+        X1 = 0.80-0.0017*abs(i_lat) + 0.000044*abs(i_lat)**2
+
       if (i_write_h == 1) then
         open(kfile_hourlyweather, FILE=trim(adjustl(i_inputpath))// &
              trim(adjustl(sfile_hourlyweather)), STATUS='new')
-        write(kfile_hourlyweather,'(5a8,5a11)') 'hour', 'dayyear', 'fday', &
+        write(kfile_hourlyweather,'(5a8,6a11)') 'hour', 'dayyear', 'fday', &
      &    'fmonth', 'fyear', 'tair_h', 'vp_h', 'par_h', 'rain_h','press_h' ,'ca_h'
       endif
 
       do in = in1, in2
-        par_d(in) = 2.0804d0 * srad_d(in)  ! (Out[17]), par in mol/m2 if srad was MJ/m2
+        par_d(in) = srad2par_d * srad_d(in)  ! (Out[17]), par in mol/m2 if srad was MJ/m2
         daylength = 12.d0 - 7.639437d0 * ASIN((0.397949d0              &
      &            * COS(0.172142d0 + 0.017214d0 * dayyear(in))         &
      &            * TAN(0.017453d0 * i_lat))                           &
@@ -942,11 +976,10 @@
      &               * COS(0.360d0 - ((-1.d0 + ik) * p_pi) / 6.d0) + 0.4632d0 &
      &               * COS(3.805d0 - ((-1.d0 + ik) * p_pi) / 12.d0))
 
+
           ca_h(ii) = ca_d(in) / 1.0d6
           press_h(ii) = press_d(in)
 
-!         vd_h(ii) = 0.006028127d0 * 2.718282d0 ** ((17.27d0 * tair_h(ii)) &
-!    &             / (237.3d0 + tair_h(ii))) - 9.869233d-6 * vp__
 !         * (derived from 3.54+3.55) (Out[52]), accounts for diurnal variation in vapour deficit
           vd_h(ii) = (((0.6108d0 * p_E ** (17.27d0 * tair_h(ii)        &
      &             / (tair_h(ii) + 237.3d0))) * 1000) - vp__)          &
@@ -978,10 +1011,66 @@
             if (par_h(ii) .lt. 0.d0) par_h(ii) = 0.d0
           else
             par_h(ii) = 0.d0
-          endif
+          endif         
+          
+!         day angle (Eq. A.2 Roderick, 1999)
+          Tauw = (2.0d0*p_pi/360.0d0) * (360.0d0/365.0d0)*(dayyear(in) - 1.0 ) !rad
+                    
+!         solar declination (Eq. A.3 Roderick, 1999)      
+          delta = 0.006918d0 - 0.399912*cos(Tauw) + 0.070257*sin(Tauw) - 0.006758*cos(2*Tauw) + &
+                  0.000907*sin(2*Tauw) - 0.002697*cos(3*Tauw) + 0.00148*sin(3*Tauw)
+          
+!         eccentricity correction (Eq. A.4 Roderick, 1999)          
+          dr2 = 1.000110 + 0.034221*cos(Tauw) + 0.001280*sin(Tauw)+0.000719*cos(Tauw) + &
+                0.00077*sin(2*Tauw)
+          
+!         sunset hour angle (Eq. A.5 Roderick, 1999)        
+          if(abs(-tan(i_lat * p_pi/180.0d0) * tan(delta) ) .lt. 1.0) then
+             omega_s = acos(-tan(i_lat * p_pi/180.0d0) * tan(delta))
+          else
+            if(  ( delta * i_lat * p_pi/180.0d0 ) .gt. 0.0) then            
+               omega_s = p_pi             
+             else             
+               omega_s = 0.0
+             end if             
+           end if
+          
+          
+!         * calculate extra terrestrial irradiance (Eq A.1 Roderick 1999)
 
+          part1 = omega_s * sin(i_lat*p_pi/180.0d0)*sin(delta)          
+          part2 = cos(i_lat*p_pi/180.0d0)*cos(delta)*sin(omega_s)
+
+          par_et_h(ii) = srad2par_h * 37.595 * dr2 * (part1 + part2) / (24.0*60.0*60.0) !mol/m2/s
+          
+!         * split par into direct and diffuse par (Roderick et al. 1999)
+
+          if( (par_h(ii) / par_et_h(ii) ) .le. X0) then     
+             
+             ! eq. 4a Roderick (1999), Rs/Ro below threshold  
+             pardiff_h(ii) = par_h(ii) * Y0          
+          end if
+          
+          if(  (  (par_h(ii) / par_et_h(ii) ) .le. X1 ) .and. (  (par_h(ii) / par_et_h(ii) ) .gt. X0 ) ) then    
+          
+             ! eq. 4b Roderick (1999), linear part between X0 and X1        
+             A1 = (Y1 - Y0) / (X1 - X0) 
+             A0 = Y1 - A1*X1
+             pardiff_h(ii) = par_h(ii) * (A0 + A1 * (par_h(ii) / par_et_h(ii)) )          
+          end if
+          
+          if( (par_h(ii) / par_et_h(ii) ) .ge. X1) then   
+          
+             ! eq. 4c Roderick (1999), above threshold       
+             pardiff_h(ii) = par_h(ii) * Y1          
+          end if
+
+          pardir_h(ii) = par_h(ii) - pardiff_h(ii)
+          
+                  
+         ! write hourly weatherdata to file 
           if (i_write_h == 1) then
-            write(kfile_hourlyweather,'(5i8,6e11.3)') ik, dayyear(in), &
+            write(kfile_hourlyweather,'(5i8,6e11.4)') ik, dayyear(in), &
      &        fday(in), fmonth(in), fyear(in), tair_h(ii), vp__/100.d0,   &
      &        par_h(ii), rain_h(ii), press_h(ii), ca_h(ii)
           endif
@@ -993,6 +1082,65 @@
 
       return
       end subroutine vom_calc_derived
+
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!*-----Calculation of derived parameters--------------------------------
+
+      subroutine vom_calc_zenith ()
+      use vom_vegwat_mod
+      implicit none
+
+      INTEGER :: in, ik, ii
+      INTEGER :: in1, in2
+      REAL*8  :: tairmean
+      REAL*8  :: delta                  ! solar declination      
+      REAL*8  :: standard_meridian      ! standard_meridian
+      REAL*8  :: f                      ! factor in calculation of solar time
+      REAL*8  :: to                     ! time of solar noon
+      REAL*8  :: LC                     ! longitude correction time of solar noon
+      REAL*8  :: ET                     ! time correction time of solar noon          
+      REAL*8  :: Tauw                   ! day angle      
+      
+      in1 = 1
+      in2 = c_maxday
+
+      do in = in1, in2
+
+!       * Loop through every hour of day, where ik=hour
+        do ik = 1, 24
+          ii = in * 24 + ik - 24
+
+!         day angle (Eq. A.2 Roderick, 1999)
+          Tauw = (2.0d0*p_pi/360.0d0) * (360.0d0/365.0d0)*(dayyear(in) - 1.0 ) !rad
+
+
+!         solar declination (Eq. A.3 Roderick, 1999)      
+          delta = 0.006918d0 - 0.399912*cos(Tauw) + 0.070257*sin(Tauw) - 0.006758*cos(2*Tauw) + &
+                  0.000907*sin(2*Tauw) - 0.002697*cos(3*Tauw) + 0.00148*sin(3*Tauw)
+
+!         longitude correction  time of solar noon, in hours 
+          standard_meridian = NINT(i_lon/15.d0)*15.d0
+          LC = (standard_meridian-i_lon)/15d0  
+
+!         equation of time correction, in hours (Campbell and Norman, 1998, Eq.11.4)
+          f = p_pi*(279.575+0.98565*dayyear(in))/180d0
+          ET = (-104.7*SIN(f)+596.2*SIN(2*f)+4.3*SIN(3*f)-12.7*SIN(4*f)       &
+                -429.3*COS(f)-2.0*COS(2*f)+19.3*COS(3*f)) /3600 !equation of time
+
+!         time of solar noon (Campbell and Norman, 1998, Eq.11.2)
+          to = 12d0 - LC - ET          
+
+!         calculate the zenith angle of the sun (Campbell and Norman, 1998, Eq.11.1)
+          phi_zenith(ii) = ACOS(SIN(p_pi*i_lat/180d0)*SIN(delta) + COS(p_pi*i_lat/180d0)*COS(delta)*COS(p_pi*15.d0*(ik-to)/180d0))
+
+        enddo
+      enddo
+
+      return
+      end subroutine vom_calc_zenith
+
 
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1026,6 +1174,7 @@
       mqtnew = 0.95d0 * q_mqx                  ! initial wood water storage
       mqtold = mqtnew
       rsurftnew(:) = 0.d0
+      
       lai_lt(:) = 2.5d0 * (/1.0d0-i_incrlait,1.0d0,1.0d0+i_incrlait/)
       lai_lg(:) = 2.5d0 * (/1.0d0-i_incrlaig,1.0d0,1.0d0+i_incrlaig/)
 
@@ -1090,11 +1239,11 @@
       select case(i_lai_function)
       case(1)
 !        * (3.38)  foliage turnover costs, assuming crown LAI of 2.5
-         q_tct_d(:) = i_tcf * o_cait * 2.5d0
+         q_tct_d(:) = i_tcft * o_cait * 2.5d0
 
       case(2)
 !        * foliage turnover costs, LAI as a function of cover (Choudhurry,1987; Monsi and Saeki,1953)
-         q_tct_d(:) = i_tcf * o_cait * lai_lt(:)
+         q_tct_d(:) = i_tcft * o_cait * lai_lt(:)
       end select
 
 !     * Setting yearly, daily and hourly parameters
@@ -1179,15 +1328,15 @@
       case(1)
 !        * (3.38) foliage turnover costs, assuming LAI/pc of 2.5
          do ii = 1,3
-            tcg_d(ii,:)     = i_tcf * caig_d(:) * 2.5d0 !grasses
+            tcg_d(ii,:)     = i_tcfg * caig_d(:) * 2.5d0 !grasses
          end do
-         q_tct_d(:)     = i_tcf * o_cait * 2.5d0    !trees
+         q_tct_d(:)     = i_tcfg * o_cait * 2.5d0    !trees
       case(2)
 !        * foliage turnover costs, varying lai
          do ii = 1,3
-            tcg_d(ii, :) = i_tcf * caig_d(:) * lai_lg(ii) !grasses 
+            tcg_d(ii, :) = i_tcfg * caig_d(:) * lai_lg(ii) !grasses 
          end do
-         q_tct_d(:) = i_tcf * o_cait * lai_lt(:)     !trees
+         q_tct_d(:) = i_tcfg * o_cait * lai_lt(:)     !trees
       end select
 
 
@@ -1226,6 +1375,9 @@
         rlg_d    = 0.d0
       endif
 
+      fpard_lg = 0.d0
+      fpard_lt = 0.d0
+      
       return
       end subroutine vom_daily_init
 
@@ -1254,17 +1406,11 @@
         &           * (273.d0 + tair_h(th_) - topt_)) / ( (tair_h(th_)      &
         &           + 273.d0) * p_R_ * topt_))) * i_ha + i_hd) 
 
-      select case(i_lai_function)
-      case(1)
-        Ma_lt(:) = 1.0d0
-      case(2)
-!       * fraction of absorbed radiation per crown area (Beer-lambert)
-        Ma_lt(:) = 1.0d0 - p_E ** (-lai_lt(:) * i_extcoefft )
-      end select
+
 
 !     * (3.24), (Out[312]), leaf respiration trees
      do ii = 1,3 !loop for LAI-values
-      rlt_h(:,ii) = ((ca_h(th_) - gammastar) * o_cait * Ma_lt(ii) * jmaxt_h(:)         &
+      rlt_h(:,ii) = ((ca_h(th_) - gammastar) * o_cait * jmaxt_h(:)         &
      &         * i_rlratio) / (4.d0 * (ca_h(th_) + 2.d0 * gammastar)   &
      &         * (1.d0 + i_rlratio))
      end do
@@ -1278,23 +1424,15 @@
         &           * (273.d0 + tair_h(th_) - topt_)) / ( (tair_h(th_)      &
         &           + 273.d0) * p_R_ * topt_))) * i_ha + i_hd)
 
-      select case(i_lai_function)
-      case(1)
-        Ma_lg(:) = 1.0d0
-      case(2)
-!       * fraction of absorbed radiation per crown area grasses (Beer-lambert)
-        Ma_lg(:) = 1.0d0 - p_E ** (-lai_lg(:) * i_extcoeffg)
-      end select
-
 !    * respiration grasses
      do ii = 1,3 !loop for LAI-values
-         rlg_h(1,:,ii) = ((ca_h(th_) - gammastar) * caig_d(1) * Ma_lg(ii) * jmaxg_h(:)    &
+         rlg_h(1,:,ii) = ((ca_h(th_) - gammastar) * caig_d(1)  * jmaxg_h(:)    &
         &           * i_rlratio) / (4.d0 * (ca_h(th_) + 2.d0 * gammastar) &
         &           * (1.d0 + i_rlratio))  ! (3.24), (Out[312])
-         rlg_h(2,:,ii) = ((ca_h(th_) - gammastar) * caig_d(2) * Ma_lg(ii) * jmaxg_h(:)    &
+         rlg_h(2,:,ii) = ((ca_h(th_) - gammastar) * caig_d(2)  * jmaxg_h(:)    &
         &           * i_rlratio) / (4.d0 * (ca_h(th_) + 2.d0 * gammastar) &
         &           * (1.d0 + i_rlratio))  ! (3.24), (Out[312])
-         rlg_h(3,:,ii) = ((ca_h(th_) - gammastar) * caig_d(3) * Ma_lg(ii) * jmaxg_h(:)    &
+         rlg_h(3,:,ii) = ((ca_h(th_) - gammastar) * caig_d(3) * jmaxg_h(:)    &
         &           * i_rlratio) / (4.d0 * (ca_h(th_) + 2.d0 * gammastar) &
         &           * (1.d0 + i_rlratio))  ! (3.24), (Out[312])
      end do
@@ -1343,44 +1481,150 @@
       REAL*8 :: part1, part2, part3, part4, part5
       REAL*8 :: part6, part7, part8, part9
       INTEGER:: ii
+      INTEGER:: ilay
+      REAL*8 :: lag_sun(3)          
+      REAL*8 :: lat_sun(3)                
+      INTEGER:: nlay            
+      REAL*8 :: kappa
+      
+      select case(i_lai_function)
+      case(1) !no dynamic LAI, no shaded/sunlit fractions
+      
+        fpar_lt(:) = 1.0d0
+        fpar_lg(:) = 1.0d0
+        
+        frac_shadeg(:) = 0.0d0
+        frac_sung(:) = 1.0d0
+        
+        frac_shadet(:) = 0.0d0
+        frac_sunt(:) = 1.0d0
+        
+      case(2) !dynamic LAI, no shaded/sunlit fractions
+      
+!       * extinction coefficient (Xiao et al. (2015) eq.6, Campbell and Norman (1998) eq. 15.4)
+        kappa = sqrt(i_chi_t**2+tan(phi_zenith(th_))**2)/(i_chi_t+1.774*(i_chi_t+1.182)**(-0.733) )        
+        
+!       * fraction of absorbed radiation per crown area (Beer-lambert, Xiao et al. (2015) eq.5, Campbell and Norman (1998) eq. 15.6)
+        fpar_lt(:) = 1.0d0 - p_E ** (-lai_lt(:) * kappa * sqrt(i_alpha_abs) )   
+       
+!       * extinction coefficient, Xiao et al. (2015)
+        kappa = sqrt(i_chi_g**2+tan(phi_zenith(th_))**2)/(i_chi_g+1.774*(i_chi_g+1.182)**(-0.733) ) 
+!       * fraction of absorbed radiation per crown area grasses (Beer-lambert)
+        fpar_lg(:) = 1.0d0 - p_E ** (-lai_lg(:) * kappa * sqrt(i_alpha_abs) )        
+        
+!       *        
+        frac_shadeg(:) = 0.0d0
+        frac_sung(:) = 1.0d0
+        
+        frac_shadet(:) = 0.0d0
+        frac_sunt(:) = 1.0d0
 
+      
+      case(3) !dynamic LAI, with shaded/sunlit fractions
+      
+!       * extinction coefficient (Xiao et al. (2015) eq.6, Campbell and Norman (1998) eq. 15.4)
+        kappa = sqrt(i_chi_t**2+tan(phi_zenith(th_))**2)/(i_chi_t+1.774*(i_chi_t+1.182)**(-0.733) )        
+        
+!       * fraction of absorbed radiation per crown area (Beer-lambert, Xiao et al. (2015) eq.5, Campbell and Norman (1998) eq. 15.6)
+        fpar_lt(:) = 1.0d0 - p_E ** (-lai_lt(:) * kappa * sqrt(i_alpha_abs) )   
+       
+!       * extinction coefficient, Xiao et al. (2015)
+        kappa = sqrt(i_chi_g**2+tan(phi_zenith(th_))**2)/(i_chi_g+1.774*(i_chi_g+1.182)**(-0.733) ) 
+!       * fraction of absorbed radiation per crown area grasses (Beer-lambert)
+        fpar_lg(:) = 1.0d0 - p_E ** (-lai_lg(:) * kappa * sqrt(i_alpha_abs) )        
+        
+        lag_sun(:) = 0.0d0
+!       * estimate shaded and sunlit fractions                
+        do ii = 1,3
+        
+            !Eq15.23 from Campbell and Norman (1998)
+            lag_sun(ii) = (1.0d0 - p_E**( -lai_lg(ii) * kappa  ) )/kappa
+                   
+            !fractions of shade and sunlit leaf areas
+            frac_sung(ii) = MIN( (lag_sun(ii) / lai_lg(ii)), 1.0d0)
+            frac_shadeg(ii) = 1.0d0 - frac_sung(ii)                  
+
+        end do
+        
+        lat_sun(:) = 0.0d0
+        do ii = 1,3
+        
+            !Eq15.23 from Campbell and Norman (1998)        
+            lat_sun(ii) = (1.0d0 - p_E**( -lai_lt(ii) * kappa  ) )/kappa           
+           
+            !fractions of shade and sunlit leaf areas           
+            frac_sunt(ii) = MIN( (lat_sun(ii) / lai_lt(ii) ), 1.0d0)
+            frac_shadet(ii) = 1.0d0 - frac_sunt(ii)                 
+        end do
+
+        
+        
+      end select
 
       if (par_h(th_) .gt. 0.d0) then
 !       * adaptation of topt to air temperature during sunlight
         topt_ = topt_ + i_toptf * (tair_h(th_) + 273.d0 - topt_)
 
-
-      select case(i_lai_function)
-      case(1)
-        Ma_lt(:) = 1.0d0
-      case(2)
-!       * fraction of absorbed radiation per crown area (Beer-lambert)
-        Ma_lt(:) = 1.0d0 - p_E ** (-lai_lt(:) * i_extcoefft )
-      end select
-
 !       * calculate electron transport capacity trees
         do ii = 1,3
-           jactt(:,ii)   = (1.d0 - p_E ** (-(i_alpha * par_h(th_))           &    
-        &             / jmaxt_h(:))) * jmaxt_h(:) * o_cait * Ma_lt(ii)  ! (3.23), (Out[311])
+        
+            select case(i_lai_function)
+              case(1) ! no dynamic LAI, fpar is set to 1
+                   jactt(:,ii)   = (1.d0 - p_E ** (-(i_alpha * fpar_lt(ii) * par_h(th_))           &    
+        &             / jmaxt_h(:))) * jmaxt_h(:) * o_cait  ! (3.23), (Out[311])
+       
+              case(2) ! dynamic LAI, with fpar-calculation
+                   jactt(:,ii)   = (1.d0 - p_E ** (-(i_alpha * fpar_lt(ii) * par_h(th_))           &    
+        &             / jmaxt_h(:))) * jmaxt_h(:) * o_cait  ! (3.23), (Out[311])    
+        
+              case(3) ! shaded and sunlit, with diffuse and direct radiation
+                   jactt(:,ii)   = ( (1.d0 - p_E ** (-(i_alpha * fpar_lt(ii) * (pardir_h(th_) + pardiff_h(th_)) ) &    
+        &             / jmaxt_h(:))) * jmaxt_h(:) * o_cait * frac_sunt(ii) ) +                                      &
+        &                          ( (1.d0 - p_E ** (-(i_alpha * fpar_lt(ii) * pardiff_h(th_) )                    &    
+        &             / jmaxt_h(:))) * jmaxt_h(:) * o_cait * frac_shadet(ii) )
+        
+             end select
         end do
-
-      select case(i_lai_function)
-      case(1)
-        Ma_lg(:) = 1.0d0
-      case(2)
-!       * fraction of absorbed radiation per crown area grasses (Beer-lambert)
-        Ma_lg(:) = 1.0d0 - p_E ** (-lai_lg(:) * i_extcoeffg)
-      end select
-
 
 !       * calculate electron transport capacity grasses
         do ii = 1,3
-           jactg(1,:,ii) = (1.d0 - p_E ** (-(i_alpha * par_h(th_))           &
-     &             / jmaxg_h(:))) * jmaxg_h(:) * caig_d(1) * Ma_lg(ii)  ! (3.23), (Out[311])
-           jactg(2,:,ii) = (1.d0 - p_E ** (-(i_alpha * par_h(th_))           &
-     &             / jmaxg_h(:))) * jmaxg_h(:) * caig_d(2) * Ma_lg(ii)  ! (3.23), (Out[311])
-           jactg(3,:,ii) = (1.d0 - p_E ** (-(i_alpha * par_h(th_))           &
-     &             / jmaxg_h(:))) * jmaxg_h(:) * caig_d(3) * Ma_lg(ii)  ! (3.23), (Out[311])
+        
+          select case(i_lai_function)
+              case(1) ! no dynamic LAI, fpar is set to 1
+               
+               jactg(1,:,ii) = (1.d0 - p_E ** (-(i_alpha * fpar_lg(ii) * par_h(th_))           &
+             &       / jmaxg_h(:))) * jmaxg_h(:) * caig_d(1)   ! (3.23), (Out[311])
+               jactg(2,:,ii) = (1.d0 - p_E ** (-(i_alpha * fpar_lg(ii) * par_h(th_))           &
+             &       / jmaxg_h(:))) * jmaxg_h(:) * caig_d(2)   ! (3.23), (Out[311])
+               jactg(3,:,ii) = (1.d0 - p_E ** (-(i_alpha * fpar_lg(ii) * par_h(th_))           &
+             &       / jmaxg_h(:))) * jmaxg_h(:) * caig_d(3)  ! (3.23), (Out[311])
+             
+              case(2) ! dynamic LAI, with fpar-calculation
+              
+               jactg(1,:,ii) = (1.d0 - p_E ** (-(i_alpha * fpar_lg(ii) * par_h(th_))           &
+             &       / jmaxg_h(:))) * jmaxg_h(:) * caig_d(1)   ! (3.23), (Out[311])
+               jactg(2,:,ii) = (1.d0 - p_E ** (-(i_alpha * fpar_lg(ii) * par_h(th_))           &
+             &       / jmaxg_h(:))) * jmaxg_h(:) * caig_d(2)   ! (3.23), (Out[311])
+               jactg(3,:,ii) = (1.d0 - p_E ** (-(i_alpha * fpar_lg(ii) * par_h(th_))           &
+             &       / jmaxg_h(:))) * jmaxg_h(:) * caig_d(3)  ! (3.23), (Out[311])
+                          
+              case(3) ! shaded and sunlit, with diffuse and direct radiation
+               jactg(1,:,ii)   = ( (1.d0 - p_E ** (-(i_alpha * fpar_lg(ii) * (pardir_h(th_) + pardiff_h(th_)) ) &    
+             &     / jmaxg_h(:))) * jmaxg_h(:) * caig_d(1) * frac_sung(ii) ) +                                &
+             &     ( (1.d0 - p_E ** (-(i_alpha * fpar_lg(ii) * pardiff_h(th_) )                                  &    
+             &     / jmaxg_h(:))) * jmaxg_h(:) * caig_d(1) * frac_shadeg(ii) )
+             
+               jactg(2,:,ii)   = ( (1.d0 - p_E ** (-(i_alpha * fpar_lg(ii) * (pardir_h(th_) + pardiff_h(th_)) ) &    
+             &     / jmaxg_h(:))) * jmaxg_h(:) * caig_d(2) * frac_sung(ii) ) +                                &
+             &     ( (1.d0 - p_E ** (-(i_alpha * fpar_lg(ii) * pardiff_h(th_) )                                  &    
+             &     / jmaxg_h(:))) * jmaxg_h(:) * caig_d(2) * frac_shadeg(ii) )
+             
+               jactg(3,:,ii)   = ( (1.d0 - p_E ** (-(i_alpha * fpar_lg(ii) * (pardir_h(th_) + pardiff_h(th_)) ) &    
+             &     / jmaxg_h(:))) * jmaxg_h(:) * caig_d(3) * frac_sung(ii) ) +                                &
+             &     ( (1.d0 - p_E ** (-(i_alpha * fpar_lg(ii) * pardiff_h(th_) )                                  &    
+             &     / jmaxg_h(:))) * jmaxg_h(:) * caig_d(3) * frac_shadeg(ii) )             
+             
+          end select
         end do
 
         cond1      = (2.d0 * p_a * vd_h(th_)) / (ca_h(th_) + 2.d0 * gammastar)
@@ -1767,7 +2011,9 @@
       infx_d   = infx_d   + infx_h
       rlt_d    = rlt_d    + rlt_h(2,2)   * 3600.d0  ! rlt_d in mol/day
       rlg_d    = rlg_d    + rlg_h(2,2,2) * 3600.d0
-
+      fpard_lg = fpard_lg + (fpar_lg(2) / 24d0) !mean fpar per day
+      fpard_lt = fpard_lt + (fpar_lt(2) / 24d0) !mean fpar per day
+      
       return
       end subroutine vom_add_daily
 

@@ -7,7 +7,9 @@ The file "vom_namelist" is an input file for the VOM, containing all settings fo
 +-----------------+----------------------------------------------------------------------------------------------------+-----------+
 |i_cpccf          | water transport cost factor (cpcc=pc * rootdepth * cpccf)                                          |mol/m^3/s  |
 +-----------------+----------------------------------------------------------------------------------------------------+-----------+
-|i_tcf            | turnover cost factor for foliage (tc=tcf*LAI)                                                      |mol/m^2/s  |
+|i_tcfg           | turnover cost factor for foliage grasses (tc=tcf*LAI)                                              |mol/m^2/s  |
++-----------------+----------------------------------------------------------------------------------------------------+-----------+
+|i_tcft           | turnover cost factor for foliage trees (tc=tcf*LAI)                                                |mol/m^2/s  |
 +-----------------+----------------------------------------------------------------------------------------------------+-----------+
 |i_maxyear        | number of years to process                                                                         | \-        |
 +-----------------+----------------------------------------------------------------------------------------------------+-----------+
@@ -61,13 +63,13 @@ The file "vom_namelist" is an input file for the VOM, containing all settings fo
 +-----------------+----------------------------------------------------------------------------------------------------+-----------+
 |i_trans_vegcov   | fraction of radiative energy reaching soil under full cover (0-1)                                  | \-        |
 +-----------------+----------------------------------------------------------------------------------------------------+-----------+
-|i_lai_function   | switch for 1) linear or 2) exponential function of LAI for foliage cost                            | \-        |
+|i_lai_function   | switch for 1) no LAI dynamics, 2) dynamic LAI, 3) dynamic LAI with shaded/sunlit fractions         | \-        |
 +-----------------+----------------------------------------------------------------------------------------------------+-----------+
 |i_no_veg         | switch for running VOM without vegetation (0-with, 1-without)                                      | \-        |
 +-----------------+----------------------------------------------------------------------------------------------------+-----------+
-|i_extcoeffg      | extinction coefficient beer's law grasses                                                          | \-        |
+|i_chi_g          | ratio projected areas of grass canopy elements on horizontal and vertical surfaces (-)             | \-        |
 +-----------------+----------------------------------------------------------------------------------------------------+-----------+
-|i_extcoefft      | extinction coefficient beer's law trees                                                            | \-        |
+|i_chi_t          | ratio projected areas of tree canopy elements on horizontal and vertical surfaces (-)              | \-        |
 +-----------------+----------------------------------------------------------------------------------------------------+-----------+
 |i_inputpath      | path to folder with inputfiles                                                                     | \-        |
 +-----------------+----------------------------------------------------------------------------------------------------+-----------+

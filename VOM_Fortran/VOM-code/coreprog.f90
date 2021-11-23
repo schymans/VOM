@@ -47,16 +47,17 @@
       INTEGER             :: iostat
       LOGICAL             :: exist
       LOGICAL             :: run_sce
-      REAL                :: starttime
-      REAL                :: currtime
-      REAL                :: runtime
+      INTEGER             :: starttime
+      INTEGER             :: currtime
+      INTEGER             :: timerate
+      INTEGER             :: runtime
       CHARACTER*100       :: outputpath_tmp ! Temporary outputpath 
       CHARACTER*100       :: inputpath_tmp  ! Temporary inputpath
       LOGICAL             :: change_in      ! Change input true/false
       LOGICAL             :: change_out     ! Change output true/false
 
       beststat = 0
-      call cpu_time(starttime)
+      call system_clock(starttime, timerate)
 
       call read_commandline(outputpath_tmp, inputpath_tmp, change_in, change_out)
 
@@ -167,8 +168,8 @@
 
             end if
             
-            call cpu_time(currtime) 
-            runtime = (currtime - starttime)  / (60.0) !minutes
+            call system_clock(currtime) 
+            runtime = (currtime - starttime)  / (timerate * 60.0) !minutes
             !also stop when time is exceeded
             if (runtime .gt. runtime_limit) then
                run_sce = .FALSE.
