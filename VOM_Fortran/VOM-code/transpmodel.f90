@@ -1247,7 +1247,7 @@
 !        * (3.38)  foliage turnover costs, assuming crown LAI of 2.5
          q_tct_d(:) = i_tcft * o_cait * 2.5d0
 
-      case(2)
+      case(2, 3, 4)
 !        * foliage turnover costs, LAI as a function of cover (Choudhurry,1987; Monsi and Saeki,1953)
          q_tct_d(:) = i_tcft * o_cait * lai_lt(:)
       end select
