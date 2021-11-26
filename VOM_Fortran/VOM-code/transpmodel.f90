@@ -2615,7 +2615,7 @@
       posbestg(:)    = MAXLOC(netcg_d(:, :, :, :))             
       posmna = posbestg(:)
       
-      caig_d(2)     = caig_d(posbestg(1))
+      caig_d(2)     =  MIN(1.d0 - o_cait, caig_d(posbestg(1)))
       jmax25g_d(2) = jmax25g_d(posbestg(2)) 
       jmax25gs_d(2) = jmax25gs_d(posbestg(3))       
       lai_lg(2)    = lai_lg(posbestg(4))
