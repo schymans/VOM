@@ -824,19 +824,19 @@ end if
       !$OMP topt_, par_y, srad_y,  vd_d, vd_y, &
       !$OMP rain_y, gammastar, wsnew, wsold, o_cait, caig_d, c_caigmin, &
       !$OMP o_wstexp, o_wsgexp, o_lambdatf, o_lambdagf, &
-      !$OMP i_cz, i_cgs, i_zr, i_go, i_ksat, i_thetar, i_thetas, i_nvg, i_avg, &
-      !$OMP lambdat_d, lambdag_d, gstomt, gstomg, gstomts, gstomgs, &
-      !$OMP rlt_h, rlts_h, rlt_d, rlt_y, rlg_h, rlgs_h, rlg_d, rlg_y, transpt, transpg, transpts, transpgs, &
-      !$OMP q_tct_d, tct_y, tcg_d, &
+      !$OMP i_cz, i_cgs, i_zr, i_go, i_ksat, i_thetar, i_thetas, i_nvg, i_avg, &      
+      !$OMP lambdat_d, lambdag_d, gstomt, gstomg, gstomts, gstomgs, &      
+      !$OMP rlt_h, rlts_h, rlt_d, rlt_y, rlg_h, rlgs_h, rlg_d, rlg_y, transpt, transpg, transpts, transpgs, &      
+      !$OMP q_tct_d, tct_y, tcg_d, &      
       !$OMP frac_sung, frac_sunt, frac_shadeg, frac_shadet, fpar_lt, fpar_lg, &
-      !$OMP lai_lg, lai_lt,      &      
-      !$OMP tcg_y, jactt, jactts, jactg, jactgs, jmaxt_h, jmaxts_h, jmaxg_h, jmaxgs_h,  &
+      !$OMP lai_lg, lai_lt,      &            
+      !$OMP tcg_y, jactt, jactts, jactg, jactgs, jmaxt_h, jmaxts_h, jmaxg_h, jmaxgs_h,  &      
       !$OMP jmax25t_d, jmax25g_d, jmax25ts_d, jmax25gs_d,   &
-      !$OMP asst_h, assts_h, asst_d, assts_d, asst_y, assg_h, assgs_h, assg_d, assgs_d, assg_y, &
-      !$OMP q_cpcct_d, cpcct_y, cpccg_d, cpccg_y, etmt__, etmts__, etmt_h, etmt_d, etmt_y, etmg__, etmgs__, etmg_h, &
-      !$OMP etmg_d, etmg_y, etm_y, mqt_, mqtnew, mqtold, dmqt, q_mqx, mqsst_, mqsstmin, q_md, &
-      !$OMP o_mdstore, o_rtdepth, o_rgdepth, pos_slt, pos_slg, pos_ult, pos_ulg, changef, &
-      !$OMP rootlim, rootlims, posmna, rrt_d, rrt_y, rrg_d, rrg_y, sumruptkt_h,  &
+      !$OMP asst_h, assts_h, asst_d, assts_d, asst_y, assg_h, assgs_h, assg_d, assgs_d, assg_y, &      
+      !$OMP q_cpcct_d, cpcct_y, cpccg_d, cpccg_y, etmt__, etmts__, etmt_h, etmt_d, etmt_y, etmg__, etmgs__, etmg_h, &      
+      !$OMP etmg_d, etmg_y, etm_y, mqt_, mqtnew, mqtold, dmqt, q_mqx, mqsst_, mqsstmin, q_md, &      
+      !$OMP o_mdstore, o_rtdepth, o_rgdepth, pos_slt, pos_slg, pos_ult, pos_ulg, changef, &      
+      !$OMP rootlim, rootlims, posmna, rrt_d, rrt_y, rrg_d, rrg_y, sumruptkt_h,  &      
       !$OMP wlayer_, wlayernew, dt_, dtmax, dtsu_count, dtmax_count, esoil__, esoil_h, &
       !$OMP ruptkt__, rsurft_, rsurftnew, prootm, ruptkt_d, ruptkt_h, ruptkg_h, ruptkg_d, &
       !$OMP esoil_d, esoil_y, spgfcf__, spgfcf_h, spgfcf_d, inf__, infx__, infx_h, infx_d, &
@@ -1111,10 +1111,6 @@ end if
 
         nrun = nrun + 1
         
-      allocate(tmp_8(nopt))
-      tmp_8(:) = invar(optid(:))
-      write(kfile_sceout,outformat) tmp_8(:), -9999.d0
-      deallocate(tmp_8)            
       call transpmodel(invar(:), vom_npar, objfun, 1)
 
         bestmark = ' '
