@@ -148,7 +148,8 @@
         call vom_write_hourly(fyear(nday), fmonth(nday), fday(nday), nday, nhour, th_,          &
              &    rain_h(th_), tair_h(th_), par_h(th_), gstomt, gstomg(2,2,2), vd_h(th_), esoil_h,    &
              &    fpar_lt(2)*o_cait + fpar_lg(2)*caig_d(2), jmax25t_d(2), jmax25g_d(2), mqt_,          &
-             &    rlt_h(2,2) +  rlts_h(2,2) + rlg_h(2,2) + rlgs_h(2,2), lambdat_d, lambdag_d, rrt_d + rrg_d,  &
+             &    (rlt_h(2,2) +  rlts_h(2,2))*o_cait + (rlg_h(2,2) + rlgs_h(2,2))*caig_d(2), &
+             &     lambdat_d, lambdag_d, rrt_d + rrg_d,  &
              &    asst_h(2,2) + assts_h(2,2), assg_h(2,2,2) + assgs_h(2,2,2), etmt_h, etmg_h, su__(1), zw_, wsnew, &
              &    spgfcf_h, infx_h, ruptkt_h, su__, i_write_nc)
 
@@ -216,7 +217,7 @@
 
         call vom_write_day( rain_d(nday), tairmax_d(nday), tairmin_d(nday), par_d(nday),         &
              &  vd_d / 24.d0, esoil_d, jmax25t_d(2), jmax25g_d(2), jmax25ts_d(2), jmax25gs_d(2), &
-             &  fpard_lt*o_cait + fpard_lg*caig_d(2), rlt_d , rlg_d, lambdat_d, lambdag_d,       &
+             &  fpard_lt*o_cait + fpard_lg*caig_d(2), rlt_d * o_cait, rlg_d*caig_d(2), lambdat_d, lambdag_d,       &
              &  rrt_d * 3600.d0 * 24.d0, rrg_d * 3600.d0 * 24.d0, asst_d(2,2),                   &
              &  assg_d(2,2,2) + assgs_d(2,2,2)  , SUM(su__(1:wlayer_)) / wlayer_, zw_, wsnew,    &
              &  spgfcf_d, infx_d, etmt_d, etmg_d, su__(1), topt_,                                &
