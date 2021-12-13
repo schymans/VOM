@@ -148,7 +148,7 @@
         call vom_write_hourly(fyear(nday), fmonth(nday), fday(nday), nday, nhour, th_,          &
              &    rain_h(th_), tair_h(th_), par_h(th_), gstomt, gstomg(2,2,2), vd_h(th_), esoil_h,    &
              &    fpar_lt(2)*o_cait + fpar_lg(2)*caig_d(2), jmax25t_d(2), jmax25g_d(2), mqt_,          &
-             &    (rlt_h(2,2) +  rlts_h(2,2))*o_cait + (rlg_h(2,2) + rlgs_h(2,2))*caig_d(2), &
+             &    (rlt_h(2) +  rlts_h(2))*o_cait + (rlg_h(2) + rlgs_h(2))*caig_d(2), &
              &     lambdat_d, lambdag_d, rrt_d + rrg_d,  &
              &    asst_h(2,2) + assts_h(2,2), assg_h(2,2,2) + assgs_h(2,2,2), etmt_h, etmg_h, su__(1), zw_, wsnew, &
              &    spgfcf_h, infx_h, ruptkt_h, su__, i_write_nc)
@@ -1424,11 +1424,11 @@
         &           + 273.d0) * p_R_ * topt_))) * i_ha + i_hd) 
 
 !     * (3.24), (Out[312]), leaf respiration trees
-     do ii = 1,3 !loop for LAI-values
-      rlt_h(:,ii) = ((ca_h(th_) - gammastar) * jmaxt_h(:)         &
+     !do ii = 1,3 !loop for LAI-values
+      rlt_h(:) = ((ca_h(th_) - gammastar) * jmaxt_h(:)         &
      &         * i_rlratio) / (4.d0 * (ca_h(th_) + 2.d0 * gammastar)   &
      &         * (1.d0 + i_rlratio))
-     end do
+     !end do
 
 
 !     * shaded jmax trees
@@ -1441,11 +1441,11 @@
         &           + 273.d0) * p_R_ * topt_))) * i_ha + i_hd) 
 
 !     * (3.24), (Out[312]), shaded leaf respiration trees
-     do ii = 1,3 !loop for LAI-values
-      rlts_h(:,ii) = ((ca_h(th_) - gammastar) * jmaxts_h(:)         &
+     !do ii = 1,3 !loop for LAI-values
+      rlts_h(:) = ((ca_h(th_) - gammastar) * jmaxts_h(:)         &
      &         * i_rlratio) / (4.d0 * (ca_h(th_) + 2.d0 * gammastar)   &
      &         * (1.d0 + i_rlratio))
-     end do
+     !end do
 
 
 !     * (Out[310], derived from (3.26)) Temperature dependence of Jmax
@@ -1458,11 +1458,11 @@
         &           + 273.d0) * p_R_ * topt_))) * i_ha + i_hd)
         
 !    * respiration grasses
-     do ii = 1,3 !loop for LAI-values
-         rlg_h(:,ii) = ((ca_h(th_) - gammastar) * jmaxg_h(:)    &
+     !do ii = 1,3 !loop for LAI-values
+         rlg_h(:) = ((ca_h(th_) - gammastar) * jmaxg_h(:)    &
         &           * i_rlratio) / (4.d0 * (ca_h(th_) + 2.d0 * gammastar) &
         &           * (1.d0 + i_rlratio))  ! (3.24), (Out[312])
-     end do        
+     !end do        
         
 !     * shaded jmax grasses
       jmaxgs_h(:) = (p_E ** ((i_ha * (-25.d0 + tair_h(th_)))                 &
@@ -1474,11 +1474,11 @@
         &           + 273.d0) * p_R_ * topt_))) * i_ha + i_hd)        
 
 !    * shaded respiration grasses
-     do ii = 1,3 !loop for LAI-values
-         rlgs_h(:,ii) = ((ca_h(th_) - gammastar) * jmaxgs_h(:)    &
+     !do ii = 1,3 !loop for LAI-values
+         rlgs_h(:) = ((ca_h(th_) - gammastar) * jmaxgs_h(:)    &
         &           * i_rlratio) / (4.d0 * (ca_h(th_) + 2.d0 * gammastar) &
         &           * (1.d0 + i_rlratio))  ! (3.24), (Out[312])
-     end do
+     !end do
 
 !     * daily recalculation for resultsdaily
       if (optmode .eq. 0) then
@@ -1522,7 +1522,7 @@
       implicit none
 
       REAL*8 :: cond1, cond2
-      REAL*8 :: cond3(3,3)
+      REAL*8 :: cond3(3)
       REAL*8 :: part1, part2, part3, part4, part5
       REAL*8 :: part6, part7, part8, part9
       INTEGER:: ii
@@ -1678,10 +1678,10 @@
 !       * calculate stomatal conductance trees
 
         cond1      = (2.d0 * p_a * vd_h(th_)) / (ca_h(th_) + 2.d0 * gammastar)
-        cond2      = (4.d0 * ca_h(th_) * rlt_h(2,2) + 8.d0 * gammastar   &
-     &             * rlt_h(2,2)) / (ca_h(th_) - gammastar)
-        cond3(:,:) = (4.d0 * ca_h(th_) * rlg_h(:,:) + 8.d0 * gammastar &
-     &             * rlg_h(:,:)) / (ca_h(th_) - gammastar)
+        cond2      = (4.d0 * ca_h(th_) * rlt_h(2) + 8.d0 * gammastar   &
+     &             * rlt_h(2)) / (ca_h(th_) - gammastar)
+        cond3(:) = (4.d0 * ca_h(th_) * rlg_h(:) + 8.d0 * gammastar &
+     &             * rlg_h(:)) / (ca_h(th_) - gammastar)
 
         if (vd_h(th_) .gt. 0.d0 .and. lambdat_d .gt. cond1 .and. jactt(2,2) .gt. cond2) then
 
@@ -1689,9 +1689,9 @@
           part2 = part1 * lambdat_d - p_a * vd_h(th_)
           part3 = p_a * vd_h(th_) * part2
 
-          part4 = ca_h(th_) * (jactt(2,2) - 4.d0 * rlt_h(2,2))
+          part4 = ca_h(th_) * (jactt(2,2) - 4.d0 * rlt_h(2))
           part5 = gammastar * jactt(2,2)
-          part6 = gammastar * 8.d0 * rlt_h(2,2)
+          part6 = gammastar * 8.d0 * rlt_h(2)
           part7 = part4 - part5 - part6
 
           part8 = SQRT(part5 * part7 * (part2 - p_a * vd_h(th_)) ** 2.d0 * part3)
@@ -1715,16 +1715,16 @@
 
         do ii = 1,3 !loop for LAI
            do jj = 1,3 ! copy values three times for later multiplication with cai_g
-             where (vd_h(th_) .gt. 0.d0 .and. lambdag_d .gt. cond1 .and. jactg(:,ii) .gt. cond3(:,ii))
+             where (vd_h(th_) .gt. 0.d0 .and. lambdag_d .gt. cond1 .and. jactg(:,ii) .gt. cond3(:))
                 gstomg(jj,:,ii) = MAX(0.d0,(0.25d0 * (p_a * (ca_h(th_)           &
-                &          * (jactg(:,ii) - 4.d0 * rlg_h(:,ii)) - 4.d0        &
-                &          * gammastar * (jactg(:,ii) + 2.d0 * rlg_h(:,ii)))  &
+                &          * (jactg(:,ii) - 4.d0 * rlg_h(:)) - 4.d0        &
+                &          * gammastar * (jactg(:,ii) + 2.d0 * rlg_h(:)))  &
                 &          * vd_h(th_) * (ca_h(th_) * lambdag_d + 2.d0      &
                 &          * gammastar * lambdag_d - p_a * vd_h(th_))       &
                 &          + 1.7320508075688772d0 * SQRT(p_a * gammastar    &
                 &          * jactg(:,ii) * (ca_h(th_) * (jactg(:,ii) - 4.d0   &
-                &          * rlg_h(:,ii)) - gammastar * (jactg(:,ii) + 8.d0   &
-                &          * rlg_h(:,ii))) * vd_h(th_) * (ca_h(th_)          &
+                &          * rlg_h(:)) - gammastar * (jactg(:,ii) + 8.d0   &
+                &          * rlg_h(:))) * vd_h(th_) * (ca_h(th_)          &
                 &          * lambdag_d + 2.d0 * gammastar * lambdag_d       &
                 &          - 2.d0 * p_a * vd_h(th_)) ** 2.d0 * (ca_h(th_)   &
                 &          * lambdag_d + 2.d0 * gammastar * lambdag_d - p_a &
@@ -1750,10 +1750,10 @@
 !       * calculate stomatal conductance shaded trees 
 
         cond1      = (2.d0 * p_a * vd_h(th_)) / (ca_h(th_) + 2.d0 * gammastar)
-        cond2      = (4.d0 * ca_h(th_) * rlts_h(2,2) + 8.d0 * gammastar   &
-     &             * rlts_h(2,2)) / (ca_h(th_) - gammastar)
-        cond3(:,:) = (4.d0 * ca_h(th_) * rlgs_h(:,:) + 8.d0 * gammastar &
-     &             * rlgs_h(:,:)) / (ca_h(th_) - gammastar)
+        cond2      = (4.d0 * ca_h(th_) * rlts_h(2) + 8.d0 * gammastar   &
+     &             * rlts_h(2)) / (ca_h(th_) - gammastar)
+        cond3(:) = (4.d0 * ca_h(th_) * rlgs_h(:) + 8.d0 * gammastar &
+     &             * rlgs_h(:)) / (ca_h(th_) - gammastar)
 
         if (vd_h(th_) .gt. 0.d0 .and. lambdat_d .gt. cond1 .and. jactts(2,2) .gt. cond2) then
 
@@ -1761,9 +1761,9 @@
           part2 = part1 * lambdat_d - p_a * vd_h(th_)
           part3 = p_a * vd_h(th_) * part2
 
-          part4 = ca_h(th_) * (jactts(2,2) - 4.d0 * rlts_h(2,2))
+          part4 = ca_h(th_) * (jactts(2,2) - 4.d0 * rlts_h(2))
           part5 = gammastar * jactts(2,2)
-          part6 = gammastar * 8.d0 * rlts_h(2,2)
+          part6 = gammastar * 8.d0 * rlts_h(2)
           part7 = part4 - part5 - part6
 
           part8 = SQRT(part5 * part7 * (part2 - p_a * vd_h(th_)) ** 2.d0 * part3)
@@ -1789,14 +1789,14 @@
            do jj = 1,3 ! copy values three times for later multiplication with cai_g        
               where (vd_h(th_) .gt. 0.d0 .and. lambdag_d .gt. cond1 .and. jactgs(:,ii) .gt. cond3(:,ii))
                  gstomgs(jj,:,ii) = MAX(0.d0,(0.25d0 * (p_a * (ca_h(th_)           &
-                 &          * (jactgs(:,ii) - 4.d0 * rlgs_h(:,ii)) - 4.d0        &
-                 &          * gammastar * (jactgs(:,ii) + 2.d0 * rlgs_h(:,ii)))  &
+                 &          * (jactgs(:,ii) - 4.d0 * rlgs_h(:)) - 4.d0        &
+                 &          * gammastar * (jactgs(:,ii) + 2.d0 * rlgs_h(:)))  &
                  &          * vd_h(th_) * (ca_h(th_) * lambdag_d + 2.d0      &
                  &          * gammastar * lambdag_d - p_a * vd_h(th_))       &
                  &          + 1.7320508075688772d0 * SQRT(p_a * gammastar    &
                  &          * jactgs(:,ii) * (ca_h(th_) * (jactgs(:,ii) - 4.d0   &
-                 &          * rlgs_h(:,ii)) - gammastar * (jactgs(:,ii) + 8.d0   &
-                 &          * rlgs_h(:,ii))) * vd_h(th_) * (ca_h(th_)          &
+                 &          * rlgs_h(:)) - gammastar * (jactgs(:,ii) + 8.d0   &
+                 &          * rlgs_h(:))) * vd_h(th_) * (ca_h(th_)          &
                  &          * lambdag_d + 2.d0 * gammastar * lambdag_d       &
                  &          - 2.d0 * p_a * vd_h(th_)) ** 2.d0 * (ca_h(th_)   &
                  &          * lambdag_d + 2.d0 * gammastar * lambdag_d - p_a &
@@ -2207,26 +2207,26 @@
         
      if(i_lai_function == 4) then
       asst__(:,ii) = frac_sunt(ii) * ( (4.d0 * ca_h(th_) * gstomt + 8.d0 * gammastar        &
-        &          * gstomt + jactt(:,ii) - 4.d0 * rlt_h(:,ii) - SQRT((-4.d0    &
+        &          * gstomt + jactt(:,ii) - 4.d0 * rlt_h(:) - SQRT((-4.d0    &
         &          * ca_h(th_) * gstomt + 8.d0 * gammastar * gstomt       &
-        &          + jactt(:,ii) - 4.d0 * rlt_h(:,ii)) ** 2.d0 + 16.d0          &
+        &          + jactt(:,ii) - 4.d0 * rlt_h(:)) ** 2.d0 + 16.d0          &
         &          * gammastar * gstomt * (8.d0 * ca_h(th_) * gstomt      &
-        &          + jactt(:,ii) + 8.d0 * rlt_h(:,ii)))) / 8.d0 )  ! (3.22) ; (Out[319])
+        &          + jactt(:,ii) + 8.d0 * rlt_h(:)))) / 8.d0 )  ! (3.22) ; (Out[319])
      
      
       assts__(:,ii) = frac_shadet(ii) * ( (4.d0 * ca_h(th_) * gstomts + 8.d0 * gammastar        &
-        &          * gstomts + jactts(:,ii) - 4.d0 * rlts_h(:,ii) - SQRT((-4.d0    &
+        &          * gstomts + jactts(:,ii) - 4.d0 * rlts_h(:) - SQRT((-4.d0    &
         &          * ca_h(th_) * gstomts + 8.d0 * gammastar * gstomts       &
-        &          + jactts(:,ii) - 4.d0 * rlts_h(:,ii)) ** 2.d0 + 16.d0          &
+        &          + jactts(:,ii) - 4.d0 * rlts_h(:)) ** 2.d0 + 16.d0          &
         &          * gammastar * gstomts * (8.d0 * ca_h(th_) * gstomts      &
-        &          + jactts(:,ii) + 8.d0 * rlts_h(:,ii)))) / 8.d0 ) ! (3.22) ; (Out[319])     
+        &          + jactts(:,ii) + 8.d0 * rlts_h(:)))) / 8.d0 ) ! (3.22) ; (Out[319])     
      else
       asst__(:,ii) =  (4.d0 * ca_h(th_) * gstomt + 8.d0 * gammastar        &
-        &          * gstomt + jactt(:,ii) - 4.d0 * rlt_h(:,ii) - SQRT((-4.d0    &
+        &          * gstomt + jactt(:,ii) - 4.d0 * rlt_h(:) - SQRT((-4.d0    &
         &          * ca_h(th_) * gstomt + 8.d0 * gammastar * gstomt       &
-        &          + jactt(:,ii) - 4.d0 * rlt_h(:,ii)) ** 2.d0 + 16.d0          &
+        &          + jactt(:,ii) - 4.d0 * rlt_h(:)) ** 2.d0 + 16.d0          &
         &          * gammastar * gstomt * (8.d0 * ca_h(th_) * gstomt      &
-        &          + jactt(:,ii) + 8.d0 * rlt_h(:,ii)))) / 8.d0  ! (3.22) ; (Out[319])
+        &          + jactt(:,ii) + 8.d0 * rlt_h(:)))) / 8.d0  ! (3.22) ; (Out[319])
           
         assts__(:,ii) = 0.d0
      end if      
@@ -2240,29 +2240,29 @@
       do jj = 1,3 !loop for CAI_g values    
         if(i_lai_function == 4) then    
           assg__(jj,:,ii) =  frac_sung(ii) * ( (4.d0 * ca_h(th_) * gstomg(jj,:,ii) + 8.d0 * gammastar &
-          &         * gstomg(jj,:,ii) + jactg(:,ii) - 4.d0 * rlg_h(:,ii)       &
+          &         * gstomg(jj,:,ii) + jactg(:,ii) - 4.d0 * rlg_h(:)       &
           &         - SQRT((-4.d0 * ca_h(th_) * gstomg(jj,:,ii) + 8.d0       &
           &         * gammastar * gstomg(jj,:,ii) + jactg(:,ii) - 4.d0        &
-          &         * rlg_h(:,ii)) ** 2.d0 + 16.d0 * gammastar            &
+          &         * rlg_h(:)) ** 2.d0 + 16.d0 * gammastar            &
           &         * gstomg(jj,:,ii) * (8.d0 * ca_h(th_) * gstomg(jj,:,ii)      &
-          &         + jactg(:,ii) + 8.d0 * rlg_h(:,ii)))) / 8.d0)  ! (3.22); (Out[319])
+          &         + jactg(:,ii) + 8.d0 * rlg_h(:)))) / 8.d0)  ! (3.22); (Out[319])
 
           assgs__(jj,:,ii) =   frac_shadeg(ii) * ( (4.d0 * ca_h(th_) * gstomgs(jj,:,ii) + 8.d0 * gammastar &
-          &         * gstomgs(jj,:,ii) + jactgs(:,ii) - 4.d0 * rlgs_h(:,ii)       &
+          &         * gstomgs(jj,:,ii) + jactgs(:,ii) - 4.d0 * rlgs_h(:)       &
           &         - SQRT((-4.d0 * ca_h(th_) * gstomgs(jj,:,ii) + 8.d0       &
           &         * gammastar * gstomgs(jj,:,ii) + jactgs(:,ii) - 4.d0        &
-          &         * rlgs_h(:,ii)) ** 2.d0 + 16.d0 * gammastar            &
+          &         * rlgs_h(:)) ** 2.d0 + 16.d0 * gammastar            &
           &         * gstomgs(jj,:,ii) * (8.d0 * ca_h(th_) * gstomgs(jj,:,ii)      &
-          &         + jactgs(:,ii) + 8.d0 * rlgs_h(:,ii)))) / 8.d0 )  ! (3.22); (Out[319])   
+          &         + jactgs(:,ii) + 8.d0 * rlgs_h(:)))) / 8.d0 )  ! (3.22); (Out[319])   
         
         else
           assg__(jj,:,ii) =  (4.d0 * ca_h(th_) * gstomg(jj,:,ii) + 8.d0 * gammastar &
-          &         * gstomg(jj,:,ii) + jactg(:,ii) - 4.d0 * rlg_h(:,ii)       &
+          &         * gstomg(jj,:,ii) + jactg(:,ii) - 4.d0 * rlg_h(:)       &
           &         - SQRT((-4.d0 * ca_h(th_) * gstomg(jj,:,ii) + 8.d0       &
           &         * gammastar * gstomg(jj,:,ii) + jactg(:,ii) - 4.d0        &
-          &         * rlg_h(:,ii)) ** 2.d0 + 16.d0 * gammastar            &
+          &         * rlg_h(:)) ** 2.d0 + 16.d0 * gammastar            &
           &         * gstomg(jj,:,ii) * (8.d0 * ca_h(th_) * gstomg(jj,:,ii)      &
-          &         + jactg(:,ii) + 8.d0 * rlg_h(:,ii)))) / 8.d0  ! (3.22); (Out[319])
+          &         + jactg(:,ii) + 8.d0 * rlg_h(:)))) / 8.d0  ! (3.22); (Out[319])
         
           assgs__(jj,:,ii) = 0.d0
         
@@ -2305,8 +2305,8 @@
       esoil_d  = esoil_d  + esoil_h
       spgfcf_d = spgfcf_d + spgfcf_h
       infx_d   = infx_d   + infx_h
-      rlt_d    = rlt_d    + (rlt_h(2,2) + rlts_h(2,2))  * 3600.d0  ! rlt_d in mol/day
-      rlg_d    = rlg_d    + (rlg_h(2,2) + rlgs_h(2,2)) * 3600.d0
+      rlt_d    = rlt_d    + (rlt_h(2) + rlts_h(2))  * 3600.d0  ! rlt_d in mol/day
+      rlg_d    = rlg_d    + (rlg_h(2) + rlgs_h(2)) * 3600.d0
       fpard_lg = fpard_lg + (fpar_lg(2) / 24d0) !mean fpar per day
       fpard_lt = fpard_lt + (fpar_lt(2) / 24d0) !mean fpar per day
       

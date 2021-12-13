@@ -376,12 +376,12 @@
       REAL*8  :: gstomg(3,3,3)            ! Grass stomatal conductance (mol/m2/s)
       REAL*8  :: gstomgs(3,3,3)           ! Shaded grass stomatal conductance (mol/m2/s)
       
-      REAL*8  :: rlt_h(3,3)             ! Tree leaf respiration for different values of Jmax (rlt_h(2) is actual value) (mol/h)
-      REAL*8  :: rlts_h(3,3)            ! Shaded tree leaf respiration for different values of Jmax (rlt_h(2) is actual value) (mol/h)      
+      REAL*8  :: rlt_h(3)             ! Tree leaf respiration for different values of Jmax (rlt_h(2) is actual value) (mol/h)
+      REAL*8  :: rlts_h(3)            ! Shaded tree leaf respiration for different values of Jmax (rlt_h(2) is actual value) (mol/h)      
       REAL*8  :: rlt_d                  ! Daily tree leaf respiration (mol/d)
       REAL*8  :: rlt_y                  ! Annual tree leaf respiration (mol/y)
-      REAL*8  :: rlg_h(3,3)           ! Grass leaf respiration (mol/h)
-      REAL*8  :: rlgs_h(3,3)           ! Grass leaf respiration (mol/h)      
+      REAL*8  :: rlg_h(3)           ! Grass leaf respiration (mol/h)
+      REAL*8  :: rlgs_h(3)           ! Grass leaf respiration (mol/h)      
       REAL*8  :: rlg_d                  ! Daily grass leaf respiration (mol/d)
       REAL*8  :: rlg_y                  ! Annual grass leaf respiration (mol/y)
 
