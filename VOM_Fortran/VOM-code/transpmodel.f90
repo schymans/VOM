@@ -1424,12 +1424,9 @@
         &           + 273.d0) * p_R_ * topt_))) * i_ha + i_hd) 
 
 !     * (3.24), (Out[312]), leaf respiration trees
-     !do ii = 1,3 !loop for LAI-values
       rlt_h(:) = ((ca_h(th_) - gammastar) * jmaxt_h(:)         &
      &         * i_rlratio) / (4.d0 * (ca_h(th_) + 2.d0 * gammastar)   &
      &         * (1.d0 + i_rlratio))
-     !end do
-
 
 !     * shaded jmax trees
       jmaxts_h(:) =  (p_E ** ((i_ha * (-25.d0 + tair_h(th_)))                &
@@ -1441,12 +1438,9 @@
         &           + 273.d0) * p_R_ * topt_))) * i_ha + i_hd) 
 
 !     * (3.24), (Out[312]), shaded leaf respiration trees
-     !do ii = 1,3 !loop for LAI-values
       rlts_h(:) = ((ca_h(th_) - gammastar) * jmaxts_h(:)         &
      &         * i_rlratio) / (4.d0 * (ca_h(th_) + 2.d0 * gammastar)   &
      &         * (1.d0 + i_rlratio))
-     !end do
-
 
 !     * (Out[310], derived from (3.26)) Temperature dependence of Jmax
       jmaxg_h(:) = (p_E ** ((i_ha * (-25.d0 + tair_h(th_)))                 &
@@ -1458,11 +1452,9 @@
         &           + 273.d0) * p_R_ * topt_))) * i_ha + i_hd)
         
 !    * respiration grasses
-     !do ii = 1,3 !loop for LAI-values
          rlg_h(:) = ((ca_h(th_) - gammastar) * jmaxg_h(:)    &
         &           * i_rlratio) / (4.d0 * (ca_h(th_) + 2.d0 * gammastar) &
         &           * (1.d0 + i_rlratio))  ! (3.24), (Out[312])
-     !end do        
         
 !     * shaded jmax grasses
       jmaxgs_h(:) = (p_E ** ((i_ha * (-25.d0 + tair_h(th_)))                 &
@@ -1474,11 +1466,9 @@
         &           + 273.d0) * p_R_ * topt_))) * i_ha + i_hd)        
 
 !    * shaded respiration grasses
-     !do ii = 1,3 !loop for LAI-values
          rlgs_h(:) = ((ca_h(th_) - gammastar) * jmaxgs_h(:)    &
         &           * i_rlratio) / (4.d0 * (ca_h(th_) + 2.d0 * gammastar) &
         &           * (1.d0 + i_rlratio))  ! (3.24), (Out[312])
-     !end do
 
 !     * daily recalculation for resultsdaily
       if (optmode .eq. 0) then
