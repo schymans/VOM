@@ -1787,7 +1787,7 @@
 
         do ii = 1,3 !loop for LAI
            do jj = 1,3 ! copy values three times for later multiplication with cai_g        
-              where (vd_h(th_) .gt. 0.d0 .and. lambdag_d .gt. cond1 .and. jactgs(:,ii) .gt. cond3(:,ii))
+              where (vd_h(th_) .gt. 0.d0 .and. lambdag_d .gt. cond1 .and. jactgs(:,ii) .gt. cond3(:))
                  gstomgs(jj,:,ii) = MAX(0.d0,(0.25d0 * (p_a * (ca_h(th_)           &
                  &          * (jactgs(:,ii) - 4.d0 * rlgs_h(:)) - 4.d0        &
                  &          * gammastar * (jactgs(:,ii) + 2.d0 * rlgs_h(:)))  &
