@@ -554,7 +554,7 @@
            trim(adjustl(sfile_resultsdaily)), STATUS='replace')
          write(kfile_resultsdaily,'(A6,A7,A7,A7,A7, 42A15)') 'fyear',         &
          &  'fmonth', 'fday', 'nday', 'nhour', 'rain', 'tairmax', 'tairmin',  &
-         &  'par', 'vd', 'esoil', 'jmax25t', 'jmax25g', 'jmax25t', 'jmax25g', &
+         &  'par', 'vd', 'esoil', 'jmax25t', 'jmax25g', 'jmax25ts', 'jmax25gs', &
          &  'pc', 'rlt', 'rlg',                                               &
          &  'lambdat', 'lambdag', 'rrt', 'rrg', 'asst', 'assg', 'su_avg',     &
          &  'zw', 'ws', 'spgfcf', 'infx', 'etmt', 'etmg', 'su_1', 'topt',     &

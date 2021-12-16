@@ -1430,7 +1430,7 @@
 
 
 !     * dynamic LAI, with shaded/sunlit fractions
-      if( (i_lai_function .eq. 3)  .or. (i_lai_function .eq. 4) ) then
+      if( i_lai_function .eq. 4 ) then
 !        * shaded jmax trees
          jmaxts_h(:) =  (p_E ** ((i_ha * (-25.d0 + tair_h(th_)))                &
          &           / ((25.d0 + 273.d0)  * p_R_ * (tair_h(th_) + 273.d0) )) &
@@ -1466,7 +1466,7 @@
         
                
 !     * dynamic LAI, shaded jmax grasses
-      if( (i_lai_function .eq. 3)  .or. (i_lai_function .eq. 4) ) then
+      if( i_lai_function .eq. 4 ) then
       jmaxgs_h(:) = (p_E ** ((i_ha * (-25.d0 + tair_h(th_)))                 &
         &           / ((25.d0 + 273.d0)  * p_R_ * (tair_h(th_) + 273.d0) )) &
         &           * ((-1.d0 + p_E ** (-(i_hd * (-298.d0                   &
@@ -1754,75 +1754,81 @@
 
 
 !       * calculate stomatal conductance shaded trees 
-
-        cond1      = (2.d0 * p_a * vd_h(th_)) / (ca_h(th_) + 2.d0 * gammastar)
-        cond2      = (4.d0 * ca_h(th_) * rlts_h(2) + 8.d0 * gammastar   &
+        if(i_lai_function == 4) then     
+        
+           cond1      = (2.d0 * p_a * vd_h(th_)) / (ca_h(th_) + 2.d0 * gammastar)
+           cond2      = (4.d0 * ca_h(th_) * rlts_h(2) + 8.d0 * gammastar   &
      &             * rlts_h(2)) / (ca_h(th_) - gammastar)
-        cond3(:) = (4.d0 * ca_h(th_) * rlgs_h(:) + 8.d0 * gammastar &
+           cond3(:) = (4.d0 * ca_h(th_) * rlgs_h(:) + 8.d0 * gammastar &
      &             * rlgs_h(:)) / (ca_h(th_) - gammastar)
 
-        if (vd_h(th_) .gt. 0.d0 .and. lambdat_d .gt. cond1 .and. jactts(2,2) .gt. cond2) then
+           if (vd_h(th_) .gt. 0.d0 .and. lambdat_d .gt. cond1 .and. jactts(2,2) .gt. cond2) then
 
-          part1 = ca_h(th_) + 2.d0 * gammastar
-          part2 = part1 * lambdat_d - p_a * vd_h(th_)
-          part3 = p_a * vd_h(th_) * part2
+             part1 = ca_h(th_) + 2.d0 * gammastar
+             part2 = part1 * lambdat_d - p_a * vd_h(th_)
+             part3 = p_a * vd_h(th_) * part2
 
-          part4 = ca_h(th_) * (jactts(2,2) - 4.d0 * rlts_h(2))
-          part5 = gammastar * jactts(2,2)
-          part6 = gammastar * 8.d0 * rlts_h(2)
-          part7 = part4 - part5 - part6
+             part4 = ca_h(th_) * (jactts(2,2) - 4.d0 * rlts_h(2))
+             part5 = gammastar * jactts(2,2)
+             part6 = gammastar * 8.d0 * rlts_h(2)
+             part7 = part4 - part5 - part6
 
-          part8 = SQRT(part5 * part7 * (part2 - p_a * vd_h(th_)) ** 2.d0 * part3)
-          part9 = part7 - 3.d0 * part5 + 1.7320508075688772d0 * part8 / part3
+             part8 = SQRT(part5 * part7 * (part2 - p_a * vd_h(th_)) ** 2.d0 * part3)
+             part9 = part7 - 3.d0 * part5 + 1.7320508075688772d0 * part8 / part3
 
-          gstomts = 0.25d0 * part9 / part1**2.d0
-          gstomts = MAX(0.d0, gstomts)    ! (Out[314])
-          !check if gstomt remains 0
+             gstomts = 0.25d0 * part9 / part1**2.d0
+             gstomts = MAX(0.d0, gstomts)    ! (Out[314])
+             !check if gstomt remains 0
 
-        else
-          gstomts = 0.d0
-        endif
-        transpts = p_a * vd_h(th_) * gstomts  ! (3.28) transpiration rate in mol/s
-        if(i_lai_function == 4) then     
+           else
+             gstomts = 0.d0
+           endif
+           transpts = p_a * vd_h(th_) * gstomts  ! (3.28) transpiration rate in mol/s
+
            etmts__ = frac_shadet(2) * (transpts * 18.d0) / (10.d0 ** 6.d0)  ! transpiration rate in m/s        
-        else           
-           etmts__ = 0d0 ! transpiration rate in m/s
+        else     
+           gstomts = 0.d0
+           transpts = 0.d0      
+           etmts__ = 0.d0 ! transpiration rate in m/s
         end if
 
 !       * calculate stomatal conductance shaded grasses 
 
-        do ii = 1,3 !loop for LAI
-           do jj = 1,3 ! copy values three times for later multiplication with cai_g        
-              where (vd_h(th_) .gt. 0.d0 .and. lambdag_d .gt. cond1 .and. jactgs(:,ii) .gt. cond3(:))
-                 gstomgs(jj,:,ii) = MAX(0.d0,(0.25d0 * (p_a * (ca_h(th_)           &
-                 &          * (jactgs(:,ii) - 4.d0 * rlgs_h(:)) - 4.d0        &
-                 &          * gammastar * (jactgs(:,ii) + 2.d0 * rlgs_h(:)))  &
-                 &          * vd_h(th_) * (ca_h(th_) * lambdag_d + 2.d0      &
-                 &          * gammastar * lambdag_d - p_a * vd_h(th_))       &
-                 &          + 1.7320508075688772d0 * SQRT(p_a * gammastar    &
-                 &          * jactgs(:,ii) * (ca_h(th_) * (jactgs(:,ii) - 4.d0   &
-                 &          * rlgs_h(:)) - gammastar * (jactgs(:,ii) + 8.d0   &
-                 &          * rlgs_h(:))) * vd_h(th_) * (ca_h(th_)          &
-                 &          * lambdag_d + 2.d0 * gammastar * lambdag_d       &
-                 &          - 2.d0 * p_a * vd_h(th_)) ** 2.d0 * (ca_h(th_)   &
-                 &          * lambdag_d + 2.d0 * gammastar * lambdag_d - p_a &
-                 &          * vd_h(th_))))) / (p_a * (ca_h(th_) + 2.d0       &
-                 &          * gammastar) ** 2.d0 * vd_h(th_) * (ca_h(th_)    &
-                 &          * lambdag_d + 2.d0 * gammastar * lambdag_d       &
-                 &          - p_a * vd_h(th_))))  ! (Out[314])
-        elsewhere
-          gstomgs(jj,:,ii) = 0.d0
-        endwhere
-          end do
-        end do
-        transpgs(:,:,:) = p_a * vd_h(th_) * gstomgs(:,:,:)  ! (3.28) transpiration rate in mol/s
-        
+
         if(i_lai_function == 4) then  
+           do ii = 1,3 !loop for LAI
+              do jj = 1,3 ! copy values three times for later multiplication with cai_g        
+                 where (vd_h(th_) .gt. 0.d0 .and. lambdag_d .gt. cond1 .and. jactgs(:,ii) .gt. cond3(:))
+                    gstomgs(jj,:,ii) = MAX(0.d0,(0.25d0 * (p_a * (ca_h(th_)           &
+                    &          * (jactgs(:,ii) - 4.d0 * rlgs_h(:)) - 4.d0        &
+                    &          * gammastar * (jactgs(:,ii) + 2.d0 * rlgs_h(:)))  &
+                    &          * vd_h(th_) * (ca_h(th_) * lambdag_d + 2.d0      &
+                    &          * gammastar * lambdag_d - p_a * vd_h(th_))       &
+                    &          + 1.7320508075688772d0 * SQRT(p_a * gammastar    &
+                    &          * jactgs(:,ii) * (ca_h(th_) * (jactgs(:,ii) - 4.d0   &
+                    &          * rlgs_h(:)) - gammastar * (jactgs(:,ii) + 8.d0   &
+                    &          * rlgs_h(:))) * vd_h(th_) * (ca_h(th_)          &
+                    &          * lambdag_d + 2.d0 * gammastar * lambdag_d       &
+                    &          - 2.d0 * p_a * vd_h(th_)) ** 2.d0 * (ca_h(th_)   &
+                    &          * lambdag_d + 2.d0 * gammastar * lambdag_d - p_a &
+                    &          * vd_h(th_))))) / (p_a * (ca_h(th_) + 2.d0       &
+                    &          * gammastar) ** 2.d0 * vd_h(th_) * (ca_h(th_)    &
+                    &          * lambdag_d + 2.d0 * gammastar * lambdag_d       &
+                    &          - p_a * vd_h(th_))))  ! (Out[314])
+                 elsewhere
+                    gstomgs(jj,:,ii) = 0.d0
+                 endwhere
+             end do
+           end do
+           transpgs(:,:,:) = p_a * vd_h(th_) * gstomgs(:,:,:)  ! (3.28) transpiration rate in mol/s       
+
            do ii = 1,3           
               etmgs__(:,:,ii) = frac_shadeg(ii) * (transpgs(:,:,ii) * 18.d0) / (10.d0 ** 6.d0)  ! transpiration rate in m/s    
            end do    
-        else        
-           etmgs__(:,:,:) = 0d0 
+        else  
+           gstomgs(:,:,:) = 0.d0
+           transpgs(:,:,:)= 0.d0     
+           etmgs__(:,:,:) = 0.d0 
         end if
       
       else
@@ -2615,7 +2621,7 @@
 
 
       jmax25t_d(2) = jmax25t_d(posbest(1))              !jmax25 trees in 
-      jmax25ts_d(2) = jmax25t_d(posbest(2))             !jmax25 trees in 
+      jmax25ts_d(2) = jmax25ts_d(posbest(2))             !jmax25 trees in 
       lai_lt(2) = lai_lt(posbest(3))                    !lai trees 
               
       !set daily value back to zero
