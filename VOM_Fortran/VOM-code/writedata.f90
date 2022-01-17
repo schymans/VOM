@@ -560,7 +560,7 @@
          &  'zw', 'ws', 'spgfcf', 'infx', 'etmt', 'etmg', 'su_1', 'topt',     &
          &  'tcg', 'tct', 'cpccg_d', 'cpcct_d', 'fsunt', 'fshadet',           &
          &  'fsung', 'fshadeg',                                               &
-         &  'jactt', 'jactts', 'jactg', 'jact_gs',                            &   
+         &  'jactt', 'jactts', 'jactg', 'jactgs',                            &   
          &  'lai_t', 'lai_g', 'lai_tot',                                      &
          &   'cai_g', 'ncp_g', 'ncp_t'
 
