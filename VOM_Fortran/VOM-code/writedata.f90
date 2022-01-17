@@ -552,14 +552,16 @@
 
          open(kfile_resultsdaily, FILE=trim(adjustl(i_outputpath))// &
            trim(adjustl(sfile_resultsdaily)), STATUS='replace')
-         write(kfile_resultsdaily,'(A6,A7,A7,A7,A7, 42A15)') 'fyear',         &
+         write(kfile_resultsdaily,'(A6,A7,A7,A7,A7, 46A15)') 'fyear',         &
          &  'fmonth', 'fday', 'nday', 'nhour', 'rain', 'tairmax', 'tairmin',  &
          &  'par', 'vd', 'esoil', 'jmax25t', 'jmax25g', 'jmax25ts', 'jmax25gs', &
          &  'pc', 'rlt', 'rlg',                                               &
          &  'lambdat', 'lambdag', 'rrt', 'rrg', 'asst', 'assg', 'su_avg',     &
          &  'zw', 'ws', 'spgfcf', 'infx', 'etmt', 'etmg', 'su_1', 'topt',     &
          &  'tcg', 'tct', 'cpccg_d', 'cpcct_d', 'fsunt', 'fshadet',           &
-         &  'fsung', 'fshadeg', 'lai_t', 'lai_g', 'lai_tot',                  &
+         &  'fsung', 'fshadeg',                                               &
+         &  'jactt', 'jactts', 'jactg', 'jact_gs',                            &   
+         &  'lai_t', 'lai_g', 'lai_tot',                                      &
          &   'cai_g', 'ncp_g', 'ncp_t'
 
         open(kfile_rsurfdaily, FILE=trim(adjustl(i_outputpath))// &
@@ -620,6 +622,7 @@
              &  spgfcf, infx, etmt, etmg, su_1, topt,                &
              & tcg, tct, cpccg, cpcct,                               &
              & fsun_t, fshade_t, fsun_g, fshade_g,                   &
+             & jact_t, jact_ts, jact_g, jact_gs,                     &             
              & lai_t, lai_g, lai_tot, caig, tp_netassg, tp_netasst, rsurft, nc_flag )
 
 
@@ -662,7 +665,11 @@
       REAL*8,  INTENT(in) :: fsun_t
       REAL*8,  INTENT(in) :: fshade_t  
       REAL*8,  INTENT(in) :: fsun_g
-      REAL*8,  INTENT(in) :: fshade_g            
+      REAL*8,  INTENT(in) :: fshade_g     
+      REAL*8,  INTENT(in) :: jact_t
+      REAL*8,  INTENT(in) :: jact_ts
+      REAL*8,  INTENT(in) :: jact_g
+      REAL*8,  INTENT(in) :: jact_gs               
       REAL*8,  INTENT(in) :: lai_t
       REAL*8,  INTENT(in) :: lai_g
       REAL*8,  INTENT(in) :: lai_tot
@@ -743,7 +750,7 @@
 !     * includes a column for each sublayer
       dailyformat = '(I6,I6,I4,I7,'//str//'E14.6)'
 
-      write(kfile_resultsdaily,'(I6,I7,I7,I7,I7,42E15.5)')    &
+      write(kfile_resultsdaily,'(I6,I7,I7,I7,I7,46E15.5)')    &
      &  fyear(nday), fmonth(nday), fday(nday), nday, nhour-1, &
      &  rain, tairmax, tairmin, par,                          &
      &  vd, esoil, jmax25t, jmax25g, jmax25ts, jmax25gs,      &
@@ -753,6 +760,7 @@
      &  spgfcf, infx, etmt, etmg, su_1, topt,                 &
      &  tcg, tct, cpccg, cpcct,                               &
      &  fsun_t, fshade_t, fsun_g, fshade_g,                   &
+     &  jact_t, jact_ts, jact_g, jact_gs,                   &     
      &  lai_t, lai_g, lai_tot, caig, tp_netassg, tp_netasst         
 
 

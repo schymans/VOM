@@ -222,7 +222,8 @@
              &  assg_d(2,2,2) + assgs_d(2,2,2)  , SUM(su__(1:wlayer_)) / wlayer_, zw_, wsnew,    &
              &  spgfcf_d, infx_d, etmt_d, etmg_d, su__(1), topt_,                                &
              & tcg_d(2,2), q_tct_d(2), cpccg_d(2), q_cpcct_d,                                    &
-             & frac_sunt(2), frac_shadet(2), frac_sung(2), frac_shadeg(2),                       &
+             & frac_sunt(2), frac_shadet(2), frac_sung(2), frac_shadeg(2),                       &             
+             & jactt(2,2), jactts(2,2), jactg(2,2), jactgs(2,2),                                 &
              & lai_lt(2), lai_lg(2), lai_lt(2)*o_cait + lai_lg(2)*caig_d(2), caig_d(2),          &
              & tp_netassg, tp_netasst, rsurft_, i_write_nc )             
 
