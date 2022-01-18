@@ -151,6 +151,7 @@
              &    (rlt_h(2) +  rlts_h(2))*o_cait + (rlg_h(2) + rlgs_h(2))*caig_d(2), &
              &     lambdat_d, lambdag_d, rrt_d + rrg_d,  &
              &    asst_h(2,2) + assts_h(2,2), assg_h(2,2,2) + assgs_h(2,2,2), etmt_h, etmg_h, su__(1), zw_, wsnew, &
+             &    jactt(2,2), jactts(2,2), jactg(2,2), jactgs(2,2),                                 &             
              &    spgfcf_h, infx_h, ruptkt_h, su__, i_write_nc)
 
 !       * check water balance
@@ -223,7 +224,6 @@
              &  spgfcf_d, infx_d, etmt_d, etmg_d, su__(1), topt_,                                &
              & tcg_d(2,2), q_tct_d(2), cpccg_d(2), q_cpcct_d,                                    &
              & frac_sunt(2), frac_shadet(2), frac_sung(2), frac_shadeg(2),                       &             
-             & jactt(2,2), jactts(2,2), jactg(2,2), jactgs(2,2),                                 &
              & lai_lt(2), lai_lg(2), lai_lt(2)*o_cait + lai_lg(2)*caig_d(2), caig_d(2),          &
              & tp_netassg, tp_netasst, rsurft_, i_write_nc )             
 
@@ -1640,7 +1640,7 @@
               case(4) ! shaded and sunlit, diffuse and direct radiation, different jact-values shaded-sunlit        
                    jactt(:,ii)   = (1.d0 - p_E ** (-(i_alpha * fpar_lt(ii) * (pardir_h(th_) + pardiff_h(th_)) ) &    
         &             / jmaxt_h(:))) * jmaxt_h(:) 
-        
+
                    jactts(:,ii)   =  (1.d0 - p_E ** (-(i_alpha * fpar_lt(ii) * pardiff_h(th_) )                    &    
         &             / jmaxts_h(:))) * jmaxts_h(:)   
         
