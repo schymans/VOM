@@ -1304,18 +1304,18 @@
 !     * Sunlit Jmax values      
 !     * vector with values varying by 1%
       jmax25t_d(:) = jmax25t_d(2) * (/1.0d0-i_incrjmax,1.0d0,1.0d0+i_incrjmax/)
-      jmax25t_d(:) = MAX(jmax25t_d(:), 50.0d-6)
+      jmax25t_d(:) = MAX(jmax25t_d(:), 0.0)
       
       jmax25g_d(:) = jmax25g_d(2) * (/1.0d0-i_incrjmax,1.0d0,1.0d0+i_incrjmax/)
-      jmax25g_d(:) = MAX(jmax25g_d(:), 50.0d-6)
+      jmax25g_d(:) = MAX(jmax25g_d(:), 0.0)
 
 !     * Shaded Jmax values
 !     * vector with values varying by 1%
       jmax25ts_d(:) = jmax25ts_d(2) * (/1.0d0-i_incrjmax,1.0d0,1.0d0+i_incrjmax/)
-      jmax25ts_d(:) = MAX(jmax25ts_d(:), 50.0d-6)
+      jmax25ts_d(:) = MAX(jmax25ts_d(:), 0.0)
       
       jmax25gs_d(:) = jmax25gs_d(2) * (/1.0d0-i_incrjmax,1.0d0,1.0d0+i_incrjmax/)
-      jmax25gs_d(:) = MAX(jmax25gs_d(:), 50.0d-6)
+      jmax25gs_d(:) = MAX(jmax25gs_d(:), 0.0)
 
 !     * adjust lai-values trees
       lai_lt(:) = lai_lt(2) * (/1.0d0-i_incrlait,1.0d0,1.0d0+i_incrlait/)
