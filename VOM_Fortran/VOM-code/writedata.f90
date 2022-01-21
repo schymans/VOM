@@ -573,7 +573,7 @@
            trim(adjustl(sfile_resultshourly)), STATUS='replace')
       write(kfile_resultshourly,'(A6,A7,A7,A7,A7,36A15)') 'fyear',     &
      &  'fmonth', 'fday', 'nday', 'nhour', 'rain', 'tair', 'par',      &
-     &  'pardir', 'pardiff' &
+     &  'pardir', 'pardiff', &
      &  'gstomt', 'gstomts', 'gstomg', 'gstomgs', 'vd',                &
      &  'esoil', 'pc', 'jmax25t', 'jmax25g', 'mqt', 'rl', 'lambdat',   &
      &  'lambdag', 'rr', 'asst', 'assg', 'etmt', 'etmg', 'su_1',       &
@@ -879,7 +879,9 @@
       REAL*8,  INTENT(in) :: pardir_hourly
       REAL*8,  INTENT(in) :: pardiff_hourly            
       REAL*8,  INTENT(in) :: gstomt_hourly
+      REAL*8,  INTENT(in) :: gstomts_hourly      
       REAL*8,  INTENT(in) :: gstomg_hourly
+      REAL*8,  INTENT(in) :: gstomgs_hourly      
       REAL*8,  INTENT(in) :: vd_hourly
       REAL*8,  INTENT(in) :: esoil_hourly
       REAL*8,  INTENT(in) :: pc_hourly
