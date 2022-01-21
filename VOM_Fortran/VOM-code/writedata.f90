@@ -571,12 +571,14 @@
 
       open(kfile_resultshourly, FILE=trim(adjustl(i_outputpath))//      &
            trim(adjustl(sfile_resultshourly)), STATUS='replace')
-      write(kfile_resultshourly,'(A6,A7,A7,A7,A7,28A15)') 'fyear',     &
+      write(kfile_resultshourly,'(A6,A7,A7,A7,A7,36A15)') 'fyear',     &
      &  'fmonth', 'fday', 'nday', 'nhour', 'rain', 'tair', 'par',      &
-     &  'gstomt', 'gstomg', 'vd',                                      &
+     &  'pardir', 'pardiff' &
+     &  'gstomt', 'gstomts', 'gstomg', 'gstomgs', 'vd',                &
      &  'esoil', 'pc', 'jmax25t', 'jmax25g', 'mqt', 'rl', 'lambdat',   &
      &  'lambdag', 'rr', 'asst', 'assg', 'etmt', 'etmg', 'su_1',       &
      &  'zw', 'ws', 'jactt', 'jactts', 'jactg', 'jactgs',              &  
+     &  'fsunt', 'fshadet', 'fsung', 'fsunt',                          &       
      & 'spgfcf', 'infx'
 
 
@@ -852,11 +854,13 @@
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
       subroutine vom_write_hourly ( year, month, day, num_day, num_hour, num_hour_tot,  &
-          &    rain_hourly, tair_hourly, par_hourly, gstomt_hourly, gstomg_hourly ,vd_hourly, esoil_hourly,    &
+          &    rain_hourly, tair_hourly, par_hourly, pardir_hourly, pardiff_hourly, & 
+          &    gstomt_hourly, gstomts_hourly, gstomg_hourly, gstomgs_hourly, vd_hourly, esoil_hourly,    &
           &    pc_hourly, jmax25t_hourly, jmax25g_hourly, mqt_hourly,          &
           &    rl_hourly, lambdat_hourly, lambdag_hourly, rr_hourly,  &
           &    asst_hourly, assg_hourly, etmt_hourly, etmg_hourly, su1_hourly, zw_hourly, ws_hourly, &
-          &    jact_t, jact_ts, jact_g, jact_gs,                                                        &                       
+          &    jact_t, jact_ts, jact_g, jact_gs,                                                        &          
+          &    fsunt_hourly, fshadet_hourly, fsung_hourly, fshadeg_hourly, &                                
           &    spgfcf_hourly, infx_hourly, ruptkt_hourly, su_hourly, nc_flag )
       use vom_vegwat_mod
       use netcdf
@@ -872,6 +876,8 @@
       REAL*8,  INTENT(in) :: rain_hourly
       REAL*8,  INTENT(in) :: tair_hourly
       REAL*8,  INTENT(in) :: par_hourly
+      REAL*8,  INTENT(in) :: pardir_hourly
+      REAL*8,  INTENT(in) :: pardiff_hourly            
       REAL*8,  INTENT(in) :: gstomt_hourly
       REAL*8,  INTENT(in) :: gstomg_hourly
       REAL*8,  INTENT(in) :: vd_hourly
@@ -893,6 +899,10 @@
       REAL*8,  INTENT(in) :: ws_hourly
       REAL*8,  INTENT(in) :: spgfcf_hourly
       REAL*8,  INTENT(in) :: infx_hourly
+      REAL*8,  INTENT(in) :: fsunt_hourly      
+      REAL*8,  INTENT(in) :: fshadet_hourly  
+      REAL*8,  INTENT(in) :: fsung_hourly      
+      REAL*8,  INTENT(in) :: fshadeg_hourly                 
       REAL*8,  INTENT(in) :: jact_t
       REAL*8,  INTENT(in) :: jact_ts
       REAL*8,  INTENT(in) :: jact_g
@@ -999,13 +1009,15 @@
 !         * includes a column for each sublayer
           hourlyformat = '(I6,I6,I4,I7,I5,'//str//'E14.6)'
 
-          write(kfile_resultshourly,'(I6,I7,I7,I7,I7,28E15.5)')          &
+          write(kfile_resultshourly,'(I6,I7,I7,I7,I7,36E15.5)')          &
           &    year, month, day, num_day, num_hour,          &
-          &    rain_hourly, tair_hourly, par_hourly, gstomt_hourly, gstomg_hourly, vd_hourly, esoil_hourly,    &
+          &    rain_hourly, tair_hourly, par_hourly, pardir_hourly, pardiff_hourly, &
+          &    gstomt_hourly, gstomts_hourly, gstomg_hourly, gstomgs_hourly, vd_hourly, esoil_hourly,    &
           &    pc_hourly, jmax25t_hourly, jmax25g_hourly, mqt_hourly,          &
           &    rl_hourly, lambdat_hourly, lambdag_hourly, rr_hourly,  &
           &    asst_hourly, assg_hourly, etmt_hourly, etmg_hourly, su1_hourly, zw_hourly, ws_hourly, &
-          &  jact_t, jact_ts, jact_g, jact_gs,                   &               
+          &    jact_t, jact_ts, jact_g, jact_gs,                   &     
+          &    fsunt_hourly, fshadet_hourly, fsung_hourly, fshadeg_hourly,   &    
           &    spgfcf_hourly, infx_hourly
 
           write(kfile_delzhourly,hourlyformat) fyear(nday),            &

@@ -146,12 +146,14 @@
        if (option1 .eq. 2) then
         call vom_add_daily()
         call vom_write_hourly(fyear(nday), fmonth(nday), fday(nday), nday, nhour, th_,          &
-             &    rain_h(th_), tair_h(th_), par_h(th_), gstomt, gstomg(2,2,2), vd_h(th_), esoil_h,    &
+             &    rain_h(th_), tair_h(th_), par_h(th_), pardir_h(th_), pardiff_h(th_),  &
+             &    gstomt, gstomts, gstomg(2,2,2), gstomgs(2,2,2), vd_h(th_), esoil_h,    &
              &    fpar_lt(2)*o_cait + fpar_lg(2)*caig_d(2), jmax25t_d(2), jmax25g_d(2), mqt_,          &
              &    (rlt_h(2) +  rlts_h(2))*o_cait + (rlg_h(2) + rlgs_h(2))*caig_d(2), &
              &     lambdat_d, lambdag_d, rrt_d + rrg_d,  &
              &    asst_h(2,2) + assts_h(2,2), assg_h(2,2,2) + assgs_h(2,2,2), etmt_h, etmg_h, su__(1), zw_, wsnew, &
-             &    jactt(2,2), jactts(2,2), jactg(2,2), jactgs(2,2),                                 &             
+             &    jactt(2,2), jactts(2,2), jactg(2,2), jactgs(2,2),                                 &    
+             &    frac_sunt(2), frac_shadet(2), frac_sung(2), frac_shadeg(2), &         
              &    spgfcf_h, infx_h, ruptkt_h, su__, i_write_nc)
 
 !       * check water balance
@@ -885,7 +887,7 @@
           !read hourly inputs
           read(kfile_hourlyweather, '(5i8,6e11.4)') h, dummyint1,       &
      &      dummyint2, dummyint3, dummyint4, tair_h(i), vp_h(i),       &
-     &      par_h(i), rain_h(i), press_h(i), ca_h(i)   
+     &      par_h(i),pardiff_h(i),pardir_h(i), rain_h(i), press_h(i), ca_h(i)   
           if (par_h(i) .lt. 0.d0) par_h(i) = 0.d0
 
           !calculate vapor pressure deficit
@@ -953,8 +955,8 @@
       if (i_write_h == 1) then
         open(kfile_hourlyweather, FILE=trim(adjustl(i_inputpath))// &
              trim(adjustl(sfile_hourlyweather)), STATUS='new')
-        write(kfile_hourlyweather,'(5a8,6a11)') 'hour', 'dayyear', 'fday', &
-     &    'fmonth', 'fyear', 'tair_h', 'vp_h', 'par_h', 'rain_h','press_h' ,'ca_h'
+        write(kfile_hourlyweather,'(5a8,8a11)') 'hour', 'dayyear', 'fday', &
+     &    'fmonth', 'fyear', 'tair_h', 'vp_h', 'par_h', 'pardiff_h','pardir_h', 'rain_h','press_h' ,'ca_h'
       endif
 
       do in = in1, in2
@@ -1076,9 +1078,9 @@
                   
          ! write hourly weatherdata to file 
           if (i_write_h == 1) then
-            write(kfile_hourlyweather,'(5i8,6e11.4)') ik, dayyear(in), &
+            write(kfile_hourlyweather,'(5i8,8e11.4)') ik, dayyear(in), &
      &        fday(in), fmonth(in), fyear(in), tair_h(ii), vp__/100.d0,   &
-     &        par_h(ii), rain_h(ii), press_h(ii), ca_h(ii)
+     &        par_h(ii), pardiff_h(ii), pardir_h(ii), rain_h(ii), press_h(ii), ca_h(ii)
           endif
 
         enddo
