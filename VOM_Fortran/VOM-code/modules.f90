@@ -317,9 +317,12 @@
       REAL*8              :: par_y      ! Annual photosynthetically active radiation (mol/m2/y)
       
       REAL*8, ALLOCATABLE :: pardiff_h(:) ! Hourly diffuse photosynthetically active radiation (mol/m2/s)
+      REAL*8, ALLOCATABLE :: pardiff_d(:) ! Daily diffuse photosynthetically active radiation (mol/m2/d)      
       REAL*8, ALLOCATABLE :: pardir_h(:)  ! Hourly direct photosynthetically active radiation (mol/m2/s)
-      
+      REAL*8, ALLOCATABLE :: pardir_d(:)  ! Daily direct photosynthetically active radiation (mol/m2/d)
+            
       REAL*8, ALLOCATABLE :: par_et_h(:)  ! Hourly extraterrestrial radiation (mol/m2/s)
+      REAL*8, ALLOCATABLE :: par_et_d(:)  ! Daily extraterrestrial radiation (mol/m2/s)      
       
       REAL*8, ALLOCATABLE :: srad_d(:)  ! Daily shortwave radiation  (MJ/m2/d)
       REAL*8              :: srad_y     ! Annual shortwave radiation (MJ/m2/y)

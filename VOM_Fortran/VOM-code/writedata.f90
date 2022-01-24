@@ -578,7 +578,7 @@
      &  'esoil', 'pc', 'jmax25t', 'jmax25g', 'mqt', 'rl', 'lambdat',   &
      &  'lambdag', 'rr', 'asst', 'assg', 'etmt', 'etmg', 'su_1',       &
      &  'zw', 'ws', 'jactt', 'jactts', 'jactg', 'jactgs',              &  
-     &  'fsunt', 'fshadet', 'fsung', 'fsunt',                          &       
+     &  'fsunt', 'fshadet', 'fsung', 'fshadeg',                          &       
      & 'spgfcf', 'infx'
 
 

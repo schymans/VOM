@@ -622,11 +622,14 @@
       allocate(vp_d(c_maxday))
       allocate(press_d(c_maxday))
       allocate(ca_d(c_maxday))
-
+      allocate(par_et_d(c_maxday))          
+      allocate(pardiff_d(c_maxday))      
+      allocate(pardir_d(c_maxday))
+            
       allocate(par_h(c_maxhour))
       allocate(pardiff_h(c_maxhour))
       allocate(pardir_h(c_maxhour))
-      allocate(par_et_h(c_maxhour))          
+
       
       allocate(vd_h(c_maxhour))
       allocate(tair_h(c_maxhour))
@@ -973,6 +976,68 @@
         dtair = tairmax_d(in) - tairmin_d(in)
         vp__ = vp_d(in) * 100.d0             ! vp__ in Pa, vp_d in hPa
 
+
+
+!       * determine daily values of diffuse and direct radation
+
+!       *  day angle (Eq. A.2 Roderick, 1999)
+        Tauw = (2.0d0*p_pi/360.0d0) * (360.0d0/365.0d0)*(dayyear(in) - 1.0 ) !rad
+                    
+!       *  solar declination (Eq. A.3 Roderick, 1999)      
+        delta = 0.006918d0 - 0.399912*cos(Tauw) + 0.070257*sin(Tauw) - 0.006758*cos(2*Tauw) + &
+                  0.000907*sin(2*Tauw) - 0.002697*cos(3*Tauw) + 0.00148*sin(3*Tauw)
+          
+!       *  eccentricity correction (Eq. A.4 Roderick, 1999)          
+        dr2 = 1.000110 + 0.034221*cos(Tauw) + 0.001280*sin(Tauw)+0.000719*cos(Tauw) + &
+                0.00077*sin(2*Tauw)
+
+!       *  sunset hour angle (Eq. A.5 Roderick, 1999)        
+        if(abs(-tan(i_lat * p_pi/180.0d0) * tan(delta) ) .lt. 1.0) then
+           omega_s = acos(-tan(i_lat * p_pi/180.0d0) * tan(delta))
+        else
+          if(  ( delta * i_lat * p_pi/180.0d0 ) .gt. 0.0) then            
+             omega_s = p_pi             
+           else             
+             omega_s = 0.0
+           end if             
+        end if
+
+!       * calculate extra terrestrial irradiance (Eq A.1 Roderick 1999)
+
+        part1 = omega_s * sin(i_lat*p_pi/180.0d0)*sin(delta)          
+        part2 = cos(i_lat*p_pi/180.0d0)*cos(delta)*sin(omega_s)
+
+        par_et_d(in) = srad2par_d * 37.595 * dr2 * (part1 + part2) ! mol/m2/d   
+
+
+!       * split par into direct and diffuse par (Roderick et al. 1999)
+
+        if( (par_d(in) / par_et_d(in) ) .le. X0) then     
+             
+           ! eq. 4a Roderick (1999), Rs/Ro below threshold  
+           pardiff_d(in) = par_d(in) * Y0          
+        end if
+          
+        if(  (  (par_d(in) / par_et_d(in) ) .le. X1 ) .and. (  (par_d(in) / par_et_d(in) ) .gt. X0 ) ) then    
+          
+           ! eq. 4b Roderick (1999), linear part between X0 and X1        
+           A1 = (Y1 - Y0) / (X1 - X0) 
+           A0 = Y1 - A1*X1
+           pardiff_d(in) = par_d(in) * (A0 + A1 * (par_d(in) / par_et_d(in)) )          
+        end if
+          
+        if( (par_d(in) / par_et_d(in) ) .ge. X1) then   
+          
+           ! eq. 4c Roderick (1999), above threshold       
+           pardiff_d(in) = par_d(in) * Y1          
+        end if
+
+        pardir_d(in) = par_d(in) - pardiff_d(in)
+
+
+
+
+
 !       * Loop through every hour of day, where ik=hour
         do ik = 1, 24
           ii = in * 24 + ik - 24
@@ -1021,60 +1086,18 @@
             par_h(ii) = 0.d0
           endif         
           
-!         day angle (Eq. A.2 Roderick, 1999)
-          Tauw = (2.0d0*p_pi/360.0d0) * (360.0d0/365.0d0)*(dayyear(in) - 1.0 ) !rad
-                    
-!         solar declination (Eq. A.3 Roderick, 1999)      
-          delta = 0.006918d0 - 0.399912*cos(Tauw) + 0.070257*sin(Tauw) - 0.006758*cos(2*Tauw) + &
-                  0.000907*sin(2*Tauw) - 0.002697*cos(3*Tauw) + 0.00148*sin(3*Tauw)
+!        * convert daily extra-terrestrial par into hourly (Eq. 3, Spitters et al.,1986)          
+          par_et_h(ii) = par_h(ii) * par_et_d(in)/par_d(in)
           
-!         eccentricity correction (Eq. A.4 Roderick, 1999)          
-          dr2 = 1.000110 + 0.034221*cos(Tauw) + 0.001280*sin(Tauw)+0.000719*cos(Tauw) + &
-                0.00077*sin(2*Tauw)
-          
-!         sunset hour angle (Eq. A.5 Roderick, 1999)        
-          if(abs(-tan(i_lat * p_pi/180.0d0) * tan(delta) ) .lt. 1.0) then
-             omega_s = acos(-tan(i_lat * p_pi/180.0d0) * tan(delta))
-          else
-            if(  ( delta * i_lat * p_pi/180.0d0 ) .gt. 0.0) then            
-               omega_s = p_pi             
-             else             
-               omega_s = 0.0
-             end if             
-           end if
-          
-          
-!         * calculate extra terrestrial irradiance (Eq A.1 Roderick 1999)
-
-          part1 = omega_s * sin(i_lat*p_pi/180.0d0)*sin(delta)          
-          part2 = cos(i_lat*p_pi/180.0d0)*cos(delta)*sin(omega_s)
-
-          par_et_h(ii) = srad2par_h * 37.595 * dr2 * (part1 + part2) / (24.0*60.0*60.0) !mol/m2/s
-          
-!         * split par into direct and diffuse par (Roderick et al. 1999)
-
-          if( (par_h(ii) / par_et_h(ii) ) .le. X0) then     
-             
-             ! eq. 4a Roderick (1999), Rs/Ro below threshold  
-             pardiff_h(ii) = par_h(ii) * Y0          
-          end if
-          
-          if(  (  (par_h(ii) / par_et_h(ii) ) .le. X1 ) .and. (  (par_h(ii) / par_et_h(ii) ) .gt. X0 ) ) then    
-          
-             ! eq. 4b Roderick (1999), linear part between X0 and X1        
-             A1 = (Y1 - Y0) / (X1 - X0) 
-             A0 = Y1 - A1*X1
-             pardiff_h(ii) = par_h(ii) * (A0 + A1 * (par_h(ii) / par_et_h(ii)) )          
-          end if
-          
-          if( (par_h(ii) / par_et_h(ii) ) .ge. X1) then   
-          
-             ! eq. 4c Roderick (1999), above threshold       
-             pardiff_h(ii) = par_h(ii) * Y1          
-          end if
-
-          pardir_h(ii) = par_h(ii) - pardiff_h(ii)
-          
+!        * convert daily diffuse par into hourly (Eq. 7, Spitters et al.,1986)          
+          pardiff_h(ii) = par_et_h(ii) * pardiff_d(in)/par_et_d(in)
+                  
+!        * 
+         if(  pardiff_h(ii) .gt.  par_h(ii) ) then
+            pardiff_h(ii) = par_h(ii)
+         end if         
+         
+         pardir_h(ii) = par_h(ii) - pardiff_h(ii)       
                   
          ! write hourly weatherdata to file 
           if (i_write_h == 1) then
