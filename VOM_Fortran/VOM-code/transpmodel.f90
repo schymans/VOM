@@ -625,7 +625,8 @@
       allocate(par_et_d(c_maxday))          
       allocate(pardiff_d(c_maxday))      
       allocate(pardir_d(c_maxday))
-            
+
+      allocate(par_et_h(c_maxhour))            
       allocate(par_h(c_maxhour))
       allocate(pardiff_h(c_maxhour))
       allocate(pardir_h(c_maxhour))
