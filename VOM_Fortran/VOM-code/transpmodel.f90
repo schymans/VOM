@@ -1373,13 +1373,13 @@
          do ii = 1,3
             tcg_d(ii,:)     = i_tcfg * caig_d(:) * 2.5d0 !grasses
          end do
-         q_tct_d(:)     = i_tcfg * o_cait * 2.5d0    !trees
+         q_tct_d(:)     = i_tcft * o_cait * 2.5d0    !trees
       case(2, 3, 4)
 !        * foliage turnover costs, varying lai
          do ii = 1,3
             tcg_d(ii, :) = i_tcfg * caig_d(:) * lai_lg(ii) !grasses 
          end do
-         q_tct_d(:) = i_tcfg * o_cait * lai_lt(:)     !trees
+         q_tct_d(:) = i_tcft * o_cait * lai_lt(:)     !trees
                   
       end select
 
