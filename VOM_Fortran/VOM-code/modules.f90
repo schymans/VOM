@@ -446,16 +446,16 @@
       REAL*8  :: etmg_y                 ! Annual grass transpiration (mm/y)
       REAL*8  :: etm_y                  ! Annual total transpiration (mm/y)
 
-      REAL*8  :: mqt_                   ! Tree water content (kg/m2)
-      REAL*8  :: mqtnew                 ! Tree water content in next time step (kg/m2)
-      REAL*8  :: mqtold                 ! Previous tree water content (kg/m2)
-      REAL*8  :: dmqt                   ! Rate of change in tree water content (kg/m2/s)
-      REAL*8  :: q_mqx                  ! Tree maximum water content per ground area (kg/m2)
-      REAL*8  :: mqsst_                 ! Tree water content at steady state (kg/m2)
-      REAL*8  :: mqsstmin               ! Tree water content at turgor loss point (kg/m2)
+      REAL*8  :: mqt_                   ! Tree water content (g/m2)
+      REAL*8  :: mqtnew                 ! Tree water content in next time step (g/m2)
+      REAL*8  :: mqtold                 ! Previous tree water content (g/m2)
+      REAL*8  :: dmqt                   ! Rate of change in tree water content (g/m2/s)
+      REAL*8  :: q_mqx                  ! Tree maximum water content per ground area (g/m2)
+      REAL*8  :: mqsst_                 ! Tree water content at steady state (g/m2)
+      REAL*8  :: mqsstmin               ! Tree water content at turgor loss point (g/m2)
 
-      REAL*8  :: q_md                     ! Tree dry mass per unit ground area (kg/m2)
-      REAL*8  :: o_mdstore                ! Wood water storage parameter of trees  (kg/m2)
+      REAL*8  :: q_md                     ! Tree dry mass per unit ground area (g/m2)
+      REAL*8  :: o_mdstore                ! Wood water storage parameter of trees  (g/m2)
 
 !     * roots
 
@@ -528,8 +528,8 @@
 !     * Vegetation Parameters
 
 
-      REAL*8  :: i_mdtf                 ! Total dry mass of living tissues of trees per unit pc (kg/m^2)
-      REAL*8  :: i_mqxtf                ! Total water storage capacity in living tissues of trees per unit md (kg/m^2)
+      REAL*8  :: i_mdtf                 ! Total dry mass of living tissues of trees per unit pc (g/m^2)
+      REAL*8  :: i_mqxtf                ! Total water storage capacity in living tissues of trees per unit md (g/m^2)
       REAL*8  :: i_rrootm               ! Root water uptake resistivity in soil (s)
       REAL*8  :: i_rsurfmin             ! Minimum root area per m^3 to be maintained (m2/m3)
       REAL*8  :: i_rsurf_               ! Initial root surface area per m^3 (m2/m3)

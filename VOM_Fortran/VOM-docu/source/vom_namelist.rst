@@ -27,7 +27,7 @@ The file "vom_namelist" is an input file for the VOM, containing all settings fo
 +-----------------+----------------------------------------------------------------------------------------------------+-----------+
 |i_mdtf           | total dry mass of living tissues of trees per unit pc                                              | g/m^2     |
 +-----------------+----------------------------------------------------------------------------------------------------+-----------+
-|i_mqxtf          | total water storage capacity in living tissues of trees per unit md                                | kg/m^2    |
+|i_mqxtf          | total water storage capacity in living tissues of trees per unit md                                | -         |
 +-----------------+----------------------------------------------------------------------------------------------------+-----------+
 |i_rrootm         | root water uptake resistivity                                                                      | s         |
 +-----------------+----------------------------------------------------------------------------------------------------+-----------+
@@ -88,7 +88,7 @@ The file "vom_namelist" is an input file for the VOM, containing all settings fo
 +-----------------+----------------------------------------------------------------------------------------------------+-----------+
 |o_rtdepth        | tree rooting depth                                                                                 | m         |
 +-----------------+----------------------------------------------------------------------------------------------------+-----------+
-|o_mdstore        | wood water storage parameter of trees (can be in shufflepar)                                       | kg/m^2    |
+|o_mdstore        | wood water storage parameter of trees (can be in shufflepar)                                       | g/m^2     |
 +-----------------+----------------------------------------------------------------------------------------------------+-----------+
 |o_rgdepth        | root depth grasses (can be in shufflepar)                                                          | m         |
 +-----------------+----------------------------------------------------------------------------------------------------+-----------+
