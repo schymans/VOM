@@ -552,9 +552,10 @@
 
          open(kfile_resultsdaily, FILE=trim(adjustl(i_outputpath))// &
            trim(adjustl(sfile_resultsdaily)), STATUS='replace')
-         write(kfile_resultsdaily,'(A6,A7,A7,A7,A7, 42A15)') 'fyear',         &
+         write(kfile_resultsdaily,'(A6,A7,A7,A7,A7, 45A15)') 'fyear',         &
          &  'fmonth', 'fday', 'nday', 'nhour', 'rain', 'tairmax', 'tairmin',  &
-         &  'par', 'vd', 'esoil', 'jmax25t', 'jmax25g', 'jmax25ts', 'jmax25gs', &
+         &  'par', 'pardir', 'pardiff', 'par_et',                             &
+         &  'vd', 'esoil', 'jmax25t', 'jmax25g', 'jmax25ts', 'jmax25gs',      &
          &  'pc', 'rlt', 'rlg',                                               &
          &  'lambdat', 'lambdag', 'rrt', 'rrg', 'asst', 'assg', 'su_avg',     &
          &  'zw', 'ws', 'spgfcf', 'infx', 'etmt', 'etmg', 'su_1', 'topt',     &
@@ -616,7 +617,8 @@
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-     subroutine vom_write_day ( rain, tairmax, tairmin, par,         &
+     subroutine vom_write_day ( rain, tairmax, tairmin,              &
+             &  par, pardir, pardiff, par_et,                        &
              &  vd, esoil, jmax25t, jmax25g, jmax25ts, jmax25gs,     &
              &  pc, rlt , rlg, lambdat, lambdag,                     &
              &  rrt, rrg , asst,                                     &
@@ -635,6 +637,9 @@
       REAL*8,  INTENT(in) :: tairmax
       REAL*8,  INTENT(in) :: tairmin
       REAL*8,  INTENT(in) :: par
+      REAL*8,  INTENT(in) :: pardir
+      REAL*8,  INTENT(in) :: pardiff
+      REAL*8,  INTENT(in) :: par_et                  
       REAL*8,  INTENT(in) :: vd
       REAL*8,  INTENT(in) :: esoil
       REAL*8,  INTENT(in) :: jmax25t
@@ -747,9 +752,10 @@
 !     * includes a column for each sublayer
       dailyformat = '(I6,I6,I4,I7,'//str//'E14.6)'
 
-      write(kfile_resultsdaily,'(I6,I7,I7,I7,I7,42E15.5)')    &
+      write(kfile_resultsdaily,'(I6,I7,I7,I7,I7,45E15.5)')    &
      &  fyear(nday), fmonth(nday), fday(nday), nday, nhour-1, &
-     &  rain, tairmax, tairmin, par,                          &
+     &  rain, tairmax, tairmin,                               &
+     &  par, pardir, pardiff, par_et,                         &
      &  vd, esoil, jmax25t, jmax25g, jmax25ts, jmax25gs,      &
      &  pc, rlt , rlg, lambdat, lambdag,                      &
      &  rrt, rrg, asst,                                       &
