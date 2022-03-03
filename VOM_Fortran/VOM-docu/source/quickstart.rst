@@ -87,7 +87,7 @@ Initially, the VOM schematized the vegetation as two big leaves, for the perenni
 
 **3**   LAI is dynamically modelled. Shaded and sunlit fractions are determined and a distinction between direct and diffuse radiation is made, but leaves are still treated as a big leave with a single photosynthetic capacity. 
 
-**4**   LAI is dynamically modelled. Shaded and sunlit fractions are determined and a distinction between direct and diffuse radiation is made. The model considers shaded and sunlit leaves with different photosynthetic capacities. 
+**4**   LAI is dynamically modelled. Shaded and sunlit fractions are determined and a distinction between direct and diffuse radiation is made. The model considers shaded and sunlit leaves with different photosynthetic capacities. Eletron transport capacities are separately optimized for shaded and sunlit leaves. 
 
 
 
