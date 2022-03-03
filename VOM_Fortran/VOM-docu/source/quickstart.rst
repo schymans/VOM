@@ -75,3 +75,26 @@ The model can be run in 4 different modes, defined by VOM_command in the VOM_nam
 **3**   Run without optimization, based on the parameters in pars.txt. Returns only NCP values as output.
 
 **4** 	Run the model with a set of random parameters.
+
+
+Other options
+-----------------
+Initially, the VOM schematized the vegetation as two big leaves, for the perennial and seasonal vegetation. In the newest VOM version, leaf area dynamics can be included in a dynamic way as well, by setting the parameter i_lai_function in the VOM_namelist:
+
+**1** 	No LAI dynamics are included.
+
+**2**   LAI is dynamically modelled, but there is no distinction between shaded and sunlit leaves, as well as different radiation components.
+
+**3**   LAI is dynamically modelled. Shaded and sunlit fractions are determined and a distinction between direct and diffuse radiation is made, but leaves are still treated as a big leave with a single photosynthetic capacity. 
+
+**4**   LAI is dynamically modelled. Shaded and sunlit fractions are determined and a distinction between direct and diffuse radiation is made. The model considers shaded and sunlit leaves with different photosynthetic capacities. 
+
+
+
+
+
+
+
+
+
+
