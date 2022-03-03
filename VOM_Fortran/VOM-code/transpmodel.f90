@@ -2174,7 +2174,7 @@
            dmqt = 0.d0
         endif
       else
-        dmqt = -1.0* (etmt__ + etmts__)* o_cait * 1.d6
+        dmqt = -1.0* (etmt__ + etmts__)* o_cait * 1.d3 !kg/m2/s
       endif
 
       return
@@ -2206,8 +2206,8 @@
             dtmq = 99999.d0
         end if
           
-        if (ABS(mqt_ - mqsst_) .gt. q_mqx / 1.d6) then
-          dtss = (mqt_ - mqsst_) / (1.d6 * ( ( (etmt__+etmts__) * o_cait) - SUM(ruptkt__(:))))
+        if (ABS(mqt_ - mqsst_) .gt. q_mqx / 1.d3) then
+          dtss = (mqt_ - mqsst_) / (1.d3 * ( ( (etmt__+etmts__) * o_cait) - SUM(ruptkt__(:))))
           if (dtss .le. 0.d0) dtss = 99999.d0
         else
           dtss = 99999.d0
@@ -2377,7 +2377,7 @@
         write(*,*) TRIM(msg)
         finish = 1
       elseif (q_md .gt. 0.d0) then
-        error1 = mqtold + (sumruptkt_h - etmt_h) * 1.d6 - mqtnew
+        error1 = mqtold + (sumruptkt_h - etmt_h) * 1.d3 - mqtnew
         if (abs(error1 / mqtnew) .gt. 1.d-6) then
           write(msg,*) 'Error in tree water balance [%]:',             &
      &      error1 * 100.d0, 'mqtold=', mqtold, 'mqtnew=', mqtnew,     &
