@@ -10,8 +10,8 @@ i_hd=2.0d5,             ! parameters to calculate jmax(temp)
 i_toptf=0.0d0,          ! parameter to calculate adaptation of topt (range 0-1, 0.0 means no adaption, 1.0 means topt=tair)
 i_toptstart=305.0d0,    ! start parameter for topt to calculate jmax(temp in K)
 i_rlratio=0.07d0,       ! leaf respiration parameter (rl=rlratio*assmax)
-i_mdtf=10000.0d0,       ! total dry mass of living tissues of trees per unit pc g/m^2
-i_mqxtf=1.0d0,          ! total water storage capacity in living tissues of trees per unit md (-)
+i_mdtf=10.0d0,          ! total dry mass of living tissues of trees per unit pc kg/m^2
+i_mqxtf=1.0d0,          ! relative water storage capacity in living tissues of trees per unit md (-)
 i_rrootm=1.02d8,        ! root water uptake resistivity in s
 i_rsurfmin=0.03d0,      ! minimum root area per m^3 to be maintained
 i_rsurf_=0.3d0,         ! initial root surface area per m^3
@@ -42,7 +42,7 @@ o_lambdatf=0.160181d4,  ! factor for calculating lambdat_d
 o_wstexp=-0.564496d0,   ! exponent for calculating lambdat_d
 o_cait=0.3d0,           ! projected cover perennial vegetation (0-1)
 o_rtdepth=0.3d1,        ! tree rooting depth (m)
-o_mdstore=1.0d2,        ! wood water storage parameter of trees (can be in shufflepar) (g/m^2)
+o_mdstore=0.1d0,        ! wood water storage parameter of trees (can be in shufflepar) (kg/m^2)
 o_rgdepth=0.1d1,        ! root depth grasses (can be in shufflepar)
 &end
 &input2par

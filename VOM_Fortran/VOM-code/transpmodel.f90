@@ -113,7 +113,7 @@
         call vom_subhourly()
 
         time = time + dt_
-        mqtnew = mqt_ + dmqt * dt_ !g/m2
+        mqtnew = mqt_ + dmqt * dt_ !kg/m2
 
 !       * adding up hourly fluxes
 
@@ -1202,9 +1202,9 @@
 
 !     * Set vegetation parameters
 
-      q_md   = o_cait * i_mdtf + o_mdstore !dry matter (g/m2) 
-      q_mqx  = q_md * i_mqxtf              !dry matter (g/m2) * water storage cap. living matter  (-) = (g/m2)
-      mqtnew = 0.95d0 * q_mqx              !initial wood water storage (g/m^2) 
+      q_md   = o_cait * i_mdtf + o_mdstore !dry matter (kg/m2) 
+      q_mqx  = q_md * i_mqxtf              !dry matter (kg/m2) * water storage cap. living matter  (-) = (kg/m2)
+      mqtnew = 0.95d0 * q_mqx              !initial wood water storage (kg/m^2) 
       mqtold = mqtnew
       rsurftnew(:) = 0.d0
       
@@ -2169,7 +2169,7 @@
 !       * (3.35), 1.e6 to convert from m (=1000kg/m2) to g/m2; (Out[250])
         if ( abs(SUM(ruptkt__(:)) - ( (etmt__ + etmts__) * o_cait) ) &
             .gt. epsilon(SUM(ruptkt__(:)) - ( (etmt__ +etmts__) * o_cait))  ) then        
-           dmqt = (SUM(ruptkt__(:)) - ( (etmt__ +etmts__)* o_cait) ) * 1.d6 !conversion from m/s to g/m2/s
+           dmqt = (SUM(ruptkt__(:)) - ( (etmt__ +etmts__)* o_cait) ) * 1.d3 !conversion from m/s to kg/m2/s
         else
            dmqt = 0.d0
         endif
