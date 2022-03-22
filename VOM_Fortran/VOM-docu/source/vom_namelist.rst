@@ -27,7 +27,7 @@ The file "vom_namelist" is an input file for the VOM, containing all settings fo
 +-----------------+----------------------------------------------------------------------------------------------------+-----------+
 |i_mdtf           | total dry mass of living tissues of trees per unit pc                                              | g/m^2     |
 +-----------------+----------------------------------------------------------------------------------------------------+-----------+
-|i_mqxtf          | total water storage capacity in living tissues of trees per unit md                                | kg/m^2    |
+|i_mqxtf          | total water storage capacity in living tissues of trees per unit md                                | -         |
 +-----------------+----------------------------------------------------------------------------------------------------+-----------+
 |i_rrootm         | root water uptake resistivity                                                                      | s         |
 +-----------------+----------------------------------------------------------------------------------------------------+-----------+
@@ -63,7 +63,8 @@ The file "vom_namelist" is an input file for the VOM, containing all settings fo
 +-----------------+----------------------------------------------------------------------------------------------------+-----------+
 |i_trans_vegcov   | fraction of radiative energy reaching soil under full cover (0-1)                                  | \-        |
 +-----------------+----------------------------------------------------------------------------------------------------+-----------+
-|i_lai_function   | switch for 1) no LAI dynamics, 2) dynamic LAI, 3) dynamic LAI with shaded/sunlit fractions         | \-        |
+|i_lai_function   | switch for 1) no LAI dynamics, 2) dynamic LAI, 3) dynamic LAI with shaded/sunlit fractions,        | \-        |
+|                 | 4) dynamic LAI with shaded/sunlit fractions and different Jmax for shaded/sunlit fractions         | \-        |
 +-----------------+----------------------------------------------------------------------------------------------------+-----------+
 |i_no_veg         | switch for running VOM without vegetation (0-with, 1-without)                                      | \-        |
 +-----------------+----------------------------------------------------------------------------------------------------+-----------+
@@ -87,7 +88,7 @@ The file "vom_namelist" is an input file for the VOM, containing all settings fo
 +-----------------+----------------------------------------------------------------------------------------------------+-----------+
 |o_rtdepth        | tree rooting depth                                                                                 | m         |
 +-----------------+----------------------------------------------------------------------------------------------------+-----------+
-|o_mdstore        | wood water storage parameter of trees (can be in shufflepar)                                       | kg/m^2    |
+|o_mdstore        | wood water storage parameter of trees (can be in shufflepar)                                       | g/m^2     |
 +-----------------+----------------------------------------------------------------------------------------------------+-----------+
 |o_rgdepth        | root depth grasses (can be in shufflepar)                                                          | m         |
 +-----------------+----------------------------------------------------------------------------------------------------+-----------+

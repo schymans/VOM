@@ -113,7 +113,7 @@
         call vom_subhourly()
 
         time = time + dt_
-        mqtnew = mqt_ + dmqt * dt_
+        mqtnew = mqt_ + dmqt * dt_ !kg/m2
 
 !       * adding up hourly fluxes
 
@@ -124,16 +124,19 @@
       enddo
 
 !     * rl does not need to be included here as ass=-rl if j=0 (at night)
-      tp_netass = tp_netass + asst_h(2,2) - 3600.d0 * (q_cpcct_d + rrt_d &
-     &          + q_tct_d(2) ) + assg_h(2,2,2) - 3600.d0 * (cpccg_d(2)       &
+      tp_netass = tp_netass + asst_h(2,2) + assts_h(2,2) - 3600.d0 * (q_cpcct_d + rrt_d &
+     &          + q_tct_d(2) ) + assg_h(2,2,2) +  assgs_h(2,2,2)   - 3600.d0 * (cpccg_d(2)       &
      &          + rrg_d + tcg_d(2,2))
-      tp_netassg_d = tp_netassg_d + assg_h(2,2,2) - 3600.d0 * (cpccg_d(2)       &
+      tp_netassg_d = tp_netassg_d + assg_h(2,2,2) + assgs_h(2,2,2) - 3600.d0 * (cpccg_d(2)       &
      &          + rrg_d + tcg_d(2,2))
-      tp_netasst_d = tp_netasst_d + asst_h(2,2) - 3600.d0 * (q_cpcct_d + rrt_d &
+      tp_netasst_d = tp_netasst_d + asst_h(2,2) + assts_h(2,2) - 3600.d0 * (q_cpcct_d + rrt_d &
      &          + q_tct_d(2) ) 
 
       asst_d(:,:)   = asst_d(:,:)   + asst_h(:,:)
+      assts_d(:,:)  = assts_d(:,:)   + assts_h(:,:)      
       assg_d(:,:,:) = assg_d(:,:,:) + assg_h(:,:,:)
+      assgs_d(:,:,:) = assgs_d(:,:,:) + assgs_h(:,:,:)      
+      
       ruptkt_d(:) = ruptkt_d(:) + ruptkt_h(:)
       ruptkg_d(:) = ruptkg_d(:) + ruptkg_h(:)
 
@@ -143,10 +146,14 @@
        if (option1 .eq. 2) then
         call vom_add_daily()
         call vom_write_hourly(fyear(nday), fmonth(nday), fday(nday), nday, nhour, th_,          &
-             &    rain_h(th_), tair_h(th_), par_h(th_), gstomt, gstomg(2,2,2), vd_h(th_), esoil_h,    &
+             &    rain_h(th_), tair_h(th_), par_h(th_), pardir_h(th_), pardiff_h(th_),  &
+             &    gstomt, gstomts, gstomg(2,2,2), gstomgs(2,2,2), vd_h(th_), esoil_h,    &
              &    fpar_lt(2)*o_cait + fpar_lg(2)*caig_d(2), jmax25t_d(2), jmax25g_d(2), mqt_,          &
-             &    rlt_h(2,2) + rlg_h(2,2,2), lambdat_d, lambdag_d, rrt_d + rrg_d,  &
-             &    asst_h(2,2), assg_h(2,2,2), etmt_h, etmg_h, su__(1), zw_, wsnew, &
+             &    (rlt_h(2) +  rlts_h(2))*o_cait + (rlg_h(2) + rlgs_h(2))*caig_d(2), &
+             &     lambdat_d, lambdag_d, rrt_d + rrg_d,  &
+             &    asst_h(2,2) + assts_h(2,2), assg_h(2,2,2) + assgs_h(2,2,2), etmt_h, etmg_h, su__(1), zw_, wsnew, &
+             &    jactt(2,2), jactts(2,2), jactg(2,2), jactgs(2,2),                                 &    
+             &    frac_sunt(2), frac_shadet(2), frac_sung(2), frac_shadeg(2), &         
              &    spgfcf_h, infx_h, ruptkt_h, su__, i_write_nc)
 
 !       * check water balance
@@ -211,14 +218,16 @@
        !formatted output for single model run
        if (option1 .eq. 2) then
 
-        call vom_write_day( rain_d(nday), tairmax_d(nday), tairmin_d(nday), par_d(nday),   &
-             &  vd_d / 24.d0, esoil_d, jmax25t_d(2), jmax25g_d(2),             &
-             &  fpard_lt*o_cait + fpard_lg*caig_d(2), rlt_d , rlg_d, lambdat_d, lambdag_d,         &
-             &  rrt_d * 3600.d0 * 24.d0, rrg_d * 3600.d0 * 24.d0, asst_d(2,2), &
-             &  assg_d(2,2,2), SUM(su__(1:wlayer_)) / wlayer_, zw_, wsnew,     &
-             &  spgfcf_d, infx_d, etmt_d, etmg_d, su__(1), topt_,              &
-             & tcg_d(2,2), q_tct_d(2), cpccg_d(2), q_cpcct_d,                  &
-             & lai_lt(2), lai_lg(2), lai_lt(2)*o_cait + lai_lg(2)*caig_d(2), caig_d(2),  &
+        call vom_write_day( rain_d(nday), tairmax_d(nday), tairmin_d(nday),         &
+             & par_d(nday), pardir_d(nday), pardiff_d(nday), par_et_d(nday),       & 
+             &  vd_d / 24.d0, esoil_d, jmax25t_d(2), jmax25g_d(2), jmax25ts_d(2), jmax25gs_d(2), &
+             &  fpard_lt*o_cait + fpard_lg*caig_d(2), rlt_d * o_cait, rlg_d*caig_d(2), lambdat_d, lambdag_d,       &
+             &  rrt_d * 3600.d0 * 24.d0, rrg_d * 3600.d0 * 24.d0, asst_d(2,2)+assts_d(2,2),      &
+             &  assg_d(2,2,2) + assgs_d(2,2,2)  , SUM(su__(1:wlayer_)) / wlayer_, zw_, wsnew,    &
+             &  spgfcf_d, infx_d, etmt_d, etmg_d, su__(1), topt_,                                &
+             & tcg_d(2,2), q_tct_d(2), cpccg_d(2), q_cpcct_d,                                    &
+             & frac_sunt(2), frac_shadet(2), frac_sung(2), frac_shadeg(2),                       &             
+             & lai_lt(2), lai_lg(2), lai_lt(2)*o_cait + lai_lg(2)*caig_d(2), caig_d(2),          &
              & tp_netassg, tp_netasst, rsurft_, i_write_nc )             
 
        if (fyear(nday) .ne. nyear) then
@@ -614,11 +623,15 @@
       allocate(vp_d(c_maxday))
       allocate(press_d(c_maxday))
       allocate(ca_d(c_maxday))
+      allocate(par_et_d(c_maxday))          
+      allocate(pardiff_d(c_maxday))      
+      allocate(pardir_d(c_maxday))
 
+      allocate(par_et_h(c_maxhour))            
       allocate(par_h(c_maxhour))
       allocate(pardiff_h(c_maxhour))
       allocate(pardir_h(c_maxhour))
-      allocate(par_et_h(c_maxhour))          
+
       
       allocate(vd_h(c_maxhour))
       allocate(tair_h(c_maxhour))
@@ -879,7 +892,7 @@
           !read hourly inputs
           read(kfile_hourlyweather, '(5i8,6e11.4)') h, dummyint1,       &
      &      dummyint2, dummyint3, dummyint4, tair_h(i), vp_h(i),       &
-     &      par_h(i), rain_h(i), press_h(i), ca_h(i)   
+     &      par_h(i),pardiff_h(i),pardir_h(i), rain_h(i), press_h(i), ca_h(i)   
           if (par_h(i) .lt. 0.d0) par_h(i) = 0.d0
 
           !calculate vapor pressure deficit
@@ -947,8 +960,8 @@
       if (i_write_h == 1) then
         open(kfile_hourlyweather, FILE=trim(adjustl(i_inputpath))// &
              trim(adjustl(sfile_hourlyweather)), STATUS='new')
-        write(kfile_hourlyweather,'(5a8,6a11)') 'hour', 'dayyear', 'fday', &
-     &    'fmonth', 'fyear', 'tair_h', 'vp_h', 'par_h', 'rain_h','press_h' ,'ca_h'
+        write(kfile_hourlyweather,'(5a8,8a11)') 'hour', 'dayyear', 'fday', &
+     &    'fmonth', 'fyear', 'tair_h', 'vp_h', 'par_h', 'pardiff_h','pardir_h', 'rain_h','press_h' ,'ca_h'
       endif
 
       do in = in1, in2
@@ -964,6 +977,68 @@
         tairmean = (tairmax_d(in) + tairmin_d(in)) / 2.d0
         dtair = tairmax_d(in) - tairmin_d(in)
         vp__ = vp_d(in) * 100.d0             ! vp__ in Pa, vp_d in hPa
+
+
+
+!       * determine daily values of diffuse and direct radation
+
+!       *  day angle (Eq. A.2 Roderick, 1999)
+        Tauw = (2.0d0*p_pi/360.0d0) * (360.0d0/365.0d0)*(dayyear(in) - 1.0 ) !rad
+                    
+!       *  solar declination (Eq. A.3 Roderick, 1999)      
+        delta = 0.006918d0 - 0.399912*cos(Tauw) + 0.070257*sin(Tauw) - 0.006758*cos(2*Tauw) + &
+                  0.000907*sin(2*Tauw) - 0.002697*cos(3*Tauw) + 0.00148*sin(3*Tauw)
+          
+!       *  eccentricity correction (Eq. A.4 Roderick, 1999)          
+        dr2 = 1.000110 + 0.034221*cos(Tauw) + 0.001280*sin(Tauw)+0.000719*cos(Tauw) + &
+                0.00077*sin(2*Tauw)
+
+!       *  sunset hour angle (Eq. A.5 Roderick, 1999)        
+        if(abs(-tan(i_lat * p_pi/180.0d0) * tan(delta) ) .lt. 1.0) then
+           omega_s = acos(-tan(i_lat * p_pi/180.0d0) * tan(delta))
+        else
+          if(  ( delta * i_lat * p_pi/180.0d0 ) .gt. 0.0) then            
+             omega_s = p_pi             
+           else             
+             omega_s = 0.0
+           end if             
+        end if
+
+!       * calculate extra terrestrial irradiance (Eq A.1 Roderick 1999)
+
+        part1 = omega_s * sin(i_lat*p_pi/180.0d0)*sin(delta)          
+        part2 = cos(i_lat*p_pi/180.0d0)*cos(delta)*sin(omega_s)
+
+        par_et_d(in) = srad2par_d * 37.595 * dr2 * (part1 + part2) ! mol/m2/d   
+
+
+!       * split par into direct and diffuse par (Roderick et al. 1999)
+
+        if( (par_d(in) / par_et_d(in) ) .le. X0) then     
+             
+           ! eq. 4a Roderick (1999), Rs/Ro below threshold  
+           pardiff_d(in) = par_d(in) * Y0          
+        end if
+          
+        if(  (  (par_d(in) / par_et_d(in) ) .le. X1 ) .and. (  (par_d(in) / par_et_d(in) ) .gt. X0 ) ) then    
+          
+           ! eq. 4b Roderick (1999), linear part between X0 and X1        
+           A1 = (Y1 - Y0) / (X1 - X0) 
+           A0 = Y1 - A1*X1
+           pardiff_d(in) = par_d(in) * (A0 + A1 * (par_d(in) / par_et_d(in)) )          
+        end if
+          
+        if( (par_d(in) / par_et_d(in) ) .ge. X1) then   
+          
+           ! eq. 4c Roderick (1999), above threshold       
+           pardiff_d(in) = par_d(in) * Y1          
+        end if
+
+        pardir_d(in) = par_d(in) - pardiff_d(in)
+
+
+
+
 
 !       * Loop through every hour of day, where ik=hour
         do ik = 1, 24
@@ -1013,66 +1088,24 @@
             par_h(ii) = 0.d0
           endif         
           
-!         day angle (Eq. A.2 Roderick, 1999)
-          Tauw = (2.0d0*p_pi/360.0d0) * (360.0d0/365.0d0)*(dayyear(in) - 1.0 ) !rad
-                    
-!         solar declination (Eq. A.3 Roderick, 1999)      
-          delta = 0.006918d0 - 0.399912*cos(Tauw) + 0.070257*sin(Tauw) - 0.006758*cos(2*Tauw) + &
-                  0.000907*sin(2*Tauw) - 0.002697*cos(3*Tauw) + 0.00148*sin(3*Tauw)
+!        * convert daily extra-terrestrial par into hourly (Eq. 3, Spitters et al.,1986)          
+          par_et_h(ii) = par_h(ii) * par_et_d(in)/par_d(in)
           
-!         eccentricity correction (Eq. A.4 Roderick, 1999)          
-          dr2 = 1.000110 + 0.034221*cos(Tauw) + 0.001280*sin(Tauw)+0.000719*cos(Tauw) + &
-                0.00077*sin(2*Tauw)
-          
-!         sunset hour angle (Eq. A.5 Roderick, 1999)        
-          if(abs(-tan(i_lat * p_pi/180.0d0) * tan(delta) ) .lt. 1.0) then
-             omega_s = acos(-tan(i_lat * p_pi/180.0d0) * tan(delta))
-          else
-            if(  ( delta * i_lat * p_pi/180.0d0 ) .gt. 0.0) then            
-               omega_s = p_pi             
-             else             
-               omega_s = 0.0
-             end if             
-           end if
-          
-          
-!         * calculate extra terrestrial irradiance (Eq A.1 Roderick 1999)
-
-          part1 = omega_s * sin(i_lat*p_pi/180.0d0)*sin(delta)          
-          part2 = cos(i_lat*p_pi/180.0d0)*cos(delta)*sin(omega_s)
-
-          par_et_h(ii) = srad2par_h * 37.595 * dr2 * (part1 + part2) / (24.0*60.0*60.0) !mol/m2/s
-          
-!         * split par into direct and diffuse par (Roderick et al. 1999)
-
-          if( (par_h(ii) / par_et_h(ii) ) .le. X0) then     
-             
-             ! eq. 4a Roderick (1999), Rs/Ro below threshold  
-             pardiff_h(ii) = par_h(ii) * Y0          
-          end if
-          
-          if(  (  (par_h(ii) / par_et_h(ii) ) .le. X1 ) .and. (  (par_h(ii) / par_et_h(ii) ) .gt. X0 ) ) then    
-          
-             ! eq. 4b Roderick (1999), linear part between X0 and X1        
-             A1 = (Y1 - Y0) / (X1 - X0) 
-             A0 = Y1 - A1*X1
-             pardiff_h(ii) = par_h(ii) * (A0 + A1 * (par_h(ii) / par_et_h(ii)) )          
-          end if
-          
-          if( (par_h(ii) / par_et_h(ii) ) .ge. X1) then   
-          
-             ! eq. 4c Roderick (1999), above threshold       
-             pardiff_h(ii) = par_h(ii) * Y1          
-          end if
-
-          pardir_h(ii) = par_h(ii) - pardiff_h(ii)
-          
+!        * convert daily diffuse par into hourly (Eq. 7, Spitters et al.,1986)          
+          pardiff_h(ii) = par_et_h(ii) * pardiff_d(in)/par_et_d(in)
+                  
+!        * 
+         if(  pardiff_h(ii) .gt.  par_h(ii) ) then
+            pardiff_h(ii) = par_h(ii)
+         end if         
+         
+         pardir_h(ii) = par_h(ii) - pardiff_h(ii)       
                   
          ! write hourly weatherdata to file 
           if (i_write_h == 1) then
-            write(kfile_hourlyweather,'(5i8,6e11.4)') ik, dayyear(in), &
+            write(kfile_hourlyweather,'(5i8,8e11.4)') ik, dayyear(in), &
      &        fday(in), fmonth(in), fyear(in), tair_h(ii), vp__/100.d0,   &
-     &        par_h(ii), rain_h(ii), press_h(ii), ca_h(ii)
+     &        par_h(ii), pardiff_h(ii), pardir_h(ii), rain_h(ii), press_h(ii), ca_h(ii)
           endif
 
         enddo
@@ -1169,9 +1202,9 @@
 
 !     * Set vegetation parameters
 
-      q_md   = o_cait * i_mdtf + o_mdstore
-      q_mqx  = q_md * i_mqxtf
-      mqtnew = 0.95d0 * q_mqx                  ! initial wood water storage
+      q_md   = o_cait * i_mdtf + o_mdstore !dry matter (kg/m2) 
+      q_mqx  = q_md * i_mqxtf              !dry matter (kg/m2) * water storage cap. living matter  (-) = (kg/m2)
+      mqtnew = 0.95d0 * q_mqx              !initial wood water storage (kg/m^2) 
       mqtold = mqtnew
       rsurftnew(:) = 0.d0
       
@@ -1210,7 +1243,9 @@
       endif
       jmax25t_d(2) = i_jmax_ini
       jmax25g_d(2) = i_jmax_ini
-
+      jmax25ts_d(2) = i_jmax_ini
+      jmax25gs_d(2) = i_jmax_ini
+      
       !set minimum grass coverage, 0 if no vegetation
       if(i_no_veg .eq. 0) then
          c_caigmin     = 0.02d0 ! minimum grass pc; initial point for growth
@@ -1241,7 +1276,7 @@
 !        * (3.38)  foliage turnover costs, assuming crown LAI of 2.5
          q_tct_d(:) = i_tcft * o_cait * 2.5d0
 
-      case(2)
+      case(2, 3, 4)
 !        * foliage turnover costs, LAI as a function of cover (Choudhurry,1987; Monsi and Saeki,1953)
          q_tct_d(:) = i_tcft * o_cait * lai_lt(:)
       end select
@@ -1292,13 +1327,22 @@
       rsurfg_(:)   = rsurfgnew(:)
       lambdat_d    = o_lambdatf * (SUM(pcapnew(1:pos_slt)) / pos_slt) ** o_wstexp  ! (3.45)
       lambdag_d    = o_lambdagf * pcapnew(1) ** o_wsgexp  ! (3.44)
+      
+!     * Sunlit Jmax values      
 !     * vector with values varying by 1%
       jmax25t_d(:) = jmax25t_d(2) * (/1.0d0-i_incrjmax,1.0d0,1.0d0+i_incrjmax/)
-!     * making sure that the values don't become too low, otherwise
-!       they could never pick up again
-      jmax25t_d(:) = MAX(jmax25t_d(:), 50.0d-6)
+      jmax25t_d(:) = MAX(jmax25t_d(:), 0.0)
+      
       jmax25g_d(:) = jmax25g_d(2) * (/1.0d0-i_incrjmax,1.0d0,1.0d0+i_incrjmax/)
-      jmax25g_d(:) = MAX(jmax25g_d(:), 50.0d-6)
+      jmax25g_d(:) = MAX(jmax25g_d(:), 0.0)
+
+!     * Shaded Jmax values
+!     * vector with values varying by 1%
+      jmax25ts_d(:) = jmax25ts_d(2) * (/1.0d0-i_incrjmax,1.0d0,1.0d0+i_incrjmax/)
+      jmax25ts_d(:) = MAX(jmax25ts_d(:), 0.0)
+      
+      jmax25gs_d(:) = jmax25gs_d(2) * (/1.0d0-i_incrjmax,1.0d0,1.0d0+i_incrjmax/)
+      jmax25gs_d(:) = MAX(jmax25gs_d(:), 0.0)
 
 !     * adjust lai-values trees
       lai_lt(:) = lai_lt(2) * (/1.0d0-i_incrlait,1.0d0,1.0d0+i_incrlait/)
@@ -1330,13 +1374,14 @@
          do ii = 1,3
             tcg_d(ii,:)     = i_tcfg * caig_d(:) * 2.5d0 !grasses
          end do
-         q_tct_d(:)     = i_tcfg * o_cait * 2.5d0    !trees
-      case(2)
+         q_tct_d(:)     = i_tcft * o_cait * 2.5d0    !trees
+      case(2, 3, 4)
 !        * foliage turnover costs, varying lai
          do ii = 1,3
             tcg_d(ii, :) = i_tcfg * caig_d(:) * lai_lg(ii) !grasses 
          end do
-         q_tct_d(:) = i_tcfg * o_cait * lai_lt(:)     !trees
+         q_tct_d(:) = i_tcft * o_cait * lai_lt(:)     !trees
+                  
       end select
 
 
@@ -1406,14 +1451,32 @@
         &           * (273.d0 + tair_h(th_) - topt_)) / ( (tair_h(th_)      &
         &           + 273.d0) * p_R_ * topt_))) * i_ha + i_hd) 
 
-
-
 !     * (3.24), (Out[312]), leaf respiration trees
-     do ii = 1,3 !loop for LAI-values
-      rlt_h(:,ii) = ((ca_h(th_) - gammastar) * o_cait * jmaxt_h(:)         &
+      rlt_h(:) = ((ca_h(th_) - gammastar) * jmaxt_h(:)         &
      &         * i_rlratio) / (4.d0 * (ca_h(th_) + 2.d0 * gammastar)   &
      &         * (1.d0 + i_rlratio))
-     end do
+
+
+!     * dynamic LAI, with shaded/sunlit fractions
+      if( i_lai_function .eq. 4 ) then
+!        * shaded jmax trees
+         jmaxts_h(:) =  (p_E ** ((i_ha * (-25.d0 + tair_h(th_)))                &
+         &           / ((25.d0 + 273.d0)  * p_R_ * (tair_h(th_) + 273.d0) )) &
+         &           * ((-1.d0 + p_E ** (-(i_hd * (-298.d0                   &
+         &           + topt_)) /( (25.d0 + 273.d0) * p_R_ * topt_))) * i_ha  &
+         &           + i_hd) * jmax25ts_d(:)) / ((-1.d0 + p_E ** ((i_hd       &
+         &           * (273.d0 + tair_h(th_) - topt_)) / ( (tair_h(th_)      &
+         &           + 273.d0) * p_R_ * topt_))) * i_ha + i_hd) 
+
+!        * (3.24), (Out[312]), shaded leaf respiration trees
+         rlts_h(:) = ((ca_h(th_) - gammastar) * jmaxts_h(:)         &
+         &         * i_rlratio) / (4.d0 * (ca_h(th_) + 2.d0 * gammastar)   &
+         &         * (1.d0 + i_rlratio))
+      else
+         jmaxts_h(:) = 0.0d0
+         rlts_h(:) = 0.0d0
+      end if
+
 
 !     * (Out[310], derived from (3.26)) Temperature dependence of Jmax
       jmaxg_h(:) = (p_E ** ((i_ha * (-25.d0 + tair_h(th_)))                 &
@@ -1423,19 +1486,33 @@
         &           + i_hd) * jmax25g_d(:)) / ((-1.d0 + p_E ** ((i_hd       &
         &           * (273.d0 + tair_h(th_) - topt_)) / ( (tair_h(th_)      &
         &           + 273.d0) * p_R_ * topt_))) * i_ha + i_hd)
-
+        
 !    * respiration grasses
-     do ii = 1,3 !loop for LAI-values
-         rlg_h(1,:,ii) = ((ca_h(th_) - gammastar) * caig_d(1)  * jmaxg_h(:)    &
+         rlg_h(:) = ((ca_h(th_) - gammastar) * jmaxg_h(:)    &
         &           * i_rlratio) / (4.d0 * (ca_h(th_) + 2.d0 * gammastar) &
         &           * (1.d0 + i_rlratio))  ! (3.24), (Out[312])
-         rlg_h(2,:,ii) = ((ca_h(th_) - gammastar) * caig_d(2)  * jmaxg_h(:)    &
+        
+               
+!     * dynamic LAI, shaded jmax grasses
+      if( i_lai_function .eq. 4 ) then
+      jmaxgs_h(:) = (p_E ** ((i_ha * (-25.d0 + tair_h(th_)))                 &
+        &           / ((25.d0 + 273.d0)  * p_R_ * (tair_h(th_) + 273.d0) )) &
+        &           * ((-1.d0 + p_E ** (-(i_hd * (-298.d0                   &
+        &           + topt_)) /( (25.d0 + 273.d0) * p_R_ * topt_))) * i_ha  &
+        &           + i_hd) * jmax25gs_d(:)) / ((-1.d0 + p_E ** ((i_hd       &
+        &           * (273.d0 + tair_h(th_) - topt_)) / ( (tair_h(th_)      &
+        &           + 273.d0) * p_R_ * topt_))) * i_ha + i_hd)        
+
+!    * shaded respiration grasses
+         rlgs_h(:) = ((ca_h(th_) - gammastar) * jmaxgs_h(:)    &
         &           * i_rlratio) / (4.d0 * (ca_h(th_) + 2.d0 * gammastar) &
         &           * (1.d0 + i_rlratio))  ! (3.24), (Out[312])
-         rlg_h(3,:,ii) = ((ca_h(th_) - gammastar) * caig_d(3) * jmaxg_h(:)    &
-        &           * i_rlratio) / (4.d0 * (ca_h(th_) + 2.d0 * gammastar) &
-        &           * (1.d0 + i_rlratio))  ! (3.24), (Out[312])
-     end do
+
+      else
+         jmaxgs_h(:) = 0.0d0
+         rlgs_h(:) = 0.0d0
+      end if
+
 
 !     * daily recalculation for resultsdaily
       if (optmode .eq. 0) then
@@ -1460,7 +1537,9 @@
 
       time        = 0.d0
       asst_h(:,:)   = 0.d0
+      assts_h(:,:)   = 0.d0      
       assg_h(:,:,:) = 0.d0
+      assgs_h(:,:,:) = 0.d0      
       ruptkt_h(:) = 0.d0
       ruptkg_h(:) = 0.d0
 
@@ -1477,14 +1556,14 @@
       implicit none
 
       REAL*8 :: cond1, cond2
-      REAL*8 :: cond3(3,3,3)
+      REAL*8 :: cond3(3)
       REAL*8 :: part1, part2, part3, part4, part5
       REAL*8 :: part6, part7, part8, part9
       INTEGER:: ii
+      INTEGER:: jj      
       INTEGER:: ilay
       REAL*8 :: lag_sun(3)          
       REAL*8 :: lat_sun(3)                
-      INTEGER:: nlay            
       REAL*8 :: kappa
       
       select case(i_lai_function)
@@ -1520,7 +1599,7 @@
         frac_sunt(:) = 1.0d0
 
       
-      case(3) !dynamic LAI, with shaded/sunlit fractions
+      case(3, 4) !dynamic LAI, with shaded/sunlit fractions
       
 !       * extinction coefficient (Xiao et al. (2015) eq.6, Campbell and Norman (1998) eq. 15.4)
         kappa = sqrt(i_chi_t**2+tan(phi_zenith(th_))**2)/(i_chi_t+1.774*(i_chi_t+1.182)**(-0.733) )        
@@ -1561,6 +1640,8 @@
         
       end select
 
+!*-----determine electron transport rates------------------
+
       if (par_h(th_) .gt. 0.d0) then
 !       * adaptation of topt to air temperature during sunlight
         topt_ = topt_ + i_toptf * (tair_h(th_) + 273.d0 - topt_)
@@ -1571,17 +1652,24 @@
             select case(i_lai_function)
               case(1) ! no dynamic LAI, fpar is set to 1
                    jactt(:,ii)   = (1.d0 - p_E ** (-(i_alpha * fpar_lt(ii) * par_h(th_))           &    
-        &             / jmaxt_h(:))) * jmaxt_h(:) * o_cait  ! (3.23), (Out[311])
+        &             / jmaxt_h(:))) * jmaxt_h(:)  ! (3.23), (Out[311])
        
               case(2) ! dynamic LAI, with fpar-calculation
                    jactt(:,ii)   = (1.d0 - p_E ** (-(i_alpha * fpar_lt(ii) * par_h(th_))           &    
-        &             / jmaxt_h(:))) * jmaxt_h(:) * o_cait  ! (3.23), (Out[311])    
+        &             / jmaxt_h(:))) * jmaxt_h(:)  ! (3.23), (Out[311])    
         
               case(3) ! shaded and sunlit, with diffuse and direct radiation
                    jactt(:,ii)   = ( (1.d0 - p_E ** (-(i_alpha * fpar_lt(ii) * (pardir_h(th_) + pardiff_h(th_)) ) &    
-        &             / jmaxt_h(:))) * jmaxt_h(:) * o_cait * frac_sunt(ii) ) +                                      &
+        &             / jmaxt_h(:))) * jmaxt_h(:) * frac_sunt(ii) ) +                                      &
         &                          ( (1.d0 - p_E ** (-(i_alpha * fpar_lt(ii) * pardiff_h(th_) )                    &    
-        &             / jmaxt_h(:))) * jmaxt_h(:) * o_cait * frac_shadet(ii) )
+        &             / jmaxt_h(:))) * jmaxt_h(:) * frac_shadet(ii) )
+        
+              case(4) ! shaded and sunlit, diffuse and direct radiation, different jact-values shaded-sunlit        
+                   jactt(:,ii)   = (1.d0 - p_E ** (-(i_alpha * fpar_lt(ii) * (pardir_h(th_) + pardiff_h(th_)) ) &    
+        &             / jmaxt_h(:))) * jmaxt_h(:) 
+
+                   jactts(:,ii)   =  (1.d0 - p_E ** (-(i_alpha * fpar_lt(ii) * pardiff_h(th_) )                    &    
+        &             / jmaxts_h(:))) * jmaxts_h(:)   
         
              end select
         end do
@@ -1592,46 +1680,42 @@
           select case(i_lai_function)
               case(1) ! no dynamic LAI, fpar is set to 1
                
-               jactg(1,:,ii) = (1.d0 - p_E ** (-(i_alpha * fpar_lg(ii) * par_h(th_))           &
-             &       / jmaxg_h(:))) * jmaxg_h(:) * caig_d(1)   ! (3.23), (Out[311])
-               jactg(2,:,ii) = (1.d0 - p_E ** (-(i_alpha * fpar_lg(ii) * par_h(th_))           &
-             &       / jmaxg_h(:))) * jmaxg_h(:) * caig_d(2)   ! (3.23), (Out[311])
-               jactg(3,:,ii) = (1.d0 - p_E ** (-(i_alpha * fpar_lg(ii) * par_h(th_))           &
-             &       / jmaxg_h(:))) * jmaxg_h(:) * caig_d(3)  ! (3.23), (Out[311])
+               jactg(:,ii) = (1.d0 - p_E ** (-(i_alpha * fpar_lg(ii) * par_h(th_))           &
+             &       / jmaxg_h(:))) * jmaxg_h(:)  ! (3.23), (Out[311])
              
               case(2) ! dynamic LAI, with fpar-calculation
               
-               jactg(1,:,ii) = (1.d0 - p_E ** (-(i_alpha * fpar_lg(ii) * par_h(th_))           &
-             &       / jmaxg_h(:))) * jmaxg_h(:) * caig_d(1)   ! (3.23), (Out[311])
-               jactg(2,:,ii) = (1.d0 - p_E ** (-(i_alpha * fpar_lg(ii) * par_h(th_))           &
-             &       / jmaxg_h(:))) * jmaxg_h(:) * caig_d(2)   ! (3.23), (Out[311])
-               jactg(3,:,ii) = (1.d0 - p_E ** (-(i_alpha * fpar_lg(ii) * par_h(th_))           &
-             &       / jmaxg_h(:))) * jmaxg_h(:) * caig_d(3)  ! (3.23), (Out[311])
+               jactg(:,ii) = (1.d0 - p_E ** (-(i_alpha * fpar_lg(ii) * par_h(th_))           &
+             &       / jmaxg_h(:))) * jmaxg_h(:)  ! (3.23), (Out[311])
                           
               case(3) ! shaded and sunlit, with diffuse and direct radiation
-               jactg(1,:,ii)   = ( (1.d0 - p_E ** (-(i_alpha * fpar_lg(ii) * (pardir_h(th_) + pardiff_h(th_)) ) &    
-             &     / jmaxg_h(:))) * jmaxg_h(:) * caig_d(1) * frac_sung(ii) ) +                                &
+               jactg(:,ii)   = ( (1.d0 - p_E ** (-(i_alpha * fpar_lg(ii) * (pardir_h(th_) + pardiff_h(th_)) ) &    
+             &     / jmaxg_h(:))) * jmaxg_h(:)  * frac_sung(ii) ) +                                &
              &     ( (1.d0 - p_E ** (-(i_alpha * fpar_lg(ii) * pardiff_h(th_) )                                  &    
-             &     / jmaxg_h(:))) * jmaxg_h(:) * caig_d(1) * frac_shadeg(ii) )
+             &     / jmaxg_h(:))) * jmaxg_h(:) * frac_shadeg(ii) )
+                      
+              case(4) ! shaded and sunlit, diffuse and direct radiation, different jact-values shaded-sunlit
+               jactg(:,ii)   =  (1.d0 - p_E ** (-(i_alpha * fpar_lg(ii) * (pardir_h(th_) + pardiff_h(th_)) ) &    
+             &     / jmaxg_h(:))) * jmaxg_h(:)   
              
-               jactg(2,:,ii)   = ( (1.d0 - p_E ** (-(i_alpha * fpar_lg(ii) * (pardir_h(th_) + pardiff_h(th_)) ) &    
-             &     / jmaxg_h(:))) * jmaxg_h(:) * caig_d(2) * frac_sung(ii) ) +                                &
-             &     ( (1.d0 - p_E ** (-(i_alpha * fpar_lg(ii) * pardiff_h(th_) )                                  &    
-             &     / jmaxg_h(:))) * jmaxg_h(:) * caig_d(2) * frac_shadeg(ii) )
-             
-               jactg(3,:,ii)   = ( (1.d0 - p_E ** (-(i_alpha * fpar_lg(ii) * (pardir_h(th_) + pardiff_h(th_)) ) &    
-             &     / jmaxg_h(:))) * jmaxg_h(:) * caig_d(3) * frac_sung(ii) ) +                                &
-             &     ( (1.d0 - p_E ** (-(i_alpha * fpar_lg(ii) * pardiff_h(th_) )                                  &    
-             &     / jmaxg_h(:))) * jmaxg_h(:) * caig_d(3) * frac_shadeg(ii) )             
+               jactgs(:,ii)   = (1.d0 - p_E ** (-(i_alpha * fpar_lg(ii) * pardiff_h(th_) )                                  &    
+             &     / jmaxgs_h(:))) * jmaxgs_h(:)    
+              
              
           end select
         end do
 
+
+
+!*-----determine stomatal conductances------------------
+
+!       * calculate stomatal conductance trees
+
         cond1      = (2.d0 * p_a * vd_h(th_)) / (ca_h(th_) + 2.d0 * gammastar)
-        cond2      = (4.d0 * ca_h(th_) * rlt_h(2,2) + 8.d0 * gammastar   &
-     &             * rlt_h(2,2)) / (ca_h(th_) - gammastar)
-        cond3(:,:,:) = (4.d0 * ca_h(th_) * rlg_h(:,:,:) + 8.d0 * gammastar &
-     &             * rlg_h(:,:,:)) / (ca_h(th_) - gammastar)
+        cond2      = (4.d0 * ca_h(th_) * rlt_h(2) + 8.d0 * gammastar   &
+     &             * rlt_h(2)) / (ca_h(th_) - gammastar)
+        cond3(:) = (4.d0 * ca_h(th_) * rlg_h(:) + 8.d0 * gammastar &
+     &             * rlg_h(:)) / (ca_h(th_) - gammastar)
 
         if (vd_h(th_) .gt. 0.d0 .and. lambdat_d .gt. cond1 .and. jactt(2,2) .gt. cond2) then
 
@@ -1639,9 +1723,9 @@
           part2 = part1 * lambdat_d - p_a * vd_h(th_)
           part3 = p_a * vd_h(th_) * part2
 
-          part4 = ca_h(th_) * (jactt(2,2) - 4.d0 * rlt_h(2,2))
+          part4 = ca_h(th_) * (jactt(2,2) - 4.d0 * rlt_h(2))
           part5 = gammastar * jactt(2,2)
-          part6 = gammastar * 8.d0 * rlt_h(2,2)
+          part6 = gammastar * 8.d0 * rlt_h(2)
           part7 = part4 - part5 - part6
 
           part8 = SQRT(part5 * part7 * (part2 - p_a * vd_h(th_)) ** 2.d0 * part3)
@@ -1655,39 +1739,139 @@
           gstomt = 0.d0
         endif
         transpt = p_a * vd_h(th_) * gstomt  ! (3.28) transpiration rate in mol/s
-        etmt__ = (transpt * 18.d0) / (10.d0 ** 6.d0)  ! transpiration rate in m/s
+        if(i_lai_function == 4) then        
+           etmt__ = frac_sunt(2) * (transpt * 18.d0) / (10.d0 ** 6.d0)  ! transpiration rate in m/s        
+        else        
+           etmt__ = (transpt * 18.d0) / (10.d0 ** 6.d0)  ! transpiration rate in m/s
+        end if
 
-        do ii = 1,3
-        where (vd_h(th_) .gt. 0.d0 .and. lambdag_d .gt. cond1 .and. jactg(:,:,ii) .gt. cond3(:,:,ii))
-          gstomg(:,:,ii) = MAX(0.d0,(0.25d0 * (p_a * (ca_h(th_)           &
-           &          * (jactg(:,:,ii) - 4.d0 * rlg_h(:,:,ii)) - 4.d0        &
-           &          * gammastar * (jactg(:,:,ii) + 2.d0 * rlg_h(:,:,ii)))  &
-           &          * vd_h(th_) * (ca_h(th_) * lambdag_d + 2.d0      &
-           &          * gammastar * lambdag_d - p_a * vd_h(th_))       &
-           &          + 1.7320508075688772d0 * SQRT(p_a * gammastar    &
-           &          * jactg(:,:,ii) * (ca_h(th_) * (jactg(:,:,ii) - 4.d0   &
-           &          * rlg_h(:,:,ii)) - gammastar * (jactg(:,:,ii) + 8.d0   &
-           &          * rlg_h(:,:,ii))) * vd_h(th_) * (ca_h(th_)          &
-           &          * lambdag_d + 2.d0 * gammastar * lambdag_d       &
-           &          - 2.d0 * p_a * vd_h(th_)) ** 2.d0 * (ca_h(th_)   &
-           &          * lambdag_d + 2.d0 * gammastar * lambdag_d - p_a &
-           &          * vd_h(th_))))) / (p_a * (ca_h(th_) + 2.d0       &
-           &          * gammastar) ** 2.d0 * vd_h(th_) * (ca_h(th_)    &
-           &          * lambdag_d + 2.d0 * gammastar * lambdag_d       &
-           &          - p_a * vd_h(th_))))  ! (Out[314])
-        elsewhere
-          gstomg(:,:,ii) = 0.d0
-        endwhere
+!       * calculate stomatal conductance grasses
+
+        do ii = 1,3 !loop for LAI
+           do jj = 1,3 ! copy values three times for later multiplication with cai_g
+             where (vd_h(th_) .gt. 0.d0 .and. lambdag_d .gt. cond1 .and. jactg(:,ii) .gt. cond3(:))
+                gstomg(jj,:,ii) = MAX(0.d0,(0.25d0 * (p_a * (ca_h(th_)           &
+                &          * (jactg(:,ii) - 4.d0 * rlg_h(:)) - 4.d0        &
+                &          * gammastar * (jactg(:,ii) + 2.d0 * rlg_h(:)))  &
+                &          * vd_h(th_) * (ca_h(th_) * lambdag_d + 2.d0      &
+                &          * gammastar * lambdag_d - p_a * vd_h(th_))       &
+                &          + 1.7320508075688772d0 * SQRT(p_a * gammastar    &
+                &          * jactg(:,ii) * (ca_h(th_) * (jactg(:,ii) - 4.d0   &
+                &          * rlg_h(:)) - gammastar * (jactg(:,ii) + 8.d0   &
+                &          * rlg_h(:))) * vd_h(th_) * (ca_h(th_)          &
+                &          * lambdag_d + 2.d0 * gammastar * lambdag_d       &
+                &          - 2.d0 * p_a * vd_h(th_)) ** 2.d0 * (ca_h(th_)   &
+                &          * lambdag_d + 2.d0 * gammastar * lambdag_d - p_a &
+                &          * vd_h(th_))))) / (p_a * (ca_h(th_) + 2.d0       &
+                &          * gammastar) ** 2.d0 * vd_h(th_) * (ca_h(th_)    &
+                &          * lambdag_d + 2.d0 * gammastar * lambdag_d       &
+                &          - p_a * vd_h(th_))))  ! (Out[314])
+             elsewhere
+                gstomg(jj, :,ii) = 0.d0
+             endwhere
+           end do
         end do
-        transpg(:,:,:) = p_a * vd_h(th_) * gstomg(:,:,:)  ! (3.28) transpiration rate in mol/s
-        etmg__(:,:,:) = (transpg(:,:,:) * 18.d0) / (10.d0 ** 6.d0)  ! transpiration rate in m/s
+        transpg(:, :, :) = p_a * vd_h(th_) * gstomg(:, :, :)  ! (3.28) transpiration rate in mol/s
+        if(i_lai_function == 4) then        
+           do ii = 1,3
+              etmg__(:, :, ii) = frac_sung(ii) * (transpg(:, :, ii) * 18.d0) / (10.d0 ** 6.d0)  ! transpiration rate in m/s 
+           end do  
+        else
+           etmg__(:,:,:) = (transpg(:, :, :) * 18.d0) / (10.d0 ** 6.d0)  ! transpiration rate in m/s        
+        end if
+
+
+!       * calculate stomatal conductance shaded trees 
+        if(i_lai_function == 4) then     
+        
+           cond1      = (2.d0 * p_a * vd_h(th_)) / (ca_h(th_) + 2.d0 * gammastar)
+           cond2      = (4.d0 * ca_h(th_) * rlts_h(2) + 8.d0 * gammastar   &
+     &             * rlts_h(2)) / (ca_h(th_) - gammastar)
+           cond3(:) = (4.d0 * ca_h(th_) * rlgs_h(:) + 8.d0 * gammastar &
+     &             * rlgs_h(:)) / (ca_h(th_) - gammastar)
+
+           if (vd_h(th_) .gt. 0.d0 .and. lambdat_d .gt. cond1 .and. jactts(2,2) .gt. cond2) then
+
+             part1 = ca_h(th_) + 2.d0 * gammastar
+             part2 = part1 * lambdat_d - p_a * vd_h(th_)
+             part3 = p_a * vd_h(th_) * part2
+
+             part4 = ca_h(th_) * (jactts(2,2) - 4.d0 * rlts_h(2))
+             part5 = gammastar * jactts(2,2)
+             part6 = gammastar * 8.d0 * rlts_h(2)
+             part7 = part4 - part5 - part6
+
+             part8 = SQRT(part5 * part7 * (part2 - p_a * vd_h(th_)) ** 2.d0 * part3)
+             part9 = part7 - 3.d0 * part5 + 1.7320508075688772d0 * part8 / part3
+
+             gstomts = 0.25d0 * part9 / part1**2.d0
+             gstomts = MAX(0.d0, gstomts)    ! (Out[314])
+             !check if gstomt remains 0
+
+           else
+             gstomts = 0.d0
+           endif
+           transpts = p_a * vd_h(th_) * gstomts  ! (3.28) transpiration rate in mol/s
+
+           etmts__ = frac_shadet(2) * (transpts * 18.d0) / (10.d0 ** 6.d0)  ! transpiration rate in m/s        
+        else     
+           gstomts = 0.d0
+           transpts = 0.d0      
+           etmts__ = 0.d0 ! transpiration rate in m/s
+        end if
+
+!       * calculate stomatal conductance shaded grasses 
+
+
+        if(i_lai_function == 4) then  
+           do ii = 1,3 !loop for LAI
+              do jj = 1,3 ! copy values three times for later multiplication with cai_g        
+                 where (vd_h(th_) .gt. 0.d0 .and. lambdag_d .gt. cond1 .and. jactgs(:,ii) .gt. cond3(:))
+                    gstomgs(jj,:,ii) = MAX(0.d0,(0.25d0 * (p_a * (ca_h(th_)           &
+                    &          * (jactgs(:,ii) - 4.d0 * rlgs_h(:)) - 4.d0        &
+                    &          * gammastar * (jactgs(:,ii) + 2.d0 * rlgs_h(:)))  &
+                    &          * vd_h(th_) * (ca_h(th_) * lambdag_d + 2.d0      &
+                    &          * gammastar * lambdag_d - p_a * vd_h(th_))       &
+                    &          + 1.7320508075688772d0 * SQRT(p_a * gammastar    &
+                    &          * jactgs(:,ii) * (ca_h(th_) * (jactgs(:,ii) - 4.d0   &
+                    &          * rlgs_h(:)) - gammastar * (jactgs(:,ii) + 8.d0   &
+                    &          * rlgs_h(:))) * vd_h(th_) * (ca_h(th_)          &
+                    &          * lambdag_d + 2.d0 * gammastar * lambdag_d       &
+                    &          - 2.d0 * p_a * vd_h(th_)) ** 2.d0 * (ca_h(th_)   &
+                    &          * lambdag_d + 2.d0 * gammastar * lambdag_d - p_a &
+                    &          * vd_h(th_))))) / (p_a * (ca_h(th_) + 2.d0       &
+                    &          * gammastar) ** 2.d0 * vd_h(th_) * (ca_h(th_)    &
+                    &          * lambdag_d + 2.d0 * gammastar * lambdag_d       &
+                    &          - p_a * vd_h(th_))))  ! (Out[314])
+                 elsewhere
+                    gstomgs(jj,:,ii) = 0.d0
+                 endwhere
+             end do
+           end do
+           transpgs(:,:,:) = p_a * vd_h(th_) * gstomgs(:,:,:)  ! (3.28) transpiration rate in mol/s       
+
+           do ii = 1,3           
+              etmgs__(:,:,ii) = frac_shadeg(ii) * (transpgs(:,:,ii) * 18.d0) / (10.d0 ** 6.d0)  ! transpiration rate in m/s    
+           end do    
+        else  
+           gstomgs(:,:,:) = 0.d0
+           transpgs(:,:,:)= 0.d0     
+           etmgs__(:,:,:) = 0.d0 
+        end if
+      
       else
-        jactt(:,:)    = 0.d0
-        gstomt      = 0.d0
-        etmt__      = 0.d0
-        jactg(:,:,:)  = 0.d0
+        jactt(:,:)   = 0.d0
+        gstomt       = 0.d0
+        etmt__      = 0.d0        
+        jactts(:,:)  = 0.d0
+        gstomts      = 0.d0                
+        etmts__      = 0.d0
+        jactg(:,:)  = 0.d0
         gstomg(:,:,:) = 0.d0
         etmg__(:,:,:) = 0.d0
+        jactgs(:,:)  = 0.d0
+        gstomgs(:,:,:) = 0.d0
+        etmgs__(:,:,:) = 0.d0        
       endif
 
 
@@ -1730,6 +1914,9 @@
       use vom_vegwat_mod
       implicit none
 
+      INTEGER:: jj
+      INTEGER:: ii
+      
       if (wlayernew .ge. 1) then
         pos_ult = MIN(pos_slt, wlayer_)
         if (q_md .gt. 0.d0) then
@@ -1755,27 +1942,44 @@
           ruptkt__(pos_ult+1:s_maxlayer) = 0.d0
         else  ! if no storage, uptake happens only when etmt__>0
 
-          if (etmt__ .gt. 0.d0) then
+          if ( (etmt__ + etmts__) .gt. 0.d0) then
             ruptkt__(1:pos_ult) = MAX(0.d0,(-pcap_(1:pos_ult)          &
      &                          + prootm(1:pos_ult)) * rsurft_(1:pos_ult) &
      &                          / (i_rrootm + rsoil(1:pos_ult)))
             ruptkt__(pos_ult+1:s_maxlayer) = 0.d0
 
             if (SUM(ruptkt__(:)) .gt. 0.d0) then
-              if (etmt__ .gt. SUM(ruptkt__(:))) then
+              if ( ( (etmt__ + etmts__)* o_cait) .gt. SUM(ruptkt__(:))) then
                 changef = 1.d0
-                etmt__   = SUM(ruptkt__(:))
-                transpt = etmt__ * 55555.555555555555d0  ! (Out[249]) mol/s=m/s*10^6 g/m/(18g/mol)
-                gstomt = transpt / (p_a * vd_h(th_))
+                if(i_lai_function == 4) then  
+                  etmt__   = (SUM(ruptkt__(:)) * frac_sunt(2) ) / o_cait 
+                  transpt = etmt__ * 55555.555555555555d0  ! (Out[249]) mol/s=m/s*10^6 g/m/(18g/mol)
+                  gstomt = transpt / (p_a * vd_h(th_))
+                  
+                  etmts__   = (SUM(ruptkt__(:)) * frac_shadet(2) )/ o_cait 
+                  transpts = etmts__ * 55555.555555555555d0  ! (Out[249]) mol/s=m/s*10^6 g/m/(18g/mol)
+                  gstomts = transpts / (p_a * vd_h(th_))                                
+                else                
+                  etmt__   = SUM(ruptkt__(:)) / o_cait 
+                  transpt = etmt__ * 55555.555555555555d0  ! (Out[249]) mol/s=m/s*10^6 g/m/(18g/mol)
+                  gstomt = transpt / (p_a * vd_h(th_))
+                  
+                  etmts__   = 0.d0
+                  transpts  = 0.d0
+                  gstomts   = 0.d0               
+                end if 
               endif
 !             * Setting SUM(ruptkt__)=etmt__ and distributing according to relative uptake:
-              ruptkt__(:) = etmt__ * (ruptkt__(:) / (SUM(ruptkt__(:))))
+              ruptkt__(:) = o_cait * (etmt__ + etmts__)* (ruptkt__(:) / (SUM(ruptkt__(:))))
             else
               ruptkt__(:) = 0.d0
               changef     = 1.d0
               etmt__      = 0.d0
+              etmts__     = 0.d0              
               transpt     = 0.d0
+              transpts    = 0.d0              
               gstomt      = 0.d0
+              gstomts      = 0.d0              
             endif
 
           else
@@ -1785,7 +1989,7 @@
         endif
 
         pos_ulg = MIN(pos_slg, wlayer_)
-        if (MAXVAL(etmg__(:,:,:)) .gt. 0.d0) then
+        if (MAXVAL(etmg__(:,:,:) + etmgs__(:,:,:)  ) .gt. 0.d0) then
 !         * root uptake by grasses can not be negative, as storage negligible
           ruptkg__(1:pos_slg) = MAX(0.d0,((-pcap_(1:pos_ulg)           &
      &                        + (i_prootmg - c_hhydrst(1:pos_ulg)))    &
@@ -1794,19 +1998,52 @@
      &                        / rsurfg_(:))) / kunsat_(1:pos_ulg)))
           ruptkg__(pos_ulg+1:s_maxlayer) = 0.d0
           if (SUM(ruptkg__(:)) .gt. 0.d0) then
-            where (etmg__(:,:,:) .gt. SUM(ruptkg__(:)))
-              rootlim(:,:,:)  = 1.d0
-              etmg__(:,:,:)   = SUM(ruptkg__(:))
-              transpg(:,:,:)  = etmg__(:,:,:) * 55555.555555555555d0  ! (Out[249]) mol/s=m/s*10^6 g/m/(18g/mol)
-              gstomg(:,:,:)   = transpg(:,:,:) / (p_a * vd_h(th_))
-            end where
-            ruptkg__(1:pos_ulg) = etmg__(2,2,2) * (ruptkg__(1:pos_ulg)   &
+             
+            if(i_lai_function == 4) then  
+                  
+                  do ii=1, 3 !loop for cai_g
+                    do jj=1, 3 !loop for LAI
+                      where ( ( etmg__(ii,:,jj) *caig_d(ii) ) .gt. (frac_sung(jj)*SUM(ruptkg__(:)) ) )
+                        rootlim(ii,:,jj)  = 1.d0              
+                        etmg__(ii,:,jj)   = (SUM(ruptkg__(:))* frac_sung(jj) ) / caig_d(ii) 
+                        transpg(ii,:,jj)  = etmg__(ii,:,jj) * 55555.555555555555d0  ! (Out[249]) mol/s=m/s*10^6 g/m/(18g/mol)
+                        gstomg(ii,:,jj)   = transpg(ii,:,jj) / (p_a * vd_h(th_))
+                       end where                                                            
+                       !shaded part
+                       where ( ( etmgs__(ii,:,jj) *caig_d(ii) ) .gt. (frac_shadeg(jj)*SUM(ruptkg__(:)) ) )   
+                        rootlims(ii,:,jj)  = 1.d0                                             
+                        etmgs__(ii,:,jj)   = (SUM(ruptkg__(:))* frac_shadeg(jj)) / caig_d(ii) 
+                        transpgs(ii,:,jj)  = etmgs__(ii,:,jj) * 55555.555555555555d0  ! (Out[249]) mol/s=m/s*10^6 g/m/(18g/mol)
+                        gstomgs(ii,:,jj)   = transpgs(ii,:,jj) / (p_a * vd_h(th_))
+                       end where  
+                     end do  
+                   end do                                             
+             else
+                  do ii=1, 3                
+                    where ( (etmg__(ii,:,:) *caig_d(ii)) .gt. SUM(ruptkg__(:)))
+                      rootlim(ii,:,:)  = 1.d0               
+                      etmg__(ii,:,:)   = SUM(ruptkg__(:)) / caig_d(ii) 
+                      transpg(ii,:,:)  = etmg__(ii,:,:) * 55555.555555555555d0  ! (Out[249]) mol/s=m/s*10^6 g/m/(18g/mol)
+                      gstomg(ii,:,:)   = transpg(ii,:,:) / (p_a * vd_h(th_))
+                   
+                      !no shaded part                   
+                      etmgs__(ii,:,:)   = 0.0d0
+                      transpgs(ii,:,:)  = 0.0d0
+                      gstomgs(ii,:,:)   = 0.0d0   
+                    end where                
+                  end do                              
+              end if
+ 
+            ruptkg__(1:pos_ulg) = caig_d(2) * (etmg__(2,2,2) + etmgs__(2,2,2) )* (ruptkg__(1:pos_ulg)   &
      &                          / (SUM(ruptkg__(:))))
           else
             ruptkg__(:)  = 0.d0
             etmg__(:,:,:)  = 0.d0
+            etmgs__(:,:,:)  = 0.d0            
             transpg(:,:,:) = 0.d0
+            transpgs(:,:,:) = 0.d0            
             gstomg(:,:,:)  = 0.d0
+            gstomgs(:,:,:)  = 0.d0            
           endif
         else
           ruptkg__(:) = 0.d0
@@ -1815,8 +2052,11 @@
         ruptkg__(:)  = 0.d0
         ruptkt__(:)  = 0.d0
         etmg__(:,:,:)  = 0.d0
+        etmgs__(:,:,:)  = 0.d0        
         transpg(:,:,:) = 0.d0
+        transpgs(:,:,:) = 0.d0        
         gstomg(:,:,:)  = 0.d0
+        gstomgs(:,:,:)  = 0.d0        
       endif
 
       return
@@ -1852,7 +2092,7 @@
 
       sum2 = SUM(((-c_hhydrst(1:pos_ult) - pcap_(1:pos_ult))           &
      &     * rsurft_(1:pos_ult)) / (i_rrootm + rsoil(1:pos_ult)))
-      mul2 = (q_md + q_mqx) * (q_md + q_mqx) * (etmt__ - sum2)
+      mul2 = (q_md + q_mqx) * (q_md + q_mqx) * ( ( (etmt__ + etmts__) * o_cait) - sum2)
 
       mqss_out = q_mqx * (mul1 - mul2) / mul1
       mqss_out = MAX(0.9d0 * q_mqx, mqss_out)
@@ -1872,14 +2112,38 @@
       REAL*8,  INTENT(inout) :: netass
       CHARACTER(len=135) :: msg
 
+
+      
 !     * makes sure that tissue water does not get below 0.9mqx
       if (mqt_ .le. 0.9d0 * q_mqx) then
         if (wlayer_ .ge. 1) then
-          if (etmt__ .gt. 0.9d0 * SUM(ruptkt__(:))) then
+          if ( ( (etmt__ + etmts__)* o_cait) .gt. 0.9d0 * SUM(ruptkt__(:))) then
             if (SUM(ruptkt__(:)) .ge. 0.d0) then
-              etmt__ = SUM(ruptkt__(:))
-              transpt = etmt__ * 55555.555555555555d0  ! (Out[249]) mol/s=m/s*10^6 g/m/(18g/mol)
-              gstomt = transpt / (p_a * vd_h(th_))
+            
+              if(i_lai_function == 4) then
+            
+                etmt__ = SUM(ruptkt__(:)) * frac_sunt(2) / o_cait
+                transpt = etmt__ * 55555.555555555555d0  ! (Out[249]) mol/s=m/s*10^6 g/m/(18g/mol)
+                gstomt = transpt / (p_a * vd_h(th_))
+              
+                etmts__ = SUM(ruptkt__(:)) * frac_shadet(2) / o_cait
+                transpts = etmts__ * 55555.555555555555d0  ! (Out[249]) mol/s=m/s*10^6 g/m/(18g/mol)
+                gstomts = transpts / (p_a * vd_h(th_))
+                dmqt = 0.d0         
+                
+              else
+              
+                etmt__ = SUM(ruptkt__(:))/ o_cait
+                transpt = etmt__ * 55555.555555555555d0  ! (Out[249]) mol/s=m/s*10^6 g/m/(18g/mol)
+                gstomt = transpt / (p_a * vd_h(th_))
+                dmqt = 0.d0
+                
+                etmts__ = 0.d0
+                transpts = 0.d0
+                gstomts = 0.d0
+              
+              end if
+              
             else
               write(msg,'(A20,I2,A1,I2,A1,I4)') 'vegetation dies on: ', &
      &          fday(nday), '/', fmonth(nday), '/', fyear(nday)
@@ -1896,13 +2160,21 @@
           etmt__  = 0.d0
           transpt = 0.d0
           gstomt  = 0.d0
+          etmts__  = 0.d0
+          transpts = 0.d0
+          gstomts  = 0.d0          
         endif
       endif
-      if (wlayer_ .ge. 0) then
+      if ( wlayer_ .ge. 0 ) then
 !       * (3.35), 1.e6 to convert from m (=1000kg/m2) to g/m2; (Out[250])
-        dmqt = (SUM(ruptkt__(:)) - etmt__) * 1.d6
+        if ( abs(SUM(ruptkt__(:)) - ( (etmt__ + etmts__) * o_cait) ) &
+            .gt. epsilon(SUM(ruptkt__(:)) - ( (etmt__ +etmts__) * o_cait))  ) then        
+           dmqt = (SUM(ruptkt__(:)) - ( (etmt__ +etmts__)* o_cait) ) * 1.d3 !conversion from m/s to kg/m2/s
+        else
+           dmqt = 0.d0
+        endif
       else
-        dmqt = -etmt__ * 1.d6
+        dmqt = -1.0* (etmt__ + etmts__)* o_cait * 1.d3 !kg/m2/s
       endif
 
       return
@@ -1919,19 +2191,23 @@
 
       REAL*8  :: dtss
       REAL*8  :: dtmq         ! Maximum timestep allowed by tree water content change
-
+      
       dtmq = 99999.d0
 
       if (q_md .gt. 0.d0) then
 !       * avoids mq from becoming larger than mqx or smaller than 0.9mqx
         if (dmqt .gt. 0.d0) then
-          dtmq = (q_mqx - mqt_) / dmqt
+             dtmq = (q_mqx - mqt_) / dmqt
         elseif (dmqt .lt. 0.d0) then
-          dtmq = (0.9d0 * q_mqx - mqt_) / dmqt
+             dtmq = (0.9d0 * q_mqx - mqt_) / dmqt
         endif
-
-        if (ABS(mqt_ - mqsst_) .gt. q_mqx / 1.d6) then
-          dtss = (mqt_ - mqsst_) / (1.d6 * (etmt__ - SUM(ruptkt__(:))))
+        ! dmqt equals zero
+        if( abs(dmqt) .lt. epsilon(dmqt) )then
+            dtmq = 99999.d0
+        end if
+          
+        if (ABS(mqt_ - mqsst_) .gt. q_mqx / 1.d3) then
+          dtss = (mqt_ - mqsst_) / (1.d3 * ( ( (etmt__+etmts__) * o_cait) - SUM(ruptkt__(:))))
           if (dtss .le. 0.d0) dtss = 99999.d0
         else
           dtss = 99999.d0
@@ -1941,6 +2217,10 @@
       endif
 
       dtmax = MIN(dtss, dtmq, 3600.d0 - time)
+
+      if(dtmax .le. 0.d0) then
+         stop "Error dtmax=<0.0s"      
+      end if
 
 !     * waterbalance uses dtmax for the determination of dt
       call waterbalance()
@@ -1957,29 +2237,85 @@
       implicit none
 
       REAL*8 :: asst__(3,3)
+      REAL*8 :: assts__(3,3)      
       REAL*8 :: assg__(3,3,3)
+      REAL*8 :: assgs__(3,3,3)      
       INTEGER:: ii
+      INTEGER:: jj      
 
     do ii = 1,3 !loop for LAI values
-      asst__(:,ii) = (4.d0 * ca_h(th_) * gstomt + 8.d0 * gammastar        &
-        &          * gstomt + jactt(:,ii) - 4.d0 * rlt_h(:,ii) - SQRT((-4.d0    &
+        
+     if(i_lai_function == 4) then
+      asst__(:,ii) = frac_sunt(ii) * ( (4.d0 * ca_h(th_) * gstomt + 8.d0 * gammastar        &
+        &          * gstomt + jactt(:,ii) - 4.d0 * rlt_h(:) - SQRT((-4.d0    &
         &          * ca_h(th_) * gstomt + 8.d0 * gammastar * gstomt       &
-        &          + jactt(:,ii) - 4.d0 * rlt_h(:,ii)) ** 2.d0 + 16.d0          &
+        &          + jactt(:,ii) - 4.d0 * rlt_h(:)) ** 2.d0 + 16.d0          &
         &          * gammastar * gstomt * (8.d0 * ca_h(th_) * gstomt      &
-        &          + jactt(:,ii) + 8.d0 * rlt_h(:,ii)))) / 8.d0  ! (3.22) ; (Out[319])
+        &          + jactt(:,ii) + 8.d0 * rlt_h(:)))) / 8.d0 )  ! (3.22) ; (Out[319])
+     
+     
+      assts__(:,ii) = frac_shadet(ii) * ( (4.d0 * ca_h(th_) * gstomts + 8.d0 * gammastar        &
+        &          * gstomts + jactts(:,ii) - 4.d0 * rlts_h(:) - SQRT((-4.d0    &
+        &          * ca_h(th_) * gstomts + 8.d0 * gammastar * gstomts       &
+        &          + jactts(:,ii) - 4.d0 * rlts_h(:)) ** 2.d0 + 16.d0          &
+        &          * gammastar * gstomts * (8.d0 * ca_h(th_) * gstomts      &
+        &          + jactts(:,ii) + 8.d0 * rlts_h(:)))) / 8.d0 ) ! (3.22) ; (Out[319])     
+     else
+      asst__(:,ii) =  (4.d0 * ca_h(th_) * gstomt + 8.d0 * gammastar        &
+        &          * gstomt + jactt(:,ii) - 4.d0 * rlt_h(:) - SQRT((-4.d0    &
+        &          * ca_h(th_) * gstomt + 8.d0 * gammastar * gstomt       &
+        &          + jactt(:,ii) - 4.d0 * rlt_h(:)) ** 2.d0 + 16.d0          &
+        &          * gammastar * gstomt * (8.d0 * ca_h(th_) * gstomt      &
+        &          + jactt(:,ii) + 8.d0 * rlt_h(:)))) / 8.d0  ! (3.22) ; (Out[319])
+          
+        assts__(:,ii) = 0.d0
+     end if      
+        
+        
     end do
-        asst_h(:,:) = asst_h(:,:) + asst__(:,:) * dt_
+        asst_h(:,:) = asst_h(:,:) + asst__(:,:) * dt_ * o_cait  
+        assts_h(:,:) = assts_h(:,:) + assts__(:,:) * dt_ * o_cait
 
     do ii = 1,3 !loop for LAI values
-        assg__(:,:,ii) = (4.d0 * ca_h(th_) * gstomg(:,:,ii) + 8.d0 * gammastar &
-        &         * gstomg(:,:,ii) + jactg(:,:,ii) - 4.d0 * rlg_h(:,:,ii)       &
-        &         - SQRT((-4.d0 * ca_h(th_) * gstomg(:,:,ii) + 8.d0       &
-        &         * gammastar * gstomg(:,:,ii) + jactg(:,:,ii) - 4.d0        &
-        &         * rlg_h(:,:,ii)) ** 2.d0 + 16.d0 * gammastar            &
-        &         * gstomg(:,:,ii) * (8.d0 * ca_h(th_) * gstomg(:,:,ii)      &
-        &         + jactg(:,:,ii) + 8.d0 * rlg_h(:,:,ii)))) / 8.d0  ! (3.22); (Out[319])
+      do jj = 1,3 !loop for CAI_g values    
+        if(i_lai_function == 4) then    
+          assg__(jj,:,ii) =  frac_sung(ii) * ( (4.d0 * ca_h(th_) * gstomg(jj,:,ii) + 8.d0 * gammastar &
+          &         * gstomg(jj,:,ii) + jactg(:,ii) - 4.d0 * rlg_h(:)       &
+          &         - SQRT((-4.d0 * ca_h(th_) * gstomg(jj,:,ii) + 8.d0       &
+          &         * gammastar * gstomg(jj,:,ii) + jactg(:,ii) - 4.d0        &
+          &         * rlg_h(:)) ** 2.d0 + 16.d0 * gammastar            &
+          &         * gstomg(jj,:,ii) * (8.d0 * ca_h(th_) * gstomg(jj,:,ii)      &
+          &         + jactg(:,ii) + 8.d0 * rlg_h(:)))) / 8.d0)  ! (3.22); (Out[319])
+
+          assgs__(jj,:,ii) =   frac_shadeg(ii) * ( (4.d0 * ca_h(th_) * gstomgs(jj,:,ii) + 8.d0 * gammastar &
+          &         * gstomgs(jj,:,ii) + jactgs(:,ii) - 4.d0 * rlgs_h(:)       &
+          &         - SQRT((-4.d0 * ca_h(th_) * gstomgs(jj,:,ii) + 8.d0       &
+          &         * gammastar * gstomgs(jj,:,ii) + jactgs(:,ii) - 4.d0        &
+          &         * rlgs_h(:)) ** 2.d0 + 16.d0 * gammastar            &
+          &         * gstomgs(jj,:,ii) * (8.d0 * ca_h(th_) * gstomgs(jj,:,ii)      &
+          &         + jactgs(:,ii) + 8.d0 * rlgs_h(:)))) / 8.d0 )  ! (3.22); (Out[319])   
+        
+        else
+          assg__(jj,:,ii) =  (4.d0 * ca_h(th_) * gstomg(jj,:,ii) + 8.d0 * gammastar &
+          &         * gstomg(jj,:,ii) + jactg(:,ii) - 4.d0 * rlg_h(:)       &
+          &         - SQRT((-4.d0 * ca_h(th_) * gstomg(jj,:,ii) + 8.d0       &
+          &         * gammastar * gstomg(jj,:,ii) + jactg(:,ii) - 4.d0        &
+          &         * rlg_h(:)) ** 2.d0 + 16.d0 * gammastar            &
+          &         * gstomg(jj,:,ii) * (8.d0 * ca_h(th_) * gstomg(jj,:,ii)      &
+          &         + jactg(:,ii) + 8.d0 * rlg_h(:)))) / 8.d0  ! (3.22); (Out[319])
+        
+          assgs__(jj,:,ii) = 0.d0
+        
+        end if
+      end do  
     end do
-      assg_h(:,:,:) = assg_h(:,:,:) + assg__(:,:,:) * dt_
+    
+    do jj = 1,3 !loop for caig values
+      assg_h(jj,:,:) = assg_h(jj,:,:) + assg__(jj,:,:) * dt_ * caig_d(jj) 
+      assgs_h(jj,:,:) = assgs_h(jj,:,:) + assgs__(jj,:,:) * dt_ * caig_d(jj)
+    end do  
+    
+    
       ruptkt_h(:) = ruptkt_h(:) + ruptkt__(:) * dt_
       ruptkg_h(:) = ruptkg_h(:) + ruptkg__(:) * dt_
       if (optmode .eq. 0) then
@@ -1987,8 +2323,8 @@
         infx_h      = infx_h      + dt_ * infx__
         io_h        = io_h        + dt_ * io__
         esoil_h     = esoil_h     + dt_ * esoil__
-        etmt_h      = etmt_h      + dt_ * etmt__
-        etmg_h      = etmg_h      + dt_ * etmg__(2,2,2)
+        etmt_h      = etmt_h      + dt_ * (etmt__ + etmts__) * o_cait
+        etmg_h      = etmg_h      + dt_ * (etmg__(2,2,2) + etmgs__(2,2,2) ) * caig_d(2)
         sumruptkt_h = sumruptkt_h + dt_ * SUM(ruptkt__(:))
       endif
 
@@ -2009,8 +2345,8 @@
       esoil_d  = esoil_d  + esoil_h
       spgfcf_d = spgfcf_d + spgfcf_h
       infx_d   = infx_d   + infx_h
-      rlt_d    = rlt_d    + rlt_h(2,2)   * 3600.d0  ! rlt_d in mol/day
-      rlg_d    = rlg_d    + rlg_h(2,2,2) * 3600.d0
+      rlt_d    = rlt_d    + (rlt_h(2) + rlts_h(2))  * 3600.d0  ! rlt_d in mol/day
+      rlg_d    = rlg_d    + (rlg_h(2) + rlgs_h(2)) * 3600.d0
       fpard_lg = fpard_lg + (fpar_lg(2) / 24d0) !mean fpar per day
       fpard_lt = fpard_lt + (fpar_lt(2) / 24d0) !mean fpar per day
       
@@ -2041,7 +2377,7 @@
         write(*,*) TRIM(msg)
         finish = 1
       elseif (q_md .gt. 0.d0) then
-        error1 = mqtold + (sumruptkt_h - etmt_h) * 1.d6 - mqtnew
+        error1 = mqtold + (sumruptkt_h - etmt_h) * 1.d3 - mqtnew
         if (abs(error1 / mqtnew) .gt. 1.d-6) then
           write(msg,*) 'Error in tree water balance [%]:',             &
      &      error1 * 100.d0, 'mqtold=', mqtold, 'mqtnew=', mqtnew,     &
@@ -2236,14 +2572,14 @@
         esoil_y  = esoil_y + esoil_d           * 1000.d0  ! in [mm]
 !       * for grasses
         etmg_y   = etmg_y  + etmg_d * 1000.d0 ! in [mm]
-        assg_y   = assg_y  + assg_d(2,2,2)
+        assg_y   = assg_y  + assg_d(2,2,2) + assgs_d(2,2,2)
         rlg_y    = rlg_y   + rlg_d
         rrg_y    = rrg_y   + rrg_d      * 3600.d0 * 24.d0
         cpccg_y  = cpccg_y + cpccg_d(2) * 3600.d0 * 24.d0
         tcg_y    = tcg_y   + tcg_d(2,2)   * 3600.d0 * 24.d0
 !       * for trees
         etmt_y   = etmt_y  + etmt_d * 1000.d0  ! in [mm]
-        asst_y   = asst_y  + asst_d(2,2)
+        asst_y   = asst_y  + asst_d(2,2) + assts_d(2,2) 
         rlt_y    = rlt_y   + rlt_d
         rrt_y    = rrt_y   + rrt_d     * 3600.d0 * 24.d0
         cpcct_y  = cpcct_y + q_cpcct_d * 3600.d0 * 24.d0
@@ -2258,7 +2594,7 @@
         esoil_y  = esoil_d * 1000.d0
 !       * for grasses
         etmg_y   = etmg_d * 1000.d0
-        assg_y   = assg_d(2,2,2)
+        assg_y   = assg_d(2,2,2) + assgs_d(2,2,2)
         rlg_y    = rlg_d
         rrg_y    = rrg_d      * 3600.d0 * 24.d0
         cpccg_y  = cpccg_d(2) * 3600.d0 * 24.d0
@@ -2285,65 +2621,95 @@
       implicit none
 
       INTEGER :: ii                     ! Counter
+      INTEGER :: jj                     ! Counter 
+      INTEGER :: ll                     ! Counter 
+      INTEGER :: kk                     ! Counter                           
       REAL*8  :: jmax25g_tmp            ! Temporary jmax25g for comparison
       REAL*8  :: lai_g_tmp              ! Temporary leaf area index for comparison
       REAL*8  :: max_netcg              ! Maximum daily grass net carbon profit grasses
       REAL*8  :: max_netcg_tmp          ! Temporary max net carbon profit
-      REAL*8  :: netcg_d(3,3)           ! Daily grass net carbon profit
-      REAL*8  :: netct_d(3,3)           ! Daily grass net carbon profit
+      REAL*8  :: netcg_d(3,3,3,3)           ! Daily grass net carbon profit
+      REAL*8  :: netct_d(3,3,3)           ! Daily grass net carbon profit
       REAL*8  :: caig_d_tmp              ! Temporary grass cover
       INTEGER :: posma(1)               ! Pointer to variable values that achieved maximum assimilation
-      INTEGER :: posbest(2)              ! Pointer to variable values that achieved maximum net assimilation
+      INTEGER :: posbest(3)              ! Pointer to variable values that achieved maximum net assimilation
+      INTEGER :: posbestg(4)              ! Pointer to variable values that achieved maximum net assimilation      
       !trees
 
       !loop over foliage costs due to different LAI
       !3 values of ncp due to different jmax25t values and LAI
-      netct_d(1,:) = asst_d(1,:) - 3600.d0 * 24.d0 * (q_cpcct_d + rrt_d + q_tct_d(:))
-      netct_d(2,:) = asst_d(2,:) - 3600.d0 * 24.d0 * (q_cpcct_d + rrt_d + q_tct_d(:))
-      netct_d(3,:) = asst_d(3,:) - 3600.d0 * 24.d0 * (q_cpcct_d + rrt_d + q_tct_d(:))
-      posbest(:)    = MAXLOC(netct_d(:,:))
+      do ii = 1,3 !loop for sunlit jmax25
+         do jj = 1,3 !loop for shaded jmax25              
+          netct_d(ii,jj,:) = (asst_d(ii,:) + assts_d(jj,:) ) - 3600.d0 * 24.d0 * (q_cpcct_d + rrt_d + q_tct_d(:))
+         end do
+      end do 
+      
+      
+      posbest(:)    = MAXLOC(netct_d(:,:,:))
 
 
-      lai_lt(2) = lai_lt(posbest(2))                    !lai trees 
       jmax25t_d(2) = jmax25t_d(posbest(1))              !jmax25 trees in 
-  
+      jmax25ts_d(2) = jmax25ts_d(posbest(2))             !jmax25 trees in 
+      lai_lt(2) = lai_lt(posbest(3))                    !lai trees 
+              
       !set daily value back to zero
       asst_d(:,:)    = 0.d0
-
+      assts_d(:,:)   = 0.d0
 
       !grasses
 
       !set initial max value at zero
       max_netcg    = -9999.d0
 
-      !loop over foliage costs due to different LAI
-      do ii = 1,3
-
-         !3 values of ncp due to different cover (rows in assg_d) and jmax25g (columns in assg_d)
-         netcg_d(1,:) = assg_d(1,:,ii) - 3600.d0 * 24.d0 * (cpccg_d(1) + rrg_d + tcg_d(ii, 1))
-         netcg_d(2,:) = assg_d(2,:,ii) - 3600.d0 * 24.d0 * (cpccg_d(2) + rrg_d + tcg_d(ii, 2))
-         netcg_d(3,:) = assg_d(3,:,ii) - 3600.d0 * 24.d0 * (cpccg_d(3) + rrg_d + tcg_d(ii, 3))
-         posbest(:)    = MAXLOC(netcg_d(:,:))
-         max_netcg_tmp= netcg_d( posbest(1), posbest(2) )
-
-         !check if carbon profit is higher for different LAI
-         if( max_netcg_tmp .gt. max_netcg) then
-            
-            caig_d_tmp = MIN(1.d0 - o_cait, caig_d(posbest(1))) !cover grasses to temporary variable
-            lai_g_tmp = lai_lg(ii)                          !lai grasses in temporary variable
-            jmax25g_tmp = jmax25g_d(posbest(2))              !jmax25 grasses in temporary variable
-            max_netcg = max_netcg_tmp                       !new NCP is higher as previous
-            posmna = (/ posbest , ii /)
-         end if
+      do jj = 1,3 !loop for sunlit jmax25   
+         do kk = 1,3 !loop for shaded jmax25  
+           do ll = 1,3 !loop over foliage costs due to different LAI             
+             
+             netcg_d(:,jj,kk,ll) = (assg_d(:,jj,ll) + assgs_d(:,kk,ll)) - 3600.d0 * 24.d0 * (cpccg_d(:) + rrg_d + tcg_d(ll, :))
+             
+           end do
+         end do
       end do
-
-      !save all temporary variables to the global vectors
-      caig_d(2)     = caig_d_tmp
-      jmax25g_d(2) = jmax25g_tmp
-      lai_lg(2)    = lai_g_tmp
+             
+      posbestg(:)    = MAXLOC(netcg_d(:, :, :, :))             
+      posmna = posbestg(:)    
+      
+      caig_d(2)     =  MIN(1.d0 - o_cait, caig_d(posbestg(1)))
+      jmax25g_d(2) = jmax25g_d(posbestg(2)) 
+      jmax25gs_d(2) = jmax25gs_d(posbestg(3))       
+      lai_lg(2)    = lai_lg(posbestg(4))
 
       !set daily value back to zero
-      assg_d(:,:,:)  = 0.d0
+      assg_d(:,:,:)  = 0.d0      
+      assgs_d(:,:,:)  = 0.d0      
+            
+      !do ii = 1,3
+
+         !3 values of ncp due to different cover (rows in assg_d) and jmax25g (columns in assg_d)
+      !   netcg_d(1,:) = assg_d(1,:,ii) - 3600.d0 * 24.d0 * (cpccg_d(1) + rrg_d + tcg_d(ii, 1))
+      !   netcg_d(2,:) = assg_d(2,:,ii) - 3600.d0 * 24.d0 * (cpccg_d(2) + rrg_d + tcg_d(ii, 2))
+      !   netcg_d(3,:) = assg_d(3,:,ii) - 3600.d0 * 24.d0 * (cpccg_d(3) + rrg_d + tcg_d(ii, 3))
+      !   posbest(:)    = MAXLOC(netcg_d(:,:))
+      !   max_netcg_tmp= netcg_d( posbest(1), posbest(2) )
+
+         !check if carbon profit is higher for different LAI
+!         if( max_netcg_tmp .gt. max_netcg) then
+            
+!            caig_d_tmp = MIN(1.d0 - o_cait, caig_d(posbest(1))) !cover grasses to temporary variable
+!            lai_g_tmp = lai_lg(ii)                          !lai grasses in temporary variable
+!            jmax25g_tmp = jmax25g_d(posbest(2))              !jmax25 grasses in temporary variable
+!            max_netcg = max_netcg_tmp                       !new NCP is higher as previous
+!            posmna = (/ posbest , ii /)
+!         end if
+!      end do
+
+      !save all temporary variables to the global vectors
+!      caig_d(2)     = caig_d_tmp
+!      jmax25g_d(2) = jmax25g_tmp
+!      lai_lg(2)    = lai_g_tmp
+
+      !set daily value back to zero
+!      assg_d(:,:,:)  = 0.d0
 
       return
       end subroutine vom_adapt_foliage
@@ -2390,7 +2756,12 @@
 !     *-----SEASONAL VEGETATION---------------
 
 !     * rootlim is either 0 or 1. Change it to be either -1 or + 1:
-      rootlim(posmna(1),posmna(2), posmna(3)) = 2.d0 * rootlim(posmna(1),posmna(2),posmna(3)) - 1.d0
+      if(i_lai_function == 4) then        
+          rootlim(posmna(1),posmna(2), posmna(4)) = 2.d0 * (rootlim(posmna(1),posmna(2),posmna(4)) &
+                                                   * rootlims(posmna(1),posmna(3),posmna(4))  )- 1.d0
+      else
+          rootlim(posmna(1),posmna(2), posmna(4)) = 2.d0 * rootlim(posmna(1),posmna(2),posmna(4)) - 1.d0      
+      end if
 
       reffg(:) = 0.d0
       maxval_tmp = MAXVAL(ruptkg_d(1:pos_slg) / rsurfg_(1:pos_slg))
@@ -2400,7 +2771,7 @@
 
 !     * if roots are going to be reduced, reverse effectivity vector
 
-      if (rootlim(posmna(1),posmna(2),posmna(3)) .lt. 0.d0) then
+      if (rootlim(posmna(1),posmna(2),posmna(4)) .lt. 0.d0) then
         reffg(:) = 1.d0 - reffg(:)
       endif
 
@@ -2410,7 +2781,7 @@
      &                     * s_delz(1:pos_slg) - rsurft_(1:pos_slg),   &
      &                     MAX(i_rsurfmin * s_delz(1:pos_slg),         &
      &                     rsurfg_(1:pos_slg) + rsurfg_(1:pos_slg)     &
-     &                     * i_growthmax * rootlim(posmna(1),posmna(2),posmna(3))&
+     &                     * i_growthmax * rootlim(posmna(1),posmna(2),posmna(4))&
      &                     * reffg(1:pos_slg)))
       rsurfgnew(pos_slg+1:s_maxlayer) = 0.d0
 

@@ -317,9 +317,12 @@
       REAL*8              :: par_y      ! Annual photosynthetically active radiation (mol/m2/y)
       
       REAL*8, ALLOCATABLE :: pardiff_h(:) ! Hourly diffuse photosynthetically active radiation (mol/m2/s)
+      REAL*8, ALLOCATABLE :: pardiff_d(:) ! Daily diffuse photosynthetically active radiation (mol/m2/d)      
       REAL*8, ALLOCATABLE :: pardir_h(:)  ! Hourly direct photosynthetically active radiation (mol/m2/s)
-      
+      REAL*8, ALLOCATABLE :: pardir_d(:)  ! Daily direct photosynthetically active radiation (mol/m2/d)
+            
       REAL*8, ALLOCATABLE :: par_et_h(:)  ! Hourly extraterrestrial radiation (mol/m2/s)
+      REAL*8, ALLOCATABLE :: par_et_d(:)  ! Daily extraterrestrial radiation (mol/m2/s)      
       
       REAL*8, ALLOCATABLE :: srad_d(:)  ! Daily shortwave radiation  (MJ/m2/d)
       REAL*8              :: srad_y     ! Annual shortwave radiation (MJ/m2/y)
@@ -371,43 +374,59 @@
       REAL*8  :: o_lambdagf             ! Factor for calculating lambdag_d (mol/mol/m)
       REAL*8  :: lambdat_d              ! Target dE/dA for calculating gstomt (mol/mol)
       REAL*8  :: lambdag_d              ! Target dE/dA for calculating gstomg (mol/mol)
-      REAL*8  :: gstomt                 ! Tree stomatal conductance (mol/m2/s)
-      REAL*8  :: gstomg(3,3,3)          ! Grass stomatal conductance (mol/m2/s)
-
-      REAL*8  :: rlt_h(3,3)             ! Tree leaf respiration for different values of Jmax (rlt_h(2) is actual value) (mol/h)
+      REAL*8  :: gstomt                 ! (Sunlit) tree stomatal conductance (mol/m2/s)
+      REAL*8  :: gstomts                ! Shaded tree stomatal conductance (mol/m2/s)      
+      REAL*8  :: gstomg(3,3,3)            ! (Sunlit) Grass stomatal conductance (mol/m2/s)
+      REAL*8  :: gstomgs(3,3,3)           ! Shaded grass stomatal conductance (mol/m2/s)
+      
+      REAL*8  :: rlt_h(3)             ! Tree leaf respiration for different values of Jmax (rlt_h(2) is actual value) (mol/h)
+      REAL*8  :: rlts_h(3)            ! Shaded tree leaf respiration for different values of Jmax (rlt_h(2) is actual value) (mol/h)      
       REAL*8  :: rlt_d                  ! Daily tree leaf respiration (mol/d)
       REAL*8  :: rlt_y                  ! Annual tree leaf respiration (mol/y)
-      REAL*8  :: rlg_h(3,3,3)           ! Grass leaf respiration (mol/h)
+      REAL*8  :: rlg_h(3)           ! Grass leaf respiration (mol/h)
+      REAL*8  :: rlgs_h(3)           ! Grass leaf respiration (mol/h)      
       REAL*8  :: rlg_d                  ! Daily grass leaf respiration (mol/d)
       REAL*8  :: rlg_y                  ! Annual grass leaf respiration (mol/y)
 
       REAL*8  :: transpt                ! Tree transpiration rate (mol/m2/s)
-      REAL*8  :: transpg(3,3,3)         ! Grass transpiration rate (mol/m2/s)
-
+      REAL*8  :: transpts               ! Shaded tree transpiration rate (mol/m2/s)      
+      REAL*8  :: transpg(3,3,3)           ! Grass transpiration rate (mol/m2/s)
+      REAL*8  :: transpgs(3,3,3)          ! Shaded grass transpiration rate (mol/m2/s)
+      
       REAL*8  :: q_tct_d(3)             ! Tree foliage turnover costs (mol/m2/s)
       REAL*8  :: tct_y                  ! Annual tree foliage turnover costs (mol/m2/y)
       REAL*8  :: tcg_d(3, 3)            ! Grass foliage turnover costs (mol/m2/s)
       REAL*8  :: tcg_y                  ! Annual grass foliage turnover costs (mol/m2/y)
 
       REAL*8  :: jactt(3,3)             ! Electron transport rates for different values of Jmax (jactt(2) is actual value) (mol/m2/s)
-      REAL*8  :: jactg(3,3,3)           ! Grass electron transport rate (mol/m2/s)
-
+      REAL*8  :: jactts(3,3)            ! Shaded Electron transport rates for different values of Jmax (jactt(2) is actual value) (mol/m2/s      
+      REAL*8  :: jactg(3,3)             ! Grass electron transport rate (mol/m2/s)
+      REAL*8  :: jactgs(3,3)            ! Shaded grass electron transport rate (mol/m2/s)
+      
       REAL*8  :: jmaxt_h(3)             ! Tree photosynthetic electron transport capacity (mol/m2/s)
+      REAL*8  :: jmaxts_h(3)            ! Shaded tree photosynthetic electron transport capacity (mol/m2/s)      
       REAL*8  :: jmaxg_h(3)             ! Grass electron transport capacity (mol/m2/s)
-
-      REAL*8  :: jmax25t_d(3)           ! Tree photosynthetic electron transport capacity at 25oC (mol/m2/s)
-      REAL*8  :: jmax25g_d(3)           ! Grass photosynthetic electron transport capacity at 25oC (mol/m2/s)
- 
+      REAL*8  :: jmaxgs_h(3)            ! Shaded grass electron transport capacity (mol/m2/s)
+      
+      REAL*8  :: jmax25t_d(3)           ! Sunlit tree photosynthetic electron transport capacity at 25oC (mol/m2/s)
+      REAL*8  :: jmax25ts_d(3)          ! Shaded tree photosynthetic electron transport capacity at 25oC (mol/m2/s)
+      REAL*8  :: jmax25g_d(3)           ! Sunlit grass photosynthetic electron transport capacity at 25oC (mol/m2/s)
+      REAL*8  :: jmax25gs_d(3)          ! Shaded grass photosynthetic electron transport capacity at 25oC (mol/m2/s)
+       
       REAL*8  :: lai_lt(3)              ! Local leaf area index trees (-)
       REAL*8  :: lai_lg(3)              ! Local leaf area index grasses (-)
 
 !     * plant water
 
       REAL*8  :: asst_h(3,3)            ! Tree hourly assimilation rate for different values of Jmax (asst_h(2) is actual value) (mol/m2/h)
+      REAL*8  :: assts_h(3,3)           ! Shaded tree hourly assimilation rate for different values of Jmax (asst_h(2) is actual value) (mol/m2/h)
       REAL*8  :: asst_d(3,3)            ! Daily tree assimilation (mol/m2/d)
+      REAL*8  :: assts_d(3,3)           ! Shade daily tree assimilation (mol/m2/d)      
       REAL*8  :: asst_y                 ! Annual tree assimilation (mol/m2/y)
       REAL*8  :: assg_h(3,3,3)          ! Hourly grass assimilation (mol/m2/h)
+      REAL*8  :: assgs_h(3,3,3)         ! Shade hourly grass assimilation (mol/m2/h)      
       REAL*8  :: assg_d(3,3,3)          ! Daily grass assimilation (mol/m2/d)
+      REAL*8  :: assgs_d(3,3,3)         ! Shade daily grass assimilation (mol/m2/d)      
       REAL*8  :: assg_y                 ! Annual grass assimilation (mol/m2/y)
 
       REAL*8  :: q_cpcct_d              ! Tree water transport costs as a function of projected cover and rooting depth (mol/m2/s)
@@ -416,10 +435,12 @@
       REAL*8  :: cpccg_y                ! Annual grass water transport costs (mol/m2/y)
 
       REAL*8  :: etmt__                 ! Transpiration rate (m/s)
+      REAL*8  :: etmts__                ! Shaded transpiration rate (m/s)      
       REAL*8  :: etmt_h                 ! Hourly transpiration (m/h)
       REAL*8  :: etmt_d                 ! Daily transpiration rate (m/d)
       REAL*8  :: etmt_y                 ! Annual tree transpiration (mm/y)
-      REAL*8  :: etmg__(3,3,3)          ! Grass transpiration rate (m/s)
+      REAL*8  :: etmg__(3,3,3)            ! Grass transpiration rate (m/s)
+      REAL*8  :: etmgs__(3,3,3)           ! Shaded grass transpiration rate (m/s)      
       REAL*8  :: etmg_h                 ! Hourly grass transpiration (m/h)
       REAL*8  :: etmg_d                 ! Daily grass transpiration (m/d)
       REAL*8  :: etmg_y                 ! Annual grass transpiration (mm/y)
@@ -454,12 +475,13 @@
       REAL*8, ALLOCATABLE :: rsurfgnew(:)  ! Adjusted root surface area of grasses in each layer for next day (m2/m3)
 
       REAL*8              :: rootlim(3,3,3)  ! Indicator whether root surface are was limiting root water uptake (-)
-
+      REAL*8              :: rootlims(3,3,3) ! Indicator whether root surface are was limiting root water uptake, shaded part (-)
+      
       REAL*8, ALLOCATABLE :: rsoil(:)   ! Resistance to water flow towards roots in each soil layer (s)
 
       REAL*8, ALLOCATABLE :: refft(:)   ! Relative root water uptake efficiency for trees in each layer (-)
       REAL*8, ALLOCATABLE :: reffg(:)   ! Relative root water uptake efficiency for grasses in each layer (-)
-      INTEGER             :: posmna(3)  ! Pointer to variable values that achieved maximum net assimilation (-)
+      INTEGER             :: posmna(4)  ! Pointer to variable values that achieved maximum net assimilation (-)
  
       REAL*8              :: rrt_d      ! Tree root respiration rate (mol/m2/s)
       REAL*8              :: rrt_y      ! Annual tree root respiration (mol/m2/y)
@@ -544,14 +566,17 @@
       !$OMP threadprivate( time, error, finish, nyear, nday, nhour, th_, c_testday,   & 
       !$OMP topt_, par_y, srad_y,   &
       !$OMP vd_d, vd_y, rain_y, gammastar, wsnew, wsold, o_cait, caig_d, c_caigmin, &
-      !$OMP o_wstexp, o_wsgexp, o_lambdatf, o_lambdagf, lambdat_d, lambdag_d, gstomt, gstomg, &
-      !$OMP rlt_h, rlt_d, rlt_y, rlg_h, rlg_d, rlg_y, transpt, transpg, q_tct_d, tct_y, tcg_d, &
-      !$OMP tcg_y, jactt, jactg, jmaxt_h, jmaxg_h, jmax25t_d, jmax25g_d, &
-      !$OMP asst_h, asst_d, asst_y, assg_h, assg_d, assg_y, &
-      !$OMP q_cpcct_d, cpcct_y, cpccg_d, cpccg_y, etmt__, etmt_h, etmt_d, etmt_y, etmg__, etmg_h, &
+      !$OMP o_wstexp, o_wsgexp, o_lambdatf, o_lambdagf, lambdat_d, lambdag_d, gstomt, gstomg, gstomts, gstomgs, &
+      !$OMP rlt_h, rlts_h, rlt_d, rlt_y, rlg_h, rlgs_h, rlg_d, rlg_y, transpt, transpg, q_tct_d, tct_y, tcg_d, &
+      !$OMP tcg_y, jactt, jactg, jmaxt_h, jmaxg_h, jmaxts_h, jmaxgs_h, jmax25t_d, jmax25g_d, &
+      !$OMP jmax25ts_d, jmax25gs_d,jactts, jactgs, transpts, transpgs,   &
+      !$OMP asst_h, assts_h, asst_d, assts_d, asst_y, assg_h, assgs_h, assg_d, assgs_d, assg_y, &
+      !$OMP q_cpcct_d, cpcct_y, cpccg_d, cpccg_y, etmt__, etmts__, etmt_h, etmt_d, etmt_y, etmg__, etmgs__, etmg_h, &
       !$OMP etmg_d, etmg_y, etm_y, mqt_, mqtnew, mqtold, dmqt, q_mqx, mqsst_, mqsstmin, q_md, &
       !$OMP o_mdstore, o_rtdepth, o_rgdepth, pos_slt, pos_slg, pos_ult, pos_ulg, changef, &
-      !$OMP rootlim, posmna, &
+      !$OMP rootlim, rootlims, posmna, &
+      !$OMP frac_sung, frac_sunt, frac_shadeg, frac_shadet, fpar_lt, fpar_lg, &
+      !$OMP lai_lg, lai_lt, fpard_lg, fpard_lt, &            
       !$OMP ruptkt__, rsurft_, rsurftnew, prootm, ruptkt_d, ruptkt_h, ruptkg_h, ruptkg_d, &
       !$OMP refft, reffg, ruptkg__, rsurfg_, rsurfgnew, rsoil,      &  
       !$OMP rrt_d, rrt_y, rrg_d, rrg_y, sumruptkt_h, output_mat)

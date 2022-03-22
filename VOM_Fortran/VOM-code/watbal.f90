@@ -290,11 +290,22 @@
           dtsu = MIN(dtsu, 0.1d0 * su__(jj) / dsu(jj),                 &
      &               (1.d0 - su__(jj)) / dsu(jj))
         endif
+        
+        !dsu equal to zero
+        if( abs(dsu(jj)) .lt. epsilon(dsu(jj)) ) then 
+           dtsu = MIN(dtsu, 999999.d0)
+        end if
+        
       enddo
 
 !     * LENGTH OF TIME STEP
 
       dt_ = MAX(0.d0, MIN(dtsu, dtmax))
+
+      if( dt_ .le. epsilon( MIN(dtsu, dtmax)  )  ) then
+         stop "Error dt=0.0s"      
+      end if
+
 
       if (dt_ .eq. dtsu) then
         dtsu_count = dtsu_count + 1
