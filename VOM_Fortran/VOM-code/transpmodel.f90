@@ -1651,25 +1651,25 @@
         
             select case(i_lai_function)
               case(1) ! no dynamic LAI, fpar is set to 1
-                   jactt(:,ii)   = (1.d0 - p_E ** (-(i_alpha * fpar_lt(ii) * par_h(th_))           &    
+                   jactt(:,ii)   = (1.d0 - p_E ** (-(i_alpha  * par_h(th_))           &    
         &             / jmaxt_h(:))) * jmaxt_h(:)  ! (3.23), (Out[311])
        
               case(2) ! dynamic LAI, with fpar-calculation
-                   jactt(:,ii)   = (1.d0 - p_E ** (-(i_alpha * fpar_lt(ii) * par_h(th_))           &    
+                   jactt(:,ii)   = (1.d0 - p_E ** (-(i_alpha * par_h(th_))           &    
         &             / jmaxt_h(:))) * jmaxt_h(:)  ! (3.23), (Out[311])    
         
               case(3) ! shaded and sunlit, with diffuse and direct radiation
-                   jactt(:,ii)   = ( (1.d0 - p_E ** (-(i_alpha * fpar_lt(ii) * (pardir_h(th_) + pardiff_h(th_)) ) &    
+                   jactt(:,ii)   = ( (1.d0 - p_E ** (-(i_alpha * (pardir_h(th_) + pardiff_h(th_)) ) &    
         &             / jmaxt_h(:))) * jmaxt_h(:) * frac_sunt(ii) ) +                                      &
-        &                          ( (1.d0 - p_E ** (-(i_alpha * fpar_lt(ii) * pardiff_h(th_) )                    &    
+        &                          ( (1.d0 - p_E ** (-(i_alpha  * pardiff_h(th_) )                    &    
         &             / jmaxt_h(:))) * jmaxt_h(:) * frac_shadet(ii) )
         
               case(4) ! shaded and sunlit, diffuse and direct radiation, different jact-values shaded-sunlit        
-                   jactt(:,ii)   = (1.d0 - p_E ** (-(i_alpha * fpar_lt(ii) * (pardir_h(th_) + pardiff_h(th_)) ) &    
-        &             / jmaxt_h(:))) * jmaxt_h(:) 
+                   jactt(:,ii)   = (1.d0 - p_E ** (-(i_alpha * (pardir_h(th_) + pardiff_h(th_)) ) &    
+        &             / jmaxt_h(:))) * jmaxt_h(:) * frac_sunt(ii)
 
-                   jactts(:,ii)   =  (1.d0 - p_E ** (-(i_alpha * fpar_lt(ii) * pardiff_h(th_) )                    &    
-        &             / jmaxts_h(:))) * jmaxts_h(:)   
+                   jactts(:,ii)   =  (1.d0 - p_E ** (-(i_alpha  * pardiff_h(th_) )                    &    
+        &             / jmaxts_h(:))) * jmaxts_h(:) * frac_shadet(ii) 
         
              end select
         end do
@@ -1689,17 +1689,17 @@
              &       / jmaxg_h(:))) * jmaxg_h(:)  ! (3.23), (Out[311])
                           
               case(3) ! shaded and sunlit, with diffuse and direct radiation
-               jactg(:,ii)   = ( (1.d0 - p_E ** (-(i_alpha * fpar_lg(ii) * (pardir_h(th_) + pardiff_h(th_)) ) &    
+               jactg(:,ii)   = ( (1.d0 - p_E ** (-(i_alpha * (pardir_h(th_) + pardiff_h(th_)) ) &    
              &     / jmaxg_h(:))) * jmaxg_h(:)  * frac_sung(ii) ) +                                &
-             &     ( (1.d0 - p_E ** (-(i_alpha * fpar_lg(ii) * pardiff_h(th_) )                                  &    
+             &     ( (1.d0 - p_E ** (-(i_alpha * pardiff_h(th_) )                                  &    
              &     / jmaxg_h(:))) * jmaxg_h(:) * frac_shadeg(ii) )
                       
               case(4) ! shaded and sunlit, diffuse and direct radiation, different jact-values shaded-sunlit
-               jactg(:,ii)   =  (1.d0 - p_E ** (-(i_alpha * fpar_lg(ii) * (pardir_h(th_) + pardiff_h(th_)) ) &    
-             &     / jmaxg_h(:))) * jmaxg_h(:)   
+               jactg(:,ii)   =  (1.d0 - p_E ** (-(i_alpha * (pardir_h(th_) + pardiff_h(th_)) ) &    
+             &     / jmaxg_h(:))) * jmaxg_h(:) * frac_sung(ii) 
              
-               jactgs(:,ii)   = (1.d0 - p_E ** (-(i_alpha * fpar_lg(ii) * pardiff_h(th_) )                                  &    
-             &     / jmaxgs_h(:))) * jmaxgs_h(:)    
+               jactgs(:,ii)   = (1.d0 - p_E ** (-(i_alpha * pardiff_h(th_) )                                  &    
+             &     / jmaxgs_h(:))) * jmaxgs_h(:) * frac_shadeg(ii)   
               
              
           end select
@@ -1739,11 +1739,8 @@
           gstomt = 0.d0
         endif
         transpt = p_a * vd_h(th_) * gstomt  ! (3.28) transpiration rate in mol/s
-        if(i_lai_function == 4) then        
-           etmt__ = frac_sunt(2) * (transpt * 18.d0) / (10.d0 ** 6.d0)  ! transpiration rate in m/s        
-        else        
-           etmt__ = (transpt * 18.d0) / (10.d0 ** 6.d0)  ! transpiration rate in m/s
-        end if
+        etmt__ = (transpt * 18.d0) / (10.d0 ** 6.d0)  ! transpiration rate in m/s
+
 
 !       * calculate stomatal conductance grasses
 
@@ -1774,7 +1771,7 @@
         transpg(:, :, :) = p_a * vd_h(th_) * gstomg(:, :, :)  ! (3.28) transpiration rate in mol/s
         if(i_lai_function == 4) then        
            do ii = 1,3
-              etmg__(:, :, ii) = frac_sung(ii) * (transpg(:, :, ii) * 18.d0) / (10.d0 ** 6.d0)  ! transpiration rate in m/s 
+              etmg__(:, :, ii) = (transpg(:, :, ii) * 18.d0) / (10.d0 ** 6.d0)  ! transpiration rate in m/s 
            end do  
         else
            etmg__(:,:,:) = (transpg(:, :, :) * 18.d0) / (10.d0 ** 6.d0)  ! transpiration rate in m/s        
@@ -1813,7 +1810,7 @@
            endif
            transpts = p_a * vd_h(th_) * gstomts  ! (3.28) transpiration rate in mol/s
 
-           etmts__ = frac_shadet(2) * (transpts * 18.d0) / (10.d0 ** 6.d0)  ! transpiration rate in m/s        
+           etmts__ = (transpts * 18.d0) / (10.d0 ** 6.d0)  ! transpiration rate in m/s        
         else     
            gstomts = 0.d0
            transpts = 0.d0      
@@ -1851,7 +1848,7 @@
            transpgs(:,:,:) = p_a * vd_h(th_) * gstomgs(:,:,:)  ! (3.28) transpiration rate in mol/s       
 
            do ii = 1,3           
-              etmgs__(:,:,ii) = frac_shadeg(ii) * (transpgs(:,:,ii) * 18.d0) / (10.d0 ** 6.d0)  ! transpiration rate in m/s    
+              etmgs__(:,:,ii) = (transpgs(:,:,ii) * 18.d0) / (10.d0 ** 6.d0)  ! transpiration rate in m/s    
            end do    
         else  
            gstomgs(:,:,:) = 0.d0
@@ -2246,7 +2243,7 @@
     do ii = 1,3 !loop for LAI values
         
      if(i_lai_function == 4) then
-      asst__(:,ii) = frac_sunt(ii) * ( (4.d0 * ca_h(th_) * gstomt + 8.d0 * gammastar        &
+      asst__(:,ii) =  ( (4.d0 * ca_h(th_) * gstomt + 8.d0 * gammastar        &
         &          * gstomt + jactt(:,ii) - 4.d0 * rlt_h(:) - SQRT((-4.d0    &
         &          * ca_h(th_) * gstomt + 8.d0 * gammastar * gstomt       &
         &          + jactt(:,ii) - 4.d0 * rlt_h(:)) ** 2.d0 + 16.d0          &
@@ -2254,7 +2251,7 @@
         &          + jactt(:,ii) + 8.d0 * rlt_h(:)))) / 8.d0 )  ! (3.22) ; (Out[319])
      
      
-      assts__(:,ii) = frac_shadet(ii) * ( (4.d0 * ca_h(th_) * gstomts + 8.d0 * gammastar        &
+      assts__(:,ii) = ( (4.d0 * ca_h(th_) * gstomts + 8.d0 * gammastar        &
         &          * gstomts + jactts(:,ii) - 4.d0 * rlts_h(:) - SQRT((-4.d0    &
         &          * ca_h(th_) * gstomts + 8.d0 * gammastar * gstomts       &
         &          + jactts(:,ii) - 4.d0 * rlts_h(:)) ** 2.d0 + 16.d0          &
@@ -2279,7 +2276,7 @@
     do ii = 1,3 !loop for LAI values
       do jj = 1,3 !loop for CAI_g values    
         if(i_lai_function == 4) then    
-          assg__(jj,:,ii) =  frac_sung(ii) * ( (4.d0 * ca_h(th_) * gstomg(jj,:,ii) + 8.d0 * gammastar &
+          assg__(jj,:,ii) =   ( (4.d0 * ca_h(th_) * gstomg(jj,:,ii) + 8.d0 * gammastar &
           &         * gstomg(jj,:,ii) + jactg(:,ii) - 4.d0 * rlg_h(:)       &
           &         - SQRT((-4.d0 * ca_h(th_) * gstomg(jj,:,ii) + 8.d0       &
           &         * gammastar * gstomg(jj,:,ii) + jactg(:,ii) - 4.d0        &
@@ -2287,7 +2284,7 @@
           &         * gstomg(jj,:,ii) * (8.d0 * ca_h(th_) * gstomg(jj,:,ii)      &
           &         + jactg(:,ii) + 8.d0 * rlg_h(:)))) / 8.d0)  ! (3.22); (Out[319])
 
-          assgs__(jj,:,ii) =   frac_shadeg(ii) * ( (4.d0 * ca_h(th_) * gstomgs(jj,:,ii) + 8.d0 * gammastar &
+          assgs__(jj,:,ii) =    ( (4.d0 * ca_h(th_) * gstomgs(jj,:,ii) + 8.d0 * gammastar &
           &         * gstomgs(jj,:,ii) + jactgs(:,ii) - 4.d0 * rlgs_h(:)       &
           &         - SQRT((-4.d0 * ca_h(th_) * gstomgs(jj,:,ii) + 8.d0       &
           &         * gammastar * gstomgs(jj,:,ii) + jactgs(:,ii) - 4.d0        &
