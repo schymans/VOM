@@ -1576,6 +1576,7 @@
       REAL*8 :: PARshade     
       REAL*8 :: par_shade_avg           
       REAL*8 :: par_sct                 
+      REAL*8 :: kappa_d                             
             
       
       select case(i_lai_function)
@@ -1612,6 +1613,8 @@
 
       
       case(3, 4) !dynamic LAI, with shaded/sunlit fractions
+      
+      kappa_d = 0.719d0
       
 !       * extinction coefficient (Xiao et al. (2015) eq.6, Campbell and Norman (1998) eq. 15.4)
         kappa_t = sqrt(i_chi_t**2+tan(phi_zenith(th_))**2)/(i_chi_t+1.774*(i_chi_t+1.182)**(-0.733) )        
@@ -1679,8 +1682,8 @@
                     !at the top of the canopy, shaded leaves receive PARdiff                   
                     !at the bottom of canopy, shaded leaves receive                     
                     !take the exponential weighted average of top and bottom (p260, Campbell&Norman):
-                    par_shade_avg = (pardiff_h(th_) * ( 1.d0 - p_E ** ( -sqrt(i_alpha_abs) * kappa_t * lai_lt(ii) )   ) ) / &
-                                    ( sqrt(i_alpha_abs) * kappa_t * lai_lt(ii)    ) 
+                    par_shade_avg = (pardiff_h(th_) * ( 1.d0 - p_E ** ( -sqrt(i_alpha_abs) * kappa_d * lai_lt(ii) )   ) ) / &
+                                    ( sqrt(i_alpha_abs) * kappa_d* lai_lt(ii)    ) 
               
                     !need to add the scattered direct PAR to the shaded PAR:
                     par_sct = 0.5* ( pardir_h(th_) * p_E ** (-sqrt(i_alpha_abs) * kappa_t * lai_lt(ii) )  -  &
@@ -1707,8 +1710,8 @@
                     !at the top of the canopy, shaded leaves receive PARdiff                   
                     !at the bottom of canopy, shaded leaves receive                                        
                     !take the exponential weighted average of top and bottom (p260, Campbell&Norman):
-                    par_shade_avg = (pardiff_h(th_) * ( 1.d0 - p_E ** ( -sqrt(i_alpha_abs) * kappa_t * lai_lt(ii) )   ) ) / &
-                                    ( sqrt(i_alpha_abs) * kappa_t * lai_lt(ii)    ) 
+                    par_shade_avg = (pardiff_h(th_) * ( 1.d0 - p_E ** ( -sqrt(i_alpha_abs) * kappa_d * lai_lt(ii) )   ) ) / &
+                                    ( sqrt(i_alpha_abs) * kappa_d * lai_lt(ii)    ) 
               
                     !need to add the scattered direct PAR to the shaded PAR:
                     par_sct = 0.5* ( pardir_h(th_) * p_E ** (-sqrt(i_alpha_abs) * kappa_t * lai_lt(ii) )  -  &
@@ -1755,8 +1758,8 @@
                     !at the top of the canopy, shaded leaves receive PARdiff                   
                     !at the bottom of canopy, shaded leaves receive                    
                     !take the exponential weighted average of top and bottom (p260, Campbell&Norman):
-                    par_shade_avg = (pardiff_h(th_) * ( 1.d0 - p_E ** ( -sqrt(i_alpha_abs) * kappa_g * lai_lg(ii) )   ) ) / &
-                                    ( sqrt(i_alpha_abs) * kappa_g * lai_lg(ii)    ) 
+                    par_shade_avg = (pardiff_h(th_) * ( 1.d0 - p_E ** ( -sqrt(i_alpha_abs) * kappa_d * lai_lg(ii) )   ) ) / &
+                                    ( sqrt(i_alpha_abs) * kappa_d * lai_lg(ii)    ) 
               
                     !need to add the scattered direct PAR to the shaded PAR:
                     par_sct = 0.5* ( pardir_h(th_) * p_E ** (-sqrt(i_alpha_abs) * kappa_g * lai_lg(ii) )  -  &
@@ -1783,8 +1786,8 @@
                     !at the bottom of canopy, shaded leaves receive                    
                     !take the exponential weighted average of top and bottom (p260, Campbell&Norman):
                      
-                    par_shade_avg = (pardiff_h(th_) * ( 1.d0 - p_E ** ( -sqrt(i_alpha_abs) * kappa_g * lai_lg(ii) )   ) ) / &
-                                    ( sqrt(i_alpha_abs) * kappa_g * lai_lg(ii)    ) 
+                    par_shade_avg = (pardiff_h(th_) * ( 1.d0 - p_E ** ( -sqrt(i_alpha_abs) * kappa_d * lai_lg(ii) )   ) ) / &
+                                    ( sqrt(i_alpha_abs) * kappa_d * lai_lg(ii)    ) 
               
                     !need to add the scattered direct PAR to the shaded PAR:
                     par_sct = 0.5* ( pardir_h(th_) * p_E ** (-sqrt(i_alpha_abs) * kappa_g * lai_lg(ii) )  -  &
