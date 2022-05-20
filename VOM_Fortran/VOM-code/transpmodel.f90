@@ -1570,7 +1570,13 @@
       REAL*8 :: fpar_shadeg 
       
                    
-      REAL*8 :: kappa
+      REAL*8 :: kappa_t
+      REAL*8 :: kappa_g 
+      REAL*8 :: PARsun            
+      REAL*8 :: PARshade     
+      REAL*8 :: par_shade_avg           
+      REAL*8 :: par_sct                 
+            
       
       select case(i_lai_function)
       case(1) !no dynamic LAI, no shaded/sunlit fractions
@@ -1587,15 +1593,15 @@
       case(2) !dynamic LAI, no shaded/sunlit fractions
       
 !       * extinction coefficient (Xiao et al. (2015) eq.6, Campbell and Norman (1998) eq. 15.4)
-        kappa = sqrt(i_chi_t**2+tan(phi_zenith(th_))**2)/(i_chi_t+1.774*(i_chi_t+1.182)**(-0.733) )        
+        kappa_t = sqrt(i_chi_t**2+tan(phi_zenith(th_))**2)/(i_chi_t+1.774*(i_chi_t+1.182)**(-0.733) )        
         
 !       * fraction of absorbed radiation per crown area (Beer-lambert, Xiao et al. (2015) eq.5, Campbell and Norman (1998) eq. 15.6)
-        fpar_lt(:) = 1.0d0 - p_E ** (-lai_lt(:) * kappa * sqrt(i_alpha_abs) )   
+        fpar_lt(:) = 1.0d0 - p_E ** (-lai_lt(:) * kappa_t * sqrt(i_alpha_abs) )   
        
 !       * extinction coefficient, Xiao et al. (2015)
-        kappa = sqrt(i_chi_g**2+tan(phi_zenith(th_))**2)/(i_chi_g+1.774*(i_chi_g+1.182)**(-0.733) ) 
+        kappa_g = sqrt(i_chi_g**2+tan(phi_zenith(th_))**2)/(i_chi_g+1.774*(i_chi_g+1.182)**(-0.733) ) 
 !       * fraction of absorbed radiation per crown area grasses (Beer-lambert)
-        fpar_lg(:) = 1.0d0 - p_E ** (-lai_lg(:) * kappa * sqrt(i_alpha_abs) )        
+        fpar_lg(:) = 1.0d0 - p_E ** (-lai_lg(:) * kappa_g * sqrt(i_alpha_abs) )        
         
 !       *        
         frac_shadeg(:) = 0.0d0
@@ -1608,22 +1614,23 @@
       case(3, 4) !dynamic LAI, with shaded/sunlit fractions
       
 !       * extinction coefficient (Xiao et al. (2015) eq.6, Campbell and Norman (1998) eq. 15.4)
-        kappa = sqrt(i_chi_t**2+tan(phi_zenith(th_))**2)/(i_chi_t+1.774*(i_chi_t+1.182)**(-0.733) )        
+        kappa_t = sqrt(i_chi_t**2+tan(phi_zenith(th_))**2)/(i_chi_t+1.774*(i_chi_t+1.182)**(-0.733) )        
         
 !       * fraction of absorbed radiation per crown area (Beer-lambert, Xiao et al. (2015) eq.5, Campbell and Norman (1998) eq. 15.6)
-        fpar_lt(:) = 1.0d0 - p_E ** (-lai_lt(:) * kappa * sqrt(i_alpha_abs) )   
+        fpar_lt(:) = 1.0d0 - p_E ** (-lai_lt(:) * kappa_t * sqrt(i_alpha_abs) )   
        
 !       * extinction coefficient, Xiao et al. (2015)
-        kappa = sqrt(i_chi_g**2+tan(phi_zenith(th_))**2)/(i_chi_g+1.774*(i_chi_g+1.182)**(-0.733) ) 
+        kappa_g = sqrt(i_chi_g**2+tan(phi_zenith(th_))**2)/(i_chi_g+1.774*(i_chi_g+1.182)**(-0.733) ) 
 !       * fraction of absorbed radiation per crown area grasses (Beer-lambert)
-        fpar_lg(:) = 1.0d0 - p_E ** (-lai_lg(:) * kappa * sqrt(i_alpha_abs) )        
+        fpar_lg(:) = 1.0d0 - p_E ** (-lai_lg(:) * kappa_g * sqrt(i_alpha_abs) )        
+        
         
         lag_sun(:) = 0.0d0
 !       * estimate shaded and sunlit fractions                
         do ii = 1,3
         
             !Eq15.23 from Campbell and Norman (1998)
-            lag_sun(ii) = (1.0d0 - p_E**( -lai_lg(ii) * kappa  ) )/kappa
+            lag_sun(ii) = (1.0d0 - p_E**( -lai_lg(ii) * kappa_g  ) )/kappa_g
                    
             !fractions of shade and sunlit leaf areas
             frac_sung(ii) = MIN( (lag_sun(ii) / lai_lg(ii)), 1.0d0)
@@ -1635,7 +1642,7 @@
         do ii = 1,3
         
             !Eq15.23 from Campbell and Norman (1998)        
-            lat_sun(ii) = (1.0d0 - p_E**( -lai_lt(ii) * kappa  ) )/kappa           
+            lat_sun(ii) = (1.0d0 - p_E**( -lai_lt(ii) * kappa_t  ) )/kappa_t           
            
             !fractions of shade and sunlit leaf areas           
             frac_sunt(ii) = MIN( (lat_sun(ii) / lai_lt(ii) ), 1.0d0)
@@ -1666,24 +1673,62 @@
         
               case(3) ! shaded and sunlit, with diffuse and direct radiation
               
-                   fpar_sunt = 1.0d0 - p_E ** (-lat_sun(ii) * kappa * sqrt(i_alpha_abs) )                     
-                   fpar_shadet = 1.0d0 - p_E ** (- ( lai_lt(ii) - lat_sun(ii)) * kappa * sqrt(i_alpha_abs) ) 
+                    !----------------------------------------------------------              
+                    !determine average PAR on shaded leaves
+                    
+                    !at the top of the canopy, shaded leaves receive PARdiff                   
+                    !at the bottom of canopy, shaded leaves receive                     
+                    !take the exponential weighted average of top and bottom (p260, Campbell&Norman):
+                    par_shade_avg = (pardiff_h(th_) * ( 1.d0 - p_E ** ( -sqrt(i_alpha_abs) * kappa_t * lai_lt(ii) )   ) ) / &
+                                    ( sqrt(i_alpha_abs) * kappa_t * lai_lt(ii)    ) 
               
-                   jactt(:,ii)   = ( (1.d0 - p_E ** (-(i_alpha * (pardir_h(th_) + pardiff_h(th_)) ) &    
-        &             / jmaxt_h(:))) * jmaxt_h(:) * fpar_sunt) +                                      &
-        &                          ( (1.d0 - p_E ** (-(i_alpha  * pardiff_h(th_) )                    &    
-        &             / jmaxt_h(:))) * jmaxt_h(:) * fpar_shadet )
+                    !need to add the scattered direct PAR to the shaded PAR:
+                    par_sct = 0.5* ( pardir_h(th_) * p_E ** (-sqrt(i_alpha_abs) * kappa_t * lai_lt(ii) )  -  &
+                                    pardir_h(th_) * p_E ** (-kappa_t * lai_lt(ii) ) )
+                              
+                    !final PAR-shade is the sum, multiplied with the absorptivity      
+                    PARshade = (par_sct + par_shade_avg) * i_alpha_abs
+              
+                    !----------------------------------------------------------
+                    !sunlit leaves
+                    PARsun = i_alpha_abs * (kappa_t * pardir_h(th_) ) + PARshade  
+              
+                   jactt(:,ii)   = ( (1.d0 - p_E ** (-(i_alpha * PARsun ) &    
+        &             / jmaxt_h(:))) * jmaxt_h(:) *  lat_sun(ii) ) +                                      &
+        &                          ( (1.d0 - p_E ** (-(i_alpha  * PARshade )                    &    
+        &             / jmaxt_h(:))) * jmaxt_h(:) * (lai_lt(ii) - lat_sun(ii) ) )
         
               case(4) ! shaded and sunlit, diffuse and direct radiation, different jact-values shaded-sunlit      
               
-                   fpar_sunt = 1.0d0 - p_E ** (-lat_sun(ii) * kappa * sqrt(i_alpha_abs) )                     
-                   fpar_shadet = 1.0d0 - p_E ** (- ( lai_lt(ii) - lat_sun(ii)) * kappa * sqrt(i_alpha_abs) )                                   
+              
+                    !----------------------------------------------------------              
+                    !determine average PAR on shaded leaves
+                    
+                    !at the top of the canopy, shaded leaves receive PARdiff                   
+                    !at the bottom of canopy, shaded leaves receive                                        
+                    !take the exponential weighted average of top and bottom (p260, Campbell&Norman):
+                    par_shade_avg = (pardiff_h(th_) * ( 1.d0 - p_E ** ( -sqrt(i_alpha_abs) * kappa_t * lai_lt(ii) )   ) ) / &
+                                    ( sqrt(i_alpha_abs) * kappa_t * lai_lt(ii)    ) 
+              
+                    !need to add the scattered direct PAR to the shaded PAR:
+                    par_sct = 0.5* ( pardir_h(th_) * p_E ** (-sqrt(i_alpha_abs) * kappa_t * lai_lt(ii) )  -  &
+                                    pardir_h(th_) * p_E ** (-kappa_t * lai_lt(ii) ) )
+                              
+                    !final PAR-shade is the sum, multiplied with the absorptivity      
+                    PARshade = (par_sct + par_shade_avg) * i_alpha_abs
+              
+                    !----------------------------------------------------------
+                    !sunlit leaves
+                    PARsun = i_alpha_abs * (kappa_t * pardir_h(th_) ) + PARshade                                     
+                            
                 
-                   jactt(:,ii)   = (1.d0 - p_E ** (-(i_alpha * (pardir_h(th_) + pardiff_h(th_)) ) &    
-        &             / jmaxt_h(:))) * jmaxt_h(:) * fpar_sunt
+                   jactt(:,ii)   = (1.d0 - p_E ** (-(i_alpha * PARsun ) &    
+        &             / jmaxt_h(:))) * jmaxt_h(:) * lat_sun(ii) 
 
-                   jactts(:,ii)   =  (1.d0 - p_E ** (-(i_alpha  * pardiff_h(th_) )                    &    
-        &             / jmaxts_h(:))) * jmaxts_h(:) * fpar_shadet
+                   jactts(:,ii)   =  (1.d0 - p_E ** (-(i_alpha  * PARshade )                    &    
+        &             / jmaxts_h(:))) * jmaxts_h(:) * (lai_lt(ii) - lat_sun(ii) )
+        
+
         
              end select
         end do
@@ -1704,25 +1749,62 @@
                           
               case(3) ! shaded and sunlit, with diffuse and direct radiation.
               
-                   fpar_sung = 1.0d0 - p_E ** (-lag_sun(ii) * kappa * sqrt(i_alpha_abs) )                     
-                   fpar_shadeg = 1.0d0 - p_E ** (- ( lai_lg(ii) - lag_sun(ii)) * kappa * sqrt(i_alpha_abs) )               
+                    !----------------------------------------------------------              
+                    !determine average PAR on shaded leaves
+                    
+                    !at the top of the canopy, shaded leaves receive PARdiff                   
+                    !at the bottom of canopy, shaded leaves receive                    
+                    !take the exponential weighted average of top and bottom (p260, Campbell&Norman):
+                    par_shade_avg = (pardiff_h(th_) * ( 1.d0 - p_E ** ( -sqrt(i_alpha_abs) * kappa_g * lai_lg(ii) )   ) ) / &
+                                    ( sqrt(i_alpha_abs) * kappa_g * lai_lg(ii)    ) 
               
-               jactg(:,ii)   = ( (1.d0 - p_E ** (-(i_alpha * (pardir_h(th_) + pardiff_h(th_)) ) &    
-             &     / jmaxg_h(:))) * jmaxg_h(:)  * fpar_sung ) +                                &
-             &     ( (1.d0 - p_E ** (-(i_alpha * pardiff_h(th_) )                                  &    
-             &     / jmaxg_h(:))) * jmaxg_h(:) * fpar_shadeg )
+                    !need to add the scattered direct PAR to the shaded PAR:
+                    par_sct = 0.5* ( pardir_h(th_) * p_E ** (-sqrt(i_alpha_abs) * kappa_g * lai_lg(ii) )  -  &
+                                    pardir_h(th_) * p_E ** (-kappa_g * lai_lg(ii) ) )
+                              
+                    !final PAR-shade is the sum, multiplied with the absorptivity      
+                    PARshade = (par_sct + par_shade_avg) * i_alpha_abs
+              
+                    !----------------------------------------------------------
+                    !sunlit leaves
+                    PARsun = i_alpha_abs * (kappa_g * pardir_h(th_) ) + PARshade                
+              
+                    jactg(:,ii)   = ( (1.d0 - p_E ** (-(i_alpha * PARsun ) &    
+                    &     / jmaxg_h(:))) * jmaxg_h(:)  *  lag_sun(ii)   ) +                                &
+                    &     ( (1.d0 - p_E ** (-(i_alpha * PARshade )                                  &    
+                    &     / jmaxg_h(:))) * jmaxg_h(:) *  ( lai_lg(ii) - lat_sun(ii) ) )
                       
               case(4) ! shaded and sunlit, diffuse and direct radiation, different jact-values shaded-sunlit
               
-                   fpar_sung = 1.0d0 - p_E ** (-lag_sun(ii) * kappa * sqrt(i_alpha_abs) )                     
-                   fpar_shadeg = 1.0d0 - p_E ** (- ( lai_lg(ii) - lag_sun(ii)) * kappa * sqrt(i_alpha_abs) )                 
+                    !----------------------------------------------------------              
+                    !determine average PAR on shaded leaves
+                    
+                    !at the top of the canopy, shaded leaves receive PARdiff                   
+                    !at the bottom of canopy, shaded leaves receive                    
+                    !take the exponential weighted average of top and bottom (p260, Campbell&Norman):
+                     
+                    par_shade_avg = (pardiff_h(th_) * ( 1.d0 - p_E ** ( -sqrt(i_alpha_abs) * kappa_g * lai_lg(ii) )   ) ) / &
+                                    ( sqrt(i_alpha_abs) * kappa_g * lai_lg(ii)    ) 
               
+                    !need to add the scattered direct PAR to the shaded PAR:
+                    par_sct = 0.5* ( pardir_h(th_) * p_E ** (-sqrt(i_alpha_abs) * kappa_g * lai_lg(ii) )  -  &
+                                    pardir_h(th_) * p_E ** (-kappa_g * lai_lg(ii) ) )
+                              
+                    !final PAR-shade is the sum, multiplied with the absorptivity      
+                    PARshade = (par_sct + par_shade_avg) * i_alpha_abs
+                    
+
               
-               jactg(:,ii)   =  (1.d0 - p_E ** (-(i_alpha * (pardir_h(th_) + pardiff_h(th_)) ) &    
-             &     / jmaxg_h(:))) * jmaxg_h(:) * fpar_sung 
+                    !----------------------------------------------------------
+                    !sunlit leaves
+                    PARsun = i_alpha_abs * (kappa_g * pardir_h(th_) ) + PARshade                  
+           
+              
+                    jactg(:,ii)   =  (1.d0 - p_E ** (-(i_alpha * PARsun ) &    
+                    &     / jmaxg_h(:))) * jmaxg_h(:) *  lag_sun(ii)  
              
-               jactgs(:,ii)   = (1.d0 - p_E ** (-(i_alpha * pardiff_h(th_) )                                  &    
-             &     / jmaxgs_h(:))) * jmaxgs_h(:) * fpar_shadeg  
+                    jactgs(:,ii)   = (1.d0 - p_E ** (-(i_alpha * PARshade )                                  &    
+                    &     / jmaxgs_h(:))) * jmaxgs_h(:) *   ( lai_lg(ii) - lat_sun(ii) )
               
              
           end select
