@@ -1563,7 +1563,13 @@
       INTEGER:: jj      
       INTEGER:: ilay
       REAL*8 :: lag_sun(3)          
-      REAL*8 :: lat_sun(3)                
+      REAL*8 :: lat_sun(3)   
+      REAL*8 :: fpar_sunt          
+      REAL*8 :: fpar_sung                
+      REAL*8 :: fpar_shadet          
+      REAL*8 :: fpar_shadeg 
+      
+                   
       REAL*8 :: kappa
       
       select case(i_lai_function)
@@ -1659,17 +1665,25 @@
         &             / jmaxt_h(:))) * jmaxt_h(:)  ! (3.23), (Out[311])    
         
               case(3) ! shaded and sunlit, with diffuse and direct radiation
+              
+                   fpar_sunt = 1.0d0 - p_E ** (-lat_sun(ii) * kappa * sqrt(i_alpha_abs) )                     
+                   fpar_shadet = 1.0d0 - p_E ** (- ( lai_lt(ii) - lat_sun(ii)) * kappa * sqrt(i_alpha_abs) ) 
+              
                    jactt(:,ii)   = ( (1.d0 - p_E ** (-(i_alpha * (pardir_h(th_) + pardiff_h(th_)) ) &    
-        &             / jmaxt_h(:))) * jmaxt_h(:) * frac_sunt(ii) ) +                                      &
+        &             / jmaxt_h(:))) * jmaxt_h(:) * fpar_sunt) +                                      &
         &                          ( (1.d0 - p_E ** (-(i_alpha  * pardiff_h(th_) )                    &    
-        &             / jmaxt_h(:))) * jmaxt_h(:) * frac_shadet(ii) )
+        &             / jmaxt_h(:))) * jmaxt_h(:) * fpar_shadet )
         
-              case(4) ! shaded and sunlit, diffuse and direct radiation, different jact-values shaded-sunlit        
+              case(4) ! shaded and sunlit, diffuse and direct radiation, different jact-values shaded-sunlit      
+              
+                   fpar_sunt = 1.0d0 - p_E ** (-lat_sun(ii) * kappa * sqrt(i_alpha_abs) )                     
+                   fpar_shadet = 1.0d0 - p_E ** (- ( lai_lt(ii) - lat_sun(ii)) * kappa * sqrt(i_alpha_abs) )                                   
+                
                    jactt(:,ii)   = (1.d0 - p_E ** (-(i_alpha * (pardir_h(th_) + pardiff_h(th_)) ) &    
-        &             / jmaxt_h(:))) * jmaxt_h(:) * frac_sunt(ii)
+        &             / jmaxt_h(:))) * jmaxt_h(:) * fpar_sunt
 
                    jactts(:,ii)   =  (1.d0 - p_E ** (-(i_alpha  * pardiff_h(th_) )                    &    
-        &             / jmaxts_h(:))) * jmaxts_h(:) * frac_shadet(ii) 
+        &             / jmaxts_h(:))) * jmaxts_h(:) * fpar_shadet
         
              end select
         end do
@@ -1688,18 +1702,27 @@
                jactg(:,ii) = (1.d0 - p_E ** (-(i_alpha * fpar_lg(ii) * par_h(th_))           &
              &       / jmaxg_h(:))) * jmaxg_h(:)  ! (3.23), (Out[311])
                           
-              case(3) ! shaded and sunlit, with diffuse and direct radiation
+              case(3) ! shaded and sunlit, with diffuse and direct radiation.
+              
+                   fpar_sung = 1.0d0 - p_E ** (-lag_sun(ii) * kappa * sqrt(i_alpha_abs) )                     
+                   fpar_shadeg = 1.0d0 - p_E ** (- ( lai_lg(ii) - lag_sun(ii)) * kappa * sqrt(i_alpha_abs) )               
+              
                jactg(:,ii)   = ( (1.d0 - p_E ** (-(i_alpha * (pardir_h(th_) + pardiff_h(th_)) ) &    
-             &     / jmaxg_h(:))) * jmaxg_h(:)  * frac_sung(ii) ) +                                &
+             &     / jmaxg_h(:))) * jmaxg_h(:)  * fpar_sung ) +                                &
              &     ( (1.d0 - p_E ** (-(i_alpha * pardiff_h(th_) )                                  &    
-             &     / jmaxg_h(:))) * jmaxg_h(:) * frac_shadeg(ii) )
+             &     / jmaxg_h(:))) * jmaxg_h(:) * fpar_shadeg )
                       
               case(4) ! shaded and sunlit, diffuse and direct radiation, different jact-values shaded-sunlit
+              
+                   fpar_sung = 1.0d0 - p_E ** (-lag_sun(ii) * kappa * sqrt(i_alpha_abs) )                     
+                   fpar_shadeg = 1.0d0 - p_E ** (- ( lai_lg(ii) - lag_sun(ii)) * kappa * sqrt(i_alpha_abs) )                 
+              
+              
                jactg(:,ii)   =  (1.d0 - p_E ** (-(i_alpha * (pardir_h(th_) + pardiff_h(th_)) ) &    
-             &     / jmaxg_h(:))) * jmaxg_h(:) * frac_sung(ii) 
+             &     / jmaxg_h(:))) * jmaxg_h(:) * fpar_sung 
              
                jactgs(:,ii)   = (1.d0 - p_E ** (-(i_alpha * pardiff_h(th_) )                                  &    
-             &     / jmaxgs_h(:))) * jmaxgs_h(:) * frac_shadeg(ii)   
+             &     / jmaxgs_h(:))) * jmaxgs_h(:) * fpar_shadeg  
               
              
           end select
