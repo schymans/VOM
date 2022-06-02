@@ -1770,8 +1770,8 @@
               
                     !----------------------------------------------------------
                     !sunlit leaves
-                    PARsun = i_alpha_abs * (kappa_g * pardir_h(th_) ) + PARshade                
-              
+                    PARsun = i_alpha_abs * (kappa_t * pardir_h(th_) + PARshade )              
+                    
                     jactg(:,ii)   = ( (1.d0 - p_E ** (-(i_alpha * PARsun ) &    
                     &     / jmaxg_h(:))) * jmaxg_h(:)  *  lag_sun(ii)   ) +                                &
                     &     ( (1.d0 - p_E ** (-(i_alpha * PARshade )                                  &    
@@ -1800,8 +1800,7 @@
               
                     !----------------------------------------------------------
                     !sunlit leaves
-                    PARsun = i_alpha_abs * (kappa_g * pardir_h(th_) ) + PARshade                  
-           
+                    PARsun = i_alpha_abs * (kappa_t * pardir_h(th_) + PARshade )           
               
                     jactg(:,ii)   =  (1.d0 - p_E ** (-(i_alpha * PARsun ) &    
                     &     / jmaxg_h(:))) * jmaxg_h(:) *  lag_sun(ii)  
