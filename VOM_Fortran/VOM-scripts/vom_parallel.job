@@ -1,0 +1,69 @@
+#!/bin/sh
+# coding: utf-8
+#***********************************************************************
+#        vom_parallel.sh
+#        Jobscript for the LIST HPC, to run run_vom.sh.
+#
+#
+#-----------------------------------------------------------------------
+#        Authors: Remko Nijzink
+#        Now at: LIST (Luxembourg Institute of Science and Technology)
+#-----------------------------------------------------------------------
+#
+#  Copyright (C) 2022, Luxembourg Institute of Science and Technology, all rights reserved.
+#
+#    Code licensed under GPL version 2 or higher
+#    SPDX-License-Identifier: GPL-2.0-or-later
+#
+#***********************************************************************
+#
+# Your job name
+#SBATCH --job-name=VOMexp
+#
+# Use current working directory
+#
+#
+#SBATCH -e /home/int/eva/nijzink/logfiles/err
+#SBATCH -o /home/int/eva/nijzink/logfiles/out
+#SBATCH --account=wave
+# pe (Parallel environment) request. Set your number of processors here.
+#SBATCH -n 4
+#SBATCH --time=47:00:00
+#
+# The following output will show in the output file. Used for debugging.
+echo "Got $SLURM_NNODES processors."
+#
+# load modules
+module load userspace/tr17.10
+module load userspace/spack
+module load gcc-8.2.0-gcc-7.2.0-la27vub
+module load netcdf-fortran-4.5.2-gcc-8.2.0-y4qfiu6
+#
+# to avoid an error message in renku
+#export LC_ALL='en_US.UTF-8'
+#export LANG='en_US.UTF-8'
+#module load null shared use.own conda
+#
+#files to be tracked with renku
+exe_src=$2
+dailyweather_input=$1
+
+NC_INCLUDE=/trinity/shared/apps/spack/opt/spack/linux-centos7-x86_64/gcc-8.2.0/netcdf-fortran-4.5.2-y4qfiu6nzx3voevihng2ihu4eunwfc3x/include
+NC_LIB=/trinity/shared/apps/spack/opt/spack/linux-centos7-x86_64/gcc-8.2.0/netcdf-fortran-4.5.2-y4qfiu6nzx3voevihng2ihu4eunwfc3x/lib/
+
+export NC_INCLUDE
+export NC_LIB
+
+date
+source /home/int/eva/nijzink/miniconda3/etc/profile.d/conda.sh
+conda activate renku
+
+#inputs:
+#workdir
+#dailyweather.prn
+#vom_namelist
+#VOM-code
+
+renku run bash src_sh/run_vom.sh $@
+
+date
