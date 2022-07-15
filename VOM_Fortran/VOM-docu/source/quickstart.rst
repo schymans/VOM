@@ -63,6 +63,54 @@ This can be changed in vom_namelist, or on the command line:
 -n The VOM_namelist (filename can be different)
 
 
+To run successfully, these input-files are needed:
+
+**vom_namelist** 
+    Contains all settings to run the VOM.
+
+**pars.txt**
+    Contains the (optimized) vegetation parameters (only needed for single run).
+
+**dailyweather.prn**
+    Contains the meteorological forcing.
+
+By default, the executable looks for the vom_namelist in the current workdirectory. The default directory for the other files is /input, relative to the workdirectory. 
+This can be changed in vom_namelist, or on the command line:
+
+-i Inputpath to directory with dailyweather.prn, and optionally pars.txt. 
+
+-o Outputpath for all outputfiles.
+
+-n The VOM_namelist (filename can be different)
+
+
+
+Scripts for running the model
+-----------------------------
+In the folder VOM-scripts, two shell-scripts can be found for running the VOM:
+
+.. code-block:: bash
+
+    vom_parallel.job
+
+
+    run_vom.sh
+    
+
+The model is compiled and executed by the script run_vom.sh. It can be used in the following way:
+
+.. code-block:: bash
+
+    bash src_sh/run_vom.sh src/VOM/VOM_Fortran/ <inputdir> <dailyweather.prn> <soilprofile.par> <vom_namelist> <outputdir>
+
+
+vom_parallel.job is a job script for the LIST HPC using SLURM. Note that the script needs to be modified for own applications of the VOM on an HPC and serves here as an example. In this example, submitting a job with SLURM functions as follows:
+
+.. code-block:: bash
+
+    sbatch -o <output_logfile> -e <error_logfile> -n <number of cpu's> -J <jobname> vom_parallel.job <VOM-src> <input-directory> <dailyweather.prn> <soilprofile.par> <vom_namelist> <output-directory>
+
+
 
 Model modes
 -----------------
