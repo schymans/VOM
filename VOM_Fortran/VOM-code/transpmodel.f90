@@ -890,7 +890,7 @@
         do i = 1, c_maxhour
         
           !read hourly inputs
-          read(kfile_hourlyweather, '(5i8,6e11.4)') h, dummyint1,       &
+          read(kfile_hourlyweather, '(5i8,8e11.4)') h, dummyint1,       &
      &      dummyint2, dummyint3, dummyint4, tair_h(i), vp_h(i),       &
      &      par_h(i),pardiff_h(i),pardir_h(i), rain_h(i), press_h(i), ca_h(i)   
           if (par_h(i) .lt. 0.d0) par_h(i) = 0.d0
